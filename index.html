@@ -258,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/23/leetcode/StackQueue/1_StackQueue/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ink">
@@ -277,7 +277,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/10/23/leetcode/StackQueue/1_StackQueue/" itemprop="url">【leetcode】栈、队列和堆编程题解【一】</a></h1>
+                <a class="post-title-link" href="/2021/08/02/Linux/Linux_capabilities/" itemprop="url">Linux 如何使用capabilities机制实现进程权限管理</a></h1>
         
 
         <div class="post-meta">
@@ -289,8 +289,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-23T00:31:09+08:00">
-                2020-10-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-02T22:19:26+08:00">
+                2021-08-02
               </time>
             
 
@@ -328,405 +328,105 @@
 
       
         
-          
-            <h1 id="20-Valid-Parentheses"><a href="#20-Valid-Parentheses" class="headerlink" title="20. Valid Parentheses"></a><a href="https://leetcode-cn.com/problems/valid-parentheses/" target="_blank" rel="noopener">20. Valid Parentheses</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Given a string containing just the characters '(', ')', '&#123;', '&#125;', '[' and ']', </span></span><br><span class="line"><span class="comment">* determine if the input string is valid.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* The brackets must close in the correct order, "()" and "()[]&#123;&#125;" are all valid </span></span><br><span class="line"><span class="comment">* but "(]" and "([)]" are not.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
+          <h1 id="systemd机制"><a href="#systemd机制" class="headerlink" title="systemd机制"></a>systemd机制</h1><p>systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 /usr/lib/systemd/systemd --switched-root --system --deserialize 22</span><br></pre></td></tr></table></figure>
 
-<h2 id="solution1"><a href="#solution1" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>stack</li>
-<li>one by one traverse characters; if cur char is left bracket push into stack</li>
-<li>if cur char is right bracket; top one element from stack; </li>
-<li>if top() element match the cur char; pop()</li>
-<li>else top() element unmatch the cur char: return Not valid</li>
-<li>if traverse to the end; stack is empty means valid else not valid    : return stack.empty</li>
-</ol>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValid</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">stack</span>&lt;<span class="keyword">char</span>&gt; sch;</span><br><span class="line">        <span class="keyword">size_t</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (; i &lt; s.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (s[i] == <span class="string">'('</span> || s[i] == <span class="string">'&#123;'</span> || s[i] == <span class="string">'['</span>) &#123;</span><br><span class="line">                sch.push(s[i]);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (sch.empty()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">int</span> topCh = sch.top();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ((s[i] == <span class="string">')'</span> &amp;&amp; topCh != <span class="string">'('</span>) ||</span><br><span class="line">                    (s[i] == <span class="string">'&#125;'</span> &amp;&amp; topCh != <span class="string">'&#123;'</span>) ||</span><br><span class="line">                    (s[i] == <span class="string">']'</span> &amp;&amp; topCh != <span class="string">'['</span>)) &#123;    <span class="comment">// ()[&#125;</span></span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        sch.pop();</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> sch.empty(); <span class="comment">//()((</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>systemd进程通常不会被用户调用，而是由/sbin/init软链接，在最开始的启动过程拉起。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# ls -l /sbin/init</span><br><span class="line">lrwxrwxrwx 1 root root 22 Jul 11  2019 /sbin/init -&gt; ../lib/systemd/systemd</span><br></pre></td></tr></table></figure>
 
-<h2 id="complexity-analysis"><a href="#complexity-analysis" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse the stack one pass</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no need extra space</p>
-<h1 id="155-Min-Stack"><a href="#155-Min-Stack" class="headerlink" title="155. Min Stack"></a><a href="https://leetcode-cn.com/problems/min-stack/" target="_blank" rel="noopener">155. Min Stack</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* push(x) -- Push element x onto stack.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* pop() -- Removes the element on top of the stack.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* top() -- Get the top element.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* getMin() -- Retrieve the minimum element in the stack.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="solution1-1"><a href="#solution1-1" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>use stl stack store the data</li>
-<li>class member min_element store the minimum element</li>
-<li>when push or pop : change the minimum element</li>
-<li>getMin(): return min_element</li>
-<li>The key: stack can’t easy to iterate，（can use a set store the stack val)</li>
-</ol>
-<p>too slow!!!</p>
-<h2 id="optimized-solution1"><a href="#optimized-solution1" class="headerlink" title="optimized solution1"></a><strong>optimized solution1</strong></h2><ol>
-<li>use two stack and min_element</li>
-<li>stack real store the data</li>
-<li>minstack  store the minimal number when it changes.: solve one case: when stack pop the minimum element, minstack can pop too, then get the next minimum element<ul>
-<li>if we keep pushing the following numbers:</li>
-<li>5 1 1 2 3 2 </li>
-<li>the minial number stack will be: </li>
-<li>5 1 1   &lt;– only store the number which &lt;= current minimal number sequence!!!</li>
-</ul>
+<h2 id="systemd-添加nginx服务实践"><a href="#systemd-添加nginx服务实践" class="headerlink" title="systemd 添加nginx服务实践"></a>systemd 添加nginx服务实践</h2><ol>
+<li><p>添加service</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/systemd/system/nginx.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=nginx</span><br><span class="line">After=aliyun.target</span><br><span class="line">Wants=aliyun.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/local/nginx/sbin/nginx</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=1min</span><br><span class="line">StartLimitInterval=36000</span><br><span class="line">StartLimitBurst=5</span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 </li>
-<li>push: if (val) &lt; cur_min: push into minstack; cur_min = val</li>
-<li>pop: if stack top() == cur_min; minstack.pop(); cur_min = minstack.top()</li>
-</ol>
-<h2 id="code-1"><a href="#code-1" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MinStack</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">/** initialize your data structure here. */</span></span><br><span class="line">    MinStack() &#123;</span><br><span class="line">       <span class="built_in">min</span> = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">       s.push(x);</span><br><span class="line">       <span class="keyword">if</span> (minstack.empty() || x &lt;= <span class="built_in">min</span>) &#123;  <span class="comment">//when minstack is empty, should push x into stack, not need compare with min</span></span><br><span class="line">           minstack.push(x);</span><br><span class="line">           <span class="built_in">min</span> = x;</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (s.empty()) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">       <span class="keyword">int</span> val = s.top();</span><br><span class="line">       <span class="keyword">if</span> (val == <span class="built_in">min</span>) &#123;</span><br><span class="line">            minstack.pop();</span><br><span class="line">            <span class="keyword">if</span> (!minstack.empty()) &#123;    <span class="comment">//caution: minstack pop all the element</span></span><br><span class="line">                <span class="built_in">min</span> = minstack.top();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">min</span> = <span class="number">0</span>;</span><br><span class="line">       &#125; </span><br><span class="line">       s.pop();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> s.top(); </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getMin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="built_in">min</span>; </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">    <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; minstack;</span><br><span class="line">    <span class="keyword">int</span> <span class="built_in">min</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your MinStack object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * MinStack* obj = new MinStack();</span></span><br><span class="line"><span class="comment"> * obj-&gt;push(x);</span></span><br><span class="line"><span class="comment"> * obj-&gt;pop();</span></span><br><span class="line"><span class="comment"> * int param_3 = obj-&gt;top();</span></span><br><span class="line"><span class="comment"> * int param_4 = obj-&gt;getMin();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis-1"><a href="#complexity-analysis-1" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(1): push() pop() top() getMin() cost constant time</p>
-<p><strong>space complexity</strong></p>
-<p>O(n): need extra minstack to store the minimal number</p>
-<h1 id="215-Kth-Largest-Element-in-an-Array"><a href="#215-Kth-Largest-Element-in-an-Array" class="headerlink" title="215. Kth Largest Element in an Array"></a><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">215. Kth Largest Element in an Array</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Find the kth largest element in an unsorted array. </span></span><br><span class="line"><span class="comment"> * Note that it is the kth largest element in the sorted order, not the kth distinct element.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * For example,</span></span><br><span class="line"><span class="comment"> * Given [3,2,1,5,6,4] and k = 2, return 5.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Note: </span></span><br><span class="line"><span class="comment"> * You may assume k is always valid, 1 ≤ k ≤ array's length.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Credits:Special thanks to @mithmatt for adding this problem and creating all test cases.</span></span><br><span class="line"><span class="comment"> *               </span></span><br><span class="line"><span class="comment"> **********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-<h2 id="solution1-2"><a href="#solution1-2" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>sort the vector or array</li>
-<li>return the k element</li>
-</ol>
-<h2 id="code-2"><a href="#code-2" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        sort(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">return</span> nums[nums.<span class="built_in">size</span>()-k];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<li><p>systemd load新的服务文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统启动过程中拉起服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动拉起服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">[root@ink system]# service nginx start</span><br><span class="line">Redirecting to /bin/systemctl start nginx.service</span><br><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">root      3796  0.0  0.0  25004   768 ?        Ss   11:06   0:00 nginx: master process /usr/local/nginx/sbin/nginx</span><br><span class="line">nobody    3797  0.0  0.1  25420  1484 ?        S    11:06   0:00  \_ nginx: worker process</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br><span class="line">[root@ink system]# systemctl status nginx.service</span><br><span class="line">● nginx.service - nginx</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/nginx.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务启动的日志</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# journalctl -u nginx.service</span><br><span class="line">-- Logs begin at Thu 2019-07-11 11:10:15 CST, end at Fri 2021-07-23 11:40:01 CST. --</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:16:41 ink systemd[1]: Started nginx.</span><br><span class="line">Jul 23 11:25:48 ink systemd[1]: Started nginx.</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:30:43 ink systemd[1]: Started nginx.</span><br></pre></td></tr></table></figure>
 
-<h2 id="complexity-analysis-2"><a href="#complexity-analysis-2" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(nlogn): sort time complexity is O(nlogn)</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no need extra space</p>
-<h2 id="solution2"><a href="#solution2" class="headerlink" title="solution2"></a><strong>solution2</strong></h2><p>leetcode partition like quick sort find the k number</p>
+</li>
+</ol>
+<p><a href="https://man7.org/linux/man-pages/man1/systemd.1.html" target="_blank" rel="noopener">systemd(1) — Linux manual page</a></p>
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units" target="_blank" rel="noopener">How To Use Systemctl to Manage Systemd Services and Units</a></p>
+<h1 id="进程权限管理"><a href="#进程权限管理" class="headerlink" title="进程权限管理"></a>进程权限管理</h1><h2 id="用户-组"><a href="#用户-组" class="headerlink" title="用户/组"></a>用户/组</h2><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
+<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护</p>
 <ol>
-<li>use the quick sort idea</li>
-<li>find the k number index by partition</li>
-<li>if pivot &lt; target; left = pivot+1</li>
-<li>if pivot &gt; target; right = pivot-1</li>
-<li>if pivot == target ; return value;</li>
+<li><p>Linux 查看所有用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Linux 查看用户组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/group</span><br><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line">daemon:x:2:</span><br><span class="line">sys:x:3:</span><br><span class="line">adm:x:4:</span><br></pre></td></tr></table></figure></li>
+<li><p>getent<br>linux中用于提供查询用户信息的命令</p>
+</li>
 </ol>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len = nums.length;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> right = len - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 转换一下，第 k 大元素的索引是 len - k</span></span><br><span class="line">        <span class="keyword">int</span> target = len - k;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> index = partition(nums, left, right);</span><br><span class="line">            <span class="keyword">if</span> (index == target) &#123;</span><br><span class="line">                <span class="keyword">return</span> nums[index];</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (index &lt; target) &#123;</span><br><span class="line">                left = index + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = index - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getent passwd</span><br><span class="line">getent group</span><br><span class="line">getent group daemon</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>Linux新增用户<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# useradd test -U -p 123</span><br><span class="line">[root@ink system]# su test</span><br><span class="line">[test@ink system]$ ls -l</span><br><span class="line">total 40</span><br><span class="line">-rw-r--r--  1 root root  492 Jul 21 01:17 aliyun.service</span><br><span class="line">-rw-r--r--  1 root root  214 Jul 21 01:17 AssistDaemon.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 basic.target.wants</span><br><span class="line">lrwxrwxrwx. 1 root root   37 Jul 11  2019 default.target -&gt; /lib/systemd/system/multi-user.target</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 default.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 getty.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 local-fs.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 23 11:15 multi-user.target.wants</span><br><span class="line">-rw-r--r--  1 root root  248 Jul 23 11:28 nginx.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 sysinit.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 system-update.target.wants</span><br><span class="line">[test@ink system]$ mv nginx.service nginx.service.back</span><br><span class="line">mv: cannot move ‘nginx.service’ to ‘nginx.service.back’: Permission denied</span><br></pre></td></tr></table></figure>
 
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/22/leetcode/LinkedList/2_LinkedList/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ink">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="千里之行，始于足下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/10/22/leetcode/LinkedList/2_LinkedList/" itemprop="url">【leetcode】链表编程题解【二】</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-22T00:20:35+08:00">
-                2020-10-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="92-reverse-linked-list-ii"><a href="#92-reverse-linked-list-ii" class="headerlink" title="92. reverse-linked-list-ii"></a><a href="https://leetcode-cn.com/problems/reverse-linked-list-ii/" target="_blank" rel="noopener">92. reverse-linked-list-ii</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Reverse a linked list from position m to n. Do it in-place and in one-pass.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* For example:</span></span><br><span class="line"><span class="comment">* Given 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL, m = 2 and n = 4,</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* return 1-&gt;4-&gt;3-&gt;2-&gt;5-&gt;NULL.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Note:</span></span><br><span class="line"><span class="comment">* Given m, n satisfy the following condition:</span></span><br><span class="line"><span class="comment">* 1 ≤ m ≤ n ≤ length of list.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-<h2 id="solution1"><a href="#solution1" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>get the reverse head and before reverse_head node and save value; save current reverse_head as reverse_tail</li>
-<li>reverse head+m to head+m+n by head insert</li>
-<li>before_reverse_head-&gt;next = reverse_head; reverse_tail-&gt;next = head+m+n-&gt;next;</li>
+</li>
 </ol>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">reverseBetween</span><span class="params">(ListNode* head, <span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="function">ListNode <span class="title">dummpy</span><span class="params">(<span class="number">0</span>)</span></span>;     <span class="comment">//add a dummpy node, solve the [1,2,3,4,5] reverse 1-5 case;</span></span><br><span class="line">        dummpy.next = head;</span><br><span class="line">        ListNode* before_rev_head = &amp;dummpy;    <span class="comment">//when reverse all the list, the before_rev_head is NULL, so need dummpy node </span></span><br><span class="line">        ListNode* rev_head = head;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (; i &lt; m<span class="number">-1</span>; ++i) &#123;     <span class="comment">//find the need revers head; caution m-1 can get the real reverse head</span></span><br><span class="line">            before_rev_head = rev_head;</span><br><span class="line">            rev_head = rev_head-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        ListNode* rev_tail = rev_head;  <span class="comment">//when reverse finish, this will be tail node;</span></span><br><span class="line">        ListNode* tmpNextNode = <span class="literal">NULL</span>;</span><br><span class="line">        ListNode* curNode = rev_head-&gt;next;</span><br><span class="line">        <span class="keyword">for</span> (i = m; i &lt; n; ++i) &#123;</span><br><span class="line">            tmpNextNode = curNode-&gt;next;</span><br><span class="line">            curNode-&gt;next = rev_head;</span><br><span class="line">            rev_head = curNode;</span><br><span class="line">            curNode = tmpNextNode;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        before_rev_head-&gt;next = rev_head;</span><br><span class="line">        rev_tail-&gt;next = curNode;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummpy.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis"><a href="#complexity-analysis" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse list one time</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no need extra space</p>
-<h1 id="141-linked-list-cycle"><a href="#141-linked-list-cycle" class="headerlink" title="141. linked-list-cycle"></a><a href="https://leetcode-cn.com/problems/linked-list-cycle/" target="_blank" rel="noopener">141. linked-list-cycle</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Given a linked list, determine if it has a cycle in it.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Follow up:</span></span><br><span class="line"><span class="comment">* Can you solve it without using extra space?</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-<h2 id="solution1-1"><a href="#solution1-1" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>set&lt;ListNode*&gt; store the have traversed node</li>
-<li>if set.find(curNode) != set.end() have the cycle</li>
-<li>tarverse to the list end : no cycle in list</li>
+<p>超级用户：root id 为0，有着系统中最大的权限，可以访问系统中的任何文件，一般使用root账号来执行系统管理的任务。上面的例子可以看出普通用户test，无法修改nginx.service。</p>
+<h2 id="进程权限"><a href="#进程权限" class="headerlink" title="进程权限"></a>进程权限</h2><ol>
+<li><p>编写demo进程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    daemon(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gcc test.c -o demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>root账户拉起test进程，并查看进程的用户和用户组，都为root</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# ./demo</span><br><span class="line">[root@ink code]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1609 root     root     ./demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>切换test用户，拉起进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# kill -9 $(pidof demo)</span><br><span class="line">[root@ink code]# su test</span><br><span class="line">[test@ink code]$ ./demo</span><br><span class="line">[test@ink code]$ ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1702 test     test     ./demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件的权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# ls -l test</span><br><span class="line">-rw-r--r-- 1 root root 0 Jul 26 10:13 test</span><br><span class="line"></span><br><span class="line">[root@ink test]# chmod 754 ./test</span><br><span class="line">[root@ink test]# ls -l</span><br><span class="line">total 0</span><br><span class="line">-rwxr-xr-- 1 root root 0 Jul 26 10:13 test</span><br></pre></td></tr></table></figure>
+
+</li>
 </ol>
-<h2 id="code-1"><a href="#code-1" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">       <span class="built_in">set</span>&lt;ListNode*&gt; NodeSet;</span><br><span class="line">       <span class="keyword">while</span> (head) &#123;</span><br><span class="line">           <span class="keyword">if</span> (NodeSet.<span class="built_in">find</span>(head) == NodeSet.<span class="built_in">end</span>()) &#123;</span><br><span class="line">               NodeSet.insert(head);</span><br><span class="line">               head = head-&gt;next;</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis-1"><a href="#complexity-analysis-1" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(nlogn): out loop : O(n) set.find O(logn)</p>
-<p><strong>space complexity</strong></p>
-<p>O(n): need extra set store the list data</p>
-<h2 id="solution2"><a href="#solution2" class="headerlink" title="solution2"></a><strong>solution2</strong></h2><p>faster letcode solution</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!head || !(head-&gt;next)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        ListNode* p1 = head;</span><br><span class="line">        ListNode* p2 = head-&gt;next;</span><br><span class="line">        <span class="keyword">while</span>(p2 != <span class="literal">NULL</span> &amp;&amp; p1 != p2)</span><br><span class="line">        &#123;</span><br><span class="line">            p1 = p1-&gt;next;</span><br><span class="line">            p2 = p2-&gt;next;</span><br><span class="line">            <span class="keyword">if</span>(p2) p2 = p2-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p2 == <span class="literal">NULL</span>? <span class="literal">false</span> : <span class="literal">true</span> ;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h1 id="160-intersection-of-two-linked-lists："><a href="#160-intersection-of-two-linked-lists：" class="headerlink" title="160. intersection-of-two-linked-lists："></a><a href="https://leetcode-cn.com/problems/intersection-of-two-linked-lists" target="_blank" rel="noopener">160. intersection-of-two-linked-lists</a>：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Write a program to find the node at which the intersection of two singly linked lists begins.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * For example, the following two linked lists: </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *    A:          a1 → a2</span></span><br><span class="line"><span class="comment"> *                       ↘</span></span><br><span class="line"><span class="comment"> *                         c1 → c2 → c3</span></span><br><span class="line"><span class="comment"> *                       ↗            </span></span><br><span class="line"><span class="comment"> *    B:     b1 → b2 → b3</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * begin to intersect at node c1.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Notes:</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * If the two linked lists have no intersection at all, return null.</span></span><br><span class="line"><span class="comment"> * The linked lists must retain their original structure after the function returns. </span></span><br><span class="line"><span class="comment"> * You may assume there are no cycles anywhere in the entire linked structure.</span></span><br><span class="line"><span class="comment"> * Your code should preferably run in O(n) time and use only O(1) memory.</span></span><br><span class="line"><span class="comment"> *               </span></span><br><span class="line"><span class="comment"> **********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="solution-1"><a href="#solution-1" class="headerlink" title="solution 1"></a><strong>solution 1</strong></h2><ol>
-<li>outer loop: headA to tailA</li>
-<li>inside loop : headB to tailB</li>
-<li>if nodeA == nodeB: return the intersected node</li>
-<li>tailA and tailB : return NULL</li>
-</ol>
-<p>too slow !!!</p>
-<h2 id="solution-2"><a href="#solution-2" class="headerlink" title="solution 2"></a><strong>solution 2</strong></h2><p>the key is :if two linked-list has intersection, the latter part is same, and berfore intersection has the same lenth of shorter list</p>
-<ol>
-<li>get the list A and list B length</li>
-<li>move the longest list head abs(len(A)-len(B)), make two list the same long</li>
-<li>synced travel both of Lists and check their node are same or not </li>
-</ol>
-<h2 id="code-2"><a href="#code-2" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode *<span class="title">getIntersectionNode</span><span class="params">(ListNode *headA, ListNode *headB)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> lenA = <span class="number">0</span>, lenB = <span class="number">0</span>;</span><br><span class="line">       ListNode* curNode =headA;</span><br><span class="line">       <span class="keyword">while</span> (curNode) &#123;    <span class="comment">//get list A length</span></span><br><span class="line">           lenA++;</span><br><span class="line">           curNode = curNode-&gt;next;</span><br><span class="line">       &#125; </span><br><span class="line"></span><br><span class="line">       curNode =headB;</span><br><span class="line">       <span class="keyword">while</span> (curNode) &#123;    <span class="comment">// get list B length</span></span><br><span class="line">           lenB++;</span><br><span class="line">           curNode = curNode-&gt;next;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (lenA &lt; lenB) &#123;</span><br><span class="line">           swap(headA, headB);  <span class="comment">// make A always be the longer list; will make code easer</span></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">abs</span>(lenA - lenB); ++i) &#123; <span class="comment">// move A to the same length with B</span></span><br><span class="line">           headA = headA-&gt;next;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">while</span> (headA &amp;&amp; headB &amp;&amp; (headA != headB)) &#123; <span class="comment">//!!! caution: two list intersected means ListNode address is the same</span></span><br><span class="line">           headA = headA-&gt;next;</span><br><span class="line">           headB = headB-&gt;next;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> headA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis-2"><a href="#complexity-analysis-2" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse the list one time</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no extra space</p>
-<h1 id="206-reverse-linked-list"><a href="#206-reverse-linked-list" class="headerlink" title="206. reverse-linked-list"></a><a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank" rel="noopener">206. reverse-linked-list</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Reverse a singly linked list.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * click to show more hints.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Hint:</span></span><br><span class="line"><span class="comment"> * A linked list can be reversed either iteratively or recursively. Could you implement both?</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> *               </span></span><br><span class="line"><span class="comment"> **********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-<h2 id="solution1-2"><a href="#solution1-2" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>init head-&gt;next = null;</li>
-<li>head insert traverse the list</li>
-</ol>
-<h2 id="code-3"><a href="#code-3" class="headerlink" title="code"></a><strong>code</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!head || !head-&gt;next) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ListNode* p = head-&gt;next;</span><br><span class="line">        head-&gt;next = <span class="literal">NULL</span>;  <span class="comment">//caution 1: reverse list end flag;</span></span><br><span class="line"></span><br><span class="line">        ListNode* tmpNext = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">while</span> (p) &#123;</span><br><span class="line">            tmpNext = p-&gt;next;  <span class="comment">//caution 2: save the next ListNode;</span></span><br><span class="line">            p-&gt;next = head;</span><br><span class="line">            head = p;</span><br><span class="line">            p = tmpNext;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis-3"><a href="#complexity-analysis-3" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse the list one pass</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no extra space</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/20/leetcode/LinkedList/1_LinkedList/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ink">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="千里之行，始于足下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/10/20/leetcode/LinkedList/1_LinkedList/" itemprop="url">【leetcode】链表编程题解【一】</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-20T23:39:31+08:00">
-                2020-10-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="19-remove-nth-node-from-end-of-list"><a href="#19-remove-nth-node-from-end-of-list" class="headerlink" title="19. remove-nth-node-from-end-of-list"></a><a href="https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/" target="_blank" rel="noopener">19. remove-nth-node-from-end-of-list</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Given a linked list, remove the nth node from the end of list and return its head.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* For example,</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*    Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n = 2.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*    After removing the second node from the end, the linked list becomes 1-&gt;2-&gt;3-&gt;5.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Note:</span></span><br><span class="line"><span class="comment">* Given n will always be valid.</span></span><br><span class="line"><span class="comment">* Try to do this in one pass.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="solution1"><a href="#solution1" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>p and p+n</li>
-<li>p and p+n increase one by one</li>
-<li>if p+n == NULL</li>
-<li>erase p</li>
-<li>special case 1 only one node</li>
-<li>speical case 2 erase the head node</li>
-</ol>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode() : val(0), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x, ListNode *next) : val(x), next(next) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">removeNthFromEnd</span><span class="params">(ListNode* head, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 1. p and p+n</span></span><br><span class="line"><span class="comment">        * 2. store before_p_node</span></span><br><span class="line"><span class="comment">        * 3. if p+n == NULL : erase p</span></span><br><span class="line"><span class="comment">        * special case : n = 1, head has only one value</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        ListNode* p = head;</span><br><span class="line">        ListNode* p_nth = head;</span><br><span class="line">        ListNode* p_before = head;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            p_nth = p_nth-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (p_nth) &#123;</span><br><span class="line">            p_before = p;</span><br><span class="line">            p = p-&gt;next;</span><br><span class="line">            p_nth = p_nth-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (p_before-&gt;next == <span class="literal">NULL</span>) &#123;   <span class="comment">//1. special case 1 only one node</span></span><br><span class="line">            head = <span class="literal">NULL</span>;                </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (p==head)&#123;            <span class="comment">//2. speical case 2 erase the head node</span></span><br><span class="line">            head = head-&gt;next;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            p_before-&gt;next = p_before-&gt;next-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis"><a href="#complexity-analysis" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse one time</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no need extra space</p>
-<h1 id="21-merge-two-sorted-lists"><a href="#21-merge-two-sorted-lists" class="headerlink" title="21. merge-two-sorted-lists"></a><a href="https://leetcode-cn.com/problems/merge-two-sorted-lists/" target="_blank" rel="noopener">21. merge-two-sorted-lists</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Merge two sorted linked lists and return it as a new list. The new list should be </span></span><br><span class="line"><span class="comment">* made by splicing together the nodes of the first two lists.</span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-<h2 id="solution1-1"><a href="#solution1-1" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="function">ListNode <span class="title">dummy</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="number">2.</span> <span class="keyword">while</span> (A-&gt; != <span class="literal">NULL</span> &amp;&amp; B-&gt; != <span class="literal">NULL</span>) </span><br><span class="line"><span class="number">3.</span>      <span class="keyword">if</span> (nodeA &lt; nodeB) </span><br><span class="line"><span class="number">4.</span>          insert A to new_head</span><br><span class="line"><span class="number">5.</span>      <span class="keyword">else</span></span><br><span class="line"><span class="number">6.</span>          insert B to new_head</span><br><span class="line"><span class="number">7.</span> <span class="keyword">while</span> (A-&gt; != <span class="literal">NULL</span>) append left A to new_head</span><br><span class="line"><span class="number">8.</span> <span class="keyword">while</span> (B-&gt; != <span class="literal">NULL</span>) append left B to new_head</span><br><span class="line"><span class="number">9.</span> <span class="keyword">return</span> dummy.</span><br></pre></td></tr></table></figure>
-
-<h2 id="code-1"><a href="#code-1" class="headerlink" title="code"></a>code</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode() : val(0), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x, ListNode *next) : val(x), next(next) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">mergeTwoLists</span><span class="params">(ListNode* l1, ListNode* l2)</span> </span>&#123;</span><br><span class="line">        <span class="function">ListNode <span class="title">dummy</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line">        ListNode* cur = &amp;dummy;</span><br><span class="line">        <span class="keyword">while</span> (l1 &amp;&amp; l2) &#123;  <span class="comment">// l1 and l2 is not null</span></span><br><span class="line">            <span class="keyword">if</span> (l1-&gt;val &lt;= l2-&gt;val) &#123;</span><br><span class="line">                cur-&gt;next = l1;</span><br><span class="line">                l1 = l1-&gt;next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                cur-&gt;next = l2;</span><br><span class="line">                l2 = l2-&gt;next;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cur = cur-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (l1) &#123;</span><br><span class="line">            cur-&gt;next = l1;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            cur-&gt; next = l2;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="complexity-analysis-1"><a href="#complexity-analysis-1" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse list one time</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no need extra space</p>
-<p><strong>solution2</strong><br>merge the 2nd list into 1st list</p>
-<p><strong>time complexity</strong></p>
-<p><strong>space complexity</strong></p>
-<h1 id="83-remove-duplicates-from-sorted-list"><a href="#83-remove-duplicates-from-sorted-list" class="headerlink" title="83. remove-duplicates-from-sorted-list"></a><a href="https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/" target="_blank" rel="noopener">83. remove-duplicates-from-sorted-list</a></h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************************************************************** </span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* Given a sorted linked list, delete all duplicates such that each element appear only once.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">* For example,</span></span><br><span class="line"><span class="comment">* Given 1-&gt;1-&gt;2, return 1-&gt;2.</span></span><br><span class="line"><span class="comment">* Given 1-&gt;1-&gt;2-&gt;3-&gt;3, return 1-&gt;2-&gt;3.</span></span><br><span class="line"><span class="comment">* </span></span><br><span class="line"><span class="comment">*               </span></span><br><span class="line"><span class="comment">**********************************************************************************/</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="solution1-2"><a href="#solution1-2" class="headerlink" title="solution1"></a><strong>solution1</strong></h2><ol>
-<li>sorted linked list</li>
-<li>traverse list p and p-&gt;next is not NULL</li>
-<li>if p-&gt;val == p-&gt;next-&gt;val: erase p-&gt;next; continue</li>
-<li>else p = p-&gt;next;</li>
-</ol>
-<h2 id="code-2"><a href="#code-2" class="headerlink" title="code"></a>code</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * struct ListNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     ListNode *next;</span></span><br><span class="line"><span class="comment"> *     ListNode(int x) : val(x), next(NULL) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">deleteDuplicates</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        ListNode* p = head;</span><br><span class="line">        <span class="keyword">while</span> (p &amp;&amp; p-&gt;next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;val == p-&gt;next-&gt;val) &#123;</span><br><span class="line">                p-&gt;next = p-&gt;next-&gt;next;</span><br><span class="line">                <span class="keyword">continue</span>;       <span class="comment">//caution :no need p to next</span></span><br><span class="line">            &#125;</span><br><span class="line">            p = p-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="complexity-analysis-2"><a href="#complexity-analysis-2" class="headerlink" title="complexity analysis"></a>complexity analysis</h2><p><strong>time complexity</strong></p>
-<p>O(n): only traverse list one time</p>
-<p><strong>space complexity</strong></p>
-<p>O(1): no need extra space</p>
-
-          
+<table>
+<thead>
+<tr>
+<th>-rwxrwxrwx</th>
+<th>详解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>第一个字段 -代表文件，d代表目录，l代表链接，c代表字符型设备，b代表块设备，n代表网络设备</td>
+</tr>
+<tr>
+<td>rwx</td>
+<td>代表所有者的权限：这个文件对应就是root  可读、可写、可执行</td>
+</tr>
+<tr>
+<td>r-x</td>
+<td>代表同组其他用户的权限：可读、不可写、可执行</td>
+</tr>
+<tr>
+<td>r–</td>
+<td>代表其他用户的其他权限：可读、不可写、不可执行</td>
+</tr>
+</tbody></table>
+<h1 id="capabilities-机制"><a href="#capabilities-机制" class="headerlink" title="capabilities  机制"></a>capabilities  机制</h1><p><strong>问题：</strong></p>
+<p><strong>1. 编写的daemon不需要root用户的所有权限，独立账号运行安全性更高</strong></p>
+<p><strong>2. 更改为普通用户拉起daemon，需要读取部分root权限才可以正常运行业务</strong></p>
+<p><strong>解决方法：</strong></p>
+<p><strong>1. 使用systemd service 管理，指定用户和用户启动进程</strong></p>
+<p><strong>2. 使用linux capabilitie 管理进程的权限，保障最小权限正常运行业务</strong></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/08/02/Linux/Linux_capabilities/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1015,8 +715,7 @@
 
       
         
-          
-            <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><p>Linux信号处理机制的一种，收到对应信号，会产生核心存储文件，同时进程终止。core文件会把保存当时进程的内存信息，可以通过gdb进行调试。</p>
+          <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><p>Linux信号处理机制的一种，收到对应信号，会产生核心存储文件，同时进程终止。core文件会把保存当时进程的内存信息，可以通过gdb进行调试。</p>
 <h1 id="默认行为core的信号列表"><a href="#默认行为core的信号列表" class="headerlink" title="默认行为core的信号列表"></a>默认行为core的信号列表</h1><table>
 <thead>
 <tr>
@@ -1046,8 +745,6 @@
 <p>修改core dump参数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&#x2F;root&#x2F;core_dump&#x2F;core-%s-%e-%p-%t&quot; &gt; &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;core_pattern</span><br></pre></td></tr></table></figure>
 
-
-
 <h1 id="core文件生成限制"><a href="#core文件生成限制" class="headerlink" title="core文件生成限制"></a>core文件生成限制</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 11039</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 65536</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 11039</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
 
 <ol>
@@ -1060,33 +757,13 @@
 
 <p>Linux编程中可以使用getrlimit和setrlimit进行设置</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getrlimit</span><span class="params">(<span class="keyword">int</span> resource, struct rlimit *rlim)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setrlimit</span><span class="params">(<span class="keyword">int</span> resource, <span class="keyword">const</span> struct rlimit *rlim)</span></span>;</span><br><span class="line">RLIMIT_CORE</span><br><span class="line">     Maximum <span class="built_in">size</span> of core file.  When <span class="number">0</span> no core dump files are created.  When nonzero, larger dumps  are  truncated  to <span class="keyword">this</span> <span class="built_in">size</span>.</span><br></pre></td></tr></table></figure>
-
-<h1 id="实战调试core"><a href="#实战调试core" class="headerlink" title="实战调试core"></a>实战调试core</h1><h2 id="SIGABRT"><a href="#SIGABRT" class="headerlink" title="SIGABRT"></a>SIGABRT</h2><p>代码及运行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost core]# cat assert.c</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	int i &#x3D; 0;</span><br><span class="line">    assert(i);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost core]# ./assert</span><br><span class="line">assert: assert.c:<span class="number">5</span>: main: Assertion `i<span class="number">'</span> failed.</span><br><span class="line">Aborted (core dumped)</span><br><span class="line">[root@localhost core]<span class="meta"># ls -l /root/core_dump/</span></span><br><span class="line">total <span class="number">160</span></span><br><span class="line">-rw-------. <span class="number">1</span> root root <span class="number">385024</span> Aug  <span class="number">8</span> <span class="number">17</span>:<span class="number">21</span> /root/core_dump/core<span class="number">-6</span>-assert<span class="number">-29752</span><span class="number">-1596878484</span></span><br></pre></td></tr></table></figure>
-
-<p>可以使用gdb进行调试：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost core]# gdb .&#x2F;assert &#x2F;root&#x2F;core_dump&#x2F;core-6-assert-29752-1596878484</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-114.el7</span><br><span class="line">Copyright (C) 2013 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http:&#x2F;&#x2F;gnu.org&#x2F;licenses&#x2F;gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;</span><br><span class="line">and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-redhat-linux-gnu&quot;.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;gdb&#x2F;bugs&#x2F;&gt;...</span><br><span class="line">Reading symbols from &#x2F;root&#x2F;code&#x2F;core&#x2F;assert...(no debugging symbols found)...done.</span><br><span class="line">[New LWP 29752]</span><br><span class="line">Core was generated by &#96;.&#x2F;assert&#39;.</span><br><span class="line">Program terminated with signal 6, Aborted.</span><br><span class="line">#0  0x00007f22b0f352c7 in raise () from &#x2F;lib64&#x2F;libc.so.6</span><br><span class="line">Missing separate debuginfos, use: debuginfo-install glibc-2.17-260.el7_6.6.x86_64</span><br><span class="line">(gdb) bt</span><br><span class="line">#0  0x00007f22b0f352c7 in raise () from &#x2F;lib64&#x2F;libc.so.6</span><br><span class="line">#1  0x00007f22b0f369b8 in abort () from &#x2F;lib64&#x2F;libc.so.6</span><br><span class="line">#2  0x00007f22b0f2e0e6 in __assert_fail_base () from &#x2F;lib64&#x2F;libc.so.6</span><br><span class="line">#3  0x00007f22b0f2e192 in __assert_fail () from &#x2F;lib64&#x2F;libc.so.6</span><br><span class="line">#4  0x000000000040054b in main ()</span><br></pre></td></tr></table></figure>
-
-<p>可以看到上面没有行号，我们编译一个debug版本的assert进行调试：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">gcc assert.c -g -o assert</span><br><span class="line">[root@localhost core]# gdb ./assert_debug /root/core_dump/core-6-assert-29752-1596878484</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-114.el7</span><br><span class="line">Copyright (C) 2013 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.  Type "show copying"</span><br><span class="line">and "show warranty" for details.</span><br><span class="line">This GDB was configured as "x86_64-redhat-linux-gnu".</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;...</span><br><span class="line">Reading symbols from /root/code/core/assert_debug...done.</span><br><span class="line"></span><br><span class="line">warning: core file may not match specified executable file.</span><br><span class="line">[New LWP 29752]</span><br><span class="line">Core was generated by `./assert'.</span><br><span class="line">Program terminated with signal 6, Aborted.</span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00007f22b0f352c7 <span class="keyword">in</span> raise () from /lib64/libc.so.6</span></span><br><span class="line">Missing separate debuginfos, use: debuginfo-install glibc-2.17-260.el7_6.6.x86_64</span><br><span class="line">(gdb) bt</span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00007f22b0f352c7 <span class="keyword">in</span> raise () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">1  0x00007f22b0f369b8 <span class="keyword">in</span> abort () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2  0x00007f22b0f2e0e6 <span class="keyword">in</span> __assert_fail_base () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">3  0x00007f22b0f2e192 <span class="keyword">in</span> __assert_fail () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">4  0x000000000040054b <span class="keyword">in</span> main () at assert.c:5</span></span><br><span class="line">(gdb) f 4</span><br><span class="line"><span class="meta">#</span><span class="bash">4  0x000000000040054b <span class="keyword">in</span> main () at assert.c:5</span></span><br><span class="line">5           assert(i);</span><br><span class="line">(gdb) p i</span><br><span class="line"><span class="meta">$</span><span class="bash">1 = 0</span></span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
-
-<p>可以看到是由于i = 0，导致的断言错误，出core</p>
-<h2 id="SIGSEGV"><a href="#SIGSEGV" class="headerlink" title="SIGSEGV"></a>SIGSEGV</h2><p>代码如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span>* test = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, test);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编译运行结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost core]# ./null_ptr</span><br><span class="line">Segmentation fault (core dumped)</span><br><span class="line">[root@localhost core]# ls -l /root/core_dump/</span><br><span class="line">total 452</span><br><span class="line">-rw-------. 1 root root 245760 Aug  8 17:28 core-11-a.out-31193-1596878908</span><br><span class="line">-rw-------. 1 root root 245760 Aug  8 17:31 core-11-null_ptr-31766-1596879081</span><br><span class="line">-rw-------. 1 root root 385024 Aug  8 17:21 core-6-assert-29752-1596878484</span><br></pre></td></tr></table></figure>
-
-<p>使用gdb进行调试，分析进程真正的出core原因：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost core]# gdb ./null_ptr /root/core_dump/core-11-null_ptr-31766-1596879081</span><br><span class="line">GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-114.el7</span><br><span class="line">Copyright (C) 2013 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.  Type "show copying"</span><br><span class="line">and "show warranty" for details.</span><br><span class="line">This GDB was configured as "x86_64-redhat-linux-gnu".</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;...</span><br><span class="line">Reading symbols from /root/code/core/null_ptr...done.</span><br><span class="line">[New LWP 31766]</span><br><span class="line">Core was generated by `./null_ptr'.</span><br><span class="line">Program terminated with signal 11, Segmentation fault.</span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00007fe1476df531 <span class="keyword">in</span> __strlen_sse2 () from /lib64/libc.so.6</span></span><br><span class="line">Missing separate debuginfos, use: debuginfo-install glibc-2.17-260.el7_6.6.x86_64</span><br><span class="line">(gdb) bt</span><br><span class="line"><span class="meta">#</span><span class="bash">0  0x00007fe1476df531 <span class="keyword">in</span> __strlen_sse2 () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">1  0x00007fe1476c3602 <span class="keyword">in</span> puts () from /lib64/libc.so.6</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2  0x0000000000400539 <span class="keyword">in</span> main () at null_ptr.c:5</span></span><br><span class="line">(gdb) f 2</span><br><span class="line"><span class="meta">#</span><span class="bash">2  0x0000000000400539 <span class="keyword">in</span> main () at null_ptr.c:5</span></span><br><span class="line">5           printf("%s\n", test);</span><br><span class="line">(gdb) p test</span><br><span class="line"><span class="meta">$</span><span class="bash">1 = 0x0</span></span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，printf访问test的内容进行打印，但是因为test是一个null指针，导致访问非法内存，进程内核的11号信号，异常退出，并出core</p>
-<h1 id="Linux-core-内核源码"><a href="#Linux-core-内核源码" class="headerlink" title="Linux core 内核源码"></a>Linux core 内核源码</h1><p>待续</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/08/Linux/Linux_coredump/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1166,7 +843,7 @@
               
                 <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1207,7 +884,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

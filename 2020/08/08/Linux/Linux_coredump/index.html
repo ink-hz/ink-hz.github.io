@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="千里之行，始于足下">
 <meta property="og:description" content="基础概念Linux信号处理机制的一种，收到对应信号，会产生核心存储文件，同时进程终止。core文件会把保存当时进程的内存信息，可以通过gdb进行调试。 默认行为core的信号列表   名称 信号值 描述    SIGQUIT 3 终端退出   SIGSEGV 11 无效的内存引用   SIGSYS 31 终端退出   core文件参数设置12345678910111213&#x2F;proc&#x2F;sys&#x2F;ker">
 <meta property="article:published_time" content="2020-08-08T08:16:33.348Z">
-<meta property="article:modified_time" content="2020-08-08T15:57:34.105Z">
+<meta property="article:modified_time" content="2021-08-02T14:53:07.142Z">
 <meta property="article:author" content="ink">
 <meta name="twitter:card" content="summary">
 
@@ -358,8 +358,6 @@
 <p>修改core dump参数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&#x2F;root&#x2F;core_dump&#x2F;core-%s-%e-%p-%t&quot; &gt; &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;core_pattern</span><br></pre></td></tr></table></figure>
 
-
-
 <h1 id="core文件生成限制"><a href="#core文件生成限制" class="headerlink" title="core文件生成限制"></a>core文件生成限制</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 11039</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 65536</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 11039</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
 
 <ol>
@@ -372,7 +370,7 @@
 
 <p>Linux编程中可以使用getrlimit和setrlimit进行设置</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getrlimit</span><span class="params">(<span class="keyword">int</span> resource, struct rlimit *rlim)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setrlimit</span><span class="params">(<span class="keyword">int</span> resource, <span class="keyword">const</span> struct rlimit *rlim)</span></span>;</span><br><span class="line">RLIMIT_CORE</span><br><span class="line">     Maximum <span class="built_in">size</span> of core file.  When <span class="number">0</span> no core dump files are created.  When nonzero, larger dumps  are  truncated  to <span class="keyword">this</span> <span class="built_in">size</span>.</span><br></pre></td></tr></table></figure>
-
+<a id="more"></a>
 <h1 id="实战调试core"><a href="#实战调试core" class="headerlink" title="实战调试core"></a>实战调试core</h1><h2 id="SIGABRT"><a href="#SIGABRT" class="headerlink" title="SIGABRT"></a>SIGABRT</h2><p>代码及运行结果如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost core]# cat assert.c</span><br><span class="line">#include &lt;assert.h&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">	int i &#x3D; 0;</span><br><span class="line">    assert(i);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -506,7 +504,7 @@
               
                 <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -563,7 +561,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

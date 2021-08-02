@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="systemd机制systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。 1root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;systemd --switched-root --system --deseria">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 如何使用capabilities机制实现进程权限管理">
+<meta property="og:url" content="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/index.html">
+<meta property="og:site_name" content="千里之行，始于足下">
+<meta property="og:description" content="systemd机制systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。 1root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;systemd --switched-root --system --deseria">
+<meta property="article:published_time" content="2021-08-02T14:19:26.367Z">
+<meta property="article:modified_time" content="2021-08-02T14:55:59.132Z">
+<meta property="article:author" content="ink">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/"/>
+
+
+
+
+
+  <title>Linux 如何使用capabilities机制实现进程权限管理 | 千里之行，始于足下</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">千里之行，始于足下</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ink">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="千里之行，始于足下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux 如何使用capabilities机制实现进程权限管理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-02T22:19:26+08:00">
+                2021-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="systemd机制"><a href="#systemd机制" class="headerlink" title="systemd机制"></a>systemd机制</h1><p>systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 /usr/lib/systemd/systemd --switched-root --system --deserialize 22</span><br></pre></td></tr></table></figure>
+
+<p>systemd进程通常不会被用户调用，而是由/sbin/init软链接，在最开始的启动过程拉起。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# ls -l /sbin/init</span><br><span class="line">lrwxrwxrwx 1 root root 22 Jul 11  2019 /sbin/init -&gt; ../lib/systemd/systemd</span><br></pre></td></tr></table></figure>
+
+<h2 id="systemd-添加nginx服务实践"><a href="#systemd-添加nginx服务实践" class="headerlink" title="systemd 添加nginx服务实践"></a>systemd 添加nginx服务实践</h2><ol>
+<li><p>添加service</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/systemd/system/nginx.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=nginx</span><br><span class="line">After=aliyun.target</span><br><span class="line">Wants=aliyun.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/local/nginx/sbin/nginx</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=1min</span><br><span class="line">StartLimitInterval=36000</span><br><span class="line">StartLimitBurst=5</span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>systemd load新的服务文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统启动过程中拉起服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动拉起服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">[root@ink system]# service nginx start</span><br><span class="line">Redirecting to /bin/systemctl start nginx.service</span><br><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">root      3796  0.0  0.0  25004   768 ?        Ss   11:06   0:00 nginx: master process /usr/local/nginx/sbin/nginx</span><br><span class="line">nobody    3797  0.0  0.1  25420  1484 ?        S    11:06   0:00  \_ nginx: worker process</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br><span class="line">[root@ink system]# systemctl status nginx.service</span><br><span class="line">● nginx.service - nginx</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/nginx.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务启动的日志</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# journalctl -u nginx.service</span><br><span class="line">-- Logs begin at Thu 2019-07-11 11:10:15 CST, end at Fri 2021-07-23 11:40:01 CST. --</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:16:41 ink systemd[1]: Started nginx.</span><br><span class="line">Jul 23 11:25:48 ink systemd[1]: Started nginx.</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:30:43 ink systemd[1]: Started nginx.</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><a href="https://man7.org/linux/man-pages/man1/systemd.1.html" target="_blank" rel="noopener">systemd(1) — Linux manual page</a></p>
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units" target="_blank" rel="noopener">How To Use Systemctl to Manage Systemd Services and Units</a></p>
+<h1 id="进程权限管理"><a href="#进程权限管理" class="headerlink" title="进程权限管理"></a>进程权限管理</h1><h2 id="用户-组"><a href="#用户-组" class="headerlink" title="用户/组"></a>用户/组</h2><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
+<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护</p>
+<ol>
+<li><p>Linux 查看所有用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Linux 查看用户组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/group</span><br><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line">daemon:x:2:</span><br><span class="line">sys:x:3:</span><br><span class="line">adm:x:4:</span><br></pre></td></tr></table></figure></li>
+<li><p>getent<br>linux中用于提供查询用户信息的命令</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getent passwd</span><br><span class="line">getent group</span><br><span class="line">getent group daemon</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>Linux新增用户<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# useradd test -U -p 123</span><br><span class="line">[root@ink system]# su test</span><br><span class="line">[test@ink system]$ ls -l</span><br><span class="line">total 40</span><br><span class="line">-rw-r--r--  1 root root  492 Jul 21 01:17 aliyun.service</span><br><span class="line">-rw-r--r--  1 root root  214 Jul 21 01:17 AssistDaemon.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 basic.target.wants</span><br><span class="line">lrwxrwxrwx. 1 root root   37 Jul 11  2019 default.target -&gt; /lib/systemd/system/multi-user.target</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 default.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 getty.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 local-fs.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 23 11:15 multi-user.target.wants</span><br><span class="line">-rw-r--r--  1 root root  248 Jul 23 11:28 nginx.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 sysinit.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 system-update.target.wants</span><br><span class="line">[test@ink system]$ mv nginx.service nginx.service.back</span><br><span class="line">mv: cannot move ‘nginx.service’ to ‘nginx.service.back’: Permission denied</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>超级用户：root id 为0，有着系统中最大的权限，可以访问系统中的任何文件，一般使用root账号来执行系统管理的任务。上面的例子可以看出普通用户test，无法修改nginx.service。</p>
+<h2 id="进程权限"><a href="#进程权限" class="headerlink" title="进程权限"></a>进程权限</h2><ol>
+<li><p>编写demo进程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    daemon(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gcc test.c -o demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>root账户拉起test进程，并查看进程的用户和用户组，都为root</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# ./demo</span><br><span class="line">[root@ink code]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1609 root     root     ./demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>切换test用户，拉起进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# kill -9 $(pidof demo)</span><br><span class="line">[root@ink code]# su test</span><br><span class="line">[test@ink code]$ ./demo</span><br><span class="line">[test@ink code]$ ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1702 test     test     ./demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件的权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# ls -l test</span><br><span class="line">-rw-r--r-- 1 root root 0 Jul 26 10:13 test</span><br><span class="line"></span><br><span class="line">[root@ink test]# chmod 754 ./test</span><br><span class="line">[root@ink test]# ls -l</span><br><span class="line">total 0</span><br><span class="line">-rwxr-xr-- 1 root root 0 Jul 26 10:13 test</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>-rwxrwxrwx</th>
+<th>详解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>第一个字段 -代表文件，d代表目录，l代表链接，c代表字符型设备，b代表块设备，n代表网络设备</td>
+</tr>
+<tr>
+<td>rwx</td>
+<td>代表所有者的权限：这个文件对应就是root  可读、可写、可执行</td>
+</tr>
+<tr>
+<td>r-x</td>
+<td>代表同组其他用户的权限：可读、不可写、可执行</td>
+</tr>
+<tr>
+<td>r–</td>
+<td>代表其他用户的其他权限：可读、不可写、不可执行</td>
+</tr>
+</tbody></table>
+<h1 id="capabilities-机制"><a href="#capabilities-机制" class="headerlink" title="capabilities  机制"></a>capabilities  机制</h1><p><strong>问题：</strong></p>
+<p><strong>1. 编写的daemon不需要root用户的所有权限，独立账号运行安全性更高</strong></p>
+<p><strong>2. 更改为普通用户拉起daemon，需要读取部分root权限才可以正常运行业务</strong></p>
+<p><strong>解决方法：</strong></p>
+<p><strong>1. 使用systemd service 管理，指定用户和用户启动进程</strong></p>
+<p><strong>2. 使用linux capabilitie 管理进程的权限，保障最小权限正常运行业务</strong></p>
+<a id="more"></a>
+
+<ol>
+<li>指定用户和用户组拉起demo<br>/etc/systemd/system/demo.service中指定User, Group<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/systemd/system/demo.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=test demo process</span><br><span class="line">After=aliyun.target</span><br><span class="line">Wants=aliyun.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=test</span><br><span class="line">Group=test</span><br><span class="line"></span><br><span class="line">ExecStart=/home/code/demo</span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@ink system]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line">[root@ink system]# systemctl start demo.service</span><br><span class="line">[root@ink system]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 6050 test     test     /home/code/demo</span><br><span class="line">[root@ink system]# journalctl -u demo.service</span><br><span class="line">-- Logs begin at Thu 2019-07-11 11:10:15 CST, end at Mon 2021-07-26 10:46:51 CST. --</span><br><span class="line">Jul 26 10:46:51 ink systemd[1]: Started test demo process.</span><br></pre></td></tr></table></figure>
+<h2 id="capabilities简介"><a href="#capabilities简介" class="headerlink" title="capabilities简介"></a>capabilities简介</h2>传统的UNIX通过区别：特权进程(user ID 0 root进程)和非特权进程，来达到权限检查的目的。特权进程可以通过内核所有的权限检查，但是非特权进程基于（有效的UID，有效GID和补充组列表）进行完全完全权限检查。</li>
+</ol>
+<p>从内核2.2版本开始，Linux划分特权进程的权限进行更详细的划分，也就是capabilities，每一个单元的权限都可以独立启用和禁用。</p>
+<h2 id="capabilities权限详解"><a href="#capabilities权限详解" class="headerlink" title="capabilities权限详解"></a>capabilities权限详解</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>capability允许的操作或者行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CAP_AUDIT_CONTROL (since Linux 2.6.11)</td>
+<td>启用或者禁用内核审计，更改审计过滤规则，检索审计状态和过滤规则</td>
+</tr>
+<tr>
+<td>CAP_AUDIT_READ (since Linux 3.16)</td>
+<td>允许通过socket读取审计日志</td>
+</tr>
+<tr>
+<td>CAP_AUDIT_WRITE (since Linux 2.6.11)</td>
+<td>可以写入内核审计日志</td>
+</tr>
+<tr>
+<td>CAP_BLOCK_SUSPEND (since Linux 3.5)</td>
+<td>使用可以阻止系统挂起的属性：epoll EPOLLWAKEUP flag会使用到对应权限</td>
+</tr>
+<tr>
+<td>CAP_BPF (since Linux 5.8)</td>
+<td>Linux 5.8才会被加入，用于从CAP_SYS_ADMIN capability中分割出BPF的功能</td>
+</tr>
+<tr>
+<td>CAP_CHECKPOINT_RESTORE (since Linux 5.9)</td>
+<td>Linux 5.9才会被加入，用于从CAP_SYS_ADMIN capability中分割出checkpoint/restore功能</td>
+</tr>
+<tr>
+<td>CAP_CHOWN</td>
+<td>可以任性修改文件的所有者权限（chown）</td>
+</tr>
+<tr>
+<td>CAP_DAC_OVERRIDE</td>
+<td>绕过文件读，写，和执行权限检查 (DAC: discretionary access control)</td>
+</tr>
+<tr>
+<td>CAP_DAC_READ_SEARCH</td>
+<td>绕过文件的读权限检查，目录读权限和执行权限检查；<br/>调用 open_by_handle_at；<br/>使用 linkat AT_EMPTY_PATH flag</td>
+</tr>
+<tr>
+<td>CAP_FOWNER</td>
+<td>绕过文件属性ID和进程属性ID相匹配的权限检查。(chmod utime)，除CAP_DAC_OVERRIDE和CAP_DAC_READ_SEARC覆盖之外的操作；<br/>设置任意文件的innode标记；<br/>设置任意文件的访问控制列表(ACL);<br/>文件删除操作中忽略文件粘位；<br/>在任何用户所有的粘性文件夹中修改用户的拓展属性；<br/>指定open fcntl任意文件的O_NOATIME属性</td>
+</tr>
+<tr>
+<td>CAP_FSETID</td>
+<td>当文件修改的时候，不清理 set-user-ID 和 set-group-ID模式位；<br/>支持进程GID不匹配文件GID属性时，可以设置文件的set-group-ID位</td>
+</tr>
+<tr>
+<td>CAP_IPC_LOCK</td>
+<td>允许锁定共享内存片段(mlock(2), mlockall(2), mmap(2), shmctl(2))；<br/>允许分配内存使用大页(memfd_create(2) mmap(2), shmctl(2)).</td>
+</tr>
+<tr>
+<td>CAP_IPC_OWNER</td>
+<td>绕过System V IPC对象的操作权限检查</td>
+</tr>
+<tr>
+<td>CAP_KILL</td>
+<td>绕过发送信号的权限检查（kill）。包含ioctl KDSIGACCEPT的操作</td>
+</tr>
+<tr>
+<td>CAP_LEASE (since Linux 2.4)</td>
+<td>针对任意文件可以建议租约：允许修改文件锁的 FL_LEASE 标志</td>
+</tr>
+<tr>
+<td>CAP_LINUX_IMMUTABLE</td>
+<td>支持设置inode FS_APPEND_FL 和 FS_IMMUTABLE_FL 标记；<br/>FS_APPEND_FL：文件只能被O_APPEND标记打开；<br/>FS_IMMUTABLE_FL：文件是不能改变的，不允许修改文件内容和属性</td>
+</tr>
+<tr>
+<td>CAP_MAC_ADMIN (since Linux 2.6.25)</td>
+<td>允许MAC配置或者状态改变。Implemented for the Smack Linux Security Module (LSM).</td>
+</tr>
+<tr>
+<td>CAP_MAC_OVERRIDE (since Linux 2.6.25)</td>
+<td>允许覆盖MAC（Mandatory Access Control）Implemented for the Smack Linux Security</td>
+</tr>
+<tr>
+<td>CAP_MKNOD (since Linux 2.4)</td>
+<td>允许使用mknod创建特殊文件</td>
+</tr>
+<tr>
+<td>CAP_NET_ADMIN</td>
+<td>执行网络相关的各种操作<br/>接口配置；<br/>管理IP防护墙，masquerading和会话管理；<br/>允许修改路由表；<br/>允许透明代理时绑定任意地址；<br/>支持设置TOS（type-of-service）；<br/>支持清理驱动统计；<br/>支持设置混淆模式；<br/>支持开启多播；<br/>支持setsockopt使用如下socket 选项：SO_DEBUG, SO_MARK, SO_PRIORITY (for a priority outside the range 0 to 6), SO_RCVBUFFORCE, and SO_SNDBUFFORCE.</td>
+</tr>
+<tr>
+<td>CAP_NET_BIND_SERVICE</td>
+<td>支持绑定套接字到互联网域特权端口（端口号小于1024）</td>
+</tr>
+<tr>
+<td>CAP_NET_BROADCAST</td>
+<td>允许创建和监听广播和多播套接字</td>
+</tr>
+<tr>
+<td>CAP_NET_RAW</td>
+<td>支持使用RAW和PACKET套接字；<br/>允许透明代理时绑定任何地址</td>
+</tr>
+<tr>
+<td>CAP_PERFMON (since Linux 5.8)</td>
+<td>Linux5.8才会引入，用于从CAP_SYS_ADMIN capability中分割出性能监控功能</td>
+</tr>
+<tr>
+<td>CAP_SETGID</td>
+<td>允许针对进程的GID和补充GID列表进行任意操作；<br/>在通过UNIX域套接字传递套接字证书时，忽略GID；<br/>允许写用户组ID映射在用户名称空间</td>
+</tr>
+<tr>
+<td>CAP_SETFCAP (since Linux 2.6.24)</td>
+<td>允许针对文件设置任意capabilities</td>
+</tr>
+<tr>
+<td>CAP_SETPCAP</td>
+<td>如果文件capabilities支持(i.e., since Linux 2.6.24)：允许添加任意capability给进程锁创建的线程</td>
+</tr>
+<tr>
+<td>CAP_SETUID</td>
+<td>允许针对进程的UID和补充UID列表进行任意操作；<br/>在通过UNIX域套接字传递套接字证书时，忽略UID；<br/>允许写用户ID映射在用户名称空间</td>
+</tr>
+<tr>
+<td>CAP_SYS_ADMIN</td>
+<td>这个属性能力设置过高了；<br/>允许执行系统管理操作（mount umount sethostname等等）；<br/>执行特权日志操作(syslog)；<br/>支持执行VM86_REQUEST_IRQ vm86命令；<br/>允许访问checkpoint/restore；<br/>允许执行BPF 操作；<br/>允许执行性能监控机制；<br/>允许针对任何System V IPC对象执行IPC_SET和IPC_RMID等操作；<br/>允许覆盖RLIMIT_NPROC资源限制；<br/>允许执行信任和安全拓展等属性的操作（xattr）；<br/>允许使用lookup_dcookie；<br/>允许使用ioprio_set设置IOPRIO_CLASS_RT 和IOPRIO_CLASS_IDLE IO调度任务；<br/></td>
+</tr>
+<tr>
+<td>CAP_SYS_BOOT</td>
+<td>允许使用 reboot和kexec_load</td>
+</tr>
+<tr>
+<td>CAP_SYS_CHROOT</td>
+<td>允许使用chroot；<br/>允许通过setns修改名称空间setns(2).</td>
+</tr>
+<tr>
+<td>CAP_SYS_MODULE</td>
+<td>允许加载和卸载内核模块(init_module delete_module)</td>
+</tr>
+<tr>
+<td>CAP_SYS_NICE</td>
+<td>允许调低进程的nice值和改变其他任意进行的nice值；<br/>允许设置调用进程的实时调度策略，设置任意进程的调度策略和优先级；<br/>允许设置任意进程的CPU亲密度；<br/>允许设置任意进程的IO调度类和优先级；<br/>运用migrate_pages到任意进程，使得进程可以迁移到任何节点；<br/>允许针对任何进程使用move_pages（移动一组的处理的页面不同的NUMA节点）；<br/>允许使用mbind和move_pages的MPOL_MF_MOVE_ALL 标志</td>
+</tr>
+<tr>
+<td>CAP_SYS_PACCT</td>
+<td>允许适应acct（开启或者关闭进程记账功能）</td>
+</tr>
+<tr>
+<td>CAP_SYS_PTRACE</td>
+<td>允许使用ptrace追踪任何进程；<br/>允许对任意进程使用get_robust_list（获取强健futexes的清单）；<br/>允许使用process_vm_readv从到任意进程的内存中接收数据，使用process_vm_writev传送数据到任意进程的内存中；<br/>允许使用kcmp检查进程</td>
+</tr>
+<tr>
+<td>CAP_SYS_RAWIO</td>
+<td>允许使用I/O端口操作(iopl 和 ioperm)；<br/>允许访问/proc/kcore；<br/>允许执行ioctl的FIBMAP操作（get the file system block number of a file）；<br/>允许打开需要访问x86模型的设备-特殊的寄存器(MSRS)；<br/>允许更新/proc/sys/vm/mmap_min_addr；<br/>允许映射/proc/bus/pci中的文件；<br/>允许打开/dev/mem和/dev/kmem；<br/>允许执行各种SCSI设备命令；<br/>允许在hspa和cciss设备上执行一些特殊的操作；<br/>允许在其他设备上执行一系列设备特殊的操作</td>
+</tr>
+<tr>
+<td>CAP_SYS_RESOURCE</td>
+<td>xxx</td>
+</tr>
+<tr>
+<td>CAP_SYS_TIME</td>
+<td>允许设置系统时钟（settimeofday(2), stime(2), adjtimex(2))；<br/>允许设置实时（硬件）时钟</td>
+</tr>
+<tr>
+<td>CAP_SYS_TTY_CONFIG</td>
+<td>允许使用vhangup（当前终端虚拟挂起）；<br/>允许在虚拟终端使用各种特权ioctl操作</td>
+</tr>
+<tr>
+<td>CAP_SYSLOG (since Linux 2.6.37)</td>
+<td>允许执行特权syslog操作；<br/>/proc/sys/kernel/kptr_restrict为1时，允许通过通过/proc和其他接口查看内核地址</td>
+</tr>
+<tr>
+<td>CAP_WAKE_ALARM (since Linux 3.0)</td>
+<td>触发可以唤醒系统的操作（CLOCK_REALTIME_ALARM and CLOCK_BOOTTIME_ALARM timers)</td>
+</tr>
+</tbody></table>
+<h2 id="getcaps-getcap-setcap的使用"><a href="#getcaps-getcap-setcap的使用" class="headerlink" title="getcaps/getcap/setcap的使用"></a>getcaps/getcap/setcap的使用</h2><p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=448594" target="_blank" rel="noopener">https://bugzilla.redhat.com/show_bug.cgi?id=448594</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Description of problem:</span><br><span class="line">If any file capabilities are set on an executable, the value of environment</span><br><span class="line">variable LD_LIBRARY_PATH is ignored when that executable is run.</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/14/algorithm/sort/" rel="next" title="【算法】常见排序算法分析">
+                <i class="fa fa-chevron-left"></i> 【算法】常见排序算法分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">ink</p>
+              <p class="site-description motion-element" itemprop="description">分享日常技术总结</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#systemd机制"><span class="nav-number">1.</span> <span class="nav-text">systemd机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#systemd-添加nginx服务实践"><span class="nav-number">1.1.</span> <span class="nav-text">systemd 添加nginx服务实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进程权限管理"><span class="nav-number">2.</span> <span class="nav-text">进程权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户-组"><span class="nav-number">2.1.</span> <span class="nav-text">用户&#x2F;组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程权限"><span class="nav-number">2.2.</span> <span class="nav-text">进程权限</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#capabilities-机制"><span class="nav-number">3.</span> <span class="nav-text">capabilities  机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#capabilities简介"><span class="nav-number">3.1.</span> <span class="nav-text">capabilities简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#capabilities权限详解"><span class="nav-number">3.2.</span> <span class="nav-text">capabilities权限详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#getcaps-getcap-setcap的使用"><span class="nav-number">3.3.</span> <span class="nav-text">getcaps&#x2F;getcap&#x2F;setcap的使用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ink</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+<div class="BbeiAn-info">
+粤ICP备 -
+<a target="_blank"  href="http://www.ink-hz.cn/">20043097号</a>
+</a>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
