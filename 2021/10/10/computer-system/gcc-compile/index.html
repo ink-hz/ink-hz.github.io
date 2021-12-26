@@ -1,355 +1,105 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html>
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <meta charset="utf-8">
+  
 
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Hexo, NexT" />
-
-
-
-
-
-
-
-
-
-
-<meta name="description" content="今天通过hello.c的例子，给大家讲述一下gcc的编译过程 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段预处理器(cpp)根据字符#开">
+  <title>操作系统：hello world 编译过程 | 千里之行，始于足下</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今天通过hello.c的例子，给大家讲述一下gcc的编译过程， 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段123预处理器(cpp)就是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="computer-system&#x2F;gcc-compile">
+<meta property="og:title" content="操作系统：hello world 编译过程">
 <meta property="og:url" content="http://yoursite.com/2021/10/10/computer-system/gcc-compile/index.html">
 <meta property="og:site_name" content="千里之行，始于足下">
-<meta property="og:description" content="今天通过hello.c的例子，给大家讲述一下gcc的编译过程 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段预处理器(cpp)根据字符#开">
+<meta property="og:description" content="今天通过hello.c的例子，给大家讲述一下gcc的编译过程， 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段123预处理器(cpp)就是">
 <meta property="article:published_time" content="2021-10-10T02:42:22.610Z">
-<meta property="article:modified_time" content="2021-10-10T02:42:46.390Z">
+<meta property="article:modified_time" content="2021-12-26T03:21:27.592Z">
 <meta property="article:author" content="ink">
+<meta property="article:tag" content="Linux AI 算法">
 <meta name="twitter:card" content="summary">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/2021/10/10/computer-system/gcc-compile/"/>
-
-
-
-
-
-  <title>computer-system/gcc-compile | 千里之行，始于足下</title>
   
-
-
-
-
-
-
-
+    <link rel="alternate" href="/atom.xml" title="千里之行，始于足下" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
 <meta name="generator" content="Hexo 4.2.0"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">千里之行，始于足下</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">千里之行，始于足下</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">黄政的个人技术博客</a>
+        </h2>
+      
     </div>
-      
-        <p class="site-subtitle"></p>
-      
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
   </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-computer-system/gcc-compile" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/10/10/computer-system/gcc-compile/" class="article-date">
+  <time datetime="2021-10-10T02:42:22.610Z" itemprop="datePublished">2021-10-10</time>
+</a>
+    
   </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/%20" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
-</nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
+  <div class="article-inner">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/10/computer-system/gcc-compile/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ink">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="千里之行，始于足下">
-    </span>
-
     
-      <header class="post-header">
-
+      <header class="article-header">
         
-        
-          <h1 class="post-title" itemprop="name headline">computer-system/gcc-compile</h1>
-        
+  
+    <h1 class="article-title" itemprop="name">
+      操作系统：hello world 编译过程
+    </h1>
+  
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-10T10:42:22+08:00">
-                2021-10-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
       </header>
     
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+    <div class="article-entry" itemprop="articleBody">
       
-      
-
-      
-        <p>今天通过hello.c的例子，给大家讲述一下gcc的编译过程</p>
+        <p>今天通过hello.c的例子，给大家讲述一下gcc的编译过程，</p>
 <h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p>插入图片 Figure 1.3 The compilation system.</p>
 <h1 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-<h1 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h1><h2 id="预处理阶段"><a href="#预处理阶段" class="headerlink" title="预处理阶段"></a>预处理阶段</h2><pre><code>预处理器(cpp)根据字符#开头指令，对原始的c程序进行修改。
+<h1 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h1><h2 id="预处理阶段"><a href="#预处理阶段" class="headerlink" title="预处理阶段"></a>预处理阶段</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">预处理器(cpp)就是根据字符#开头指令，对原始的c程序进行修改。C预处理器就是C、Objective-C、C++等计算机编程语言的宏处理器。预处理器为这些编程语言提供头文件的包含、宏拓展、条件编译和行控制等功能。在大多数C语言的实现中，预处理器是编译器在编译代码过程中，第一个调用的程序。</span><br><span class="line">  </span><br><span class="line">预处理器指令语言与C语言的语法关系不大，因此有时被用来处理其他类型的文本文件。C预处理器不是编译器的一部分，而是编译过程中的一个单独步骤。简单地说，C预处理器只是一个文本替换工具，它指示编译器在实际编译之前进行必要的预处理。我们将C预处理器称为CPP。所有预处理器命令都以哈希符号(#)开头。它必须是第一个非空白字符，为了可读性，预处理器指令应该从第一列开始。</span><br></pre></td></tr></table></figure>
 
-The C preprocessor is the macro preprocessor for the C, Objective-C and C++ computer programming languages. The preprocessor provides the ability for the inclusion of header files, macro expansions, conditional compilation, and line control.
-
-In many C implementations, it is a separate program invoked by the compiler as the first part of translation.
-
-The language of preprocessor directives is only weakly related to the grammar of C, and so is sometimes used to process other kinds of text files.
-
-The C Preprocessor is not a part of the compiler, but is a separate step in the compilation process. In simple terms, a C Preprocessor is just a text substitution tool and it instructs the compiler to do required pre-processing before the actual compilation. We&apos;ll refer to the C Preprocessor as CPP.
-
-All preprocessor commands begin with a hash symbol (#). It must be the first nonblank character, and for readability, a preprocessor directive should begin in the first column. The following section lists down all the important preprocessor directives
-
-C preprocessor is used before compiler processing program. It pre scans source code to complete functions including header file, macro extension, conditional compilation, line control, etc. For the test code, the preprocessor only processes the header file. To get the output of the preprocessor, use the command gcc -E hello.c -o hello.i. because hello.i There are many contents in the file. Here is a description of the intercepted part.</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -E hello.c -o hello.i</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Tips:</span><br><span class="line">There are many such formats in hello.i, # line file name flags, which means that the following line is generated by the line of file name. Among them, flags have four values: 1, 2, 3 and 4</span><br><span class="line"></span><br><span class="line">1 represents the beginning of a new document</span><br><span class="line">2 represents the return of a file</span><br><span class="line">3 means that the following text comes from the system header file, so some warnings can be filtered out</span><br><span class="line">4 means that the following text should be included in the extern C block. According to the prompt, there is size on line 212 in the stddef.h file_ Macro definition of T.</span><br></pre></td></tr></table></figure>
-
-
+<p>下面的部分列出了所有重要的预处理器指令：</p>
 <table>
 <thead>
 <tr>
@@ -363,426 +113,199 @@ C preprocessor is used before compiler processing program. It pre scans source c
 </tr>
 <tr>
 <td><strong>#include</strong></td>
-<td>Inserts a particular header from another file.</td>
+<td>插入另外一个文件的特定头部内容</td>
 </tr>
 <tr>
 <td><strong>#undef</strong></td>
-<td>Undefines a preprocessor macro.</td>
+<td>取消定义预处理器宏.</td>
 </tr>
 <tr>
 <td><strong>#ifdef</strong></td>
-<td>Returns true if this macro is defined.</td>
+<td>如果宏被定义，返回true</td>
 </tr>
 <tr>
 <td><strong>#ifndef</strong></td>
-<td>Returns true if this macro is not defined.</td>
+<td>Returns true if this macro is not defined.如果宏未被定义，返回true</td>
 </tr>
 <tr>
 <td><strong>#if</strong></td>
-<td>Tests if a compile time condition is true.</td>
+<td>Tests if a compile time condition is true.测试编译时，条件是否为真</td>
 </tr>
 <tr>
 <td><strong>#else</strong></td>
-<td>The alternative for #if.</td>
+<td>#if 条件之后的选择</td>
 </tr>
 <tr>
 <td><strong>#elif</strong></td>
-<td>else and #if in one statement.</td>
+<td>else 和 #if的语法</td>
 </tr>
 <tr>
 <td><strong>#endif</strong></td>
-<td>Ends preprocessor conditional.</td>
+<td>预处理条件的结束</td>
 </tr>
 <tr>
 <td><strong>#error</strong></td>
-<td>Prints error message on stderr.</td>
+<td>打印stderr的错误信息</td>
 </tr>
 <tr>
 <td><strong>#pragma</strong></td>
-<td>Issues special commands to the compiler, using a standardized method.</td>
+<td>使用标准化方法向编译器发出特殊命令。</td>
 </tr>
 </tbody></table>
-<h2 id="编译阶段"><a href="#编译阶段" class="headerlink" title="编译阶段"></a>编译阶段</h2><pre><code>The process of compiling is to convert the source code written in one programming language (here, C language in particular) into another programming language (here, assembly language in particular). Ahead we will hello.c The pretreatment is done hello.i File, now it&apos;s time to hello.i File into the assembly file hello.s. To get the output of the compiler, use the command gcc -S hello.i -o hello.s. The compilation results are shown in the table below hello.s .</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">        .file   &quot;hello.c&quot;</span><br><span class="line">        .section        .rodata</span><br><span class="line">.LC0:</span><br><span class="line">        .string &quot;hello world&quot;</span><br><span class="line">        .text</span><br><span class="line">        .globl  main</span><br><span class="line">        .type   main, @function</span><br><span class="line">main:</span><br><span class="line">.LFB0:</span><br><span class="line">        .cfi_startproc</span><br><span class="line">        pushq   %rbp</span><br><span class="line">        .cfi_def_cfa_offset 16</span><br><span class="line">        .cfi_offset 6, -16</span><br><span class="line">        movq    %rsp, %rbp</span><br><span class="line">        .cfi_def_cfa_register 6</span><br><span class="line">        movl    $.LC0, %edi</span><br><span class="line">        call    puts</span><br><span class="line">        movl    $0, %eax</span><br><span class="line">        popq    %rbp</span><br><span class="line">        .cfi_def_cfa 7, 8</span><br><span class="line">        ret</span><br><span class="line">        .cfi_endproc</span><br><span class="line">.LFE0:</span><br><span class="line">        .size   main, .-main</span><br><span class="line">        .ident  &quot;GCC: (GNU) 4.8.5 20150623 (Red Hat 4.8.5-44)&quot;</span><br><span class="line">        .section        .note.GNU-stack,&quot;&quot;,@progbits</span><br></pre></td></tr></table></figure>
+<pre><code>C预处理器是在编译程序之前使用的。它预扫描源代码，以完成包括头文件，宏扩展，条件编译，行控制等功能。对于测试代码，预处理器只处理头文件。要获得预处理器的输出，使用命令**gcc -E hello.c -o hello.i**。</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -E hello.c -o hello.i</span><br></pre></td></tr></table></figure>
 
-<h2 id="汇编阶段"><a href="#汇编阶段" class="headerlink" title="汇编阶段"></a>汇编阶段</h2><pre><code>The process of assembly is to convert the source code written in assembly language into executable machine code. Usually, the object file contains at least two segments: code segment and data segment. The code segment contains the program instructions, which are generally readable, executable and not writable; the data segment is used to store all kinds of global variables or static data used in the program, which are generally readable, writable and executable. To get the output of the assembler, use the command gcc -o hello.o -c hello.c. Since hello.o is a binary file, it cannot be read. Here, we use the command objdump to disassemble the binary file to see its contents.</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# objdump -d hello.o &gt;&gt; hello.o.dump</span><br><span class="line">[root@ink The-compilation-system]# ls -l</span><br><span class="line">total 36</span><br><span class="line">-rw-r--r-- 1 root root    78 Sep 26 19:30 hello.c</span><br><span class="line">-rw-r--r-- 1 root root 16879 Sep 26 20:07 hello.i</span><br><span class="line">-rw-r--r-- 1 root root  1496 Sep 26 20:20 hello.o</span><br><span class="line">-rw-r--r-- 1 root root   396 Sep 26 20:20 hello.o.dump</span><br><span class="line">-rw-r--r-- 1 root root   448 Sep 26 20:13 hello.s</span><br><span class="line">[root@ink The-compilation-system]# cat hello.o.dump</span><br><span class="line"></span><br><span class="line">hello.o:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">0000000000000000 &lt;main&gt;:</span><br><span class="line">   0:   55                      push   %rbp</span><br><span class="line">   1:   48 89 e5                mov    %rsp,%rbp</span><br><span class="line">   4:   bf 00 00 00 00          mov    $0x0,%edi</span><br><span class="line">   9:   e8 00 00 00 00          callq  e &lt;main+0xe&gt;</span><br><span class="line">   e:   b8 00 00 00 00          mov    $0x0,%eax</span><br><span class="line">  13:   5d                      pop    %rbp</span><br><span class="line">  14:   c3                      retq</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Tips:</span><br><span class="line">There are many such formats in hello.i, # line file name flags, which means that the following line is generated by the line of file name. Among them, flags have four values: 1, 2, 3 and 4</span><br><span class="line"></span><br><span class="line">1 represents the beginning of a new document</span><br><span class="line">2 represents the return of a file</span><br><span class="line">3 means that the following text comes from the system header file, so some warnings can be filtered out</span><br><span class="line">4 means that the following text should be included in the extern C block. According to the prompt, there is size on line 212 in the stddef.h file_ Macro definition of T.</span><br></pre></td></tr></table></figure>
 
-<p>objdump -h hello.o displays the header information of each segment in hello.o</p>
+
+<h2 id="编译阶段"><a href="#编译阶段" class="headerlink" title="编译阶段"></a>编译阶段</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">编译过程：编译就是将一种编程语言源码，翻译成汇编语言。GCC编译器就是将C语言源码翻译成汇编代码，汇编语言为不同高级语言的编译器提供了通用的输出语言。</span><br><span class="line">经过上述预处理阶段，我们已经将hello.c的源代码，处理成了hello.i文件，现在通过执行命令**gcc -S hello.i -o hello.s**转换hello.i为hello.s（汇编代码）。</span><br></pre></td></tr></table></figure>
+
+<p><strong>汇编代码hello.s</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">        .file   &quot;hello.c&quot;</span><br><span class="line">        .section        .rodata</span><br><span class="line">.LC0:</span><br><span class="line">        .string &quot;hello world&quot;</span><br><span class="line">        .text</span><br><span class="line">        .globl  main</span><br><span class="line">        .type   main, @function</span><br><span class="line">main:</span><br><span class="line">.LFB0:</span><br><span class="line">        .cfi_startproc</span><br><span class="line">        pushq   %rbp</span><br><span class="line">        .cfi_def_cfa_offset 16</span><br><span class="line">        .cfi_offset 6, -16</span><br><span class="line">        movq    %rsp, %rbp</span><br><span class="line">        .cfi_def_cfa_register 6</span><br><span class="line">        movl    $.LC0, %edi</span><br><span class="line">        call    puts</span><br><span class="line">        movl    $0, %eax</span><br><span class="line">        popq    %rbp</span><br><span class="line">        .cfi_def_cfa 7, 8</span><br><span class="line">        ret</span><br><span class="line">        .cfi_endproc</span><br><span class="line">.LFE0:</span><br><span class="line">        .size   main, .-main</span><br><span class="line">        .ident  &quot;GCC: (GNU) 4.8.5 20150623 (Red Hat 4.8.5-44)&quot;</span><br><span class="line">        .section        .note.GNU-stack,&quot;&quot;,@progbits</span><br></pre></td></tr></table></figure>
+
+<h2 id="汇编阶段"><a href="#汇编阶段" class="headerlink" title="汇编阶段"></a>汇编阶段</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">汇编的过程，就是将汇编语言的源代码转换成可执行的机器代码。通常来说，目标文件至少包含两个部分：代码段和数据段。</span><br><span class="line">代码段：包含程序指令，通常是可读、可执行、但是不可写；数据段是用来存储程序中用到的各种类型的全局变量和静态数据，通常是可读、可写、可执行的。</span><br><span class="line">通过执行命令**gcc -o hello.o -c hello.c.**获取汇编器的输出结果，因为hello.o是一个二进制文件，文本阅读的时是乱码，所以我们使用objdump针对二进制文件进行反汇编，再阅读反汇编代码。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# objdump -d hello.o &gt;&gt; hello.o.dump</span><br><span class="line">[root@ink The-compilation-system]# ls -l</span><br><span class="line">total 36</span><br><span class="line">-rw-r--r-- 1 root root    78 Sep 26 19:30 hello.c</span><br><span class="line">-rw-r--r-- 1 root root 16879 Sep 26 20:07 hello.i</span><br><span class="line">-rw-r--r-- 1 root root  1496 Sep 26 20:20 hello.o</span><br><span class="line">-rw-r--r-- 1 root root   396 Sep 26 20:20 hello.o.dump</span><br><span class="line">-rw-r--r-- 1 root root   448 Sep 26 20:13 hello.s</span><br><span class="line">[root@ink The-compilation-system]# cat hello.o.dump</span><br><span class="line"></span><br><span class="line">hello.o:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">0000000000000000 &lt;main&gt;:</span><br><span class="line">   0:   55                      push   %rbp</span><br><span class="line">   1:   48 89 e5                mov    %rsp,%rbp</span><br><span class="line">   4:   bf 00 00 00 00          mov    $0x0,%edi</span><br><span class="line">   9:   e8 00 00 00 00          callq  e &lt;main+0xe&gt;</span><br><span class="line">   e:   b8 00 00 00 00          mov    $0x0,%eax</span><br><span class="line">  13:   5d                      pop    %rbp</span><br><span class="line">  14:   c3                      retq</span><br></pre></td></tr></table></figure>
+
+
+<p>*<em>objdump -h *</em>命令可以获取二进制文件每个段的头部信息</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# objdump -h hello.o</span><br><span class="line"></span><br><span class="line">hello.o:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line">Sections:</span><br><span class="line">Idx Name          Size      VMA               LMA               File off  Algn</span><br><span class="line">  0 .text         00000015  0000000000000000  0000000000000000  00000040  2**0</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE</span><br><span class="line">  1 .data         00000000  0000000000000000  0000000000000000  00000055  2**0</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, DATA</span><br><span class="line">  2 .bss          00000000  0000000000000000  0000000000000000  00000055  2**0</span><br><span class="line">                  ALLOC</span><br><span class="line">  3 .rodata       0000000c  0000000000000000  0000000000000000  00000055  2**0</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, DATA</span><br><span class="line">  4 .comment      0000002e  0000000000000000  0000000000000000  00000061  2**0</span><br><span class="line">                  CONTENTS, READONLY</span><br><span class="line">  5 .note.GNU-stack 00000000  0000000000000000  0000000000000000  0000008f  2**0</span><br><span class="line">                  CONTENTS, READONLY</span><br><span class="line">  6 .eh_frame     00000038  0000000000000000  0000000000000000  00000090  2**3</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA</span><br></pre></td></tr></table></figure>
 
-<h2 id="链接阶段"><a href="#链接阶段" class="headerlink" title="链接阶段"></a>链接阶段</h2><pre><code>The process of linking is to make one or more target file link libraries (static library or dynamic library) generated by compiler or assembler into executable files. The static library will be linked with the object file generated by the assembly and packaged into the executable file [static link]. Its link to the function library is completed during the compilation period. The dynamic library will not be linked to the executable file when the program is compiled, but will be loaded when the program is running. If different applications call the same library, they only need one instance of the shared library in memory. Get the executable file linked by the linker and use the command gcc hello.o -o hello. If you want to see the library the executable depends on, you can use the command ldd hello.
-
-ldd hello displays the libraries that hello depends on</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# ldd hello</span><br><span class="line">        linux-vdso.so.1 =&gt;  (0x00007ffc7e78e000)</span><br><span class="line">        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fcb4fa45000)</span><br><span class="line">        /lib64/ld-linux-x86-64.so.2 (0x00007fcb4fe12000)</span><br></pre></td></tr></table></figure>
-
-
-
+<h2 id="链接阶段"><a href="#链接阶段" class="headerlink" title="链接阶段"></a>链接阶段</h2><pre><code>链接的过程是将编译器或汇编器生成的一个或多个目标文件链接库(静态库或动态库)转换为可执行文件。静态库将与程序集生成的对象文件链接，并打包到可执行文件[静态链接]。它与函数库的链接在编译期间完成。动态库不会在程序编译时链接到可执行文件，而是在程序运行时加载。如果不同的应用程序调用相同的库，它们只需要内存中共享库的一个实例
+可以通过执行**ldd hello**命令查看hello程序依赖的函数库。</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# ldd hello</span><br><span class="line">        linux-vdso.so.1 =&gt;  (0x00007ffc7e78e000)</span><br><span class="line">        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fcb4fa45000)</span><br><span class="line">        /lib64/ld-linux-x86-64.so.2 (0x00007fcb4fe12000)</span><br></pre></td></tr></table></figure>
 
 <h1 id="编译优化"><a href="#编译优化" class="headerlink" title="编译优化"></a>编译优化</h1><ul>
 <li>O1 </li>
 </ul>
-<h1 id="常见的安全编译选项"><a href="#常见的安全编译选项" class="headerlink" title="常见的安全编译选项"></a>常见的安全编译选项</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>《深入理解计算机操作系统》<br><a href="https://www.fatalerrors.org/a/four-steps-of-c-programming.html" target="_blank" rel="noopener">Four steps of C programming</a><br><a href="https://www.tutorialspoint.com/cprogramming/c_preprocessors.htm" target="_blank" rel="noopener">C - Preprocessors</a><br><a href="https://en.wikipedia.org/wiki/C_preprocessor" target="_blank" rel="noopener">C preprocessor</a><br><a href="https://www.geeksforgeeks.org/preprocessor-works-c/" target="_blank" rel="noopener">How a Preprocessor works in C?</a></p>
+<h1 id="常见的安全编译选项"><a href="#常见的安全编译选项" class="headerlink" title="常见的安全编译选项"></a>常见的安全编译选项</h1><h2 id="ASLR（地址空间布局随机化）"><a href="#ASLR（地址空间布局随机化）" class="headerlink" title="ASLR（地址空间布局随机化）"></a>ASLR（地址空间布局随机化）</h2><p><a href="https://wiki.ubuntu.com/Security/Features#stack-protector" target="_blank" rel="noopener">https://wiki.ubuntu.com/Security/Features#stack-protector</a><br><a href="https://www.jianshu.com/p/859de634ded8" target="_blank" rel="noopener">https://www.jianshu.com/p/859de634ded8</a></p>
+<h2 id="NX（堆栈不可执行）"><a href="#NX（堆栈不可执行）" class="headerlink" title="NX（堆栈不可执行）"></a>NX（堆栈不可执行）</h2><p>-Wl,-z,noexecstack</p>
+<h2 id="SP-栈保护"><a href="#SP-栈保护" class="headerlink" title="SP(栈保护)"></a>SP(栈保护)</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options</a><br><a href="https://arxiv.org/pdf/1909.05747.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1909.05747.pdf</a></p>
+<p>-fstack-protector<br>Emit extra code to check for buffer overflows, such as stack smashing attacks. This is done by adding a guard variable to functions with vulnerable objects. This includes functions that call alloca, and functions with buffers larger than 8 bytes. The guards are initialized when a function is entered and then checked when the function exits. If a guard check fails, an error message is printed and the program exits.<br>-fstack-protector-all<br>Like -fstack-protector except that all functions are protected.<br>-fstack-protector-strong<br>Like -fstack-protector but includes additional functions to be protected — those that have local array definitions, or have references to local frame addresses.</p>
+<p>链接阶段加上：-fstack-protector</p>
+<p><strong>实战用例</strong></p>
+<h2 id="RELRO（只读重定位）"><a href="#RELRO（只读重定位）" class="headerlink" title="RELRO（只读重定位）"></a>RELRO（只读重定位）</h2><p><a href="https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables" target="_blank" rel="noopener">https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables</a><br><a href="https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro" target="_blank" rel="noopener">https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro</a></p>
+<h2 id="PIC（位置无关代码）"><a href="#PIC（位置无关代码）" class="headerlink" title="PIC（位置无关代码）"></a>PIC（位置无关代码）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
+<h2 id="PIE（位置无关可执行文件）"><a href="#PIE（位置无关可执行文件）" class="headerlink" title="PIE（位置无关可执行文件）"></a>PIE（位置无关可执行文件）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
+<h2 id="RPATH（动态库搜索路径）"><a href="#RPATH（动态库搜索路径）" class="headerlink" title="RPATH（动态库搜索路径）"></a>RPATH（动态库搜索路径）</h2><p><a href="https://sourceware.org/binutils/docs/ld/Options.html#Options" target="_blank" rel="noopener">https://sourceware.org/binutils/docs/ld/Options.html#Options</a></p>
+<h2 id="Strip"><a href="#Strip" class="headerlink" title="Strip"></a>Strip</h2><p><a href="https://sourceware.org/binutils/docs/ld/Options.html#Options" target="_blank" rel="noopener">https://sourceware.org/binutils/docs/ld/Options.html#Options</a></p>
+<h2 id="FS"><a href="#FS" class="headerlink" title="FS"></a>FS</h2><p><a href="https://access.redhat.com/blogs/766093/posts/3606481" target="_blank" rel="noopener">https://access.redhat.com/blogs/766093/posts/3606481</a></p>
+<h2 id="Ftrapv"><a href="#Ftrapv" class="headerlink" title="Ftrapv"></a>Ftrapv</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>《深入理解计算机操作系统》</p>
+<p><a href="https://www.fatalerrors.org/a/four-steps-of-c-programming.html" target="_blank" rel="noopener">Four steps of C programming</a></p>
+<p><a href="https://www.tutorialspoint.com/cprogramming/c_preprocessors.htm" target="_blank" rel="noopener">C - Preprocessors</a></p>
+<p><a href="https://en.wikipedia.org/wiki/C_preprocessor" target="_blank" rel="noopener">C preprocessor</a></p>
+<p><a href="https://www.geeksforgeeks.org/preprocessor-works-c/" target="_blank" rel="noopener">How a Preprocessor works in C?</a></p>
 
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2021/08/02/Linux/Linux_capabilities/" rel="next" title="Linux 如何使用capabilities机制实现进程权限管理">
-                <i class="fa fa-chevron-left"></i> Linux 如何使用capabilities机制实现进程权限管理
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-          </div>
-        </div>
-      
-
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/10/10/computer-system/gcc-compile/" data-id="ckxmr9pc60000287c134mblua" class="article-share-link">Share</a>
       
       
     </footer>
   </div>
   
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
     
-    <div class="sidebar-inner">
+<nav id="article-nav">
+  
+  
+    <a href="/2021/08/02/Linux/Linux_capabilities/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Linux 如何使用capabilities机制实现进程权限管理</div>
+    </a>
+  
+</nav>
 
-      
+  
+</article>
 
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/10/10/computer-system/gcc-compile/">操作系统：hello world 编译过程</a>
           </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
+        
+          <li>
+            <a href="/2021/08/02/Linux/Linux_capabilities/">Linux 如何使用capabilities机制实现进程权限管理</a>
           </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">ink</p>
-              <p class="site-description motion-element" itemprop="description">分享日常技术总结</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/%20%7C%7C%20archive">
-              
-                  <span class="site-state-item-count">4</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-
-            
-
-          </nav>
-
-          
-
-          
-
-          
-          
-
-          
-          
-
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译系统"><span class="nav-number">1.</span> <span class="nav-text">编译系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编写代码"><span class="nav-number">2.</span> <span class="nav-text">编写代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译过程"><span class="nav-number">3.</span> <span class="nav-text">编译过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#预处理阶段"><span class="nav-number">3.1.</span> <span class="nav-text">预处理阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译阶段"><span class="nav-number">3.2.</span> <span class="nav-text">编译阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#汇编阶段"><span class="nav-number">3.3.</span> <span class="nav-text">汇编阶段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链接阶段"><span class="nav-number">3.4.</span> <span class="nav-text">链接阶段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译优化"><span class="nav-number">4.</span> <span class="nav-text">编译优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见的安全编译选项"><span class="nav-number">5.</span> <span class="nav-text">常见的安全编译选项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
+        
+          <li>
+            <a href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/08/Linux/Linux_coredump/">Linux coredump机制</a>
+          </li>
+        
+      </ul>
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">ink</span>
-
-  
-</div>
-
-
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
-
-<div class="BbeiAn-info">
-粤ICP备 -
-<a target="_blank"  href="http://www.ink-hz.cn/">20043097号</a>
-</a>
-</div>
-
-
-
-
-        
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
   </div>
 
   
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 ink<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
 
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
   
-
-
-
-
-
-
-
-
-
-
-
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
 
   
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
 
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
 
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
 
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
 
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
+<script src="/js/script.js"></script>
 
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
 
 
-  
 
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
+  </div>
 </body>
 </html>
