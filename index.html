@@ -82,7 +82,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/10/computer-system/gcc-compile/">操作系统：hello world 编译过程</a>
+      <a class="article-title" href="/2021/10/10/computer-system/gcc-compile/">【操作系统】hello world 编译过程</a>
     </h1>
   
 
@@ -196,139 +196,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/10/10/computer-system/gcc-compile/" data-id="ckxmr9pc60000287c134mblua" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Linux/Linux_capabilities" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/08/02/Linux/Linux_capabilities/" class="article-date">
-  <time datetime="2021-08-02T14:19:26.367Z" itemprop="datePublished">2021-08-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/08/02/Linux/Linux_capabilities/">Linux 如何使用capabilities机制实现进程权限管理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="systemd机制"><a href="#systemd机制" class="headerlink" title="systemd机制"></a>systemd机制</h1><p>systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 /usr/lib/systemd/systemd --switched-root --system --deserialize 22</span><br></pre></td></tr></table></figure>
-
-<p>systemd进程通常不会被用户调用，而是由/sbin/init软链接，在最开始的启动过程拉起。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# ls -l /sbin/init</span><br><span class="line">lrwxrwxrwx 1 root root 22 Jul 11  2019 /sbin/init -&gt; ../lib/systemd/systemd</span><br></pre></td></tr></table></figure>
-
-<h2 id="systemd-添加nginx服务实践"><a href="#systemd-添加nginx服务实践" class="headerlink" title="systemd 添加nginx服务实践"></a>systemd 添加nginx服务实践</h2><ol>
-<li><p>添加service</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/systemd/system/nginx.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=nginx</span><br><span class="line">After=aliyun.target</span><br><span class="line">Wants=aliyun.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/local/nginx/sbin/nginx</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=1min</span><br><span class="line">StartLimitInterval=36000</span><br><span class="line">StartLimitBurst=5</span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>systemd load新的服务文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>系统启动过程中拉起服务</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>手动拉起服务</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">[root@ink system]# service nginx start</span><br><span class="line">Redirecting to /bin/systemctl start nginx.service</span><br><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">root      3796  0.0  0.0  25004   768 ?        Ss   11:06   0:00 nginx: master process /usr/local/nginx/sbin/nginx</span><br><span class="line">nobody    3797  0.0  0.1  25420  1484 ?        S    11:06   0:00  \_ nginx: worker process</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看服务状态</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br><span class="line">[root@ink system]# systemctl status nginx.service</span><br><span class="line">● nginx.service - nginx</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/nginx.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看服务启动的日志</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# journalctl -u nginx.service</span><br><span class="line">-- Logs begin at Thu 2019-07-11 11:10:15 CST, end at Fri 2021-07-23 11:40:01 CST. --</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:16:41 ink systemd[1]: Started nginx.</span><br><span class="line">Jul 23 11:25:48 ink systemd[1]: Started nginx.</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:30:43 ink systemd[1]: Started nginx.</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p><a href="https://man7.org/linux/man-pages/man1/systemd.1.html" target="_blank" rel="noopener">systemd(1) — Linux manual page</a></p>
-<p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units" target="_blank" rel="noopener">How To Use Systemctl to Manage Systemd Services and Units</a></p>
-<h1 id="进程权限管理"><a href="#进程权限管理" class="headerlink" title="进程权限管理"></a>进程权限管理</h1><h2 id="用户-组"><a href="#用户-组" class="headerlink" title="用户/组"></a>用户/组</h2><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
-<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护</p>
-<ol>
-<li><p>Linux 查看所有用户</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Linux 查看用户组</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/group</span><br><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line">daemon:x:2:</span><br><span class="line">sys:x:3:</span><br><span class="line">adm:x:4:</span><br></pre></td></tr></table></figure></li>
-<li><p>getent<br>linux中用于提供查询用户信息的命令</p>
-</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getent passwd</span><br><span class="line">getent group</span><br><span class="line">getent group daemon</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>Linux新增用户<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# useradd test -U -p 123</span><br><span class="line">[root@ink system]# su test</span><br><span class="line">[test@ink system]$ ls -l</span><br><span class="line">total 40</span><br><span class="line">-rw-r--r--  1 root root  492 Jul 21 01:17 aliyun.service</span><br><span class="line">-rw-r--r--  1 root root  214 Jul 21 01:17 AssistDaemon.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 basic.target.wants</span><br><span class="line">lrwxrwxrwx. 1 root root   37 Jul 11  2019 default.target -&gt; /lib/systemd/system/multi-user.target</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 default.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 getty.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 local-fs.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 23 11:15 multi-user.target.wants</span><br><span class="line">-rw-r--r--  1 root root  248 Jul 23 11:28 nginx.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 sysinit.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 system-update.target.wants</span><br><span class="line">[test@ink system]$ mv nginx.service nginx.service.back</span><br><span class="line">mv: cannot move ‘nginx.service’ to ‘nginx.service.back’: Permission denied</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>超级用户：root id 为0，有着系统中最大的权限，可以访问系统中的任何文件，一般使用root账号来执行系统管理的任务。上面的例子可以看出普通用户test，无法修改nginx.service。</p>
-<h2 id="进程权限"><a href="#进程权限" class="headerlink" title="进程权限"></a>进程权限</h2><ol>
-<li><p>编写demo进程：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    daemon(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gcc test.c -o demo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>root账户拉起test进程，并查看进程的用户和用户组，都为root</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# ./demo</span><br><span class="line">[root@ink code]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1609 root     root     ./demo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>切换test用户，拉起进程</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# kill -9 $(pidof demo)</span><br><span class="line">[root@ink code]# su test</span><br><span class="line">[test@ink code]$ ./demo</span><br><span class="line">[test@ink code]$ ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1702 test     test     ./demo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>文件的权限</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# ls -l test</span><br><span class="line">-rw-r--r-- 1 root root 0 Jul 26 10:13 test</span><br><span class="line"></span><br><span class="line">[root@ink test]# chmod 754 ./test</span><br><span class="line">[root@ink test]# ls -l</span><br><span class="line">total 0</span><br><span class="line">-rwxr-xr-- 1 root root 0 Jul 26 10:13 test</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>-rwxrwxrwx</th>
-<th>详解</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-</td>
-<td>第一个字段 -代表文件，d代表目录，l代表链接，c代表字符型设备，b代表块设备，n代表网络设备</td>
-</tr>
-<tr>
-<td>rwx</td>
-<td>代表所有者的权限：这个文件对应就是root  可读、可写、可执行</td>
-</tr>
-<tr>
-<td>r-x</td>
-<td>代表同组其他用户的权限：可读、不可写、可执行</td>
-</tr>
-<tr>
-<td>r–</td>
-<td>代表其他用户的其他权限：可读、不可写、不可执行</td>
-</tr>
-</tbody></table>
-<h1 id="capabilities-机制"><a href="#capabilities-机制" class="headerlink" title="capabilities  机制"></a>capabilities  机制</h1><p><strong>问题：</strong></p>
-<p><strong>1. 编写的daemon不需要root用户的所有权限，独立账号运行安全性更高</strong></p>
-<p><strong>2. 更改为普通用户拉起daemon，需要读取部分root权限才可以正常运行业务</strong></p>
-<p><strong>解决方法：</strong></p>
-<p><strong>1. 使用systemd service 管理，指定用户和用户启动进程</strong></p>
-<p><strong>2. 使用linux capabilitie 管理进程的权限，保障最小权限正常运行业务</strong></p>
-        
-          <p class="article-more-link">
-            <a href="/2021/08/02/Linux/Linux_capabilities/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="ckxmr9pcm0003287chp1wf1fl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/10/10/computer-system/gcc-compile/" data-id="ckxmrlgfo00018k7cgjjl3woa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -417,89 +285,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="ckxmr9pcm0002287caz4qfwjc" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Linux/Linux_coredump" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/08/08/Linux/Linux_coredump/" class="article-date">
-  <time datetime="2020-08-08T08:16:33.348Z" itemprop="datePublished">2020-08-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/08/Linux/Linux_coredump/">Linux coredump机制</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><p>Linux信号处理机制的一种，收到对应信号，会产生核心存储文件，同时进程终止。core文件会把保存当时进程的内存信息，可以通过gdb进行调试。</p>
-<h1 id="默认行为core的信号列表"><a href="#默认行为core的信号列表" class="headerlink" title="默认行为core的信号列表"></a>默认行为core的信号列表</h1><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>信号值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>SIGQUIT</td>
-<td>3</td>
-<td>终端退出</td>
-</tr>
-<tr>
-<td>SIGSEGV</td>
-<td>11</td>
-<td>无效的内存引用</td>
-</tr>
-<tr>
-<td>SIGSYS</td>
-<td>31</td>
-<td>终端退出</td>
-</tr>
-</tbody></table>
-<h1 id="core文件参数设置"><a href="#core文件参数设置" class="headerlink" title="core文件参数设置"></a>core文件参数设置</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/proc/sys/kernel/core_pattern</span><br><span class="line"></span><br><span class="line">默认的配置</span><br><span class="line">[root@localhost ~]# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/libexec/abrt-hook-ccpp %s %c %p %u %g %t %e</span><br><span class="line"></span><br><span class="line"><span class="meta">%</span><span class="bash">s 造成coredump的信号值</span></span><br><span class="line"><span class="meta">%</span><span class="bash">c 崩溃进程core文件大小的软限制</span></span><br><span class="line"><span class="meta">%</span><span class="bash">p 进程的pid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">u 进程的uid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">g 进程的gid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">t 进程出core的时间</span></span><br><span class="line"><span class="meta">%</span><span class="bash">e  执行出core的命令</span></span><br></pre></td></tr></table></figure>
-
-<p>修改core dump参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&#x2F;root&#x2F;core_dump&#x2F;core-%s-%e-%p-%t&quot; &gt; &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;core_pattern</span><br></pre></td></tr></table></figure>
-
-<h1 id="core文件生成限制"><a href="#core文件生成限制" class="headerlink" title="core文件生成限制"></a>core文件生成限制</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 11039</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 65536</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 11039</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>ulimit -a 或者 unlimit -c可以看到</li>
-<li>core file size代表 core文件大小：0代表 core无法生成</li>
-<li>core生成，受到 core file size 和file size两个限制</li>
-</ol>
-<p>修改core文件大小限制为unlimited</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -c unlimited</span><br><span class="line">[root@localhost ~]# ulimit -c</span><br><span class="line">unlimited</span><br></pre></td></tr></table></figure>
-
-<p>Linux编程中可以使用getrlimit和setrlimit进行设置</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getrlimit</span><span class="params">(<span class="keyword">int</span> resource, struct rlimit *rlim)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setrlimit</span><span class="params">(<span class="keyword">int</span> resource, <span class="keyword">const</span> struct rlimit *rlim)</span></span>;</span><br><span class="line">RLIMIT_CORE</span><br><span class="line">     Maximum <span class="built_in">size</span> of core file.  When <span class="number">0</span> no core dump files are created.  When nonzero, larger dumps  are  truncated  to <span class="keyword">this</span> <span class="built_in">size</span>.</span><br></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2020/08/08/Linux/Linux_coredump/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/08/08/Linux/Linux_coredump/" data-id="ckxmr9pc60001287c0pz37boj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="ckxmrlgf900008k7c3dbldcfb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -527,7 +313,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">August 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
     </div>
   </div>
 
@@ -540,19 +326,11 @@
       <ul>
         
           <li>
-            <a href="/2021/10/10/computer-system/gcc-compile/">操作系统：hello world 编译过程</a>
-          </li>
-        
-          <li>
-            <a href="/2021/08/02/Linux/Linux_capabilities/">Linux 如何使用capabilities机制实现进程权限管理</a>
+            <a href="/2021/10/10/computer-system/gcc-compile/">【操作系统】hello world 编译过程</a>
           </li>
         
           <li>
             <a href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
-          </li>
-        
-          <li>
-            <a href="/2020/08/08/Linux/Linux_coredump/">Linux coredump机制</a>
           </li>
         
       </ul>
