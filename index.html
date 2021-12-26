@@ -11,14 +11,12 @@
 <meta property="og:title" content="千里之行，始于足下">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="千里之行，始于足下">
+<meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="ink">
-<meta property="article:tag" content="Linux AI 算法">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="千里之行，始于足下" type="application/atom+xml">
   
-  
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/css/images/favicon.png">
   
   
     <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
@@ -48,16 +46,14 @@
       <nav id="main-nav">
         <a id="main-nav-toggle" class="nav-icon"></a>
         
-          <a class="main-nav-link" href="/">Home</a>
+          <a class="main-nav-link" href="/">主页</a>
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+          <a class="main-nav-link" href="/archives">归档</a>
         
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -68,12 +64,16 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-computer-system/gcc-compile" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Linux/Linux_cpu" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2021/10/10/computer-system/gcc-compile/" class="article-date">
-  <time datetime="2021-10-10T02:42:22.610Z" itemprop="datePublished">2021-10-10</time>
+    <a href="/2021/12/26/Linux/Linux_cpu/" class="article-date">
+  <time datetime="2021-12-25T16:00:00.000Z" itemprop="datePublished">2021-12-26</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -82,7 +82,491 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/10/computer-system/gcc-compile/">【操作系统】hello world 编译过程</a>
+      <a class="article-title" href="/2021/12/26/Linux/Linux_cpu/">【Linux】cpu性能问题排查</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="0-问题"><a href="#0-问题" class="headerlink" title="0. 问题"></a>0. 问题</h1><p>cpu idle基本为0，设备卡顿，请求设备上的server响应较慢。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# mpstat -P ALL 1</span><br><span class="line">Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12/16/2021      _x86_64_        (1 CPU)</span><br><span class="line"></span><br><span class="line">05:05:28 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</span><br><span class="line">05:05:29 PM  all  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00</span><br><span class="line">05:05:29 PM    0  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00</span><br><span class="line"></span><br><span class="line">05:05:29 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</span><br><span class="line">05:05:30 PM  all  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00</span><br><span class="line">05:05:30 PM    0  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00</span><br><span class="line"></span><br><span class="line">05:05:33 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</span><br><span class="line">05:05:34 PM  all   99.01    0.00    0.00    0.00    0.00    0.99    0.00    0.00    0.00    0.00</span><br><span class="line">05:05:34 PM    0   99.01    0.00    0.00    0.00    0.00    0.99    0.00    0.00    0.00    0.00</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>mpstat：Linux常用的工具，用于获取处理器相关的统计信息。</li>
+<li><strong>mpstat -P ALL 1</strong>：-P ALL 统计所有CPU信息 1秒统计时间间隔<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- %usr: 显示在用户级别（应用程序）执行时发生的 CPU 利用率百分比。</span><br><span class="line">- %nice: 显示在具有良好优先级的用户级别执行时发生的 CPU 利用率百分比。</span><br><span class="line">- %sys: 显示在系统级别（内核）执行时发生的 CPU 利用率百分比。不包括服务软硬中断耗费的时间。</span><br><span class="line">- %iowait: 显示系统在未完成的磁盘I&#x2F;O请求期间，一个或多个CPU空闲的时间百分比。</span><br><span class="line">- %irq: 显示一个或多个CPU用于服务硬中断的时间百分比。</span><br><span class="line">- %soft: 显示一个或多个 CPU 用于服务软中断的时间百分比。</span><br><span class="line">- %steal: 显示当虚拟机管理程序为另一个虚拟处理器提供服务时，一个或多个虚拟CPU花费在非自愿等待上的时间百分比。</span><br><span class="line">- %guest: 显示一个或多个 CPU 运行虚拟处理器所花费的时间百分比。</span><br><span class="line">- %gnice: 显示一个或多个 CPU 用于运行niced guest所花费的时间百分比。</span><br><span class="line">- %idle: CPU出去系统等待磁盘IO操作请求之外的空闲的时间。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="1-常用的cpu统计命令"><a href="#1-常用的cpu统计命令" class="headerlink" title="1. 常用的cpu统计命令"></a>1. 常用的cpu统计命令</h1><h2 id="1-0-ps"><a href="#1-0-ps" class="headerlink" title="1.0 ps"></a>1.0 ps</h2><ul>
+<li><p><strong>ps -eo pid,args,psr,%cpu –sort %cpu</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# ps -eo pid,args,psr,%cpu --sort %cpu | tail -n 10</span><br><span class="line">28877 sshd: root@notty              0  0.0</span><br><span class="line">28879 -bash                         0  0.0</span><br><span class="line">28895 /usr/libexec/openssh/sftp-s   0  0.0</span><br><span class="line">28973 ps -eo pid,args,psr,%cpu --   0  0.0</span><br><span class="line">28974 tail -n 10                    0  0.0</span><br><span class="line">29097 /usr/local/aegis/aegis_upda   0  0.0</span><br><span class="line">28875 sshd: root@pts/3              0  0.1</span><br><span class="line">22047 /usr/local/aegis/aegis_clie   0  2.0</span><br><span class="line">28942 ./test                        0  5.2</span><br><span class="line">29152 ./server                      0 87.0</span><br></pre></td></tr></table></figure>
+<p>通过ps可以看到server占用cpu最高。</p>
+</li>
+<li><p>拓展：<strong>ps -eo pid,args,rss –sort rss</strong> 可以查耗费内存占用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# ps -eo pid,args,rss --sort rss | tail -n 10</span><br><span class="line">  489 /usr/lib/polkit-1/polkitd -  9592</span><br><span class="line">  904 /usr/local/share/aliyun-ass  9832</span><br><span class="line">  750 ovs-vswitchd unix:/var/run/ 10228</span><br><span class="line">  908 /usr/bin/python2 -Es /usr/s 14140</span><br><span class="line">22047 /usr/local/aegis/aegis_clie 17196</span><br><span class="line"> 8387 /usr/bin/containerd         29592</span><br><span class="line">29097 /usr/local/aegis/aegis_upda 31656</span><br><span class="line"> 8397 /usr/bin/dockerd -H fd:// - 31912</span><br><span class="line">  907 /usr/sbin/rsyslogd -n       69356</span><br><span class="line">  338 /usr/lib/systemd/systemd-jo 89728</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="1-1-top"><a href="#1-1-top" class="headerlink" title="1.1 top"></a>1.1 top</h2><p>Linux上最常用的用于展示进程使用系统资源情况的命令。</p>
+<ul>
+<li><p><strong>top</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# top</span><br><span class="line">top - 19:40:08 up 59 days,  4:50,  4 users,  load average: 4.03, 3.76, 3.74</span><br><span class="line">Tasks:  96 total,   2 running,  94 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 99.7 us,  0.3 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   110652 free,   203592 used,   700476 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   630824 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">29152 root      20   0    5364   1224    356 R 98.0  0.1   7:42.35 server</span><br><span class="line">22047 root      10 -10  136792  17196   6668 S  0.7  1.7 452:51.31 AliYunDun</span><br><span class="line">12280 root      20   0  115572   2184   1684 S  0.3  0.2   0:00.33 bash</span><br><span class="line">29097 root      10 -10   74636  31656   2980 S  0.3  3.1  33:12.76 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   3:32.01 systemd</span><br><span class="line">    2 root      20   0       0      0      0 S  0.0  0.0   0:00.11 kthreadd</span><br><span class="line">    3 root      20   0       0      0      0 S  0.0  0.0   0:18.02 ksoftirqd/0</span><br><span class="line">    5 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kworker/0:0H</span><br><span class="line">    7 root      rt   0       0      0      0 S  0.0  0.0   0:00.00 migration/0</span><br><span class="line">    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh</span><br><span class="line">    9 root      20   0       0      0      0 S  0.0  0.0   9:40.99 rcu_sched</span><br><span class="line">   10 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 lru-add-drain</span><br><span class="line">   11 root      rt   0       0      0      0 S  0.0  0.0   0:13.17 watchdog/0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>top -H</strong></p>
+</li>
+</ul>
+<p>-H：线程模式，显示独立线程的信息。</p>
+<p>改造一下server为多线程，执行top -H，可以看到server三个线程都上榜了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# top -H</span><br><span class="line">top - 19:50:41 up 59 days,  5:01,  4 users,  load average: 0.97, 1.64, 2.83</span><br><span class="line">Threads: 171 total,   7 running, 164 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 96.4 us,  3.6 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   107492 free,   206048 used,   701180 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   628124 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">32224 root      20   0  154992   3160    476 R 33.2  0.3   0:01.60 server</span><br><span class="line">32225 root      20   0  154992   3160    476 R 32.9  0.3   0:01.59 server</span><br><span class="line">32223 root      20   0  154992   3160    476 R 30.9  0.3   0:01.61 server</span><br><span class="line"> 8341 root      20   0  115816   6016   4588 R  1.3  0.6   0:00.59 sshd</span><br><span class="line">22074 root      10 -10  136792  17204   6668 R  0.3  1.7 330:48.64 AliYunDun</span><br><span class="line">29101 root      10 -10   74636  31656   2980 S  0.3  3.1  15:59.17 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   2:53.92 systemd</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-pidstat"><a href="#1-2-pidstat" class="headerlink" title="1.2 pidstat"></a>1.2 pidstat</h2><p>Linux统计任务信息工具</p>
+<ul>
+<li>-u: 统计CPU相关信息</li>
+<li>-r: 统计内存相关信息</li>
+<li>-d: 统计进程IO相关信息<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ink malloc]# pidstat -u -r -d 1</span><br><span class="line">Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12/16/2021      _x86_64_        (1 CPU)</span><br><span class="line"></span><br><span class="line">08:01:57 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command</span><br><span class="line">08:01:58 PM     0      2704    0.00    1.00    0.00    1.00     0  pidstat</span><br><span class="line">08:01:58 PM     0     22047    0.00    2.00    0.00    2.00     0  AliYunDun</span><br><span class="line"></span><br><span class="line">08:01:57 PM   UID       PID  minflt/s  majflt/s     VSZ    RSS   %MEM  Command</span><br><span class="line">08:01:58 PM     0      2704    282.00      0.00  108180   1048   0.10  pidstat</span><br><span class="line">08:01:58 PM     0      2707    783.00      0.00  150908   2524   0.25  wget</span><br><span class="line">08:01:58 PM     0     12280     66.00      0.00  115668   2316   0.23  bash</span><br><span class="line"></span><br><span class="line">08:01:57 PM   UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s  Command</span><br><span class="line">08:01:58 PM     0      2707      0.00     52.00      0.00  wget</span><br><span class="line">08:01:58 PM     0     12280      0.00     80.00     80.00  bash</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="2-perf"><a href="#2-perf" class="headerlink" title="2. perf"></a>2. perf</h1><p>我这个系统跑的进程比较少，所以异常的demo很快能被查到，但是一般服务器上跑几十上百个进程，又怎么查？</p>
+<p>perf是一款Linux性能分析工具。Linux性能计数器是一个新的基于内核的子系统，它提供一个性能分析框架，比如硬件（CPU、PMU(Performance Monitoring Unit)）功能和软件(软件计数器、tracepoint)功能。通过perf，应用程序可以利用PMU、tracepoint和内核中的计数器来进行性能统计。它不但可以分析制定应用程序的性能问题（per thread），也可以用来分析内核的性能问题。</p>
+<p>总之perf是一款很牛逼的综合性分析工具，大到系统全局性性能，再小到进程线程级别，甚至到函数及汇编级别。</p>
+<ul>
+<li>yum install perf 安装</li>
+</ul>
+<h2 id="2-0-perf-top"><a href="#2-0-perf-top" class="headerlink" title="2.0 perf top"></a>2.0 perf top</h2><ul>
+<li><p><strong>perf top -s comm,dso -C 0 -d 5 &amp;&gt; ./perf.log</strong></p>
+</li>
+<li><p>perf top: System profiling tool</p>
+</li>
+<li><p>-C: 指定CPU进行监控</p>
+</li>
+<li><p>-d: 数据刷新时延（秒）</p>
+</li>
+<li><p>-s: 可根据这些key进行输出排序：pid, comm, dso, symbol, parent, srcline, weight, local_weight, abort, in_tx, transaction, overhead, sample, period。更详细可以<strong>man perf-report</strong>看下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">   PerfTop:    3461 irqs/sec  kernel: 8.3%  exact:  0.0% lost: 0/0 drop: 0/0 [4000Hz cpu-clock],  (all, CPU: 0)</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">    87.82%  server     libc-2.17.so</span><br><span class="line">     3.17%  AliYunDun  [kernel]</span><br><span class="line">     3.01%  server     [kernel]</span><br><span class="line">     1.04%  AliYunDun  libModuleMetadata.so</span><br><span class="line">     0.90%  perf       perf</span><br><span class="line">     0.72%  AliYunDun  libc-2.17.so</span><br><span class="line">     0.33%  perf       [kernel]</span><br><span class="line">     0.32%  wget       [kernel]</span><br><span class="line">     0.29%  perf       libc-2.17.so</span><br><span class="line">     0.22%  AliYunDun  libaegisMonitor.so</span><br><span class="line">     0.21%  AliYunDun  libstdc++.so.6.0.19</span><br><span class="line">     0.19%  AliYunDun  libaqsUtil.so.1</span><br><span class="line">     0.19%  AliYunDun  libpthread-2.17.so</span><br><span class="line">     0.19%  AliYunDun  libaegisIpc.so</span><br><span class="line">     0.16%  server     server</span><br><span class="line">     0.14%  bash       [kernel]</span><br><span class="line">     0.14%  AliYunDun  AliYunDun</span><br><span class="line">     0.12%  wget       ld-2.17.so</span><br><span class="line">     0.12%  AliYunDun  libaegisNetWor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>perf top -e raw_syscalls:sys_enter -ns comm</strong></p>
+</li>
+<li><p>-e <event>, –event=<event> Select the PMU event. Selection can be a symbolic event name (use perf list to list all events) or a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a hexadecimal event descript</p>
+</li>
+</ul>
+<p>追踪系统调用使用的，可以通过perf list查看所有的事件名称，当热点抽样发现一种系统调用非常频繁时，就可以-e指定排查是哪个进程调用触发的。</p>
+<p><strong>如何统计一段时间并记录perf top 数据呢？</strong></p>
+<p>  上述的 &amp;&gt; ./perf.log，只是将perf top所有输出重定向到perf.log，没有记录全量数据，更没有记录函数调用栈帧。</p>
+<h2 id="2-1-perf-record"><a href="#2-1-perf-record" class="headerlink" title="2.1 perf record"></a>2.1 perf record</h2><p>perf-record - Run a command and record its profile into perf.data</p>
+<ul>
+<li><strong>perf record -F 99 -a -g – sleep 60</strong></li>
+<li>-F: 采样频率 -F99 每秒采样99个样本</li>
+<li>-a: –all-cpus 采集所有cpu的信息</li>
+<li>-g: 记录函数的调用关系</li>
+</ul>
+<p>上面这个命令就是以每秒99次的平路，采样60秒内所有cpu函数调用栈的信息。<br>执行之后生成perf.data，二进制内容，直接打开无法进行阅读。</p>
+<ul>
+<li><p><strong>perf script &gt; out.perf</strong> 输出函数栈报告</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# perf script &gt; out.perf</span><br><span class="line">[root@ink perf]# cat out.perf | more</span><br><span class="line">server 14501 [000] 5792011.675125:   10101010 cpu-clock:</span><br><span class="line">            7f31f1346165 __memset_sse2+0xa5 (/usr/lib64/libc-2.17.so)</span><br><span class="line">            7f31f168bdd5 start_thread+0xc5 (/usr/lib64/libpthread-2.17.so)</span><br><span class="line"></span><br><span class="line">server 14501 [000] 5792011.685224:   10101010 cpu-clock:</span><br><span class="line">            7f31f1346177 __memset_sse2+0xb7 (/usr/lib64/libc-2.17.so)</span><br><span class="line">            7f31f168bdd5 start_thread+0xc5 (/usr/lib64/libpthread-2.17.so)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>perf report -n –stdio</strong>输出函数调用栈百分比</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# perf report -n --stdio</span><br><span class="line"><span class="meta">#</span><span class="bash"> To display the perf.data header info, please use --header/--header-only options.</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Total Lost Samples: 0</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Samples: 1K of event <span class="string">'cpu-clock'</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Event count (approx.): 12909090780</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Children      Self       Samples  Command        Shared Object         Symbol</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ........  ........  ............  .............  ....................  ................................................................................................................................</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line">    92.10%    91.86%          1174  server         libc-2.17.so          [.] __memset_sse2</span><br><span class="line">            |</span><br><span class="line">            |--58.84%--start_thread</span><br><span class="line">            |          __memset_sse2</span><br><span class="line">            |</span><br><span class="line">             --33.02%--__libc_start_main</span><br><span class="line">                       __memset_sse2</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>但是这些输出报告还是不太友好，为了更好的发现cpu瓶颈在哪里，就可以使用火焰图进行性能分析。</p>
+<h1 id="3-火焰图-Flame-Graphs"><a href="#3-火焰图-Flame-Graphs" class="headerlink" title="3. 火焰图 Flame Graphs"></a>3. 火焰图 Flame Graphs</h1><p><strong>git仓库地址：<a href="https://github.com/brendangregg/FlameGraph" target="_blank" rel="noopener">https://github.com/brendangregg/FlameGraph</a></strong><br><strong>主页：<a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></strong></p>
+<p><strong>火焰图的使用方法：</strong></p>
+<ol>
+<li><p>下载FlameGraph源码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:brendangregg/FlameGraph.git</span><br><span class="line"></span><br><span class="line">wget https://github.com/brendangregg/FlameGraph/archive/refs/heads/master.zip</span><br><span class="line">unzip master.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>FlameGraph二进制目录加入PATH环境变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$&#123;PATH&#125;:/home/perf/FlameGraph/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>perf进行cpu采样，并生成perf栈报告</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">perf record -F 99 -a -g -- sleep 60</span><br><span class="line">perf script &gt; out.perf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>stackcollapse-perf.pl 分析perf output</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stackcollapse-perf.pl out.perf &gt; out.folded</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>flamegraph.pl 生成SVG.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flamegraph.pl out.folded &gt; allcpu.svg</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>xxx图片</p>
+<p><strong>perf涉及的功能点太多了，后面再详细写一篇内容来介绍这个工具。</strong></p>
+<p>常见的perf使用例子参考:<a href="https://www.brendangregg.com/perf.html" target="_blank" rel="noopener">perf Examples</a></p>
+<p><strong>火焰图除了cpu分析以外还有On-CPU, Off-CPU, 还有 Memory, Hot/Cold, Differential 等等.</strong></p>
+<p>更多文档参考<a href="https://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">Flame Graphs</a></p>
+<h1 id="进阶难题：Linux-cpu负载不均"><a href="#进阶难题：Linux-cpu负载不均" class="headerlink" title="进阶难题：Linux cpu负载不均"></a>进阶难题：Linux cpu负载不均</h1><p>问题：写了一个server，多线程的，但是在多核cpu设备上总是把一个核跑到idle为0，但是其他核还很空闲，导致响应性能很差。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# mpstat -P ALL 1</span><br><span class="line">Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12/20/2021      _x86_64_        (2 CPU)</span><br><span class="line">04:41:53 PM    0    2.02    0.00    1.01    0.00    0.00    0.00    0.00    0.00    0.00   96.97</span><br><span class="line">04:41:53 PM    1    95.02    0.00    1.01    0.00    0.00    0.00    0.00    0.00    0.00   4.97</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>获取进程cpu affinity（亲和性）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>grub2-editenv /boot/grub2/grubenv unset isolcpus</p>
+</li>
+<li><p><a href="https://blog.csdn.net/lihualoveyou/article/details/78236267" target="_blank" rel="noopener">grub2配置原理分析</a></p>
+</li>
+<li></li>
+</ol>
+<p>grub:</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>Linux cpu瓶颈问题定位，首先使用top ps pidstat mpstat等命令查看系统资源，进行初步定位。</li>
+<li>进一步perf进行cpu热点采样，精确到函数栈定位性能问题。</li>
+<li>perf ouput可读性一般，使用火焰图实现函数栈数据的分层数据可视化，快速分析cpu上使用最频繁的进程函数栈。</li>
+<li>进阶：cpu负载不均，这是比较少见的问题</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="ckxmwecqx00007k7cffog9cie" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Linux/Linux_capabilities" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/08/02/Linux/Linux_capabilities/" class="article-date">
+  <time datetime="2021-08-01T16:00:00.000Z" itemprop="datePublished">2021-08-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/08/02/Linux/Linux_capabilities/">【Linux】如何使用capabilities机制实现进程权限管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="systemd机制"><a href="#systemd机制" class="headerlink" title="systemd机制"></a>systemd机制</h1><p>systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 /usr/lib/systemd/systemd --switched-root --system --deserialize 22</span><br></pre></td></tr></table></figure>
+
+<p>systemd进程通常不会被用户调用，而是由/sbin/init软链接，在最开始的启动过程拉起。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# ls -l /sbin/init</span><br><span class="line">lrwxrwxrwx 1 root root 22 Jul 11  2019 /sbin/init -&gt; ../lib/systemd/systemd</span><br></pre></td></tr></table></figure>
+
+<h2 id="systemd-添加nginx服务实践"><a href="#systemd-添加nginx服务实践" class="headerlink" title="systemd 添加nginx服务实践"></a>systemd 添加nginx服务实践</h2><ol>
+<li><p>添加service</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/systemd/system/nginx.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=nginx</span><br><span class="line">After=aliyun.target</span><br><span class="line">Wants=aliyun.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/local/nginx/sbin/nginx</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=1min</span><br><span class="line">StartLimitInterval=36000</span><br><span class="line">StartLimitBurst=5</span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>systemd load新的服务文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统启动过程中拉起服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动拉起服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">[root@ink system]# service nginx start</span><br><span class="line">Redirecting to /bin/systemctl start nginx.service</span><br><span class="line">[root@ink system]# ps auxf | grep nginx | grep -v grep</span><br><span class="line">root      3796  0.0  0.0  25004   768 ?        Ss   11:06   0:00 nginx: master process /usr/local/nginx/sbin/nginx</span><br><span class="line">nobody    3797  0.0  0.1  25420  1484 ?        S    11:06   0:00  \_ nginx: worker process</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# systemctl enable nginx.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /etc/systemd/system/nginx.service.</span><br><span class="line">[root@ink system]# systemctl status nginx.service</span><br><span class="line">● nginx.service - nginx</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/nginx.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看服务启动的日志</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# journalctl -u nginx.service</span><br><span class="line">-- Logs begin at Thu 2019-07-11 11:10:15 CST, end at Fri 2021-07-23 11:40:01 CST. --</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:16:41 ink systemd[1]: Started nginx.</span><br><span class="line">Jul 23 11:25:48 ink systemd[1]: Started nginx.</span><br><span class="line">-- Reboot --</span><br><span class="line">Jul 23 11:30:43 ink systemd[1]: Started nginx.</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><a href="https://man7.org/linux/man-pages/man1/systemd.1.html" target="_blank" rel="noopener">systemd(1) — Linux manual page</a></p>
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units" target="_blank" rel="noopener">How To Use Systemctl to Manage Systemd Services and Units</a></p>
+<h1 id="进程权限管理"><a href="#进程权限管理" class="headerlink" title="进程权限管理"></a>进程权限管理</h1><h2 id="用户-组"><a href="#用户-组" class="headerlink" title="用户/组"></a>用户/组</h2><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
+<p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护</p>
+<ol>
+<li><p>Linux 查看所有用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Linux 查看用户组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/group</span><br><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line">daemon:x:2:</span><br><span class="line">sys:x:3:</span><br><span class="line">adm:x:4:</span><br></pre></td></tr></table></figure></li>
+<li><p>getent<br>linux中用于提供查询用户信息的命令</p>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getent passwd</span><br><span class="line">getent group</span><br><span class="line">getent group daemon</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>Linux新增用户<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# useradd test -U -p 123</span><br><span class="line">[root@ink system]# su test</span><br><span class="line">[test@ink system]$ ls -l</span><br><span class="line">total 40</span><br><span class="line">-rw-r--r--  1 root root  492 Jul 21 01:17 aliyun.service</span><br><span class="line">-rw-r--r--  1 root root  214 Jul 21 01:17 AssistDaemon.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 basic.target.wants</span><br><span class="line">lrwxrwxrwx. 1 root root   37 Jul 11  2019 default.target -&gt; /lib/systemd/system/multi-user.target</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 default.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 getty.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 local-fs.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 23 11:15 multi-user.target.wants</span><br><span class="line">-rw-r--r--  1 root root  248 Jul 23 11:28 nginx.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 sysinit.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 system-update.target.wants</span><br><span class="line">[test@ink system]$ mv nginx.service nginx.service.back</span><br><span class="line">mv: cannot move ‘nginx.service’ to ‘nginx.service.back’: Permission denied</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>超级用户：root id 为0，有着系统中最大的权限，可以访问系统中的任何文件，一般使用root账号来执行系统管理的任务。上面的例子可以看出普通用户test，无法修改nginx.service。</p>
+<h2 id="进程权限"><a href="#进程权限" class="headerlink" title="进程权限"></a>进程权限</h2><ol>
+<li><p>编写demo进程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    daemon(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gcc test.c -o demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>root账户拉起test进程，并查看进程的用户和用户组，都为root</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# ./demo</span><br><span class="line">[root@ink code]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1609 root     root     ./demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>切换test用户，拉起进程</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# kill -9 $(pidof demo)</span><br><span class="line">[root@ink code]# su test</span><br><span class="line">[test@ink code]$ ./demo</span><br><span class="line">[test@ink code]$ ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1702 test     test     ./demo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件的权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# ls -l test</span><br><span class="line">-rw-r--r-- 1 root root 0 Jul 26 10:13 test</span><br><span class="line"></span><br><span class="line">[root@ink test]# chmod 754 ./test</span><br><span class="line">[root@ink test]# ls -l</span><br><span class="line">total 0</span><br><span class="line">-rwxr-xr-- 1 root root 0 Jul 26 10:13 test</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>-rwxrwxrwx</th>
+<th>详解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>第一个字段 -代表文件，d代表目录，l代表链接，c代表字符型设备，b代表块设备，n代表网络设备</td>
+</tr>
+<tr>
+<td>rwx</td>
+<td>代表所有者的权限：这个文件对应就是root  可读、可写、可执行</td>
+</tr>
+<tr>
+<td>r-x</td>
+<td>代表同组其他用户的权限：可读、不可写、可执行</td>
+</tr>
+<tr>
+<td>r–</td>
+<td>代表其他用户的其他权限：可读、不可写、不可执行</td>
+</tr>
+</tbody></table>
+<h1 id="capabilities-机制"><a href="#capabilities-机制" class="headerlink" title="capabilities  机制"></a>capabilities  机制</h1><p><strong>问题：</strong></p>
+<p><strong>1. 编写的daemon不需要root用户的所有权限，独立账号运行安全性更高</strong></p>
+<p><strong>2. 更改为普通用户拉起daemon，需要读取部分root权限才可以正常运行业务</strong></p>
+<p><strong>解决方法：</strong></p>
+<p><strong>1. 使用systemd service 管理，指定用户和用户启动进程</strong></p>
+<p><strong>2. 使用linux capabilitie 管理进程的权限，保障最小权限正常运行业务</strong></p>
+        
+          <p class="article-more-link">
+            <a href="/2021/08/02/Linux/Linux_capabilities/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="ckxmwecrd00037k7cegci1slz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-algorithm/sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/14/algorithm/sort/" class="article-date">
+  <time datetime="2020-10-13T16:00:00.000Z" itemprop="datePublished">2020-10-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><h2 id="冒泡排序思想"><a href="#冒泡排序思想" class="headerlink" title="冒泡排序思想"></a>冒泡排序思想</h2><ol>
+<li>循环遍历输入的数组（这层循环确定已排序区间和未排序区间）</li>
+<li>内部循环遍历未排序的区间（这层进行冒泡比较和调换）</li>
+<li>比较内部循环相邻两个数据是否满足比较条件（例如小于），不满足就进行交换，再接着向后遍历，一直到遍历完未排序区间</li>
+<li>优化点：定义一个交换标记，有交换时置位true，未有交换时提前退出循环</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>* first, <span class="keyword">int</span>* second)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = *first;</span><br><span class="line">        *first = *second;</span><br><span class="line">        *second = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubble_sort</span><span class="params">(<span class="keyword">int</span> [] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n - i <span class="number">-1</span>; ++j) &#123; <span class="comment">//j &lt; n-i-1是关键，j+1就代表着未冒泡的最后一个数</span></span><br><span class="line">            <span class="keyword">if</span> (a[j] &gt; a[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                swap(&amp;a[j], &amp;a[j+<span class="number">1</span>]);</span><br><span class="line">                flag = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!flag) &#123; <span class="comment">//整个过程没有一次数据交换，就可以退出，提前结束排序了</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="冒泡排序算法分析"><a href="#冒泡排序算法分析" class="headerlink" title="冒泡排序算法分析"></a>冒泡排序算法分析</h2><ol>
+<li>原地排序算法（只涉及原内存空间的排序，空间复杂度为O(1)）</li>
+<li>相邻两个数据==时不交换，是稳定排序算法</li>
+<li>时间复杂度：最好O(n) 一轮循环直接结束，无需进行交换；最坏O(n^2) 要进行排序的数据时逆序的；平均O(n^2)涉及两层n常量的循环</li>
+</ol>
+<h1 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h1><h2 id="插入排序思想"><a href="#插入排序思想" class="headerlink" title="插入排序思想"></a>插入排序思想</h2><ol>
+<li>循环遍历输入的数组（这层循环确定已排序区间和未排序区间），拿到当前需要进行插入排序的值</li>
+<li>内层循环递减遍历已排序区间的数组，与当前需要插入的值进行比较，与插入值相比满足比较条件的向后移，一直找到插入的位置break</li>
+<li>break之后的索引+1（因为偏移到了未满足条件的前一个值了）即是当前值正确插入的位置<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;   <span class="comment">//遍历下标从1开始</span></span><br><span class="line">        <span class="keyword">int</span> val = a[i];</span><br><span class="line">        <span class="keyword">int</span> j = i <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (; j &gt;= <span class="number">0</span>; --j) </span><br><span class="line">            <span class="keyword">if</span> (a[j] &gt; val) &#123;</span><br><span class="line">                a[j+<span class="number">1</span>] = a[j];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;      <span class="comment">//这里需要break; 不然索引不对</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        a[j+<span class="number">1</span>] = val;       <span class="comment">//这里应该是j+1，因为已经向前偏移一位了</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="插入排序分析"><a href="#插入排序分析" class="headerlink" title="插入排序分析"></a>插入排序分析</h2><ol>
+<li>原地排序（只涉及原内存空间的排序，空间复杂度为O(1)）</li>
+<li>当前需要插入的值与比较值==时即break跳出循环，这样可以保证两个相同的值在数组中的位置不变，是稳定排序算法</li>
+<li>时间复杂度：最好O(n)，最坏O(n^2)，平均 O(n^2)</li>
+</ol>
+<h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h1><h2 id="归并排序思想"><a href="#归并排序思想" class="headerlink" title="归并排序思想"></a>归并排序思想</h2><ol>
+<li>归并排序用的是分治思想，将1个大问题递归分解小问题，处理完小问题之后再进行合并，最终处理完整个问题</li>
+<li>归并排序数组：将数组递归平分成2个小数组，针对前后两部分进行排序，排序完再讲前后两部分进行合并</li>
+<li>归并分解公式 merge_sort(array, p, r) = merge_sort(array, p, (p+r)/2) + merge_sort(array, (p+r)/2 + 1, r)</li>
+<li>递归终止条件：p &gt;= r</li>
+<li>归并排序的重点在于合并过程merge(array, p, q)：<br>. 1）根据传入p,q，分别开辟前后两个子数组L和R<br>. 2）分别存入array从p, (p+r)/2和(p+r)/2+1,r的数据<br>. 3) 循环比较L和R的数据，将满足条件的值放在：array从p索引开始的位置，依次向后递增<br>. 4) L和R有一个数组的数据被放空当前循环结束，然后将剩余未遍历完的数据放入array递增的后续位置</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> m = (p+q)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> nl = m-p+<span class="number">1</span>; <span class="comment">//左区间数组的大小（因为p,q都是元素下标，所以数组大小要+1）</span></span><br><span class="line">    <span class="keyword">int</span> nr = q-m;   <span class="comment">//右区间数组的大小</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span>* L = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(nl);  <span class="comment">//应该对L和R进行返回值判断，这里展示算法过程忽略</span></span><br><span class="line">    <span class="keyword">int</span>* R = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(nr);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> i,j,k;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; nl; ++i) &#123;    <span class="comment">//将左右区间的元素存入L和R数组，</span></span><br><span class="line">        L[i] = a[p+i];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (j=<span class="number">0</span>; j &lt; nr; ++j) &#123;</span><br><span class="line">        R[j] = a[m+<span class="number">1</span>+j];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    k = p;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (i &lt; nl &amp;&amp; j &lt; nr) &#123;</span><br><span class="line">        <span class="keyword">if</span> (L[i] &lt;= R[j]) &#123;     <span class="comment">//这里按照从小到大进行排序</span></span><br><span class="line">            a[k++] = L[i++];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            a[k++] = R[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (i &lt; nl) &#123;            <span class="comment">//将L或者R数组从未填完的元素填入a数组中</span></span><br><span class="line">        a[k++] = L[i++];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (j &lt; nr) &#123;</span><br><span class="line">        a[k++] = R[j++];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">free</span>(L);</span><br><span class="line">    <span class="built_in">free</span>(R);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (p &lt; q) &#123;            <span class="comment">//递归终止条件 p&gt;=q</span></span><br><span class="line">        <span class="keyword">int</span> m = (p+q)/<span class="number">2</span>;</span><br><span class="line">        merge_sort(a, p, m);    <span class="comment">//分成两个子数组进行排序</span></span><br><span class="line">        merge_sort(a, m+<span class="number">1</span>, q);</span><br><span class="line">        merge(a, p, q);     <span class="comment">//合并两个已排序好的子数组</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="归并排序分析"><a href="#归并排序分析" class="headerlink" title="归并排序分析"></a>归并排序分析</h2><ol>
+<li>非原地排序算法，merge的过程中开辟了新空间，空间复杂度为O(n)</li>
+<li>当L和R子数组值进行比较时，值相同，填入L的值到array，这样可以保证两个相同的值在数组中的位置不变，是稳定排序算法</li>
+<li>时间复杂度：归并排序不管数组输入的有序程序是如何，最好，最坏，平均时间复杂度都是O(nlogn)</li>
+</ol>
+<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1><h2 id="快排思想"><a href="#快排思想" class="headerlink" title="快排思想"></a>快排思想</h2><ol>
+<li>快排利用的也是分治思想</li>
+<li>从array的low到high之间选取任意位置一个数组作为分区点(pivot)</li>
+<li>遍历array从low到high，将满足比较条件（例如小于）的数据置于左区间，不满足的置于右区间，中间填写pivot的数据</li>
+<li>继续递归排序左区间和右区间</li>
+<li>递归公式：quick_sort(array, low, high) = quick_sort(array, low, pivot-1) + quick_sort(array, pivot+1, high)</li>
+<li>递归终止条件：low &gt;= high</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>* first, <span class="keyword">int</span>* second)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = *first;</span><br><span class="line">    *first = *second;</span><br><span class="line">    *second = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pivot = a[high];    <span class="comment">//分区点数据取当前数组最后一个元素</span></span><br><span class="line">    <span class="keyword">int</span> i = low - <span class="number">1</span>;        <span class="comment">//已排序区间最后一个元素的索引</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = low; j &lt; high; ++j) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[j] &lt;= pivot) &#123; <span class="comment">//小于等于pivot的元素都放入已排序区间</span></span><br><span class="line">            i++;</span><br><span class="line">            swap(&amp;a[i], &amp;a[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">                        </span><br><span class="line">    swap(&amp;a[i+<span class="number">1</span>], &amp;a[high]);  <span class="comment">//分区数据已排序区间（左区间）的下一个位置</span></span><br><span class="line">    <span class="keyword">return</span> i+<span class="number">1</span>;               <span class="comment">//返回pivot的位置</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high) &#123;</span><br><span class="line">        <span class="keyword">int</span> pivot = partition(a, low, high);</span><br><span class="line">        quick_sort(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">        quick_sort(a, pivot+<span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="快排分析"><a href="#快排分析" class="headerlink" title="快排分析"></a>快排分析</h2><ol>
+<li>原地排序算法</li>
+<li>partition过程中涉及交换操作，相同元素的先后顺序可能发生改变，非稳定的排序算法</li>
+<li>时间复杂度：平均时间复杂度为O(logn)，极端情况下为O(n^2)</li>
+<li>快排的关键在于partition过程，实现了原址重排</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="ckxmwecrd00017k7c8uj0dseb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Linux/Linux_coredump" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/08/Linux/Linux_coredump/" class="article-date">
+  <time datetime="2020-08-07T16:00:00.000Z" itemprop="datePublished">2020-08-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/08/Linux/Linux_coredump/">【Linux】cpu性能问题排查</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h1><p>Linux信号处理机制的一种，收到对应信号，会产生核心存储文件，同时进程终止。core文件会把保存当时进程的内存信息，可以通过gdb进行调试。</p>
+<h1 id="默认行为core的信号列表"><a href="#默认行为core的信号列表" class="headerlink" title="默认行为core的信号列表"></a>默认行为core的信号列表</h1><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>信号值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SIGQUIT</td>
+<td>3</td>
+<td>终端退出</td>
+</tr>
+<tr>
+<td>SIGSEGV</td>
+<td>11</td>
+<td>无效的内存引用</td>
+</tr>
+<tr>
+<td>SIGSYS</td>
+<td>31</td>
+<td>终端退出</td>
+</tr>
+</tbody></table>
+<h1 id="core文件参数设置"><a href="#core文件参数设置" class="headerlink" title="core文件参数设置"></a>core文件参数设置</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/proc/sys/kernel/core_pattern</span><br><span class="line"></span><br><span class="line">默认的配置</span><br><span class="line">[root@localhost ~]# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/libexec/abrt-hook-ccpp %s %c %p %u %g %t %e</span><br><span class="line"></span><br><span class="line"><span class="meta">%</span><span class="bash">s 造成coredump的信号值</span></span><br><span class="line"><span class="meta">%</span><span class="bash">c 崩溃进程core文件大小的软限制</span></span><br><span class="line"><span class="meta">%</span><span class="bash">p 进程的pid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">u 进程的uid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">g 进程的gid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">t 进程出core的时间</span></span><br><span class="line"><span class="meta">%</span><span class="bash">e  执行出core的命令</span></span><br></pre></td></tr></table></figure>
+
+<p>修改core dump参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;&#x2F;root&#x2F;core_dump&#x2F;core-%s-%e-%p-%t&quot; &gt; &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;core_pattern</span><br></pre></td></tr></table></figure>
+
+<h1 id="core文件生成限制"><a href="#core文件生成限制" class="headerlink" title="core文件生成限制"></a>core文件生成限制</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 11039</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 65536</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 11039</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>ulimit -a 或者 unlimit -c可以看到</li>
+<li>core file size代表 core文件大小：0代表 core无法生成</li>
+<li>core生成，受到 core file size 和file size两个限制</li>
+</ol>
+<p>修改core文件大小限制为unlimited</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ulimit -c unlimited</span><br><span class="line">[root@localhost ~]# ulimit -c</span><br><span class="line">unlimited</span><br></pre></td></tr></table></figure>
+
+<p>Linux编程中可以使用getrlimit和setrlimit进行设置</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getrlimit</span><span class="params">(<span class="keyword">int</span> resource, struct rlimit *rlim)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setrlimit</span><span class="params">(<span class="keyword">int</span> resource, <span class="keyword">const</span> struct rlimit *rlim)</span></span>;</span><br><span class="line">RLIMIT_CORE</span><br><span class="line">     Maximum <span class="built_in">size</span> of core file.  When <span class="number">0</span> no core dump files are created.  When nonzero, larger dumps  are  truncated  to <span class="keyword">this</span> <span class="built_in">size</span>.</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2020/08/08/Linux/Linux_coredump/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/08/08/Linux/Linux_coredump/" data-id="ckxmwecrd00047k7chh5ofc58" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-computer-system/gcc-compile" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/08/computer-system/gcc-compile/" class="article-date">
+  <time datetime="2020-08-07T16:00:00.000Z" itemprop="datePublished">2020-08-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/08/computer-system/gcc-compile/">【操作系统】hello world 编译过程</a>
     </h1>
   
 
@@ -196,96 +680,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/10/10/computer-system/gcc-compile/" data-id="ckxmrlgfo00018k7cgjjl3woa" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-algorithm/sort" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/14/algorithm/sort/" class="article-date">
-  <time datetime="2020-10-14T12:40:55.550Z" itemprop="datePublished">2020-10-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><h2 id="冒泡排序思想"><a href="#冒泡排序思想" class="headerlink" title="冒泡排序思想"></a>冒泡排序思想</h2><ol>
-<li>循环遍历输入的数组（这层循环确定已排序区间和未排序区间）</li>
-<li>内部循环遍历未排序的区间（这层进行冒泡比较和调换）</li>
-<li>比较内部循环相邻两个数据是否满足比较条件（例如小于），不满足就进行交换，再接着向后遍历，一直到遍历完未排序区间</li>
-<li>优化点：定义一个交换标记，有交换时置位true，未有交换时提前退出循环</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>* first, <span class="keyword">int</span>* second)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = *first;</span><br><span class="line">        *first = *second;</span><br><span class="line">        *second = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubble_sort</span><span class="params">(<span class="keyword">int</span> [] a, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n - i <span class="number">-1</span>; ++j) &#123; <span class="comment">//j &lt; n-i-1是关键，j+1就代表着未冒泡的最后一个数</span></span><br><span class="line">            <span class="keyword">if</span> (a[j] &gt; a[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                swap(&amp;a[j], &amp;a[j+<span class="number">1</span>]);</span><br><span class="line">                flag = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!flag) &#123; <span class="comment">//整个过程没有一次数据交换，就可以退出，提前结束排序了</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="冒泡排序算法分析"><a href="#冒泡排序算法分析" class="headerlink" title="冒泡排序算法分析"></a>冒泡排序算法分析</h2><ol>
-<li>原地排序算法（只涉及原内存空间的排序，空间复杂度为O(1)）</li>
-<li>相邻两个数据==时不交换，是稳定排序算法</li>
-<li>时间复杂度：最好O(n) 一轮循环直接结束，无需进行交换；最坏O(n^2) 要进行排序的数据时逆序的；平均O(n^2)涉及两层n常量的循环</li>
-</ol>
-<h1 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h1><h2 id="插入排序思想"><a href="#插入排序思想" class="headerlink" title="插入排序思想"></a>插入排序思想</h2><ol>
-<li>循环遍历输入的数组（这层循环确定已排序区间和未排序区间），拿到当前需要进行插入排序的值</li>
-<li>内层循环递减遍历已排序区间的数组，与当前需要插入的值进行比较，与插入值相比满足比较条件的向后移，一直找到插入的位置break</li>
-<li>break之后的索引+1（因为偏移到了未满足条件的前一个值了）即是当前值正确插入的位置<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;   <span class="comment">//遍历下标从1开始</span></span><br><span class="line">        <span class="keyword">int</span> val = a[i];</span><br><span class="line">        <span class="keyword">int</span> j = i <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (; j &gt;= <span class="number">0</span>; --j) </span><br><span class="line">            <span class="keyword">if</span> (a[j] &gt; val) &#123;</span><br><span class="line">                a[j+<span class="number">1</span>] = a[j];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;      <span class="comment">//这里需要break; 不然索引不对</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        a[j+<span class="number">1</span>] = val;       <span class="comment">//这里应该是j+1，因为已经向前偏移一位了</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h2 id="插入排序分析"><a href="#插入排序分析" class="headerlink" title="插入排序分析"></a>插入排序分析</h2><ol>
-<li>原地排序（只涉及原内存空间的排序，空间复杂度为O(1)）</li>
-<li>当前需要插入的值与比较值==时即break跳出循环，这样可以保证两个相同的值在数组中的位置不变，是稳定排序算法</li>
-<li>时间复杂度：最好O(n)，最坏O(n^2)，平均 O(n^2)</li>
-</ol>
-<h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h1><h2 id="归并排序思想"><a href="#归并排序思想" class="headerlink" title="归并排序思想"></a>归并排序思想</h2><ol>
-<li>归并排序用的是分治思想，将1个大问题递归分解小问题，处理完小问题之后再进行合并，最终处理完整个问题</li>
-<li>归并排序数组：将数组递归平分成2个小数组，针对前后两部分进行排序，排序完再讲前后两部分进行合并</li>
-<li>归并分解公式 merge_sort(array, p, r) = merge_sort(array, p, (p+r)/2) + merge_sort(array, (p+r)/2 + 1, r)</li>
-<li>递归终止条件：p &gt;= r</li>
-<li>归并排序的重点在于合并过程merge(array, p, q)：<br>. 1）根据传入p,q，分别开辟前后两个子数组L和R<br>. 2）分别存入array从p, (p+r)/2和(p+r)/2+1,r的数据<br>. 3) 循环比较L和R的数据，将满足条件的值放在：array从p索引开始的位置，依次向后递增<br>. 4) L和R有一个数组的数据被放空当前循环结束，然后将剩余未遍历完的数据放入array递增的后续位置</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> m = (p+q)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> nl = m-p+<span class="number">1</span>; <span class="comment">//左区间数组的大小（因为p,q都是元素下标，所以数组大小要+1）</span></span><br><span class="line">    <span class="keyword">int</span> nr = q-m;   <span class="comment">//右区间数组的大小</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span>* L = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(nl);  <span class="comment">//应该对L和R进行返回值判断，这里展示算法过程忽略</span></span><br><span class="line">    <span class="keyword">int</span>* R = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(nr);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> i,j,k;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; nl; ++i) &#123;    <span class="comment">//将左右区间的元素存入L和R数组，</span></span><br><span class="line">        L[i] = a[p+i];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (j=<span class="number">0</span>; j &lt; nr; ++j) &#123;</span><br><span class="line">        R[j] = a[m+<span class="number">1</span>+j];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    k = p;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (i &lt; nl &amp;&amp; j &lt; nr) &#123;</span><br><span class="line">        <span class="keyword">if</span> (L[i] &lt;= R[j]) &#123;     <span class="comment">//这里按照从小到大进行排序</span></span><br><span class="line">            a[k++] = L[i++];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            a[k++] = R[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (i &lt; nl) &#123;            <span class="comment">//将L或者R数组从未填完的元素填入a数组中</span></span><br><span class="line">        a[k++] = L[i++];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (j &lt; nr) &#123;</span><br><span class="line">        a[k++] = R[j++];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">free</span>(L);</span><br><span class="line">    <span class="built_in">free</span>(R);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (p &lt; q) &#123;            <span class="comment">//递归终止条件 p&gt;=q</span></span><br><span class="line">        <span class="keyword">int</span> m = (p+q)/<span class="number">2</span>;</span><br><span class="line">        merge_sort(a, p, m);    <span class="comment">//分成两个子数组进行排序</span></span><br><span class="line">        merge_sort(a, m+<span class="number">1</span>, q);</span><br><span class="line">        merge(a, p, q);     <span class="comment">//合并两个已排序好的子数组</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="归并排序分析"><a href="#归并排序分析" class="headerlink" title="归并排序分析"></a>归并排序分析</h2><ol>
-<li>非原地排序算法，merge的过程中开辟了新空间，空间复杂度为O(n)</li>
-<li>当L和R子数组值进行比较时，值相同，填入L的值到array，这样可以保证两个相同的值在数组中的位置不变，是稳定排序算法</li>
-<li>时间复杂度：归并排序不管数组输入的有序程序是如何，最好，最坏，平均时间复杂度都是O(nlogn)</li>
-</ol>
-<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1><h2 id="快排思想"><a href="#快排思想" class="headerlink" title="快排思想"></a>快排思想</h2><ol>
-<li>快排利用的也是分治思想</li>
-<li>从array的low到high之间选取任意位置一个数组作为分区点(pivot)</li>
-<li>遍历array从low到high，将满足比较条件（例如小于）的数据置于左区间，不满足的置于右区间，中间填写pivot的数据</li>
-<li>继续递归排序左区间和右区间</li>
-<li>递归公式：quick_sort(array, low, high) = quick_sort(array, low, pivot-1) + quick_sort(array, pivot+1, high)</li>
-<li>递归终止条件：low &gt;= high</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>* first, <span class="keyword">int</span>* second)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = *first;</span><br><span class="line">    *first = *second;</span><br><span class="line">    *second = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pivot = a[high];    <span class="comment">//分区点数据取当前数组最后一个元素</span></span><br><span class="line">    <span class="keyword">int</span> i = low - <span class="number">1</span>;        <span class="comment">//已排序区间最后一个元素的索引</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = low; j &lt; high; ++j) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[j] &lt;= pivot) &#123; <span class="comment">//小于等于pivot的元素都放入已排序区间</span></span><br><span class="line">            i++;</span><br><span class="line">            swap(&amp;a[i], &amp;a[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">                        </span><br><span class="line">    swap(&amp;a[i+<span class="number">1</span>], &amp;a[high]);  <span class="comment">//分区数据已排序区间（左区间）的下一个位置</span></span><br><span class="line">    <span class="keyword">return</span> i+<span class="number">1</span>;               <span class="comment">//返回pivot的位置</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high) &#123;</span><br><span class="line">        <span class="keyword">int</span> pivot = partition(a, low, high);</span><br><span class="line">        quick_sort(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">        quick_sort(a, pivot+<span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="快排分析"><a href="#快排分析" class="headerlink" title="快排分析"></a>快排分析</h2><ol>
-<li>原地排序算法</li>
-<li>partition过程中涉及交换操作，相同元素的先后顺序可能发生改变，非稳定的排序算法</li>
-<li>时间复杂度：平均时间复杂度为O(logn)，极端情况下为O(n^2)</li>
-<li>快排的关键在于partition过程，实现了原址重排</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="ckxmrlgf900008k7c3dbldcfb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/08/08/computer-system/gcc-compile/" data-id="ckxmwecrd00057k7cf6mne42z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -302,40 +697,54 @@
           <aside id="sidebar">
   
     
-
-  
-    
-
-  
-    
-  
-    
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2021/10/10/computer-system/gcc-compile/">【操作系统】hello world 编译过程</a>
+            <a href="/2021/12/26/Linux/Linux_cpu/">【Linux】cpu性能问题排查</a>
+          </li>
+        
+          <li>
+            <a href="/2021/08/02/Linux/Linux_capabilities/">【Linux】如何使用capabilities机制实现进程权限管理</a>
           </li>
         
           <li>
             <a href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
           </li>
         
+          <li>
+            <a href="/2020/08/08/Linux/Linux_coredump/">【Linux】cpu性能问题排查</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/08/computer-system/gcc-compile/">【操作系统】hello world 编译过程</a>
+          </li>
+        
       </ul>
     </div>
   </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
 
   
 </aside>
@@ -353,9 +762,9 @@
     </div>
     <nav id="mobile-nav">
   
-    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/" class="mobile-nav-link">主页</a>
   
-    <a href="/archives" class="mobile-nav-link">Archives</a>
+    <a href="/archives" class="mobile-nav-link">归档</a>
   
 </nav>
     
