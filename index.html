@@ -150,7 +150,7 @@
 </li>
 <li><p><strong>perf top -e raw_syscalls:sys_enter -ns comm</strong></p>
 </li>
-<li><p>-e <event>, –event=<event> Select the PMU event. Selection can be a symbolic event name (use perf list to list all events) or a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a hexadecimal event descript</p>
+<li><p>-e <event>, –event=<event> Select the PMU event. Selection can be a symbolic event name (use perf list to list all events) or a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a hexadecimal event descript</event></event></p>
 </li>
 </ul>
 <p>追踪系统调用使用的，可以通过perf list查看所有的事件名称，当热点抽样发现一种系统调用非常频繁时，就可以-e指定排查是哪个进程调用触发的。</p>
@@ -194,36 +194,40 @@
 
 </li>
 </ol>
-<p>xxx图片</p>
+<p><img src="/2021/12/26/Linux/Linux_cpu/allcpu.png" alt="cpu调用栈火焰图"></p>
+<p>这里是我写的跑在Linux系统上的内存分配demo，火焰图函数栈比较简单。但是真实服务器上进程多，函数栈嵌套深也复杂。参考官方提供的mysql cpu图：</p>
+<p><img src="/2021/12/26/Linux/Linux_cpu/cpu-mysql-updated.png" alt="cpu-mysql-updated"></p>
 <p><strong>perf涉及的功能点太多了，后面再详细写一篇内容来介绍这个工具。</strong></p>
 <p>常见的perf使用例子参考:<a href="https://www.brendangregg.com/perf.html" target="_blank" rel="noopener">perf Examples</a></p>
 <p><strong>火焰图除了cpu分析以外还有On-CPU, Off-CPU, 还有 Memory, Hot/Cold, Differential 等等.</strong></p>
 <p>更多文档参考<a href="https://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">Flame Graphs</a></p>
 <h1 id="进阶难题：Linux-cpu负载不均"><a href="#进阶难题：Linux-cpu负载不均" class="headerlink" title="进阶难题：Linux cpu负载不均"></a>进阶难题：Linux cpu负载不均</h1><p>问题：写了一个server，多线程的，但是在多核cpu设备上总是把一个核跑到idle为0，但是其他核还很空闲，导致响应性能很差。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# mpstat -P ALL 1</span><br><span class="line">Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12/20/2021      _x86_64_        (2 CPU)</span><br><span class="line">04:41:53 PM    0    2.02    0.00    1.01    0.00    0.00    0.00    0.00    0.00    0.00   96.97</span><br><span class="line">04:41:53 PM    1    95.02    0.00    1.01    0.00    0.00    0.00    0.00    0.00    0.00   4.97</span><br></pre></td></tr></table></figure>
-
 <ol>
-<li><p>获取进程cpu affinity（亲和性）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>grub2-editenv /boot/grub2/grubenv unset isolcpus</p>
-</li>
-<li><p><a href="https://blog.csdn.net/lihualoveyou/article/details/78236267" target="_blank" rel="noopener">grub2配置原理分析</a></p>
-</li>
-<li></li>
+<li>获取server所有现场的cpu affinity（亲和性）<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# pidof server</span><br><span class="line">29923</span><br><span class="line">[root@ink ~]# taskset -acp 29923</span><br><span class="line">pid 29923's current affinity list: 0,1</span><br><span class="line">pid 29924's current affinity list: 0,1</span><br><span class="line">pid 29925's current affinity list: 0,1</span><br></pre></td></tr></table></figure>
+可以看到server在2c设备上，0,1核都是可以进行调度使用的，而且server是多线程的，应该不止用到一个cpu的算力。</li>
 </ol>
-<p>grub:</p>
+<p>找资料，排查整个系统可能造成这种影响的原因，发现是内核启动参数设置导致的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# grub2-editenv list</span><br><span class="line">saved_entry=CentOS Linux (3.10.0-957.21.3.el7.x86_64) 7 (Core)</span><br><span class="line">kernelopt= isolcpus=1</span><br></pre></td></tr></table></figure>
+
+<p><strong>isolcpus:</strong> 内核cpu孤立设置，isolcpus=1，代表内核启动时，隔离cpu1，不被内核调度器进行调度，只有指定运行在cpu1上的进程或者内核进程才能使用。</p>
+<ol start="2">
+<li>解决方案</li>
+</ol>
+<p>方案一：去掉cpu孤立机制，如果系统没有什么特殊需要隔离的需求，去掉之后，内核调度器通过调度算法分配是最好的。<br>方案二：进程孤立是为了其他功能需求特意实现的，<strong>对server进行改造，多进程或者多线程，再进行绑核，保障负载均衡</strong>。</p>
+<p>taskset 绑定pid 29924（server的工作线程）到cpu1上运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">taskset -cp 1 29924</span><br></pre></td></tr></table></figure>
+
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
 <li>Linux cpu瓶颈问题定位，首先使用top ps pidstat mpstat等命令查看系统资源，进行初步定位。</li>
 <li>进一步perf进行cpu热点采样，精确到函数栈定位性能问题。</li>
 <li>perf ouput可读性一般，使用火焰图实现函数栈数据的分层数据可视化，快速分析cpu上使用最频繁的进程函数栈。</li>
-<li>进阶：cpu负载不均，这是比较少见的问题</li>
+<li>进阶：cpu负载不均，这是比较少见的问题，可以去掉内核cpu孤立机制，或者自己改造多进程多线程，绑核运行，实现负载均衡。</li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="ckxmwecqx00007k7cffog9cie" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="ckxn1a44z0005v07c0l5rad52" class="article-share-link">Share</a>
       
       
     </footer>
@@ -359,7 +363,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="ckxmwecrd00037k7cegci1slz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="ckxn1a44s0001v07ccj27b1ge" class="article-share-link">Share</a>
       
       
     </footer>
@@ -452,7 +456,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="ckxmwecrd00017k7c8uj0dseb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="ckxn1a44y0004v07cez9i9kjg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -538,7 +542,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/08/08/Linux/Linux_coredump/" data-id="ckxmwecrd00047k7chh5ofc58" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/08/08/Linux/Linux_coredump/" data-id="ckxn1a44l0000v07c2yat3lvb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -574,8 +578,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>今天通过hello.c的例子，给大家讲述一下gcc的编译过程，</p>
-<h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p>插入图片 Figure 1.3 The compilation system.</p>
+        <p>今天通过hello.c的例子整理一下gcc的编译过程，</p>
+<h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p><img src="/2020/08/08/computer-system/gcc-compile/The-Compile-System.png" alt="编译系统"><br>插入图片 Figure 1.3 The compilation system.</p>
 <h1 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -663,7 +667,6 @@
 <h2 id="SP-栈保护"><a href="#SP-栈保护" class="headerlink" title="SP(栈保护)"></a>SP(栈保护)</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options</a><br><a href="https://arxiv.org/pdf/1909.05747.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1909.05747.pdf</a></p>
 <p>-fstack-protector<br>Emit extra code to check for buffer overflows, such as stack smashing attacks. This is done by adding a guard variable to functions with vulnerable objects. This includes functions that call alloca, and functions with buffers larger than 8 bytes. The guards are initialized when a function is entered and then checked when the function exits. If a guard check fails, an error message is printed and the program exits.<br>-fstack-protector-all<br>Like -fstack-protector except that all functions are protected.<br>-fstack-protector-strong<br>Like -fstack-protector but includes additional functions to be protected — those that have local array definitions, or have references to local frame addresses.</p>
 <p>链接阶段加上：-fstack-protector</p>
-<p><strong>实战用例</strong></p>
 <h2 id="RELRO（只读重定位）"><a href="#RELRO（只读重定位）" class="headerlink" title="RELRO（只读重定位）"></a>RELRO（只读重定位）</h2><p><a href="https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables" target="_blank" rel="noopener">https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables</a><br><a href="https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro" target="_blank" rel="noopener">https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro</a></p>
 <h2 id="PIC（位置无关代码）"><a href="#PIC（位置无关代码）" class="headerlink" title="PIC（位置无关代码）"></a>PIC（位置无关代码）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
 <h2 id="PIE（位置无关可执行文件）"><a href="#PIE（位置无关可执行文件）" class="headerlink" title="PIE（位置无关可执行文件）"></a>PIE（位置无关可执行文件）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
@@ -680,7 +683,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/08/08/computer-system/gcc-compile/" data-id="ckxmwecrd00057k7cf6mne42z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/08/08/computer-system/gcc-compile/" data-id="ckxn1a44w0003v07cf4mu2x3r" class="article-share-link">Share</a>
       
       
     </footer>

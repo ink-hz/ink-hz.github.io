@@ -233,19 +233,19 @@
 </tr>
 <tr>
 <td>CAP_DAC_READ_SEARCH</td>
-<td>绕过文件的读权限检查，目录读权限和执行权限检查；<br/>调用 open_by_handle_at；<br/>使用 linkat AT_EMPTY_PATH flag</td>
+<td>绕过文件的读权限检查，目录读权限和执行权限检查；<br>调用 open_by_handle_at；<br>使用 linkat AT_EMPTY_PATH flag</td>
 </tr>
 <tr>
 <td>CAP_FOWNER</td>
-<td>绕过文件属性ID和进程属性ID相匹配的权限检查。(chmod utime)，除CAP_DAC_OVERRIDE和CAP_DAC_READ_SEARC覆盖之外的操作；<br/>设置任意文件的innode标记；<br/>设置任意文件的访问控制列表(ACL);<br/>文件删除操作中忽略文件粘位；<br/>在任何用户所有的粘性文件夹中修改用户的拓展属性；<br/>指定open fcntl任意文件的O_NOATIME属性</td>
+<td>绕过文件属性ID和进程属性ID相匹配的权限检查。(chmod utime)，除CAP_DAC_OVERRIDE和CAP_DAC_READ_SEARC覆盖之外的操作；<br>设置任意文件的innode标记；<br>设置任意文件的访问控制列表(ACL);<br>文件删除操作中忽略文件粘位；<br>在任何用户所有的粘性文件夹中修改用户的拓展属性；<br>指定open fcntl任意文件的O_NOATIME属性</td>
 </tr>
 <tr>
 <td>CAP_FSETID</td>
-<td>当文件修改的时候，不清理 set-user-ID 和 set-group-ID模式位；<br/>支持进程GID不匹配文件GID属性时，可以设置文件的set-group-ID位</td>
+<td>当文件修改的时候，不清理 set-user-ID 和 set-group-ID模式位；<br>支持进程GID不匹配文件GID属性时，可以设置文件的set-group-ID位</td>
 </tr>
 <tr>
 <td>CAP_IPC_LOCK</td>
-<td>允许锁定共享内存片段(mlock(2), mlockall(2), mmap(2), shmctl(2))；<br/>允许分配内存使用大页(memfd_create(2) mmap(2), shmctl(2)).</td>
+<td>允许锁定共享内存片段(mlock(2), mlockall(2), mmap(2), shmctl(2))；<br>允许分配内存使用大页(memfd_create(2) mmap(2), shmctl(2)).</td>
 </tr>
 <tr>
 <td>CAP_IPC_OWNER</td>
@@ -261,7 +261,7 @@
 </tr>
 <tr>
 <td>CAP_LINUX_IMMUTABLE</td>
-<td>支持设置inode FS_APPEND_FL 和 FS_IMMUTABLE_FL 标记；<br/>FS_APPEND_FL：文件只能被O_APPEND标记打开；<br/>FS_IMMUTABLE_FL：文件是不能改变的，不允许修改文件内容和属性</td>
+<td>支持设置inode FS_APPEND_FL 和 FS_IMMUTABLE_FL 标记；<br>FS_APPEND_FL：文件只能被O_APPEND标记打开；<br>FS_IMMUTABLE_FL：文件是不能改变的，不允许修改文件内容和属性</td>
 </tr>
 <tr>
 <td>CAP_MAC_ADMIN (since Linux 2.6.25)</td>
@@ -277,7 +277,7 @@
 </tr>
 <tr>
 <td>CAP_NET_ADMIN</td>
-<td>执行网络相关的各种操作<br/>接口配置；<br/>管理IP防护墙，masquerading和会话管理；<br/>允许修改路由表；<br/>允许透明代理时绑定任意地址；<br/>支持设置TOS（type-of-service）；<br/>支持清理驱动统计；<br/>支持设置混淆模式；<br/>支持开启多播；<br/>支持setsockopt使用如下socket 选项：SO_DEBUG, SO_MARK, SO_PRIORITY (for a priority outside the range 0 to 6), SO_RCVBUFFORCE, and SO_SNDBUFFORCE.</td>
+<td>执行网络相关的各种操作<br>接口配置；<br>管理IP防护墙，masquerading和会话管理；<br>允许修改路由表；<br>允许透明代理时绑定任意地址；<br>支持设置TOS（type-of-service）；<br>支持清理驱动统计；<br>支持设置混淆模式；<br>支持开启多播；<br>支持setsockopt使用如下socket 选项：SO_DEBUG, SO_MARK, SO_PRIORITY (for a priority outside the range 0 to 6), SO_RCVBUFFORCE, and SO_SNDBUFFORCE.</td>
 </tr>
 <tr>
 <td>CAP_NET_BIND_SERVICE</td>
@@ -289,7 +289,7 @@
 </tr>
 <tr>
 <td>CAP_NET_RAW</td>
-<td>支持使用RAW和PACKET套接字；<br/>允许透明代理时绑定任何地址</td>
+<td>支持使用RAW和PACKET套接字；<br>允许透明代理时绑定任何地址</td>
 </tr>
 <tr>
 <td>CAP_PERFMON (since Linux 5.8)</td>
@@ -297,7 +297,7 @@
 </tr>
 <tr>
 <td>CAP_SETGID</td>
-<td>允许针对进程的GID和补充GID列表进行任意操作；<br/>在通过UNIX域套接字传递套接字证书时，忽略GID；<br/>允许写用户组ID映射在用户名称空间</td>
+<td>允许针对进程的GID和补充GID列表进行任意操作；<br>在通过UNIX域套接字传递套接字证书时，忽略GID；<br>允许写用户组ID映射在用户名称空间</td>
 </tr>
 <tr>
 <td>CAP_SETFCAP (since Linux 2.6.24)</td>
@@ -309,11 +309,11 @@
 </tr>
 <tr>
 <td>CAP_SETUID</td>
-<td>允许针对进程的UID和补充UID列表进行任意操作；<br/>在通过UNIX域套接字传递套接字证书时，忽略UID；<br/>允许写用户ID映射在用户名称空间</td>
+<td>允许针对进程的UID和补充UID列表进行任意操作；<br>在通过UNIX域套接字传递套接字证书时，忽略UID；<br>允许写用户ID映射在用户名称空间</td>
 </tr>
 <tr>
 <td>CAP_SYS_ADMIN</td>
-<td>这个属性能力设置过高了；<br/>允许执行系统管理操作（mount umount sethostname等等）；<br/>执行特权日志操作(syslog)；<br/>支持执行VM86_REQUEST_IRQ vm86命令；<br/>允许访问checkpoint/restore；<br/>允许执行BPF 操作；<br/>允许执行性能监控机制；<br/>允许针对任何System V IPC对象执行IPC_SET和IPC_RMID等操作；<br/>允许覆盖RLIMIT_NPROC资源限制；<br/>允许执行信任和安全拓展等属性的操作（xattr）；<br/>允许使用lookup_dcookie；<br/>允许使用ioprio_set设置IOPRIO_CLASS_RT 和IOPRIO_CLASS_IDLE IO调度任务；<br/></td>
+<td>这个属性能力设置过高了；<br>允许执行系统管理操作（mount umount sethostname等等）；<br>执行特权日志操作(syslog)；<br>支持执行VM86_REQUEST_IRQ vm86命令；<br>允许访问checkpoint/restore；<br>允许执行BPF 操作；<br>允许执行性能监控机制；<br>允许针对任何System V IPC对象执行IPC_SET和IPC_RMID等操作；<br>允许覆盖RLIMIT_NPROC资源限制；<br>允许执行信任和安全拓展等属性的操作（xattr）；<br>允许使用lookup_dcookie；<br>允许使用ioprio_set设置IOPRIO_CLASS_RT 和IOPRIO_CLASS_IDLE IO调度任务；<br></td>
 </tr>
 <tr>
 <td>CAP_SYS_BOOT</td>
@@ -321,7 +321,7 @@
 </tr>
 <tr>
 <td>CAP_SYS_CHROOT</td>
-<td>允许使用chroot；<br/>允许通过setns修改名称空间setns(2).</td>
+<td>允许使用chroot；<br>允许通过setns修改名称空间setns(2).</td>
 </tr>
 <tr>
 <td>CAP_SYS_MODULE</td>
@@ -329,7 +329,7 @@
 </tr>
 <tr>
 <td>CAP_SYS_NICE</td>
-<td>允许调低进程的nice值和改变其他任意进行的nice值；<br/>允许设置调用进程的实时调度策略，设置任意进程的调度策略和优先级；<br/>允许设置任意进程的CPU亲密度；<br/>允许设置任意进程的IO调度类和优先级；<br/>运用migrate_pages到任意进程，使得进程可以迁移到任何节点；<br/>允许针对任何进程使用move_pages（移动一组的处理的页面不同的NUMA节点）；<br/>允许使用mbind和move_pages的MPOL_MF_MOVE_ALL 标志</td>
+<td>允许调低进程的nice值和改变其他任意进行的nice值；<br>允许设置调用进程的实时调度策略，设置任意进程的调度策略和优先级；<br>允许设置任意进程的CPU亲密度；<br>允许设置任意进程的IO调度类和优先级；<br>运用migrate_pages到任意进程，使得进程可以迁移到任何节点；<br>允许针对任何进程使用move_pages（移动一组的处理的页面不同的NUMA节点）；<br>允许使用mbind和move_pages的MPOL_MF_MOVE_ALL 标志</td>
 </tr>
 <tr>
 <td>CAP_SYS_PACCT</td>
@@ -337,11 +337,11 @@
 </tr>
 <tr>
 <td>CAP_SYS_PTRACE</td>
-<td>允许使用ptrace追踪任何进程；<br/>允许对任意进程使用get_robust_list（获取强健futexes的清单）；<br/>允许使用process_vm_readv从到任意进程的内存中接收数据，使用process_vm_writev传送数据到任意进程的内存中；<br/>允许使用kcmp检查进程</td>
+<td>允许使用ptrace追踪任何进程；<br>允许对任意进程使用get_robust_list（获取强健futexes的清单）；<br>允许使用process_vm_readv从到任意进程的内存中接收数据，使用process_vm_writev传送数据到任意进程的内存中；<br>允许使用kcmp检查进程</td>
 </tr>
 <tr>
 <td>CAP_SYS_RAWIO</td>
-<td>允许使用I/O端口操作(iopl 和 ioperm)；<br/>允许访问/proc/kcore；<br/>允许执行ioctl的FIBMAP操作（get the file system block number of a file）；<br/>允许打开需要访问x86模型的设备-特殊的寄存器(MSRS)；<br/>允许更新/proc/sys/vm/mmap_min_addr；<br/>允许映射/proc/bus/pci中的文件；<br/>允许打开/dev/mem和/dev/kmem；<br/>允许执行各种SCSI设备命令；<br/>允许在hspa和cciss设备上执行一些特殊的操作；<br/>允许在其他设备上执行一系列设备特殊的操作</td>
+<td>允许使用I/O端口操作(iopl 和 ioperm)；<br>允许访问/proc/kcore；<br>允许执行ioctl的FIBMAP操作（get the file system block number of a file）；<br>允许打开需要访问x86模型的设备-特殊的寄存器(MSRS)；<br>允许更新/proc/sys/vm/mmap_min_addr；<br>允许映射/proc/bus/pci中的文件；<br>允许打开/dev/mem和/dev/kmem；<br>允许执行各种SCSI设备命令；<br>允许在hspa和cciss设备上执行一些特殊的操作；<br>允许在其他设备上执行一系列设备特殊的操作</td>
 </tr>
 <tr>
 <td>CAP_SYS_RESOURCE</td>
@@ -349,15 +349,15 @@
 </tr>
 <tr>
 <td>CAP_SYS_TIME</td>
-<td>允许设置系统时钟（settimeofday(2), stime(2), adjtimex(2))；<br/>允许设置实时（硬件）时钟</td>
+<td>允许设置系统时钟（settimeofday(2), stime(2), adjtimex(2))；<br>允许设置实时（硬件）时钟</td>
 </tr>
 <tr>
 <td>CAP_SYS_TTY_CONFIG</td>
-<td>允许使用vhangup（当前终端虚拟挂起）；<br/>允许在虚拟终端使用各种特权ioctl操作</td>
+<td>允许使用vhangup（当前终端虚拟挂起）；<br>允许在虚拟终端使用各种特权ioctl操作</td>
 </tr>
 <tr>
 <td>CAP_SYSLOG (since Linux 2.6.37)</td>
-<td>允许执行特权syslog操作；<br/>/proc/sys/kernel/kptr_restrict为1时，允许通过通过/proc和其他接口查看内核地址</td>
+<td>允许执行特权syslog操作；<br>/proc/sys/kernel/kptr_restrict为1时，允许通过通过/proc和其他接口查看内核地址</td>
 </tr>
 <tr>
 <td>CAP_WAKE_ALARM (since Linux 3.0)</td>
@@ -490,7 +490,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="ckxmwecrd00037k7cegci1slz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="ckxn1a44s0001v07ccj27b1ge" class="article-share-link">Share</a>
       
       
     </footer>

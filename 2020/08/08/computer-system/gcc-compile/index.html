@@ -7,18 +7,20 @@
   
   <title>【操作系统】hello world 编译过程 | 千里之行，始于足下</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="今天通过hello.c的例子，给大家讲述一下gcc的编译过程， 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段123预处理器(cpp)就是">
+  <meta name="description" content="今天通过hello.c的例子整理一下gcc的编译过程， 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段123预处理器(cpp)就是根据字符">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【操作系统】hello world 编译过程">
 <meta property="og:url" content="http://yoursite.com/2020/08/08/computer-system/gcc-compile/index.html">
 <meta property="og:site_name" content="千里之行，始于足下">
-<meta property="og:description" content="今天通过hello.c的例子，给大家讲述一下gcc的编译过程， 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段123预处理器(cpp)就是">
+<meta property="og:description" content="今天通过hello.c的例子整理一下gcc的编译过程， 编译系统插入图片 Figure 1.3 The compilation system. 编写代码123456#include &lt;stdio.h&gt;int main() &amp;#123;    printf(&quot;hello world\n&quot;);    return 0;&amp;#125;   编译过程预处理阶段123预处理器(cpp)就是根据字符">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/08/08/computer-system/gcc-compile/The-Compile-System.png">
 <meta property="article:published_time" content="2020-08-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-26T06:49:10.606Z">
+<meta property="article:modified_time" content="2021-12-26T09:10:49.046Z">
 <meta property="article:author" content="ink">
 <meta property="article:tag" content="编译">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/08/08/computer-system/gcc-compile/The-Compile-System.png">
   
   
     <link rel="icon" href="/css/images/favicon.png">
@@ -93,8 +95,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>今天通过hello.c的例子，给大家讲述一下gcc的编译过程，</p>
-<h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p>插入图片 Figure 1.3 The compilation system.</p>
+        <p>今天通过hello.c的例子整理一下gcc的编译过程，</p>
+<h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p><img src="/2020/08/08/computer-system/gcc-compile/The-Compile-System.png" alt="编译系统"><br>插入图片 Figure 1.3 The compilation system.</p>
 <h1 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -182,7 +184,6 @@
 <h2 id="SP-栈保护"><a href="#SP-栈保护" class="headerlink" title="SP(栈保护)"></a>SP(栈保护)</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options</a><br><a href="https://arxiv.org/pdf/1909.05747.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1909.05747.pdf</a></p>
 <p>-fstack-protector<br>Emit extra code to check for buffer overflows, such as stack smashing attacks. This is done by adding a guard variable to functions with vulnerable objects. This includes functions that call alloca, and functions with buffers larger than 8 bytes. The guards are initialized when a function is entered and then checked when the function exits. If a guard check fails, an error message is printed and the program exits.<br>-fstack-protector-all<br>Like -fstack-protector except that all functions are protected.<br>-fstack-protector-strong<br>Like -fstack-protector but includes additional functions to be protected — those that have local array definitions, or have references to local frame addresses.</p>
 <p>链接阶段加上：-fstack-protector</p>
-<p><strong>实战用例</strong></p>
 <h2 id="RELRO（只读重定位）"><a href="#RELRO（只读重定位）" class="headerlink" title="RELRO（只读重定位）"></a>RELRO（只读重定位）</h2><p><a href="https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables" target="_blank" rel="noopener">https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables</a><br><a href="https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro" target="_blank" rel="noopener">https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro</a></p>
 <h2 id="PIC（位置无关代码）"><a href="#PIC（位置无关代码）" class="headerlink" title="PIC（位置无关代码）"></a>PIC（位置无关代码）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
 <h2 id="PIE（位置无关可执行文件）"><a href="#PIE（位置无关可执行文件）" class="headerlink" title="PIE（位置无关可执行文件）"></a>PIE（位置无关可执行文件）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
@@ -199,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/08/08/computer-system/gcc-compile/" data-id="ckxmwecrd00057k7cf6mne42z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/08/08/computer-system/gcc-compile/" data-id="ckxn1a44w0003v07cf4mu2x3r" class="article-share-link">Share</a>
       
       
     </footer>

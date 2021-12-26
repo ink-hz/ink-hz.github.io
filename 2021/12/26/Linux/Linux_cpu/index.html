@@ -14,11 +14,14 @@
 <meta property="og:site_name" content="千里之行，始于足下">
 <meta property="og:description" content="0. 问题cpu idle基本为0，设备卡顿，请求设备上的server响应较慢。 1234567891011121314[root@ink ~]# mpstat -P ALL 1Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12&#x2F;16&#x2F;2021      _x86_64_        (1 CPU)05:05:28 PM  CPU    %usr   %nice">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2021/12/26/Linux/Linux_cpu/allcpu.png">
+<meta property="og:image" content="http://yoursite.com/2021/12/26/Linux/Linux_cpu/cpu-mysql-updated.png">
 <meta property="article:published_time" content="2021-12-25T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-26T06:05:43.229Z">
+<meta property="article:modified_time" content="2021-12-26T09:01:27.222Z">
 <meta property="article:author" content="ink">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2021/12/26/Linux/Linux_cpu/allcpu.png">
   
   
     <link rel="icon" href="/css/images/favicon.png">
@@ -153,7 +156,7 @@
 </li>
 <li><p><strong>perf top -e raw_syscalls:sys_enter -ns comm</strong></p>
 </li>
-<li><p>-e <event>, –event=<event> Select the PMU event. Selection can be a symbolic event name (use perf list to list all events) or a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a hexadecimal event descript</p>
+<li><p>-e <event>, –event=<event> Select the PMU event. Selection can be a symbolic event name (use perf list to list all events) or a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a hexadecimal event descript</event></event></p>
 </li>
 </ul>
 <p>追踪系统调用使用的，可以通过perf list查看所有的事件名称，当热点抽样发现一种系统调用非常频繁时，就可以-e指定排查是哪个进程调用触发的。</p>
@@ -197,36 +200,40 @@
 
 </li>
 </ol>
-<p>xxx图片</p>
+<p><img src="/2021/12/26/Linux/Linux_cpu/allcpu.png" alt="cpu调用栈火焰图"></p>
+<p>这里是我写的跑在Linux系统上的内存分配demo，火焰图函数栈比较简单。但是真实服务器上进程多，函数栈嵌套深也复杂。参考官方提供的mysql cpu图：</p>
+<p><img src="/2021/12/26/Linux/Linux_cpu/cpu-mysql-updated.png" alt="cpu-mysql-updated"></p>
 <p><strong>perf涉及的功能点太多了，后面再详细写一篇内容来介绍这个工具。</strong></p>
 <p>常见的perf使用例子参考:<a href="https://www.brendangregg.com/perf.html" target="_blank" rel="noopener">perf Examples</a></p>
 <p><strong>火焰图除了cpu分析以外还有On-CPU, Off-CPU, 还有 Memory, Hot/Cold, Differential 等等.</strong></p>
 <p>更多文档参考<a href="https://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">Flame Graphs</a></p>
 <h1 id="进阶难题：Linux-cpu负载不均"><a href="#进阶难题：Linux-cpu负载不均" class="headerlink" title="进阶难题：Linux cpu负载不均"></a>进阶难题：Linux cpu负载不均</h1><p>问题：写了一个server，多线程的，但是在多核cpu设备上总是把一个核跑到idle为0，但是其他核还很空闲，导致响应性能很差。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# mpstat -P ALL 1</span><br><span class="line">Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12/20/2021      _x86_64_        (2 CPU)</span><br><span class="line">04:41:53 PM    0    2.02    0.00    1.01    0.00    0.00    0.00    0.00    0.00    0.00   96.97</span><br><span class="line">04:41:53 PM    1    95.02    0.00    1.01    0.00    0.00    0.00    0.00    0.00    0.00   4.97</span><br></pre></td></tr></table></figure>
-
 <ol>
-<li><p>获取进程cpu affinity（亲和性）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>grub2-editenv /boot/grub2/grubenv unset isolcpus</p>
-</li>
-<li><p><a href="https://blog.csdn.net/lihualoveyou/article/details/78236267" target="_blank" rel="noopener">grub2配置原理分析</a></p>
-</li>
-<li></li>
+<li>获取server所有现场的cpu affinity（亲和性）<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# pidof server</span><br><span class="line">29923</span><br><span class="line">[root@ink ~]# taskset -acp 29923</span><br><span class="line">pid 29923's current affinity list: 0,1</span><br><span class="line">pid 29924's current affinity list: 0,1</span><br><span class="line">pid 29925's current affinity list: 0,1</span><br></pre></td></tr></table></figure>
+可以看到server在2c设备上，0,1核都是可以进行调度使用的，而且server是多线程的，应该不止用到一个cpu的算力。</li>
 </ol>
-<p>grub:</p>
+<p>找资料，排查整个系统可能造成这种影响的原因，发现是内核启动参数设置导致的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# grub2-editenv list</span><br><span class="line">saved_entry=CentOS Linux (3.10.0-957.21.3.el7.x86_64) 7 (Core)</span><br><span class="line">kernelopt= isolcpus=1</span><br></pre></td></tr></table></figure>
+
+<p><strong>isolcpus:</strong> 内核cpu孤立设置，isolcpus=1，代表内核启动时，隔离cpu1，不被内核调度器进行调度，只有指定运行在cpu1上的进程或者内核进程才能使用。</p>
+<ol start="2">
+<li>解决方案</li>
+</ol>
+<p>方案一：去掉cpu孤立机制，如果系统没有什么特殊需要隔离的需求，去掉之后，内核调度器通过调度算法分配是最好的。<br>方案二：进程孤立是为了其他功能需求特意实现的，<strong>对server进行改造，多进程或者多线程，再进行绑核，保障负载均衡</strong>。</p>
+<p>taskset 绑定pid 29924（server的工作线程）到cpu1上运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">taskset -cp 1 29924</span><br></pre></td></tr></table></figure>
+
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
 <li>Linux cpu瓶颈问题定位，首先使用top ps pidstat mpstat等命令查看系统资源，进行初步定位。</li>
 <li>进一步perf进行cpu热点采样，精确到函数栈定位性能问题。</li>
 <li>perf ouput可读性一般，使用火焰图实现函数栈数据的分层数据可视化，快速分析cpu上使用最频繁的进程函数栈。</li>
-<li>进阶：cpu负载不均，这是比较少见的问题</li>
+<li>进阶：cpu负载不均，这是比较少见的问题，可以去掉内核cpu孤立机制，或者自己改造多进程多线程，绑核运行，实现负载均衡。</li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="ckxmwecqx00007k7cffog9cie" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="ckxn1a44z0005v07c0l5rad52" class="article-share-link">Share</a>
       
       
     </footer>
