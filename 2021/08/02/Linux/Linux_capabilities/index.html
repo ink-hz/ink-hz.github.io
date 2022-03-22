@@ -15,7 +15,7 @@
 <meta property="og:description" content="systemd机制systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。 1root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;systemd --switched-root --system --deseria">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-26T06:49:53.668Z">
+<meta property="article:modified_time" content="2022-03-03T08:55:43.529Z">
 <meta property="article:author" content="ink">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -124,6 +124,8 @@
 <p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units" target="_blank" rel="noopener">How To Use Systemctl to Manage Systemd Services and Units</a></p>
 <h1 id="进程权限管理"><a href="#进程权限管理" class="headerlink" title="进程权限管理"></a>进程权限管理</h1><h2 id="用户-组"><a href="#用户-组" class="headerlink" title="用户/组"></a>用户/组</h2><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
 <p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护</p>
+<a id="more"></a>
+
 <ol>
 <li><p>Linux 查看所有用户</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br></pre></td></tr></table></figure>
@@ -185,8 +187,6 @@
 <p><strong>解决方法：</strong></p>
 <p><strong>1. 使用systemd service 管理，指定用户和用户启动进程</strong></p>
 <p><strong>2. 使用linux capabilitie 管理进程的权限，保障最小权限正常运行业务</strong></p>
-<a id="more"></a>
-
 <ol>
 <li>指定用户和用户组拉起demo<br>/etc/systemd/system/demo.service中指定User, Group<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/systemd/system/demo.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=test demo process</span><br><span class="line">After=aliyun.target</span><br><span class="line">Wants=aliyun.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=test</span><br><span class="line">Group=test</span><br><span class="line"></span><br><span class="line">ExecStart=/home/code/demo</span><br><span class="line">KillMode=process</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@ink system]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line">[root@ink system]# systemctl start demo.service</span><br><span class="line">[root@ink system]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 6050 test     test     /home/code/demo</span><br><span class="line">[root@ink system]# journalctl -u demo.service</span><br><span class="line">-- Logs begin at Thu 2019-07-11 11:10:15 CST, end at Mon 2021-07-26 10:46:51 CST. --</span><br><span class="line">Jul 26 10:46:51 ink systemd[1]: Started test demo process.</span><br></pre></td></tr></table></figure>
 <h2 id="capabilities简介"><a href="#capabilities简介" class="headerlink" title="capabilities简介"></a>capabilities简介</h2>传统的UNIX通过区别：特权进程(user ID 0 root进程)和非特权进程，来达到权限检查的目的。特权进程可以通过内核所有的权限检查，但是非特权进程基于（有效的UID，有效GID和补充组列表）进行完全完全权限检查。</li>
@@ -490,7 +490,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="cl06cdjc60003f47c01iigs5l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="cl11uqnwt0001787cbh1kbef9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -530,6 +530,10 @@
       <ul>
         
           <li>
+            <a href="/2022/03/22/Language/C/The-C-Programming-Language/">【C】《C程序设计语言》-笔记</a>
+          </li>
+        
+          <li>
             <a href="/2021/12/26/Linux/Linux_cpu/">【Linux】cpu性能问题排查</a>
           </li>
         
@@ -545,10 +549,6 @@
             <a href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
           </li>
         
-          <li>
-            <a href="/2020/08/08/Linux/Linux_coredump/">【Linux】coredump机制</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -558,7 +558,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -568,7 +568,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

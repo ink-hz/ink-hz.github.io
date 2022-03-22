@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/12/26/Linux/Linux_cpu/allcpu.png">
 <meta property="og:image" content="http://yoursite.com/2021/12/26/Linux/Linux_cpu/cpu-mysql-updated.png">
 <meta property="article:published_time" content="2021-12-25T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-26T09:01:27.222Z">
+<meta property="article:modified_time" content="2022-03-03T08:55:59.718Z">
 <meta property="article:author" content="ink">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -118,11 +118,14 @@
 </ul>
 <h2 id="1-1-top"><a href="#1-1-top" class="headerlink" title="1.1 top"></a>1.1 top</h2><p>Linux上最常用的用于展示进程使用系统资源情况的命令。</p>
 <ul>
-<li><p><strong>top</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# top</span><br><span class="line">top - 19:40:08 up 59 days,  4:50,  4 users,  load average: 4.03, 3.76, 3.74</span><br><span class="line">Tasks:  96 total,   2 running,  94 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 99.7 us,  0.3 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   110652 free,   203592 used,   700476 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   630824 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">29152 root      20   0    5364   1224    356 R 98.0  0.1   7:42.35 server</span><br><span class="line">22047 root      10 -10  136792  17196   6668 S  0.7  1.7 452:51.31 AliYunDun</span><br><span class="line">12280 root      20   0  115572   2184   1684 S  0.3  0.2   0:00.33 bash</span><br><span class="line">29097 root      10 -10   74636  31656   2980 S  0.3  3.1  33:12.76 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   3:32.01 systemd</span><br><span class="line">    2 root      20   0       0      0      0 S  0.0  0.0   0:00.11 kthreadd</span><br><span class="line">    3 root      20   0       0      0      0 S  0.0  0.0   0:18.02 ksoftirqd/0</span><br><span class="line">    5 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kworker/0:0H</span><br><span class="line">    7 root      rt   0       0      0      0 S  0.0  0.0   0:00.00 migration/0</span><br><span class="line">    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh</span><br><span class="line">    9 root      20   0       0      0      0 S  0.0  0.0   9:40.99 rcu_sched</span><br><span class="line">   10 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 lru-add-drain</span><br><span class="line">   11 root      rt   0       0      0      0 S  0.0  0.0   0:13.17 watchdog/0</span><br></pre></td></tr></table></figure>
+<li><strong>top</strong><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# top</span><br><span class="line">top - 19:40:08 up 59 days,  4:50,  4 users,  load average: 4.03, 3.76, 3.74</span><br><span class="line">Tasks:  96 total,   2 running,  94 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 99.7 us,  0.3 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   110652 free,   203592 used,   700476 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   630824 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">29152 root      20   0    5364   1224    356 R 98.0  0.1   7:42.35 server</span><br><span class="line">22047 root      10 -10  136792  17196   6668 S  0.7  1.7 452:51.31 AliYunDun</span><br><span class="line">12280 root      20   0  115572   2184   1684 S  0.3  0.2   0:00.33 bash</span><br><span class="line">29097 root      10 -10   74636  31656   2980 S  0.3  3.1  33:12.76 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   3:32.01 systemd</span><br><span class="line">    2 root      20   0       0      0      0 S  0.0  0.0   0:00.11 kthreadd</span><br><span class="line">    3 root      20   0       0      0      0 S  0.0  0.0   0:18.02 ksoftirqd/0</span><br><span class="line">    5 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kworker/0:0H</span><br><span class="line">    7 root      rt   0       0      0      0 S  0.0  0.0   0:00.00 migration/0</span><br><span class="line">    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh</span><br><span class="line">    9 root      20   0       0      0      0 S  0.0  0.0   9:40.99 rcu_sched</span><br><span class="line">   10 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 lru-add-drain</span><br><span class="line">   11 root      rt   0       0      0      0 S  0.0  0.0   0:13.17 watchdog/0</span><br></pre></td></tr></table></figure>
+
 </li>
-<li><p><strong>top -H</strong></p>
-</li>
+</ul>
+<a id="more"></a>
+
+<ul>
+<li><strong>top -H</strong></li>
 </ul>
 <p>-H：线程模式，显示独立线程的信息。</p>
 <p>改造一下server为多线程，执行top -H，可以看到server三个线程都上榜了。</p>
@@ -233,7 +236,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="cl06cdjcc0004f47cf96p5a05" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="cl11uqnx80005787c9ekr3ngd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -241,6 +244,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2022/03/22/Language/C/The-C-Programming-Language/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          【C】《C程序设计语言》-笔记
+        
+      </div>
+    </a>
   
   
     <a href="/2021/10/10/computer-system/gcc-compile/" id="article-nav-older" class="article-nav-link-wrap">
@@ -264,6 +276,10 @@
       <ul>
         
           <li>
+            <a href="/2022/03/22/Language/C/The-C-Programming-Language/">【C】《C程序设计语言》-笔记</a>
+          </li>
+        
+          <li>
             <a href="/2021/12/26/Linux/Linux_cpu/">【Linux】cpu性能问题排查</a>
           </li>
         
@@ -279,10 +295,6 @@
             <a href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
           </li>
         
-          <li>
-            <a href="/2020/08/08/Linux/Linux_coredump/">【Linux】coredump机制</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -292,7 +304,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -302,7 +314,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

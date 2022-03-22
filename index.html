@@ -64,6 +64,177 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Language/C/The-C-Programming-Language" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/22/Language/C/The-C-Programming-Language/" class="article-date">
+  <time datetime="2022-03-21T16:00:00.000Z" itemprop="datePublished">2022-03-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/22/Language/C/The-C-Programming-Language/">【C】《C程序设计语言》-笔记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="第1章-导言"><a href="#第1章-导言" class="headerlink" title="第1章 导言"></a>第1章 导言</h1><p>第一个C语言程序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="第2章-类型、运算符与表达式"><a href="#第2章-类型、运算符与表达式" class="headerlink" title="第2章 类型、运算符与表达式"></a>第2章 类型、运算符与表达式</h1><h2 id="2-1-变量名"><a href="#2-1-变量名" class="headerlink" title="2.1 变量名"></a>2.1 变量名</h2><ol>
+<li><p>变量名第一个字符必须为字母</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-C-Programming-Language]# gcc 2_1.c</span><br><span class="line">2_1.c: In function ‘main’:</span><br><span class="line">2_1.c:4:6: error: invalid suffix "_a" on integer constant</span><br><span class="line">  int 1_a;</span><br><span class="line">      ^</span><br><span class="line">2_1.c:4:6: error: expected identifier or ‘(’ before numeric constant</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变量名由字母和数字组成</p>
+</li>
+<li><p>符号常量名全部使用大写字母</p>
+</li>
+</ol>
+<h2 id="2-2-数据类型及长度"><a href="#2-2-数据类型及长度" class="headerlink" title="2.2 数据类型及长度"></a>2.2 数据类型及长度</h2><table>
+<thead>
+<tr>
+<th>DATA TYPE</th>
+<th>MEMORY (BYTES)</th>
+<th>RANGE</th>
+<th>FORMAT SPECIFIER</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>short int</td>
+<td>2</td>
+<td>-32,768 to 32,767</td>
+<td>%hd</td>
+</tr>
+<tr>
+<td>unsigned short int</td>
+<td>2</td>
+<td>0 to 65,535</td>
+<td>%hu</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>4</td>
+<td>0 to 4,294,967,295</td>
+<td>%u</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td>-2,147,483,648 to 2,147,483,647</td>
+<td>%d</td>
+</tr>
+<tr>
+<td>long int</td>
+<td>8</td>
+<td>-2,147,483,648 to 2,147,483,647</td>
+<td>%ld</td>
+</tr>
+<tr>
+<td>unsigned long int</td>
+<td>8</td>
+<td>0 to 4,294,967,295</td>
+<td>%lu</td>
+</tr>
+<tr>
+<td>long long int</td>
+<td>8</td>
+<td>-(2^63) to (2^63)-1</td>
+<td>%lld</td>
+</tr>
+<tr>
+<td>unsigned long long int</td>
+<td>8</td>
+<td>0 to 18,446,744,073,709,551,615</td>
+<td>%llu</td>
+</tr>
+<tr>
+<td>signed char</td>
+<td>1</td>
+<td>-128 to 127</td>
+<td>%c</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>1</td>
+<td>0 to 255</td>
+<td>%c</td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td>1.2E-38 to 3.4E+38</td>
+<td>%f</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td>2.3E-308 to 1.7E+308</td>
+<td>%lf</td>
+</tr>
+<tr>
+<td>long double</td>
+<td>16</td>
+<td>3.4E-4932 to 1.1E+4932</td>
+<td>%Lf</td>
+</tr>
+</tbody></table>
+<h2 id="2-3-常量"><a href="#2-3-常量" class="headerlink" title="2.3 常量"></a>2.3 常量</h2><ol>
+<li>整型常量：十进制-123 long类型-123L 八进制-037 十六进制-0x1f</li>
+<li>字符串常量：”hello world”</li>
+<li>枚举 常量整型值列表：enum boolean {NO, YES}</li>
+<li>常量表达式在<strong>编译</strong>时求值</li>
+</ol>
+<h2 id="2-4-声明"><a href="#2-4-声明" class="headerlink" title="2.4 声明"></a>2.4 声明</h2><ol>
+<li>默认情况下，外部变量与静态变量将被初始为0</li>
+<li>const限定符指定变量的值不能被修改</li>
+</ol>
+<p><strong>const关键字</strong></p>
+<ol>
+<li>修饰局部变量：const int a = 0; int const  </li>
+</ol>
+<h2 id="2-5-算术运算符"><a href="#2-5-算术运算符" class="headerlink" title="2.5 算术运算符"></a>2.5 算术运算符</h2><ol>
+<li><p>整数除法会阶段结果中的小数部分 int a = 5/2; a=2</p>
+</li>
+<li><p>取模运算符 int a = 100%3; a=33</p>
+</li>
+<li><p>取模运算符%不能应用于float或者double类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2.c:15:11: error: invalid operands to binary % (have ‘float’ and ‘int’)</span><br><span class="line">  int a = f%3;</span><br><span class="line">           ^</span><br><span class="line">2.c:18:11: error: invalid operands to binary % (have ‘double’ and ‘int’)</span><br><span class="line">  int b = d%3;</span><br></pre></td></tr></table></figure>
+<h2 id="2-9-位运算符"><a href="#2-9-位运算符" class="headerlink" title="2.9 位运算符"></a>2.9 位运算符</h2></li>
+<li><p>按位异或运算符^，两个操作数对应位不相同时该位置为1，否则，将该位置为0。</p>
+</li>
+<li><p>1^2 = 3;</p>
+</li>
+</ol>
+        
+          <p class="article-more-link">
+            <a href="/2022/03/22/Language/C/The-C-Programming-Language/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2022/03/22/Language/C/The-C-Programming-Language/" data-id="cl11uqnxo000f787cd6ckf6vx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Linux/Linux_cpu" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/12/26/Linux/Linux_cpu/" class="article-date">
@@ -112,122 +283,19 @@
 </ul>
 <h2 id="1-1-top"><a href="#1-1-top" class="headerlink" title="1.1 top"></a>1.1 top</h2><p>Linux上最常用的用于展示进程使用系统资源情况的命令。</p>
 <ul>
-<li><p><strong>top</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# top</span><br><span class="line">top - 19:40:08 up 59 days,  4:50,  4 users,  load average: 4.03, 3.76, 3.74</span><br><span class="line">Tasks:  96 total,   2 running,  94 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 99.7 us,  0.3 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   110652 free,   203592 used,   700476 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   630824 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">29152 root      20   0    5364   1224    356 R 98.0  0.1   7:42.35 server</span><br><span class="line">22047 root      10 -10  136792  17196   6668 S  0.7  1.7 452:51.31 AliYunDun</span><br><span class="line">12280 root      20   0  115572   2184   1684 S  0.3  0.2   0:00.33 bash</span><br><span class="line">29097 root      10 -10   74636  31656   2980 S  0.3  3.1  33:12.76 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   3:32.01 systemd</span><br><span class="line">    2 root      20   0       0      0      0 S  0.0  0.0   0:00.11 kthreadd</span><br><span class="line">    3 root      20   0       0      0      0 S  0.0  0.0   0:18.02 ksoftirqd/0</span><br><span class="line">    5 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kworker/0:0H</span><br><span class="line">    7 root      rt   0       0      0      0 S  0.0  0.0   0:00.00 migration/0</span><br><span class="line">    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh</span><br><span class="line">    9 root      20   0       0      0      0 S  0.0  0.0   9:40.99 rcu_sched</span><br><span class="line">   10 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 lru-add-drain</span><br><span class="line">   11 root      rt   0       0      0      0 S  0.0  0.0   0:13.17 watchdog/0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>top -H</strong></p>
-</li>
-</ul>
-<p>-H：线程模式，显示独立线程的信息。</p>
-<p>改造一下server为多线程，执行top -H，可以看到server三个线程都上榜了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# top -H</span><br><span class="line">top - 19:50:41 up 59 days,  5:01,  4 users,  load average: 0.97, 1.64, 2.83</span><br><span class="line">Threads: 171 total,   7 running, 164 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 96.4 us,  3.6 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   107492 free,   206048 used,   701180 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   628124 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">32224 root      20   0  154992   3160    476 R 33.2  0.3   0:01.60 server</span><br><span class="line">32225 root      20   0  154992   3160    476 R 32.9  0.3   0:01.59 server</span><br><span class="line">32223 root      20   0  154992   3160    476 R 30.9  0.3   0:01.61 server</span><br><span class="line"> 8341 root      20   0  115816   6016   4588 R  1.3  0.6   0:00.59 sshd</span><br><span class="line">22074 root      10 -10  136792  17204   6668 R  0.3  1.7 330:48.64 AliYunDun</span><br><span class="line">29101 root      10 -10   74636  31656   2980 S  0.3  3.1  15:59.17 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   2:53.92 systemd</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-2-pidstat"><a href="#1-2-pidstat" class="headerlink" title="1.2 pidstat"></a>1.2 pidstat</h2><p>Linux统计任务信息工具</p>
-<ul>
-<li>-u: 统计CPU相关信息</li>
-<li>-r: 统计内存相关信息</li>
-<li>-d: 统计进程IO相关信息<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ink malloc]# pidstat -u -r -d 1</span><br><span class="line">Linux 3.10.0-957.21.3.el7.x86_64 (ink)  12/16/2021      _x86_64_        (1 CPU)</span><br><span class="line"></span><br><span class="line">08:01:57 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command</span><br><span class="line">08:01:58 PM     0      2704    0.00    1.00    0.00    1.00     0  pidstat</span><br><span class="line">08:01:58 PM     0     22047    0.00    2.00    0.00    2.00     0  AliYunDun</span><br><span class="line"></span><br><span class="line">08:01:57 PM   UID       PID  minflt/s  majflt/s     VSZ    RSS   %MEM  Command</span><br><span class="line">08:01:58 PM     0      2704    282.00      0.00  108180   1048   0.10  pidstat</span><br><span class="line">08:01:58 PM     0      2707    783.00      0.00  150908   2524   0.25  wget</span><br><span class="line">08:01:58 PM     0     12280     66.00      0.00  115668   2316   0.23  bash</span><br><span class="line"></span><br><span class="line">08:01:57 PM   UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s  Command</span><br><span class="line">08:01:58 PM     0      2707      0.00     52.00      0.00  wget</span><br><span class="line">08:01:58 PM     0     12280      0.00     80.00     80.00  bash</span><br></pre></td></tr></table></figure>
+<li><strong>top</strong><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# top</span><br><span class="line">top - 19:40:08 up 59 days,  4:50,  4 users,  load average: 4.03, 3.76, 3.74</span><br><span class="line">Tasks:  96 total,   2 running,  94 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s): 99.7 us,  0.3 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem :  1014720 total,   110652 free,   203592 used,   700476 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used.   630824 avail Mem</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND</span><br><span class="line">29152 root      20   0    5364   1224    356 R 98.0  0.1   7:42.35 server</span><br><span class="line">22047 root      10 -10  136792  17196   6668 S  0.7  1.7 452:51.31 AliYunDun</span><br><span class="line">12280 root      20   0  115572   2184   1684 S  0.3  0.2   0:00.33 bash</span><br><span class="line">29097 root      10 -10   74636  31656   2980 S  0.3  3.1  33:12.76 AliYunDunUpdate</span><br><span class="line">    1 root      20   0   51732   3412   2144 S  0.0  0.3   3:32.01 systemd</span><br><span class="line">    2 root      20   0       0      0      0 S  0.0  0.0   0:00.11 kthreadd</span><br><span class="line">    3 root      20   0       0      0      0 S  0.0  0.0   0:18.02 ksoftirqd/0</span><br><span class="line">    5 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 kworker/0:0H</span><br><span class="line">    7 root      rt   0       0      0      0 S  0.0  0.0   0:00.00 migration/0</span><br><span class="line">    8 root      20   0       0      0      0 S  0.0  0.0   0:00.00 rcu_bh</span><br><span class="line">    9 root      20   0       0      0      0 S  0.0  0.0   9:40.99 rcu_sched</span><br><span class="line">   10 root       0 -20       0      0      0 S  0.0  0.0   0:00.00 lru-add-drain</span><br><span class="line">   11 root      rt   0       0      0      0 S  0.0  0.0   0:13.17 watchdog/0</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<h1 id="2-perf"><a href="#2-perf" class="headerlink" title="2. perf"></a>2. perf</h1><p>我这个系统跑的进程比较少，所以异常的demo很快能被查到，但是一般服务器上跑几十上百个进程，又怎么查？</p>
-<p>perf是一款Linux性能分析工具。Linux性能计数器是一个新的基于内核的子系统，它提供一个性能分析框架，比如硬件（CPU、PMU(Performance Monitoring Unit)）功能和软件(软件计数器、tracepoint)功能。通过perf，应用程序可以利用PMU、tracepoint和内核中的计数器来进行性能统计。它不但可以分析制定应用程序的性能问题（per thread），也可以用来分析内核的性能问题。</p>
-<p>总之perf是一款很牛逼的综合性分析工具，大到系统全局性性能，再小到进程线程级别，甚至到函数及汇编级别。</p>
-<ul>
-<li>yum install perf 安装</li>
-</ul>
-<h2 id="2-0-perf-top"><a href="#2-0-perf-top" class="headerlink" title="2.0 perf top"></a>2.0 perf top</h2><ul>
-<li><p><strong>perf top -s comm,dso -C 0 -d 5 &amp;&gt; ./perf.log</strong></p>
-</li>
-<li><p>perf top: System profiling tool</p>
-</li>
-<li><p>-C: 指定CPU进行监控</p>
-</li>
-<li><p>-d: 数据刷新时延（秒）</p>
-</li>
-<li><p>-s: 可根据这些key进行输出排序：pid, comm, dso, symbol, parent, srcline, weight, local_weight, abort, in_tx, transaction, overhead, sample, period。更详细可以<strong>man perf-report</strong>看下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">   PerfTop:    3461 irqs/sec  kernel: 8.3%  exact:  0.0% lost: 0/0 drop: 0/0 [4000Hz cpu-clock],  (all, CPU: 0)</span><br><span class="line">-------------------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">    87.82%  server     libc-2.17.so</span><br><span class="line">     3.17%  AliYunDun  [kernel]</span><br><span class="line">     3.01%  server     [kernel]</span><br><span class="line">     1.04%  AliYunDun  libModuleMetadata.so</span><br><span class="line">     0.90%  perf       perf</span><br><span class="line">     0.72%  AliYunDun  libc-2.17.so</span><br><span class="line">     0.33%  perf       [kernel]</span><br><span class="line">     0.32%  wget       [kernel]</span><br><span class="line">     0.29%  perf       libc-2.17.so</span><br><span class="line">     0.22%  AliYunDun  libaegisMonitor.so</span><br><span class="line">     0.21%  AliYunDun  libstdc++.so.6.0.19</span><br><span class="line">     0.19%  AliYunDun  libaqsUtil.so.1</span><br><span class="line">     0.19%  AliYunDun  libpthread-2.17.so</span><br><span class="line">     0.19%  AliYunDun  libaegisIpc.so</span><br><span class="line">     0.16%  server     server</span><br><span class="line">     0.14%  bash       [kernel]</span><br><span class="line">     0.14%  AliYunDun  AliYunDun</span><br><span class="line">     0.12%  wget       ld-2.17.so</span><br><span class="line">     0.12%  AliYunDun  libaegisNetWor</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>perf top -e raw_syscalls:sys_enter -ns comm</strong></p>
-</li>
-<li><p>-e <event>, –event=<event> Select the PMU event. Selection can be a symbolic event name (use perf list to list all events) or a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a hexadecimal event descript</event></event></p>
-</li>
-</ul>
-<p>追踪系统调用使用的，可以通过perf list查看所有的事件名称，当热点抽样发现一种系统调用非常频繁时，就可以-e指定排查是哪个进程调用触发的。</p>
-<p><strong>如何统计一段时间并记录perf top 数据呢？</strong></p>
-<p>  上述的 &amp;&gt; ./perf.log，只是将perf top所有输出重定向到perf.log，没有记录全量数据，更没有记录函数调用栈帧。</p>
-<h2 id="2-1-perf-record"><a href="#2-1-perf-record" class="headerlink" title="2.1 perf record"></a>2.1 perf record</h2><p>perf-record - Run a command and record its profile into perf.data</p>
-<ul>
-<li><strong>perf record -F 99 -a -g – sleep 60</strong></li>
-<li>-F: 采样频率 -F99 每秒采样99个样本</li>
-<li>-a: –all-cpus 采集所有cpu的信息</li>
-<li>-g: 记录函数的调用关系</li>
-</ul>
-<p>上面这个命令就是以每秒99次的平路，采样60秒内所有cpu函数调用栈的信息。<br>执行之后生成perf.data，二进制内容，直接打开无法进行阅读。</p>
-<ul>
-<li><p><strong>perf script &gt; out.perf</strong> 输出函数栈报告</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# perf script &gt; out.perf</span><br><span class="line">[root@ink perf]# cat out.perf | more</span><br><span class="line">server 14501 [000] 5792011.675125:   10101010 cpu-clock:</span><br><span class="line">            7f31f1346165 __memset_sse2+0xa5 (/usr/lib64/libc-2.17.so)</span><br><span class="line">            7f31f168bdd5 start_thread+0xc5 (/usr/lib64/libpthread-2.17.so)</span><br><span class="line"></span><br><span class="line">server 14501 [000] 5792011.685224:   10101010 cpu-clock:</span><br><span class="line">            7f31f1346177 __memset_sse2+0xb7 (/usr/lib64/libc-2.17.so)</span><br><span class="line">            7f31f168bdd5 start_thread+0xc5 (/usr/lib64/libpthread-2.17.so)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>perf report -n –stdio</strong>输出函数调用栈百分比</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# perf report -n --stdio</span><br><span class="line"><span class="meta">#</span><span class="bash"> To display the perf.data header info, please use --header/--header-only options.</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Total Lost Samples: 0</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Samples: 1K of event <span class="string">'cpu-clock'</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Event count (approx.): 12909090780</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Children      Self       Samples  Command        Shared Object         Symbol</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ........  ........  ............  .............  ....................  ................................................................................................................................</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line">    92.10%    91.86%          1174  server         libc-2.17.so          [.] __memset_sse2</span><br><span class="line">            |</span><br><span class="line">            |--58.84%--start_thread</span><br><span class="line">            |          __memset_sse2</span><br><span class="line">            |</span><br><span class="line">             --33.02%--__libc_start_main</span><br><span class="line">                       __memset_sse2</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>但是这些输出报告还是不太友好，为了更好的发现cpu瓶颈在哪里，就可以使用火焰图进行性能分析。</p>
-<h1 id="3-火焰图-Flame-Graphs"><a href="#3-火焰图-Flame-Graphs" class="headerlink" title="3. 火焰图 Flame Graphs"></a>3. 火焰图 Flame Graphs</h1><p><strong>git仓库地址：<a href="https://github.com/brendangregg/FlameGraph" target="_blank" rel="noopener">https://github.com/brendangregg/FlameGraph</a></strong><br><strong>主页：<a href="http://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">http://www.brendangregg.com/flamegraphs.html</a></strong></p>
-<p><strong>火焰图的使用方法：</strong></p>
-<ol>
-<li><p>下载FlameGraph源码</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:brendangregg/FlameGraph.git</span><br><span class="line"></span><br><span class="line">wget https://github.com/brendangregg/FlameGraph/archive/refs/heads/master.zip</span><br><span class="line">unzip master.zip</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>FlameGraph二进制目录加入PATH环境变量</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$&#123;PATH&#125;:/home/perf/FlameGraph/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>perf进行cpu采样，并生成perf栈报告</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">perf record -F 99 -a -g -- sleep 60</span><br><span class="line">perf script &gt; out.perf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>stackcollapse-perf.pl 分析perf output</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stackcollapse-perf.pl out.perf &gt; out.folded</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>flamegraph.pl 生成SVG.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flamegraph.pl out.folded &gt; allcpu.svg</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p><img src="/2021/12/26/Linux/Linux_cpu/allcpu.png" alt="cpu调用栈火焰图"></p>
-<p>这里是我写的跑在Linux系统上的内存分配demo，火焰图函数栈比较简单。但是真实服务器上进程多，函数栈嵌套深也复杂。参考官方提供的mysql cpu图：</p>
-<p><img src="/2021/12/26/Linux/Linux_cpu/cpu-mysql-updated.png" alt="cpu-mysql-updated"></p>
-<p><strong>perf涉及的功能点太多了，后面再详细写一篇内容来介绍这个工具。</strong></p>
-<p>常见的perf使用例子参考:<a href="https://www.brendangregg.com/perf.html" target="_blank" rel="noopener">perf Examples</a></p>
-<p><strong>火焰图除了cpu分析以外还有On-CPU, Off-CPU, 还有 Memory, Hot/Cold, Differential 等等.</strong></p>
-<p>更多文档参考<a href="https://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">Flame Graphs</a></p>
-<h1 id="进阶难题：Linux-cpu负载不均"><a href="#进阶难题：Linux-cpu负载不均" class="headerlink" title="进阶难题：Linux cpu负载不均"></a>进阶难题：Linux cpu负载不均</h1><p>问题：写了一个server，多线程的，但是在多核cpu设备上总是把一个核跑到idle为0，但是其他核还很空闲，导致响应性能很差。</p>
-<ol>
-<li>获取server所有现场的cpu affinity（亲和性）<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink ~]# pidof server</span><br><span class="line">29923</span><br><span class="line">[root@ink ~]# taskset -acp 29923</span><br><span class="line">pid 29923's current affinity list: 0,1</span><br><span class="line">pid 29924's current affinity list: 0,1</span><br><span class="line">pid 29925's current affinity list: 0,1</span><br></pre></td></tr></table></figure>
-可以看到server在2c设备上，0,1核都是可以进行调度使用的，而且server是多线程的，应该不止用到一个cpu的算力。</li>
-</ol>
-<p>找资料，排查整个系统可能造成这种影响的原因，发现是内核启动参数设置导致的</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink perf]# grub2-editenv list</span><br><span class="line">saved_entry=CentOS Linux (3.10.0-957.21.3.el7.x86_64) 7 (Core)</span><br><span class="line">kernelopt= isolcpus=1</span><br></pre></td></tr></table></figure>
-
-<p><strong>isolcpus:</strong> 内核cpu孤立设置，isolcpus=1，代表内核启动时，隔离cpu1，不被内核调度器进行调度，只有指定运行在cpu1上的进程或者内核进程才能使用。</p>
-<ol start="2">
-<li>解决方案</li>
-</ol>
-<p>方案一：去掉cpu孤立机制，如果系统没有什么特殊需要隔离的需求，去掉之后，内核调度器通过调度算法分配是最好的。<br>方案二：进程孤立是为了其他功能需求特意实现的，<strong>对server进行改造，多进程或者多线程，再进行绑核，保障负载均衡</strong>。</p>
-<p>taskset 绑定pid 29924（server的工作线程）到cpu1上运行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">taskset -cp 1 29924</span><br></pre></td></tr></table></figure>
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
-<li>Linux cpu瓶颈问题定位，首先使用top ps pidstat mpstat等命令查看系统资源，进行初步定位。</li>
-<li>进一步perf进行cpu热点采样，精确到函数栈定位性能问题。</li>
-<li>perf ouput可读性一般，使用火焰图实现函数栈数据的分层数据可视化，快速分析cpu上使用最频繁的进程函数栈。</li>
-<li>进阶：cpu负载不均，这是比较少见的问题，可以去掉内核cpu孤立机制，或者自己改造多进程多线程，绑核运行，实现负载均衡。</li>
-</ol>
-
+        
+          <p class="article-more-link">
+            <a href="/2021/12/26/Linux/Linux_cpu/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="cl06cdjcc0004f47cf96p5a05" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/12/26/Linux/Linux_cpu/" data-id="cl11uqnx80005787c9ekr3ngd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -264,7 +332,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>今天通过hello.c的例子整理一下gcc的编译过程，</p>
-<h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p><img src="/2021/10/10/computer-system/gcc-compile/The-Compile-System.png" alt="编译系统"><br>插入图片 Figure 1.3 The compilation system.</p>
+<h1 id="编译系统"><a href="#编译系统" class="headerlink" title="编译系统"></a>编译系统</h1><p><img src="/2021/10/10/computer-system/gcc-compile/The-Compile-System.png" alt="编译系统"></p>
 <h1 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"hello world\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -332,43 +400,15 @@
 
 <p><strong>汇编代码hello.s</strong>：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">        .file   &quot;hello.c&quot;</span><br><span class="line">        .section        .rodata</span><br><span class="line">.LC0:</span><br><span class="line">        .string &quot;hello world&quot;</span><br><span class="line">        .text</span><br><span class="line">        .globl  main</span><br><span class="line">        .type   main, @function</span><br><span class="line">main:</span><br><span class="line">.LFB0:</span><br><span class="line">        .cfi_startproc</span><br><span class="line">        pushq   %rbp</span><br><span class="line">        .cfi_def_cfa_offset 16</span><br><span class="line">        .cfi_offset 6, -16</span><br><span class="line">        movq    %rsp, %rbp</span><br><span class="line">        .cfi_def_cfa_register 6</span><br><span class="line">        movl    $.LC0, %edi</span><br><span class="line">        call    puts</span><br><span class="line">        movl    $0, %eax</span><br><span class="line">        popq    %rbp</span><br><span class="line">        .cfi_def_cfa 7, 8</span><br><span class="line">        ret</span><br><span class="line">        .cfi_endproc</span><br><span class="line">.LFE0:</span><br><span class="line">        .size   main, .-main</span><br><span class="line">        .ident  &quot;GCC: (GNU) 4.8.5 20150623 (Red Hat 4.8.5-44)&quot;</span><br><span class="line">        .section        .note.GNU-stack,&quot;&quot;,@progbits</span><br></pre></td></tr></table></figure>
-
-<h2 id="汇编阶段"><a href="#汇编阶段" class="headerlink" title="汇编阶段"></a>汇编阶段</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">汇编的过程，就是将汇编语言的源代码转换成可执行的机器代码。通常来说，目标文件至少包含两个部分：代码段和数据段。</span><br><span class="line">代码段：包含程序指令，通常是可读、可执行、但是不可写；数据段是用来存储程序中用到的各种类型的全局变量和静态数据，通常是可读、可写、可执行的。</span><br><span class="line">通过执行命令**gcc -o hello.o -c hello.c.**获取汇编器的输出结果，因为hello.o是一个二进制文件，文本阅读的时是乱码，所以我们使用objdump针对二进制文件进行反汇编，再阅读反汇编代码。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# objdump -d hello.o &gt;&gt; hello.o.dump</span><br><span class="line">[root@ink The-compilation-system]# ls -l</span><br><span class="line">total 36</span><br><span class="line">-rw-r--r-- 1 root root    78 Sep 26 19:30 hello.c</span><br><span class="line">-rw-r--r-- 1 root root 16879 Sep 26 20:07 hello.i</span><br><span class="line">-rw-r--r-- 1 root root  1496 Sep 26 20:20 hello.o</span><br><span class="line">-rw-r--r-- 1 root root   396 Sep 26 20:20 hello.o.dump</span><br><span class="line">-rw-r--r-- 1 root root   448 Sep 26 20:13 hello.s</span><br><span class="line">[root@ink The-compilation-system]# cat hello.o.dump</span><br><span class="line"></span><br><span class="line">hello.o:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disassembly of section .text:</span><br><span class="line"></span><br><span class="line">0000000000000000 &lt;main&gt;:</span><br><span class="line">   0:   55                      push   %rbp</span><br><span class="line">   1:   48 89 e5                mov    %rsp,%rbp</span><br><span class="line">   4:   bf 00 00 00 00          mov    $0x0,%edi</span><br><span class="line">   9:   e8 00 00 00 00          callq  e &lt;main+0xe&gt;</span><br><span class="line">   e:   b8 00 00 00 00          mov    $0x0,%eax</span><br><span class="line">  13:   5d                      pop    %rbp</span><br><span class="line">  14:   c3                      retq</span><br></pre></td></tr></table></figure>
-
-
-<p>*<em>objdump -h *</em>命令可以获取二进制文件每个段的头部信息</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# objdump -h hello.o</span><br><span class="line"></span><br><span class="line">hello.o:     file format elf64-x86-64</span><br><span class="line"></span><br><span class="line">Sections:</span><br><span class="line">Idx Name          Size      VMA               LMA               File off  Algn</span><br><span class="line">  0 .text         00000015  0000000000000000  0000000000000000  00000040  2**0</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE</span><br><span class="line">  1 .data         00000000  0000000000000000  0000000000000000  00000055  2**0</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, DATA</span><br><span class="line">  2 .bss          00000000  0000000000000000  0000000000000000  00000055  2**0</span><br><span class="line">                  ALLOC</span><br><span class="line">  3 .rodata       0000000c  0000000000000000  0000000000000000  00000055  2**0</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, READONLY, DATA</span><br><span class="line">  4 .comment      0000002e  0000000000000000  0000000000000000  00000061  2**0</span><br><span class="line">                  CONTENTS, READONLY</span><br><span class="line">  5 .note.GNU-stack 00000000  0000000000000000  0000000000000000  0000008f  2**0</span><br><span class="line">                  CONTENTS, READONLY</span><br><span class="line">  6 .eh_frame     00000038  0000000000000000  0000000000000000  00000090  2**3</span><br><span class="line">                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA</span><br></pre></td></tr></table></figure>
-
-<h2 id="链接阶段"><a href="#链接阶段" class="headerlink" title="链接阶段"></a>链接阶段</h2><pre><code>链接的过程是将编译器或汇编器生成的一个或多个目标文件链接库(静态库或动态库)转换为可执行文件。静态库将与程序集生成的对象文件链接，并打包到可执行文件[静态链接]。它与函数库的链接在编译期间完成。动态库不会在程序编译时链接到可执行文件，而是在程序运行时加载。如果不同的应用程序调用相同的库，它们只需要内存中共享库的一个实例
-可以通过执行**ldd hello**命令查看hello程序依赖的函数库。</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ink The-compilation-system]# ldd hello</span><br><span class="line">        linux-vdso.so.1 =&gt;  (0x00007ffc7e78e000)</span><br><span class="line">        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fcb4fa45000)</span><br><span class="line">        /lib64/ld-linux-x86-64.so.2 (0x00007fcb4fe12000)</span><br></pre></td></tr></table></figure>
-
-<h1 id="编译优化"><a href="#编译优化" class="headerlink" title="编译优化"></a>编译优化</h1><ul>
-<li>O1 </li>
-</ul>
-<h1 id="常见的安全编译选项"><a href="#常见的安全编译选项" class="headerlink" title="常见的安全编译选项"></a>常见的安全编译选项</h1><h2 id="ASLR（地址空间布局随机化）"><a href="#ASLR（地址空间布局随机化）" class="headerlink" title="ASLR（地址空间布局随机化）"></a>ASLR（地址空间布局随机化）</h2><p><a href="https://wiki.ubuntu.com/Security/Features#stack-protector" target="_blank" rel="noopener">https://wiki.ubuntu.com/Security/Features#stack-protector</a><br><a href="https://www.jianshu.com/p/859de634ded8" target="_blank" rel="noopener">https://www.jianshu.com/p/859de634ded8</a></p>
-<h2 id="NX（堆栈不可执行）"><a href="#NX（堆栈不可执行）" class="headerlink" title="NX（堆栈不可执行）"></a>NX（堆栈不可执行）</h2><p>-Wl,-z,noexecstack</p>
-<h2 id="SP-栈保护"><a href="#SP-栈保护" class="headerlink" title="SP(栈保护)"></a>SP(栈保护)</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-4.9.4/gcc/Optimize-Options.html#Optimize-Options</a><br><a href="https://arxiv.org/pdf/1909.05747.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1909.05747.pdf</a></p>
-<p>-fstack-protector<br>Emit extra code to check for buffer overflows, such as stack smashing attacks. This is done by adding a guard variable to functions with vulnerable objects. This includes functions that call alloca, and functions with buffers larger than 8 bytes. The guards are initialized when a function is entered and then checked when the function exits. If a guard check fails, an error message is printed and the program exits.<br>-fstack-protector-all<br>Like -fstack-protector except that all functions are protected.<br>-fstack-protector-strong<br>Like -fstack-protector but includes additional functions to be protected — those that have local array definitions, or have references to local frame addresses.</p>
-<p>链接阶段加上：-fstack-protector</p>
-<h2 id="RELRO（只读重定位）"><a href="#RELRO（只读重定位）" class="headerlink" title="RELRO（只读重定位）"></a>RELRO（只读重定位）</h2><p><a href="https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables" target="_blank" rel="noopener">https://www.leviathansecurity.com/blog/aslr-protection-for-statically-linked-executables</a><br><a href="https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro" target="_blank" rel="noopener">https://www.redhat.com/zh/blog/hardening-elf-binaries-using-relocation-read-only-relro</a></p>
-<h2 id="PIC（位置无关代码）"><a href="#PIC（位置无关代码）" class="headerlink" title="PIC（位置无关代码）"></a>PIC（位置无关代码）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
-<h2 id="PIE（位置无关可执行文件）"><a href="#PIE（位置无关可执行文件）" class="headerlink" title="PIE（位置无关可执行文件）"></a>PIE（位置无关可执行文件）</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
-<h2 id="RPATH（动态库搜索路径）"><a href="#RPATH（动态库搜索路径）" class="headerlink" title="RPATH（动态库搜索路径）"></a>RPATH（动态库搜索路径）</h2><p><a href="https://sourceware.org/binutils/docs/ld/Options.html#Options" target="_blank" rel="noopener">https://sourceware.org/binutils/docs/ld/Options.html#Options</a></p>
-<h2 id="Strip"><a href="#Strip" class="headerlink" title="Strip"></a>Strip</h2><p><a href="https://sourceware.org/binutils/docs/ld/Options.html#Options" target="_blank" rel="noopener">https://sourceware.org/binutils/docs/ld/Options.html#Options</a></p>
-<h2 id="FS"><a href="#FS" class="headerlink" title="FS"></a>FS</h2><p><a href="https://access.redhat.com/blogs/766093/posts/3606481" target="_blank" rel="noopener">https://access.redhat.com/blogs/766093/posts/3606481</a></p>
-<h2 id="Ftrapv"><a href="#Ftrapv" class="headerlink" title="Ftrapv"></a>Ftrapv</h2><p><a href="https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options" target="_blank" rel="noopener">https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Code-Gen-Options.html#Code-Gen-Options</a></p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>《深入理解计算机操作系统》</p>
-<p><a href="https://www.fatalerrors.org/a/four-steps-of-c-programming.html" target="_blank" rel="noopener">Four steps of C programming</a></p>
-<p><a href="https://www.tutorialspoint.com/cprogramming/c_preprocessors.htm" target="_blank" rel="noopener">C - Preprocessors</a></p>
-<p><a href="https://en.wikipedia.org/wiki/C_preprocessor" target="_blank" rel="noopener">C preprocessor</a></p>
-<p><a href="https://www.geeksforgeeks.org/preprocessor-works-c/" target="_blank" rel="noopener">How a Preprocessor works in C?</a></p>
-
+        
+          <p class="article-more-link">
+            <a href="/2021/10/10/computer-system/gcc-compile/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/10/10/computer-system/gcc-compile/" data-id="cl06cdjcu000cf47ch1kb4c5w" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/10/10/computer-system/gcc-compile/" data-id="cl11uqnx80003787c5i2q32xi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -435,67 +475,6 @@
 <p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units" target="_blank" rel="noopener">How To Use Systemctl to Manage Systemd Services and Units</a></p>
 <h1 id="进程权限管理"><a href="#进程权限管理" class="headerlink" title="进程权限管理"></a>进程权限管理</h1><h2 id="用户-组"><a href="#用户-组" class="headerlink" title="用户/组"></a>用户/组</h2><p>Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。</p>
 <p>用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护</p>
-<ol>
-<li><p>Linux 查看所有用户</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Linux 查看用户组</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# cat /etc/group</span><br><span class="line">root:x:0:</span><br><span class="line">bin:x:1:</span><br><span class="line">daemon:x:2:</span><br><span class="line">sys:x:3:</span><br><span class="line">adm:x:4:</span><br></pre></td></tr></table></figure></li>
-<li><p>getent<br>linux中用于提供查询用户信息的命令</p>
-</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getent passwd</span><br><span class="line">getent group</span><br><span class="line">getent group daemon</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>Linux新增用户<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@ink system]# useradd test -U -p 123</span><br><span class="line">[root@ink system]# su test</span><br><span class="line">[test@ink system]$ ls -l</span><br><span class="line">total 40</span><br><span class="line">-rw-r--r--  1 root root  492 Jul 21 01:17 aliyun.service</span><br><span class="line">-rw-r--r--  1 root root  214 Jul 21 01:17 AssistDaemon.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 basic.target.wants</span><br><span class="line">lrwxrwxrwx. 1 root root   37 Jul 11  2019 default.target -&gt; /lib/systemd/system/multi-user.target</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 default.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 getty.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 local-fs.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 23 11:15 multi-user.target.wants</span><br><span class="line">-rw-r--r--  1 root root  248 Jul 23 11:28 nginx.service</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 sysinit.target.wants</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Jul 11  2019 system-update.target.wants</span><br><span class="line">[test@ink system]$ mv nginx.service nginx.service.back</span><br><span class="line">mv: cannot move ‘nginx.service’ to ‘nginx.service.back’: Permission denied</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>超级用户：root id 为0，有着系统中最大的权限，可以访问系统中的任何文件，一般使用root账号来执行系统管理的任务。上面的例子可以看出普通用户test，无法修改nginx.service。</p>
-<h2 id="进程权限"><a href="#进程权限" class="headerlink" title="进程权限"></a>进程权限</h2><ol>
-<li><p>编写demo进程：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    daemon(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        sleep(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gcc test.c -o demo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>root账户拉起test进程，并查看进程的用户和用户组，都为root</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# ./demo</span><br><span class="line">[root@ink code]# ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1609 root     root     ./demo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>切换test用户，拉起进程</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink code]# kill -9 $(pidof demo)</span><br><span class="line">[root@ink code]# su test</span><br><span class="line">[test@ink code]$ ./demo</span><br><span class="line">[test@ink code]$ ps -eo pid,user,group,args | grep demo | grep -v grep</span><br><span class="line"> 1702 test     test     ./demo</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>文件的权限</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ink test]# ls -l test</span><br><span class="line">-rw-r--r-- 1 root root 0 Jul 26 10:13 test</span><br><span class="line"></span><br><span class="line">[root@ink test]# chmod 754 ./test</span><br><span class="line">[root@ink test]# ls -l</span><br><span class="line">total 0</span><br><span class="line">-rwxr-xr-- 1 root root 0 Jul 26 10:13 test</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>-rwxrwxrwx</th>
-<th>详解</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-</td>
-<td>第一个字段 -代表文件，d代表目录，l代表链接，c代表字符型设备，b代表块设备，n代表网络设备</td>
-</tr>
-<tr>
-<td>rwx</td>
-<td>代表所有者的权限：这个文件对应就是root  可读、可写、可执行</td>
-</tr>
-<tr>
-<td>r-x</td>
-<td>代表同组其他用户的权限：可读、不可写、可执行</td>
-</tr>
-<tr>
-<td>r–</td>
-<td>代表其他用户的其他权限：可读、不可写、不可执行</td>
-</tr>
-</tbody></table>
-<h1 id="capabilities-机制"><a href="#capabilities-机制" class="headerlink" title="capabilities  机制"></a>capabilities  机制</h1><p><strong>问题：</strong></p>
-<p><strong>1. 编写的daemon不需要root用户的所有权限，独立账号运行安全性更高</strong></p>
-<p><strong>2. 更改为普通用户拉起daemon，需要读取部分root权限才可以正常运行业务</strong></p>
-<p><strong>解决方法：</strong></p>
-<p><strong>1. 使用systemd service 管理，指定用户和用户启动进程</strong></p>
-<p><strong>2. 使用linux capabilitie 管理进程的权限，保障最小权限正常运行业务</strong></p>
         
           <p class="article-more-link">
             <a href="/2021/08/02/Linux/Linux_capabilities/#more">Read More</a>
@@ -504,7 +483,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="cl06cdjc60003f47c01iigs5l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="cl11uqnwt0001787cbh1kbef9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -559,45 +538,15 @@
 
 </li>
 </ol>
-<h2 id="插入排序分析"><a href="#插入排序分析" class="headerlink" title="插入排序分析"></a>插入排序分析</h2><ol>
-<li>原地排序（只涉及原内存空间的排序，空间复杂度为O(1)）</li>
-<li>当前需要插入的值与比较值==时即break跳出循环，这样可以保证两个相同的值在数组中的位置不变，是稳定排序算法</li>
-<li>时间复杂度：最好O(n)，最坏O(n^2)，平均 O(n^2)</li>
-</ol>
-<h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h1><h2 id="归并排序思想"><a href="#归并排序思想" class="headerlink" title="归并排序思想"></a>归并排序思想</h2><ol>
-<li>归并排序用的是分治思想，将1个大问题递归分解小问题，处理完小问题之后再进行合并，最终处理完整个问题</li>
-<li>归并排序数组：将数组递归平分成2个小数组，针对前后两部分进行排序，排序完再讲前后两部分进行合并</li>
-<li>归并分解公式 merge_sort(array, p, r) = merge_sort(array, p, (p+r)/2) + merge_sort(array, (p+r)/2 + 1, r)</li>
-<li>递归终止条件：p &gt;= r</li>
-<li>归并排序的重点在于合并过程merge(array, p, q)：<br>. 1）根据传入p,q，分别开辟前后两个子数组L和R<br>. 2）分别存入array从p, (p+r)/2和(p+r)/2+1,r的数据<br>. 3) 循环比较L和R的数据，将满足条件的值放在：array从p索引开始的位置，依次向后递增<br>. 4) L和R有一个数组的数据被放空当前循环结束，然后将剩余未遍历完的数据放入array递增的后续位置</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> m = (p+q)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> nl = m-p+<span class="number">1</span>; <span class="comment">//左区间数组的大小（因为p,q都是元素下标，所以数组大小要+1）</span></span><br><span class="line">    <span class="keyword">int</span> nr = q-m;   <span class="comment">//右区间数组的大小</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span>* L = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(nl);  <span class="comment">//应该对L和R进行返回值判断，这里展示算法过程忽略</span></span><br><span class="line">    <span class="keyword">int</span>* R = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(nr);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> i,j,k;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; nl; ++i) &#123;    <span class="comment">//将左右区间的元素存入L和R数组，</span></span><br><span class="line">        L[i] = a[p+i];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (j=<span class="number">0</span>; j &lt; nr; ++j) &#123;</span><br><span class="line">        R[j] = a[m+<span class="number">1</span>+j];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    k = p;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (i &lt; nl &amp;&amp; j &lt; nr) &#123;</span><br><span class="line">        <span class="keyword">if</span> (L[i] &lt;= R[j]) &#123;     <span class="comment">//这里按照从小到大进行排序</span></span><br><span class="line">            a[k++] = L[i++];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            a[k++] = R[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (i &lt; nl) &#123;            <span class="comment">//将L或者R数组从未填完的元素填入a数组中</span></span><br><span class="line">        a[k++] = L[i++];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (j &lt; nr) &#123;</span><br><span class="line">        a[k++] = R[j++];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">free</span>(L);</span><br><span class="line">    <span class="built_in">free</span>(R);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> p, <span class="keyword">int</span> q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (p &lt; q) &#123;            <span class="comment">//递归终止条件 p&gt;=q</span></span><br><span class="line">        <span class="keyword">int</span> m = (p+q)/<span class="number">2</span>;</span><br><span class="line">        merge_sort(a, p, m);    <span class="comment">//分成两个子数组进行排序</span></span><br><span class="line">        merge_sort(a, m+<span class="number">1</span>, q);</span><br><span class="line">        merge(a, p, q);     <span class="comment">//合并两个已排序好的子数组</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="归并排序分析"><a href="#归并排序分析" class="headerlink" title="归并排序分析"></a>归并排序分析</h2><ol>
-<li>非原地排序算法，merge的过程中开辟了新空间，空间复杂度为O(n)</li>
-<li>当L和R子数组值进行比较时，值相同，填入L的值到array，这样可以保证两个相同的值在数组中的位置不变，是稳定排序算法</li>
-<li>时间复杂度：归并排序不管数组输入的有序程序是如何，最好，最坏，平均时间复杂度都是O(nlogn)</li>
-</ol>
-<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1><h2 id="快排思想"><a href="#快排思想" class="headerlink" title="快排思想"></a>快排思想</h2><ol>
-<li>快排利用的也是分治思想</li>
-<li>从array的low到high之间选取任意位置一个数组作为分区点(pivot)</li>
-<li>遍历array从low到high，将满足比较条件（例如小于）的数据置于左区间，不满足的置于右区间，中间填写pivot的数据</li>
-<li>继续递归排序左区间和右区间</li>
-<li>递归公式：quick_sort(array, low, high) = quick_sort(array, low, pivot-1) + quick_sort(array, pivot+1, high)</li>
-<li>递归终止条件：low &gt;= high</li>
-</ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>* first, <span class="keyword">int</span>* second)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = *first;</span><br><span class="line">    *first = *second;</span><br><span class="line">    *second = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pivot = a[high];    <span class="comment">//分区点数据取当前数组最后一个元素</span></span><br><span class="line">    <span class="keyword">int</span> i = low - <span class="number">1</span>;        <span class="comment">//已排序区间最后一个元素的索引</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = low; j &lt; high; ++j) &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[j] &lt;= pivot) &#123; <span class="comment">//小于等于pivot的元素都放入已排序区间</span></span><br><span class="line">            i++;</span><br><span class="line">            swap(&amp;a[i], &amp;a[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">                        </span><br><span class="line">    swap(&amp;a[i+<span class="number">1</span>], &amp;a[high]);  <span class="comment">//分区数据已排序区间（左区间）的下一个位置</span></span><br><span class="line">    <span class="keyword">return</span> i+<span class="number">1</span>;               <span class="comment">//返回pivot的位置</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="keyword">int</span>* a, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high) &#123;</span><br><span class="line">        <span class="keyword">int</span> pivot = partition(a, low, high);</span><br><span class="line">        quick_sort(a, low, pivot<span class="number">-1</span>);</span><br><span class="line">        quick_sort(a, pivot+<span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="快排分析"><a href="#快排分析" class="headerlink" title="快排分析"></a>快排分析</h2><ol>
-<li>原地排序算法</li>
-<li>partition过程中涉及交换操作，相同元素的先后顺序可能发生改变，非稳定的排序算法</li>
-<li>时间复杂度：平均时间复杂度为O(logn)，极端情况下为O(n^2)</li>
-<li>快排的关键在于partition过程，实现了原址重排</li>
-</ol>
-
+        
+          <p class="article-more-link">
+            <a href="/2020/10/14/algorithm/sort/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="cl06cdjbw0000f47c97naac6y" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/10/14/algorithm/sort/" data-id="cl11uqnwt0000787c3ni2bvy8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -683,7 +632,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/08/08/Linux/Linux_coredump/" data-id="cl06cdjc30001f47cg6rka9ux" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/08/08/Linux/Linux_coredump/" data-id="cl11uqnx80004787c2ib57i8e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -706,6 +655,10 @@
       <ul>
         
           <li>
+            <a href="/2022/03/22/Language/C/The-C-Programming-Language/">【C】《C程序设计语言》-笔记</a>
+          </li>
+        
+          <li>
             <a href="/2021/12/26/Linux/Linux_cpu/">【Linux】cpu性能问题排查</a>
           </li>
         
@@ -721,10 +674,6 @@
             <a href="/2020/10/14/algorithm/sort/">【算法】常见排序算法分析</a>
           </li>
         
-          <li>
-            <a href="/2020/08/08/Linux/Linux_coredump/">【Linux】coredump机制</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -734,7 +683,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -744,7 +693,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
