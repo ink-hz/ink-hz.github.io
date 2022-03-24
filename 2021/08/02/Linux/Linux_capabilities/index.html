@@ -15,7 +15,7 @@
 <meta property="og:description" content="systemd机制systemd是linux操作系统的系统和服务管理进程。系统启动的时候，作为1号进程启动，进行系统初始化和拉起用户定义的其他服务。 1root         1  0.5  0.3  43396  3696 ?        Ss   10:14   0:00 &#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;systemd --switched-root --system --deseria">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-03T08:55:43.529Z">
+<meta property="article:modified_time" content="2022-03-22T08:49:52.241Z">
 <meta property="article:author" content="ink">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -479,18 +479,13 @@
 <p>完整的实现代码: <a href="https://github.com/inkhz007/setcap" target="_blank" rel="noopener">https://github.com/inkhz007/setcap</a></p>
 </li>
 <li><p>最终实现效果:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink src]# ps aux | grep demo</span><br><span class="line">test     14369  0.0  0.0  12668   144 ?        Ss   23:33   0:00 ./demo</span><br><span class="line">root     14400  0.0  0.0 112708   980 pts/0    R+   23:34   0:00 grep --color=auto demo</span><br><span class="line">[root@ink src]# getpcaps 14369</span><br><span class="line">Capabilities for `14369': = cap_chown,cap_dac_override,cap_dac_read_search,cap_fowner,cap_fsetid,cap_kill+eip</span><br></pre></td></tr></table></figure>
-
-
-
-
-</li>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ink src]# ps aux | grep demo</span><br><span class="line">test     14369  0.0  0.0  12668   144 ?        Ss   23:33   0:00 ./demo</span><br><span class="line">root     14400  0.0  0.0 112708   980 pts/0    R+   23:34   0:00 grep --color=auto demo</span><br><span class="line">[root@ink src]# getpcaps 14369</span><br><span class="line">Capabilities for `14369': = cap_chown,cap_dac_override,cap_dac_read_search,cap_fowner,cap_fsetid,cap_kill+eip</span><br></pre></td></tr></table></figure></li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="cl11uqnwt0001787cbh1kbef9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2021/08/02/Linux/Linux_capabilities/" data-id="cl155z8s80003ts7c8lze3a7t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -530,7 +525,7 @@
       <ul>
         
           <li>
-            <a href="/2022/03/22/Language/C/The-C-Programming-Language/">【C】《C程序设计语言》-笔记</a>
+            <a href="/2022/03/23/Language/C/The-C-Programming-Language/">【C】《C程序设计语言》-笔记</a>
           </li>
         
           <li>
@@ -558,7 +553,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E7%AC%94%E8%AE%B0/">技术书籍笔记</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF%E4%B9%A6%E7%B1%8D%E7%AC%94%E8%AE%B0/C/">C</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E8%AF%91/">编译</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
