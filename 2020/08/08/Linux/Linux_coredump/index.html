@@ -114,8 +114,8 @@
 </tr>
 <tr>
 <td>SIGSYS</td>
-<td>31</td>
-<td>终端退出</td>
+<td>12</td>
+<td>非法系统调用</td>
 </tr>
 </tbody></table>
 <h1 id="core文件参数设置"><a href="#core文件参数设置" class="headerlink" title="core文件参数设置"></a>core文件参数设置</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/proc/sys/kernel/core_pattern</span><br><span class="line"></span><br><span class="line">默认的配置</span><br><span class="line">[root@localhost ~]# cat /proc/sys/kernel/core_pattern</span><br><span class="line">|/usr/libexec/abrt-hook-ccpp %s %c %p %u %g %t %e</span><br><span class="line"></span><br><span class="line"><span class="meta">%</span><span class="bash">s 造成coredump的信号值</span></span><br><span class="line"><span class="meta">%</span><span class="bash">c 崩溃进程core文件大小的软限制</span></span><br><span class="line"><span class="meta">%</span><span class="bash">p 进程的pid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">u 进程的uid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">g 进程的gid</span></span><br><span class="line"><span class="meta">%</span><span class="bash">t 进程出core的时间</span></span><br><span class="line"><span class="meta">%</span><span class="bash">e  执行出core的命令</span></span><br></pre></td></tr></table></figure>
