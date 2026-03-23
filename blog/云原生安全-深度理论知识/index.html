@@ -1,0 +1,2079 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="云原生安全完整体系：容器安全、Kubernetes安全架构、网络策略与隔离、Secrets管理、合规与审计等高级理论知识。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>云原生安全深度理论知识</title><style>:root{--bg: #ffffff;--text: #1a1a1a;--accent: #2563eb;--accent-hover: #1d4ed8;--gray: #6b7280;--border: #e5e7eb;--code-bg: #f3f4f6}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:color .2s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-decoration:underline}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#e11d48;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:#f6f8fa;padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-decoration:underline}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic}
+</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>云原生安全深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#云原生</span><span class="tag" data-astro-cid-bvzihdzo>#Kubernetes</span><span class="tag" data-astro-cid-bvzihdzo>#容器安全</span><span class="tag" data-astro-cid-bvzihdzo>#网络策略</span><span class="tag" data-astro-cid-bvzihdzo>#合规审计</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="云原生安全深度理论知识">云原生安全深度理论知识</h1>
+<blockquote>
+<p><strong>学习深度</strong>: ⭐⭐⭐⭐
+<strong>文档类型</strong>: 纯理论知识（无代码实践）
+<strong>权威参考</strong>: CNCF、Falco、HashiCorp Vault、NIST、CIS Benchmarks</p>
+</blockquote>
+<hr>
+<h2 id="目录">目录</h2>
+<ol>
+<li><a href="#%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AE%89%E5%85%A8%E5%9F%BA%E7%A1%80">云原生安全基础</a></li>
+<li><a href="#%E5%AE%B9%E5%99%A8%E5%AE%89%E5%85%A8">容器安全</a></li>
+<li><a href="#kubernetes%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84">Kubernetes安全架构</a></li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5%E4%B8%8E%E9%9A%94%E7%A6%BB">网络策略与隔离</a></li>
+<li><a href="#secrets%E7%AE%A1%E7%90%86">Secrets管理</a></li>
+<li><a href="#%E5%90%88%E8%A7%84%E4%B8%8E%E5%AE%A1%E8%AE%A1">合规与审计</a></li>
+</ol>
+<hr>
+<h2 id="云原生安全基础">云原生安全基础</h2>
+<h3 id="11-云原生安全挑战">1.1 云原生安全挑战</h3>
+<h4 id="传统安全-vs-云原生安全">传统安全 vs 云原生安全</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Traditional["传统应用安全模型"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Firewall["网络边界(防火墙)"]</span></span>
+<span class="line"><span style="color:#24292E">        subgraph AppServer["应用服务器(长期运行)"]</span></span>
+<span class="line"><span style="color:#24292E">            Feature1["• 静态IP"]</span></span>
+<span class="line"><span style="color:#24292E">            Feature2["• 可预测端口"]</span></span>
+<span class="line"><span style="color:#24292E">            Feature3["• 手动配置"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">        Firewall --> AppServer</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph TraditionalFeatures["传统模型特点"]</span></span>
+<span class="line"><span style="color:#24292E">        T1["边界清晰"]</span></span>
+<span class="line"><span style="color:#24292E">        T2["资源静态"]</span></span>
+<span class="line"><span style="color:#24292E">        T3["部署频率低"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph CloudNative["云原生挑战"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Mesh["微服务网格"]</span></span>
+<span class="line"><span style="color:#24292E">        subgraph Pods["Pod集群"]</span></span>
+<span class="line"><span style="color:#24292E">            Pod1["Pod1"]</span></span>
+<span class="line"><span style="color:#24292E">            Pod2["Pod2"]</span></span>
+<span class="line"><span style="color:#24292E">            Pod3["Pod3"]</span></span>
+<span class="line"><span style="color:#24292E">            Pod4["Pod4"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">        Dynamic["动态IP、动态端口、自动扩缩容"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        Mesh --> Pods</span></span>
+<span class="line"><span style="color:#24292E">        Pods --> Dynamic</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Challenges["新挑战"]</span></span>
+<span class="line"><span style="color:#24292E">        C1["❌ 边界消失(东西向流量占80%+)"]</span></span>
+<span class="line"><span style="color:#24292E">        C2["❌ 资源动态(Pod生命周期秒级)"]</span></span>
+<span class="line"><span style="color:#24292E">        C3["❌ 部署频繁(每天数百次)"]</span></span>
+<span class="line"><span style="color:#24292E">        C4["❌ 攻击面扩大(容器、编排器、镜像仓库)"]</span></span>
+<span class="line"><span style="color:#24292E">        C5["❌ 复杂性爆炸(微服务+依赖)"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    Traditional -.对比.-> CloudNative</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Traditional fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style CloudNative fill:#fff3e0</span></span>
+<span class="line"><span style="color:#24292E">    style Challenges fill:#ffebee</span></span>
+<span class="line"><span style="color:#24292E">    style TraditionalFeatures fill:#e8f5e9</span></span></code></pre>
+<hr>
+<h3 id="12-云原生安全的4c模型">1.2 云原生安全的4C模型</h3>
+<p><strong>CNCF 安全层次模型</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer1["Cloud (云基础设施)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Cloud1["物理安全"]</span></span>
+<span class="line"><span style="color:#24292E">        Cloud2["网络安全"]</span></span>
+<span class="line"><span style="color:#24292E">        Cloud3["IAM (身份访问管理)"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer2["Cluster (集群)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Cluster1["Kubernetes RBAC"]</span></span>
+<span class="line"><span style="color:#24292E">        Cluster2["网络策略"]</span></span>
+<span class="line"><span style="color:#24292E">        Cluster3["Pod安全策略"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer3["Container (容器)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Container1["镜像扫描"]</span></span>
+<span class="line"><span style="color:#24292E">        Container2["运行时保护"]</span></span>
+<span class="line"><span style="color:#24292E">        Container3["资源限制"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer4["Code (代码)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Code1["依赖扫描"]</span></span>
+<span class="line"><span style="color:#24292E">        Code2["SAST/DAST"]</span></span>
+<span class="line"><span style="color:#24292E">        Code3["Secrets检测"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph LayerRelation["层次关系"]</span></span>
+<span class="line"><span style="color:#24292E">        R1["每层依赖下层安全"]</span></span>
+<span class="line"><span style="color:#24292E">        R2["攻击可在任何层发生"]</span></span>
+<span class="line"><span style="color:#24292E">        R3["深度防御 (Defense in Depth)"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    Layer1 --> Layer2</span></span>
+<span class="line"><span style="color:#24292E">    Layer2 --> Layer3</span></span>
+<span class="line"><span style="color:#24292E">    Layer3 --> Layer4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Layer1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Layer2 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Layer3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Layer4 fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style LayerRelation fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span></code></pre>
+<hr>
+<h3 id="13-零信任架构在云原生中的应用">1.3 零信任架构在云原生中的应用</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">sequenceDiagram</span></span>
+<span class="line"><span style="color:#24292E">    participant SA as Service A&#x3C;br/>(mTLS证书: A)</span></span>
+<span class="line"><span style="color:#24292E">    participant SB as Service B&#x3C;br/>(验证证书A, 检查权限)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    Note over SA,SB: 零信任原则应用</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    SA->>SB: 1. TLS握手</span></span>
+<span class="line"><span style="color:#24292E">    SB->>SA: 2. 请求客户端证书</span></span>
+<span class="line"><span style="color:#24292E">    SA->>SB: 3. 提供证书A</span></span>
+<span class="line"><span style="color:#24292E">    SB->>SB: 4. 验证证书A</span></span>
+<span class="line"><span style="color:#24292E">    SB->>SB: 5. 提取Service Account</span></span>
+<span class="line"><span style="color:#24292E">    SB->>SB: 6. RBAC授权检查</span></span>
+<span class="line"><span style="color:#24292E">    SB->>SB: 7. Network Policy过滤</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    alt 验证成功</span></span>
+<span class="line"><span style="color:#24292E">        SB-->>SA: 允许访问</span></span>
+<span class="line"><span style="color:#24292E">    else 验证失败</span></span>
+<span class="line"><span style="color:#24292E">        SB-->>SA: 拒绝访问</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    Note over SA,SB: 每个请求多层验证:&#x3C;br/>1. mTLS双向认证&#x3C;br/>2. 提取Service Account&#x3C;br/>3. RBAC授权检查&#x3C;br/>4. Network Policy过滤</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style SA fill:#e3f2fd,stroke:#1976d2</span></span>
+<span class="line"><span style="color:#24292E">    style SB fill:#e8f5e9,stroke:#388e3c</span></span></code></pre>
+<p><strong>零信任四大原则</strong>:</p>
+<ol>
+<li>
+<p><strong>永不信任网络位置</strong>:</p>
+<ul>
+<li>Pod IP动态分配 → 不能依赖IP白名单</li>
+<li>解决方案: 基于身份的访问控制 (Service Mesh mTLS)</li>
+</ul>
+</li>
+<li>
+<p><strong>微分段 (Micro-Segmentation)</strong>:</p>
+<ul>
+<li>每个微服务独立隔离</li>
+<li>解决方案: Network Policy 限制Pod间通信</li>
+</ul>
+</li>
+<li>
+<p><strong>持续验证</strong>:</p>
+<ul>
+<li>每个请求都验证身份</li>
+<li>解决方案: Istio/Linkerd 自动注入认证</li>
+</ul>
+</li>
+<li>
+<p><strong>最小权限</strong>:</p>
+<ul>
+<li>Pod仅获得必需权限</li>
+<li>解决方案: RBAC + Pod Security Standards</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="容器安全">容器安全</h2>
+<h3 id="21-容器隔离原理">2.1 容器隔离原理</h3>
+<h4 id="linux-namespace-命名空间">Linux Namespace (命名空间)</h4>
+<p><strong>定义</strong>: 隔离进程视图，让容器看到独立的系统资源。</p>
+<p><strong>7种命名空间</strong>:</p>
+<ol>
+<li>
+<p><strong>PID Namespace (进程隔离)</strong>:</p>
+<ul>
+<li>容器内 PID 1 (init)</li>
+<li>主机看到真实 PID (如 12345)</li>
+<li>容器看不到主机进程</li>
+</ul>
+</li>
+<li>
+<p><strong>Network Namespace (网络隔离)</strong>:</p>
+<ul>
+<li>独立网卡、IP、路由表</li>
+<li>容器间网络隔离</li>
+</ul>
+</li>
+<li>
+<p><strong>Mount Namespace (文件系统隔离)</strong>:</p>
+<ul>
+<li>独立挂载点</li>
+<li>容器看到自己的根文件系统</li>
+</ul>
+</li>
+<li>
+<p><strong>UTS Namespace (主机名隔离)</strong>:</p>
+<ul>
+<li>独立主机名</li>
+<li>容器可设置hostname</li>
+</ul>
+</li>
+<li>
+<p><strong>IPC Namespace (进程间通信隔离)</strong>:</p>
+<ul>
+<li>隔离共享内存、信号量</li>
+<li>防止容器间IPC干扰</li>
+</ul>
+</li>
+<li>
+<p><strong>User Namespace (用户隔离)</strong>:</p>
+<ul>
+<li>容器内 root ≠ 主机 root</li>
+<li>UID/GID 映射</li>
+</ul>
+</li>
+<li>
+<p><strong>Cgroup Namespace (资源视图隔离)</strong>:</p>
+<ul>
+<li>隔离 cgroup 视图</li>
+</ul>
+</li>
+</ol>
+<p><strong>示例: PID Namespace</strong></p>
+<p>主机视角:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PID 1: systemd</span></span>
+<span class="line"><span>PID 12345: nginx (容器进程)</span></span></code></pre>
+<p>容器视角:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PID 1: nginx (以为自己是init)</span></span></code></pre>
+<h4 id="cgroups-控制组">Cgroups (控制组)</h4>
+<p><strong>定义</strong>: 限制和监控容器资源使用。</p>
+<p><strong>资源类型</strong>:</p>
+<ol>
+<li>
+<p><strong>CPU</strong>:</p>
+<ul>
+<li>cpu.shares: CPU权重 (默认1024)</li>
+<li>cpu.cfs_quota_us: CPU配额 (微秒)</li>
+<li>示例: 限制容器最多使用50% CPU</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory</strong>:</p>
+<ul>
+<li>memory.limit_in_bytes: 内存上限</li>
+<li>memory.oom_control: OOM行为</li>
+<li>示例: 限制容器最多512MB内存</li>
+</ul>
+</li>
+<li>
+<p><strong>Block I/O</strong>:</p>
+<ul>
+<li>blkio.weight: I/O权重</li>
+<li>blkio.throttle.read_bps_device: 读取速率</li>
+<li>示例: 限制磁盘读取10MB/s</li>
+</ul>
+</li>
+<li>
+<p><strong>Network (通过 tc)</strong>:</p>
+<ul>
+<li>带宽限制</li>
+<li>示例: 限制容器100Mbps网速</li>
+</ul>
+</li>
+</ol>
+<p><strong>资源爆炸的后果</strong>:</p>
+<ul>
+<li>CPU饱和 → 其他容器卡顿</li>
+<li>内存溢出 → OOM Killer杀进程</li>
+<li>磁盘I/O满 → 系统不响应</li>
+</ul>
+<p><strong>Cgroups防护</strong>:</p>
+<ul>
+<li>硬限制 (limit): 超过即拒绝</li>
+<li>软限制 (request): 保证最小资源</li>
+</ul>
+<hr>
+<h3 id="22-容器镜像安全">2.2 容器镜像安全</h3>
+<h4 id="镜像构建安全">镜像构建安全</h4>
+<p><strong>安全层次</strong>:</p>
+<p><strong>Dockerfile 安全最佳实践</strong>:</p>
+<p>❌ 不安全:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="dockerfile"><code><span class="line"><span style="color:#D73A49">FROM</span><span style="color:#24292E"> ubuntu:latest</span></span>
+<span class="line"><span style="color:#D73A49">RUN</span><span style="color:#24292E"> apt-get update &#x26;&#x26; apt-get install -y nginx</span></span>
+<span class="line"><span style="color:#D73A49">COPY</span><span style="color:#24292E"> app /app</span></span>
+<span class="line"><span style="color:#D73A49">USER</span><span style="color:#24292E"> root</span></span>
+<span class="line"><span style="color:#D73A49">ENV</span><span style="color:#24292E"> SECRET_KEY=hardcoded_secret</span></span></code></pre>
+<p>问题:</p>
+<ul>
+<li>latest 标签不确定（无法重现）</li>
+<li>root 用户运行（权限过高）</li>
+<li>硬编码 secret</li>
+</ul>
+<p>✅ 安全:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="dockerfile"><code><span class="line"><span style="color:#D73A49">FROM</span><span style="color:#24292E"> ubuntu:22.04@sha256:abc123...  # 固定版本+digest</span></span>
+<span class="line"><span style="color:#D73A49">RUN</span><span style="color:#24292E"> apt-get update &#x26;&#x26; apt-get install -y nginx=1.18.0 \</span></span>
+<span class="line"><span style="color:#24292E">    &#x26;&#x26; rm -rf /var/lib/apt/lists/*  # 清理缓存减小镜像</span></span>
+<span class="line"><span style="color:#D73A49">RUN</span><span style="color:#24292E"> useradd -m -u 1000 appuser      # 创建非特权用户</span></span>
+<span class="line"><span style="color:#D73A49">USER</span><span style="color:#24292E"> appuser                         # 非root运行</span></span>
+<span class="line"><span style="color:#D73A49">ENV</span><span style="color:#24292E"> SECRET_KEY=/run/secrets/key     # 引用外部secret</span></span></code></pre>
+<p>改进:</p>
+<ul>
+<li>固定版本（可重现）</li>
+<li>非特权用户</li>
+<li>不包含 secrets</li>
+<li>最小化镜像（多阶段构建）</li>
+</ul>
+<p><strong>多阶段构建 (Multi-stage Build)</strong>:</p>
+<p><strong>目的</strong>: 减小最终镜像大小，去除构建工具</p>
+<p><strong>示例</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="dockerfile"><code><span class="line"><span style="color:#6A737D"># 阶段1: 构建</span></span>
+<span class="line"><span style="color:#D73A49">FROM</span><span style="color:#24292E"> golang:1.21 </span><span style="color:#D73A49">AS</span><span style="color:#24292E"> builder</span></span>
+<span class="line"><span style="color:#D73A49">WORKDIR</span><span style="color:#24292E"> /app</span></span>
+<span class="line"><span style="color:#D73A49">COPY</span><span style="color:#24292E"> . .</span></span>
+<span class="line"><span style="color:#D73A49">RUN</span><span style="color:#24292E"> go build -o myapp</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 阶段2: 运行</span></span>
+<span class="line"><span style="color:#D73A49">FROM</span><span style="color:#24292E"> alpine:3.18  # 最小基础镜像</span></span>
+<span class="line"><span style="color:#D73A49">COPY</span><span style="color:#24292E"> --from=builder /app/myapp /</span></span>
+<span class="line"><span style="color:#D73A49">USER</span><span style="color:#24292E"> 1000</span></span>
+<span class="line"><span style="color:#D73A49">CMD</span><span style="color:#24292E"> [</span><span style="color:#032F62">"/myapp"</span><span style="color:#24292E">]</span></span></code></pre>
+<p><strong>对比</strong>:</p>
+<ul>
+<li>传统: golang:1.21 镜像 (800MB)</li>
+<li>多阶段: alpine + 二进制 (20MB)</li>
+<li>减小 97.5%</li>
+</ul>
+<p><strong>安全好处</strong>:</p>
+<ul>
+<li>攻击面小（无编译器、调试工具）</li>
+<li>漏洞少</li>
+<li>扫描快</li>
+</ul>
+<hr>
+<h3 id="23-镜像扫描">2.3 镜像扫描</h3>
+<h4 id="漏洞扫描原理">漏洞扫描原理</h4>
+<p><strong>扫描流程</strong>:</p>
+<ol>
+<li>
+<p><strong>镜像解析</strong>:</p>
+<ul>
+<li>提取所有层 (layers)</li>
+<li>识别包管理器 (apt, yum, apk)</li>
+</ul>
+</li>
+<li>
+<p><strong>包清单提取</strong>:</p>
+<ul>
+<li>列出所有已安装包及版本</li>
+<li>示例: nginx 1.18.0, openssl 1.1.1k</li>
+</ul>
+</li>
+<li>
+<p><strong>漏洞数据库匹配</strong>:</p>
+<ul>
+<li>查询 CVE 数据库</li>
+<li>匹配包名 + 版本</li>
+</ul>
+</li>
+<li>
+<p><strong>风险评分</strong>:</p>
+<ul>
+<li>CVSS 分数 (0-10)</li>
+<li>严重性: Critical, High, Medium, Low</li>
+</ul>
+</li>
+<li>
+<p><strong>生成报告</strong>:</p>
+<ul>
+<li>漏洞列表</li>
+<li>修复建议</li>
+</ul>
+</li>
+</ol>
+<p><strong>扫描工具对比</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具</th><th>数据源</th><th>语言支持</th><th>性能</th><th>推荐指数</th></tr></thead><tbody><tr><td><strong>Trivy</strong></td><td>多源</td><td>多语言</td><td>快</td><td>⭐⭐⭐⭐⭐</td></tr><tr><td><strong>Grype</strong></td><td>Syft + CVE</td><td>多语言</td><td>快</td><td>⭐⭐⭐⭐</td></tr><tr><td><strong>Clair</strong></td><td>NVD</td><td>操作系统包</td><td>中</td><td>⭐⭐⭐</td></tr><tr><td><strong>Snyk</strong></td><td>私有DB</td><td>多语言</td><td>快</td><td>⭐⭐⭐⭐ (商业)</td></tr></tbody></table>
+<p><strong>Trivy 示例输出</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>nginx:1.18.0 (ubuntu 20.04)</span></span>
+<span class="line"><span>├─ CVE-2021-23017 (CRITICAL, CVSS 9.8)</span></span>
+<span class="line"><span>│  • 受影响包: nginx &#x3C; 1.20.1</span></span>
+<span class="line"><span>│  • 修复: 升级到 nginx:1.20.1</span></span>
+<span class="line"><span>├─ CVE-2020-12345 (HIGH, CVSS 7.5)</span></span>
+<span class="line"><span>│  • 受影响包: openssl &#x3C; 1.1.1l</span></span>
+<span class="line"><span>│  • 修复: 更新基础镜像</span></span>
+<span class="line"><span>└─ 总计: 2 Critical, 5 High, 12 Medium</span></span></code></pre>
+<h4 id="镜像签名与验证">镜像签名与验证</h4>
+<p><strong>问题</strong>: 如何确保镜像未被篡改？</p>
+<p><strong>方案1: Docker Content Trust (DCT)</strong></p>
+<p>原理: Notary 签名</p>
+<p>流程:</p>
+<ol>
+<li>
+<p><strong>推送镜像时签名</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">docker</span><span style="color:#032F62"> push</span><span style="color:#032F62"> myregistry.com/app:v1.0</span></span></code></pre>
+<ul>
+<li>生成签名（使用私钥）</li>
+<li>存储到 Notary 服务器</li>
+</ul>
+</li>
+<li>
+<p><strong>拉取镜像时验证</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">docker</span><span style="color:#032F62"> pull</span><span style="color:#032F62"> myregistry.com/app:v1.0</span></span></code></pre>
+<ul>
+<li>下载签名</li>
+<li>验证签名（使用公钥）</li>
+<li>签名有效 → 拉取镜像</li>
+<li>签名无效 → 拒绝</li>
+</ul>
+</li>
+</ol>
+<p>好处:</p>
+<ul>
+<li>防止中间人攻击</li>
+<li>确保镜像来源可信</li>
+</ul>
+<p><strong>方案2: Sigstore Cosign</strong></p>
+<p>特点:</p>
+<ul>
+<li>无需维护密钥服务器</li>
+<li>支持 Keyless 签名 (OIDC)</li>
+<li>透明日志 (Rekor)</li>
+</ul>
+<p>签名验证:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">cosign</span><span style="color:#032F62"> verify</span><span style="color:#032F62"> myregistry.com/app:v1.0</span></span></code></pre>
+<ul>
+<li>查询透明日志</li>
+<li>验证签名</li>
+<li>检查证书链</li>
+</ul>
+<hr>
+<h3 id="24-容器运行时安全">2.4 容器运行时安全</h3>
+<h4 id="运行时威胁检测-falco">运行时威胁检测 (Falco)</h4>
+<p><strong>Falco 原理</strong>: 基于系统调用监控异常行为。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph ContainerProc["容器进程"]</span></span>
+<span class="line"><span style="color:#24292E">        Nginx["nginx"]</span></span>
+<span class="line"><span style="color:#24292E">        App["app"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Kernel["Linux Kernel (系统调用)"]</span></span>
+<span class="line"><span style="color:#24292E">        Syscalls["系统调用接口"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph SyscallCapture["系统调用捕获"]</span></span>
+<span class="line"><span style="color:#24292E">        eBPF["eBPF 探针"]</span></span>
+<span class="line"><span style="color:#24292E">        KernelModule["内核模块"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph FalcoEngine["Falco 引擎"]</span></span>
+<span class="line"><span style="color:#24292E">        RuleEngine["规则引擎"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    ContainerProc --> Kernel</span></span>
+<span class="line"><span style="color:#24292E">    Kernel --> SyscallCapture</span></span>
+<span class="line"><span style="color:#24292E">    SyscallCapture --> FalcoEngine</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style ContainerProc fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Kernel fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style SyscallCapture fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style FalcoEngine fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span></code></pre>
+<p><strong>检测示例</strong>:</p>
+<p><strong>规则1: 检测容器内执行Shell</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">rule</span><span style="color:#24292E">: </span><span style="color:#032F62">Container Shell Spawned</span></span>
+<span class="line"><span style="color:#22863A">  condition</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    container and</span></span>
+<span class="line"><span style="color:#032F62">    proc.name in (bash, sh, zsh)</span></span>
+<span class="line"><span style="color:#22863A">  output</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    Shell spawned in container</span></span>
+<span class="line"><span style="color:#032F62">    (user=%user.name container=%container.name)</span></span>
+<span class="line"><span style="color:#22863A">  priority</span><span style="color:#24292E">: </span><span style="color:#032F62">WARNING</span></span></code></pre>
+<p><strong>规则2: 检测容器内写入系统目录</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">rule</span><span style="color:#24292E">: </span><span style="color:#032F62">Write Below Etc</span></span>
+<span class="line"><span style="color:#22863A">  condition</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    container and</span></span>
+<span class="line"><span style="color:#032F62">    fd.name startswith /etc and</span></span>
+<span class="line"><span style="color:#032F62">    evt.type = write</span></span>
+<span class="line"><span style="color:#22863A">  output</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    File written to /etc in container</span></span>
+<span class="line"><span style="color:#22863A">  priority</span><span style="color:#24292E">: </span><span style="color:#032F62">ERROR</span></span></code></pre>
+<p><strong>规则3: 检测异常网络连接</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">rule</span><span style="color:#24292E">: </span><span style="color:#032F62">Unexpected Outbound Connection</span></span>
+<span class="line"><span style="color:#22863A">  condition</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    container and</span></span>
+<span class="line"><span style="color:#032F62">    fd.type = ipv4 and</span></span>
+<span class="line"><span style="color:#032F62">    fd.sip not in (allowed_ips)</span></span>
+<span class="line"><span style="color:#22863A">  output</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    Unexpected outbound connection</span></span>
+<span class="line"><span style="color:#032F62">    (dest=%fd.rip port=%fd.rport)</span></span>
+<span class="line"><span style="color:#22863A">  priority</span><span style="color:#24292E">: </span><span style="color:#032F62">CRITICAL</span></span></code></pre>
+<p><strong>告警流程</strong>:</p>
+<ol>
+<li>容器内执行 <code>curl malicious.com</code></li>
+<li>Falco 捕获 socket() 系统调用</li>
+<li>匹配规则: 目标IP不在白名单</li>
+<li>触发告警 → Webhook/Slack/SIEM</li>
+<li>可选: 自动响应（杀死容器）</li>
+</ol>
+<hr>
+<h3 id="25-容器逃逸防护">2.5 容器逃逸防护</h3>
+<h4 id="常见逃逸技术">常见逃逸技术</h4>
+<p><strong>1. 特权容器逃逸</strong></p>
+<p>攻击方式:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">docker</span><span style="color:#032F62"> run</span><span style="color:#005CC5"> --privileged</span><span style="color:#005CC5"> -v</span><span style="color:#032F62"> /:/host</span><span style="color:#032F62"> ubuntu</span></span></code></pre>
+<p>→ 挂载主机根目录 → chroot /host → 逃逸到主机</p>
+<p>防护措施:</p>
+<ul>
+<li>禁止 <code>privileged: true</code></li>
+<li>限制 capabilities (CAP_SYS_ADMIN)</li>
+<li>使用 Pod Security Standards</li>
+</ul>
+<p><strong>2. 内核漏洞利用</strong></p>
+<p>攻击方式:
+利用脏牛 (Dirty COW) 等内核漏洞 → 提权 → 逃逸</p>
+<p>防护措施:</p>
+<ul>
+<li>及时更新内核</li>
+<li>使用安全容器 (gVisor, Kata Containers)</li>
+</ul>
+<p><strong>3. Docker Socket 暴露</strong></p>
+<p>攻击方式:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">docker</span><span style="color:#032F62"> run</span><span style="color:#005CC5"> -v</span><span style="color:#032F62"> /var/run/docker.sock:/var/run/docker.sock</span></span></code></pre>
+<p>→ 容器内控制 Docker → 创建特权容器 → 逃逸</p>
+<p>防护措施:</p>
+<ul>
+<li>绝不挂载 docker.sock 到不可信容器</li>
+<li>使用只读挂载</li>
+</ul>
+<p><strong>4. HostPath 挂载</strong></p>
+<p>攻击方式:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">volumes</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">hostPath</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      path</span><span style="color:#24292E">: </span><span style="color:#032F62">/</span></span>
+<span class="line"><span style="color:#22863A">      type</span><span style="color:#24292E">: </span><span style="color:#032F62">Directory</span></span></code></pre>
+<p>→ 读写主机文件系统</p>
+<p>防护措施:</p>
+<ul>
+<li>Pod Security Policy 限制 hostPath</li>
+<li>仅允许特定路径 (如 /var/log)</li>
+</ul>
+<h4 id="安全容器技术">安全容器技术</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Traditional["传统容器 (Docker/containerd)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        subgraph Containers["容器层"]</span></span>
+<span class="line"><span style="color:#24292E">            C1["容器1"]</span></span>
+<span class="line"><span style="color:#24292E">            C2["容器2"]</span></span>
+<span class="line"><span style="color:#24292E">            C3["容器3"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">        SharedKernel["共享主机内核"]</span></span>
+<span class="line"><span style="color:#24292E">        Containers --> SharedKernel</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph TraditionalRisk["风险"]</span></span>
+<span class="line"><span style="color:#24292E">        Risk["内核漏洞影响所有容器"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph gVisor["安全容器 (gVisor)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Application["应用"]</span></span>
+<span class="line"><span style="color:#24292E">        Sentry["Sentry (用户空间内核)&#x3C;br/>• 系统调用拦截&#x3C;br/>• 沙箱隔离"]</span></span>
+<span class="line"><span style="color:#24292E">        Application --> Sentry</span></span>
+<span class="line"><span style="color:#24292E">        MinimalKernel["Linux Kernel (最小接触)"]</span></span>
+<span class="line"><span style="color:#24292E">        Sentry --> MinimalKernel</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph gVisorBenefits["gVisor 好处"]</span></span>
+<span class="line"><span style="color:#24292E">        GB1["✓ 攻击面减小 (只有少量系统调用到达内核)"]</span></span>
+<span class="line"><span style="color:#24292E">        GB2["✓ 逃逸困难"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Kata["安全容器 (Kata Containers)"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        KataContainers["容器1 &#x26; 容器2"]</span></span>
+<span class="line"><span style="color:#24292E">        LightweightVM["轻量级虚拟机 (VM)"]</span></span>
+<span class="line"><span style="color:#24292E">        GuestKernel["Guest Kernel"]</span></span>
+<span class="line"><span style="color:#24292E">        Hypervisor["Hypervisor (KVM/Firecracker)"]</span></span>
+<span class="line"><span style="color:#24292E">        HostKernel["Host Kernel"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        KataContainers --> LightweightVM</span></span>
+<span class="line"><span style="color:#24292E">        LightweightVM --> GuestKernel</span></span>
+<span class="line"><span style="color:#24292E">        GuestKernel --> Hypervisor</span></span>
+<span class="line"><span style="color:#24292E">        Hypervisor --> HostKernel</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph KataBenefits["Kata 好处"]</span></span>
+<span class="line"><span style="color:#24292E">        KB1["✓ 硬件级隔离 (VM边界)"]</span></span>
+<span class="line"><span style="color:#24292E">        KB2["✓ 性能接近容器 (轻量级VM)"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Performance["性能对比"]</span></span>
+<span class="line"><span style="color:#24292E">        P1["Docker: 启动 &#x3C;1s, 开销 ~2%"]</span></span>
+<span class="line"><span style="color:#24292E">        P2["gVisor: 启动 ~2s, 开销 ~20%"]</span></span>
+<span class="line"><span style="color:#24292E">        P3["Kata: 启动 ~3s, 开销 ~10%"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Traditional fill:#ffebee,stroke:#c62828,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style TraditionalRisk fill:#ffcdd2,stroke:#e53935,stroke-width:1px</span></span>
+<span class="line"><span style="color:#24292E">    style gVisor fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style gVisorBenefits fill:#c8e6c9,stroke:#66bb6a,stroke-width:1px</span></span>
+<span class="line"><span style="color:#24292E">    style Kata fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style KataBenefits fill:#bbdefb,stroke:#42a5f5,stroke-width:1px</span></span>
+<span class="line"><span style="color:#24292E">    style Performance fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span></code></pre>
+<hr>
+<h2 id="kubernetes安全架构">Kubernetes安全架构</h2>
+<h3 id="31-kubernetes认证与授权">3.1 Kubernetes认证与授权</h3>
+<h4 id="认证-authentication">认证 (Authentication)</h4>
+<p><strong>Kubernetes 支持的认证方式</strong>:</p>
+<ol>
+<li>
+<p><strong>X.509 客户端证书</strong>:</p>
+<ul>
+<li>kubectl 使用证书认证</li>
+<li>证书 CN (Common Name) = 用户名</li>
+<li>证书 O (Organization) = 用户组</li>
+</ul>
+</li>
+<li>
+<p><strong>Service Account Token</strong>:</p>
+<ul>
+<li>Pod 内应用使用</li>
+<li>JWT 格式</li>
+<li>自动挂载到 /var/run/secrets/kubernetes.io/serviceaccount/token</li>
+</ul>
+</li>
+<li>
+<p><strong>OIDC (OpenID Connect)</strong>:</p>
+<ul>
+<li>集成企业 IdP (如 Okta, Azure AD)</li>
+<li>用户通过 SSO 登录</li>
+</ul>
+</li>
+<li>
+<p><strong>Webhook Token</strong>:</p>
+<ul>
+<li>自定义认证服务</li>
+<li>Kubernetes 调用 webhook 验证 token</li>
+</ul>
+</li>
+<li>
+<p><strong>Static Token File (不推荐)</strong>:</p>
+<ul>
+<li>静态密码文件</li>
+<li>安全性差</li>
+</ul>
+</li>
+</ol>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    User["用户/Pod"] --> APIServer["API Server"]</span></span>
+<span class="line"><span style="color:#24292E">    APIServer --> Auth["1. 认证 (Authentication)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph AuthProcess["认证过程"]</span></span>
+<span class="line"><span style="color:#24292E">        Auth --> Extract["提取证书/Token"]</span></span>
+<span class="line"><span style="color:#24292E">        Extract --> Verify["验证签名"]</span></span>
+<span class="line"><span style="color:#24292E">        Verify --> Identify["确定用户身份"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    Identify --> Result["用户: alice&#x3C;br/>组: developers"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Auth fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style AuthProcess fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Result fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
+<h4 id="授权-authorization">授权 (Authorization)</h4>
+<p><strong>RBAC (Role-Based Access Control)</strong>:</p>
+<p><strong>核心概念</strong>:</p>
+<ol>
+<li>
+<p><strong>Role (角色)</strong>:</p>
+<ul>
+<li>定义一组权限</li>
+<li>Namespace 级别</li>
+</ul>
+<p>示例:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">Role</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  namespace</span><span style="color:#24292E">: </span><span style="color:#032F62">default</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">pod-reader</span></span>
+<span class="line"><span style="color:#22863A">rules</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">apiGroups</span><span style="color:#24292E">: [</span><span style="color:#032F62">""</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#22863A">  resources</span><span style="color:#24292E">: [</span><span style="color:#032F62">"pods"</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#22863A">  verbs</span><span style="color:#24292E">: [</span><span style="color:#032F62">"get"</span><span style="color:#24292E">, </span><span style="color:#032F62">"list"</span><span style="color:#24292E">]</span></span></code></pre>
+</li>
+<li>
+<p><strong>ClusterRole (集群角色)</strong>:</p>
+<ul>
+<li>集群级别权限</li>
+<li>可访问所有 Namespace</li>
+</ul>
+</li>
+<li>
+<p><strong>RoleBinding (角色绑定)</strong>:</p>
+<ul>
+<li>将 Role 绑定到用户/组</li>
+</ul>
+<p>示例:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">RoleBinding</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">read-pods</span></span>
+<span class="line"><span style="color:#22863A">  namespace</span><span style="color:#24292E">: </span><span style="color:#032F62">default</span></span>
+<span class="line"><span style="color:#22863A">subjects</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">User</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">alice</span></span>
+<span class="line"><span style="color:#22863A">roleRef</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  kind</span><span style="color:#24292E">: </span><span style="color:#032F62">Role</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">pod-reader</span></span></code></pre>
+</li>
+<li>
+<p><strong>ClusterRoleBinding (集群角色绑定)</strong>:</p>
+<ul>
+<li>将 ClusterRole 绑定到用户/组</li>
+<li>全局生效</li>
+</ul>
+</li>
+</ol>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    User["用户: alice"] --> Request["请求: GET /api/v1/namespaces/default/pods"]</span></span>
+<span class="line"><span style="color:#24292E">    Request --> Authz["2. 授权 (Authorization)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph AuthzProcess["授权过程"]</span></span>
+<span class="line"><span style="color:#24292E">        Authz --> FindBindings["查找 alice 的 Bindings"]</span></span>
+<span class="line"><span style="color:#24292E">        FindBindings --> CheckRole["检查 Role 权限"]</span></span>
+<span class="line"><span style="color:#24292E">        CheckRole --> MatchAPI["匹配 apiGroups/resources"]</span></span>
+<span class="line"><span style="color:#24292E">        MatchAPI --> CheckVerbs["检查 verbs"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    CheckVerbs --> Decision["允许/拒绝"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Authz fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style AuthzProcess fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Decision fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
+<p><strong>常见 verbs</strong>:</p>
+<ul>
+<li><strong>get</strong>: 读取单个资源</li>
+<li><strong>list</strong>: 列出资源</li>
+<li><strong>watch</strong>: 监听资源变化</li>
+<li><strong>create</strong>: 创建</li>
+<li><strong>update</strong>: 更新</li>
+<li><strong>patch</strong>: 部分更新</li>
+<li><strong>delete</strong>: 删除</li>
+</ul>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>#### 准入控制 (Admission Control)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**准入控制器链**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>认证 → 授权 → 准入控制 → 持久化</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**准入控制器职责**:</span></span>
+<span class="line"><span>- 变更请求 (Mutating)</span></span>
+<span class="line"><span>- 验证请求 (Validating)</span></span>
+<span class="line"><span>- 拒绝不合规请求</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**内置准入控制器**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1. **NamespaceLifecycle**:</span></span>
+<span class="line"><span>   - 防止在被删除的 Namespace 创建资源</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>2. **LimitRanger**:</span></span>
+<span class="line"><span>   - 强制执行资源限制 (CPU/内存)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>3. **ResourceQuota**:</span></span>
+<span class="line"><span>   - 强制执行配额（总资源上限）</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>4. **PodSecurityPolicy (已废弃 → Pod Security Standards)**:</span></span>
+<span class="line"><span>   - 强制 Pod 安全策略</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>5. **ServiceAccount**:</span></span>
+<span class="line"><span>   - 自动注入 ServiceAccount Token</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>6. **NodeRestriction**:</span></span>
+<span class="line"><span>   - 限制 kubelet 只能修改自己节点的资源</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**动态准入控制**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**Mutating Webhook**:</span></span></code></pre>
+<p>请求 → API Server → Webhook (修改请求) → 继续处理</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>示例: Istio Sidecar 注入</span></span>
+<span class="line"><span>- 用户创建 Pod</span></span>
+<span class="line"><span>- Webhook 拦截请求</span></span>
+<span class="line"><span>- 自动添加 Envoy Sidecar 容器</span></span>
+<span class="line"><span>- 返回修改后的 Pod</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**Validating Webhook**:</span></span></code></pre>
+<p>请求 → API Server → Webhook (验证) → 允许/拒绝</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>示例: OPA Gatekeeper</span></span>
+<span class="line"><span>- 用户创建 Pod</span></span>
+<span class="line"><span>- Webhook 检查策略:</span></span>
+<span class="line"><span>  - 镜像必须来自可信仓库</span></span>
+<span class="line"><span>  - 不能使用 latest 标签</span></span>
+<span class="line"><span>  - 必须设置资源限制</span></span>
+<span class="line"><span>- 不符合 → 拒绝</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>---</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>### 3.2 Pod安全标准 (Pod Security Standards)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>#### 三个安全级别</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**PSS 级别（从宽松到严格）**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**1. Privileged (特权)**:</span></span>
+<span class="line"><span>- 无限制</span></span>
+<span class="line"><span>- 允许特权容器</span></span>
+<span class="line"><span>- 允许 hostPath</span></span>
+<span class="line"><span>- 适用: 系统组件</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**2. Baseline (基线)**:</span></span>
+<span class="line"><span>- 最小限制集</span></span>
+<span class="line"><span>- 禁止:</span></span>
+<span class="line"><span>  - 特权容器</span></span>
+<span class="line"><span>  - hostPath (除特定路径)</span></span>
+<span class="line"><span>  - hostNetwork/hostPID</span></span>
+<span class="line"><span>  - 不安全的 capabilities</span></span>
+<span class="line"><span>- 适用: 大多数应用</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**3. Restricted (限制)**:</span></span>
+<span class="line"><span>- 最严格</span></span>
+<span class="line"><span>- 禁止:</span></span>
+<span class="line"><span>  - Baseline 所有禁止项</span></span>
+<span class="line"><span>  - root 用户运行</span></span>
+<span class="line"><span>  - 特权提升</span></span>
+<span class="line"><span>  - 所有 capabilities (除 NET_BIND_SERVICE)</span></span>
+<span class="line"><span>- 强制:</span></span>
+<span class="line"><span>  - 非root用户</span></span>
+<span class="line"><span>  - 只读根文件系统</span></span>
+<span class="line"><span>  - runAsNonRoot: true</span></span>
+<span class="line"><span>- 适用: 高安全需求</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**实施方式**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**方式1: Namespace 标签**</span></span>
+<span class="line"><span>```yaml</span></span>
+<span class="line"><span>apiVersion: v1</span></span>
+<span class="line"><span>kind: Namespace</span></span>
+<span class="line"><span>metadata:</span></span>
+<span class="line"><span>  name: my-app</span></span>
+<span class="line"><span>  labels:</span></span>
+<span class="line"><span>    pod-security.kubernetes.io/enforce: restricted</span></span>
+<span class="line"><span>    pod-security.kubernetes.io/audit: restricted</span></span>
+<span class="line"><span>    pod-security.kubernetes.io/warn: restricted</span></span></code></pre>
+<p><strong>方式2: 准入控制器</strong></p>
+<ul>
+<li>集群级别配置</li>
+<li>不同 Namespace 不同策略</li>
+</ul>
+<p><strong>示例: Restricted Pod</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">v1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">Pod</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">secure-pod</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  securityContext</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    runAsNonRoot</span><span style="color:#24292E">: </span><span style="color:#005CC5">true</span><span style="color:#6A737D">      # 必须</span></span>
+<span class="line"><span style="color:#22863A">    runAsUser</span><span style="color:#24292E">: </span><span style="color:#005CC5">1000</span><span style="color:#6A737D">         # 非root UID</span></span>
+<span class="line"><span style="color:#22863A">    fsGroup</span><span style="color:#24292E">: </span><span style="color:#005CC5">2000</span></span>
+<span class="line"><span style="color:#22863A">    seccompProfile</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      type</span><span style="color:#24292E">: </span><span style="color:#032F62">RuntimeDefault</span><span style="color:#6A737D">  # 必须</span></span>
+<span class="line"><span style="color:#22863A">  containers</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">name</span><span style="color:#24292E">: </span><span style="color:#032F62">app</span></span>
+<span class="line"><span style="color:#22863A">    image</span><span style="color:#24292E">: </span><span style="color:#032F62">nginx:1.21</span></span>
+<span class="line"><span style="color:#22863A">    securityContext</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      allowPrivilegeEscalation</span><span style="color:#24292E">: </span><span style="color:#005CC5">false</span><span style="color:#6A737D">  # 必须</span></span>
+<span class="line"><span style="color:#22863A">      readOnlyRootFilesystem</span><span style="color:#24292E">: </span><span style="color:#005CC5">true</span><span style="color:#6A737D">     # 推荐</span></span>
+<span class="line"><span style="color:#22863A">      capabilities</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        drop</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">        - </span><span style="color:#032F62">ALL</span><span style="color:#6A737D">                           # 必须</span></span>
+<span class="line"><span style="color:#22863A">    resources</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      limits</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        cpu</span><span style="color:#24292E">: </span><span style="color:#032F62">100m</span></span>
+<span class="line"><span style="color:#22863A">        memory</span><span style="color:#24292E">: </span><span style="color:#032F62">128Mi</span></span>
+<span class="line"><span style="color:#22863A">      requests</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        cpu</span><span style="color:#24292E">: </span><span style="color:#032F62">50m</span></span>
+<span class="line"><span style="color:#22863A">        memory</span><span style="color:#24292E">: </span><span style="color:#032F62">64Mi</span></span></code></pre>
+<hr>
+<h3 id="33-secrets安全">3.3 Secrets安全</h3>
+<h4 id="kubernetes-secrets-的局限性">Kubernetes Secrets 的局限性</h4>
+<p><strong>问题</strong>:</p>
+<ol>
+<li>
+<p><strong>Base64 编码 ≠ 加密</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#005CC5">echo</span><span style="color:#005CC5"> -n</span><span style="color:#032F62"> 'password123'</span><span style="color:#D73A49"> |</span><span style="color:#6F42C1"> base64</span></span>
+<span class="line"><span style="color:#6A737D"># 输出: cGFzc3dvcmQxMjM=</span></span>
+<span class="line"><span style="color:#6A737D"># 轻易解码</span></span></code></pre>
+</li>
+<li>
+<p><strong>etcd 默认明文存储</strong>:</p>
+<ul>
+<li>Secret 存储在 etcd</li>
+<li>etcd 未加密 → Secret 明文</li>
+</ul>
+</li>
+<li>
+<p><strong>广泛的 RBAC 权限</strong>:</p>
+<ul>
+<li>有 get/list secrets 权限的用户可读所有 secrets</li>
+<li>难以细粒度控制</li>
+</ul>
+</li>
+<li>
+<p><strong>日志泄露风险</strong>:</p>
+<ul>
+<li>Secret 可能被打印到日志</li>
+<li>容器环境变量可被inspect</li>
+</ul>
+</li>
+</ol>
+<p><strong>改进方案</strong>:</p>
+<ol>
+<li>
+<p><strong>etcd 加密</strong>:</p>
+<ul>
+<li>启用 Encryption at Rest</li>
+<li>配置加密提供商 (AES-CBC, KMS)</li>
+</ul>
+</li>
+<li>
+<p><strong>外部 Secrets 管理</strong>:</p>
+<ul>
+<li>HashiCorp Vault</li>
+<li>AWS Secrets Manager</li>
+<li>Azure Key Vault</li>
+</ul>
+</li>
+<li>
+<p><strong>Sealed Secrets</strong>:</p>
+<ul>
+<li>加密 Secret 存储在 Git</li>
+<li>集群内控制器解密</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="网络策略与隔离">网络策略与隔离</h2>
+<h3 id="41-kubernetes网络模型">4.1 Kubernetes网络模型</h3>
+<h4 id="默认网络行为">默认网络行为</h4>
+<p><strong>Kubernetes 网络要求</strong>:</p>
+<ol>
+<li>所有 Pod 可直接通信 (无 NAT)</li>
+<li>所有节点可与 Pod 通信</li>
+<li>Pod 看到的自己IP = 其他 Pod 看到的IP</li>
+</ol>
+<p><strong>默认行为</strong>:</p>
+<ul>
+<li>所有 Pod 互通 (Flat Network)</li>
+<li>无网络隔离</li>
+</ul>
+<p><strong>风险</strong>:
+攻击者攻陷一个 Pod → 可访问所有其他 Pod</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    Pod1["Pod1&#x3C;br/>(Web)"] -->|✓| Pod2["Pod2&#x3C;br/>(API)"]</span></span>
+<span class="line"><span style="color:#24292E">    Pod2 -->|✓| Pod3["Pod3&#x3C;br/>(DB)"]</span></span>
+<span class="line"><span style="color:#24292E">    Pod1 -.->|不应该但可以| Pod3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    Note["问题: Web Pod 可直接访问 DB Pod (不应该)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Pod1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Pod2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Pod3 fill:#ffebee,stroke:#c62828,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Note fill:#fff9c4,stroke:#f57f17,stroke-width:2px</span></span></code></pre>
+<hr>
+<h3 id="42-network-policy-原理">4.2 Network Policy 原理</h3>
+<h4 id="网络策略模型">网络策略模型</h4>
+<p><strong>Network Policy 工作原理</strong>:</p>
+<ol>
+<li>
+<p><strong>默认拒绝 + 显式允许</strong>:</p>
+<ul>
+<li>创建 NetworkPolicy → 拒绝所有流量</li>
+<li>配置规则 → 允许特定流量</li>
+</ul>
+</li>
+<li>
+<p><strong>选择器匹配</strong>:</p>
+<ul>
+<li>podSelector: 选择应用策略的 Pod</li>
+<li>namespaceSelector: 选择允许的 Namespace</li>
+<li>ipBlock: 允许的 IP 段</li>
+</ul>
+</li>
+<li>
+<p><strong>入站/出站规则</strong>:</p>
+<ul>
+<li>ingress: 入站流量规则</li>
+<li>egress: 出站流量规则</li>
+</ul>
+</li>
+</ol>
+<p><strong>示例: 三层应用隔离</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    subgraph NS["Namespace: production"]</span></span>
+<span class="line"><span style="color:#24292E">        Web["Web&#x3C;br/>Pod"] --> API["API&#x3C;br/>Pod"]</span></span>
+<span class="line"><span style="color:#24292E">        API --> DB["DB&#x3C;br/>Pod"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    External["外部&#x3C;br/>0.0.0.0/0"] -->|允许:80| Web</span></span>
+<span class="line"><span style="color:#24292E">    Web -->|✓ 允许:8080| API</span></span>
+<span class="line"><span style="color:#24292E">    Web -.->|✗ 拒绝| DB</span></span>
+<span class="line"><span style="color:#24292E">    API -->|✓ 允许:5432| DB</span></span>
+<span class="line"><span style="color:#24292E">    External -.->|✗ 拒绝| API</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Web fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style API fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style DB fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style External fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style NS fill:#fafafa,stroke:#424242,stroke-width:2px</span></span></code></pre>
+<p><strong>策略1: Web Pod 只接受外部流量</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">networking.k8s.io/v1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">NetworkPolicy</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">web-ingress</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  podSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      app</span><span style="color:#24292E">: </span><span style="color:#032F62">web</span></span>
+<span class="line"><span style="color:#22863A">  policyTypes</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#032F62">Ingress</span></span>
+<span class="line"><span style="color:#22863A">  ingress</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">from</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">ipBlock</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        cidr</span><span style="color:#24292E">: </span><span style="color:#032F62">0.0.0.0/0</span><span style="color:#6A737D">  # 允许所有外部IP</span></span>
+<span class="line"><span style="color:#22863A">    ports</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">protocol</span><span style="color:#24292E">: </span><span style="color:#032F62">TCP</span></span>
+<span class="line"><span style="color:#22863A">      port</span><span style="color:#24292E">: </span><span style="color:#005CC5">80</span></span></code></pre>
+<p><strong>策略2: API Pod 只接受 Web Pod 流量</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">networking.k8s.io/v1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">NetworkPolicy</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">api-ingress</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  podSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      app</span><span style="color:#24292E">: </span><span style="color:#032F62">api</span></span>
+<span class="line"><span style="color:#22863A">  policyTypes</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#032F62">Ingress</span></span>
+<span class="line"><span style="color:#22863A">  ingress</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">from</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">podSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">          app</span><span style="color:#24292E">: </span><span style="color:#032F62">web</span><span style="color:#6A737D">        # 仅允许来自 Web Pod</span></span>
+<span class="line"><span style="color:#22863A">    ports</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">protocol</span><span style="color:#24292E">: </span><span style="color:#032F62">TCP</span></span>
+<span class="line"><span style="color:#22863A">      port</span><span style="color:#24292E">: </span><span style="color:#005CC5">8080</span></span></code></pre>
+<p><strong>策略3: DB Pod 只接受 API Pod 流量</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">networking.k8s.io/v1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">NetworkPolicy</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">db-ingress</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  podSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      app</span><span style="color:#24292E">: </span><span style="color:#032F62">db</span></span>
+<span class="line"><span style="color:#22863A">  policyTypes</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#032F62">Ingress</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#032F62">Egress</span><span style="color:#6A737D">              # 同时限制出站</span></span>
+<span class="line"><span style="color:#22863A">  ingress</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">from</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">podSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">          app</span><span style="color:#24292E">: </span><span style="color:#032F62">api</span><span style="color:#6A737D">        # 仅允许来自 API Pod</span></span>
+<span class="line"><span style="color:#22863A">    ports</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">protocol</span><span style="color:#24292E">: </span><span style="color:#032F62">TCP</span></span>
+<span class="line"><span style="color:#22863A">      port</span><span style="color:#24292E">: </span><span style="color:#005CC5">5432</span></span>
+<span class="line"><span style="color:#22863A">  egress</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">to</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">podSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">          app</span><span style="color:#24292E">: </span><span style="color:#032F62">api</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">to</span><span style="color:#24292E">:                   </span><span style="color:#6A737D"># 允许 DNS 查询</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">namespaceSelector</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        matchLabels</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">          name</span><span style="color:#24292E">: </span><span style="color:#032F62">kube-system</span></span>
+<span class="line"><span style="color:#22863A">    ports</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">protocol</span><span style="color:#24292E">: </span><span style="color:#032F62">UDP</span></span>
+<span class="line"><span style="color:#22863A">      port</span><span style="color:#24292E">: </span><span style="color:#005CC5">53</span></span></code></pre>
+<p><strong>效果</strong>:</p>
+<ul>
+<li>Web → API ✓</li>
+<li>Web → DB ✗ (被拒绝)</li>
+<li>API → DB ✓</li>
+<li>外部 → API ✗ (被拒绝)</li>
+</ul>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>---</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>### 4.3 Service Mesh 安全</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>#### mTLS (双向TLS) 原理</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**传统 TLS vs mTLS**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>```mermaid</span></span>
+<span class="line"><span>sequenceDiagram</span></span>
+<span class="line"><span>    participant C as 客户端</span></span>
+<span class="line"><span>    participant S as 服务器</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    Note over C,S: 传统 TLS (单向)</span></span>
+<span class="line"><span>    C->>S: 验证服务器证书</span></span>
+<span class="line"><span>    S-->>C: 加密通信</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    Note over C,S: mTLS (双向)</span></span>
+<span class="line"><span>    C->>S: 出示客户端证书</span></span>
+<span class="line"><span>    S->>C: 验证客户端证书</span></span>
+<span class="line"><span>    C&#x3C;&#x3C;->>S: 双向加密通信</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    style C fill:#e3f2fd,stroke:#1976d2</span></span>
+<span class="line"><span>    style S fill:#e8f5e9,stroke:#388e3c</span></span></code></pre>
+<p><strong>Istio mTLS 实现</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph PodA["Pod A (Envoy Sidecar)"]</span></span>
+<span class="line"><span style="color:#24292E">        AppA["App容器"] --> EnvoyA["Envoy"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph PodB["Pod B (Envoy Sidecar)"]</span></span>
+<span class="line"><span style="color:#24292E">        EnvoyB["Envoy"] --> AppB["App容器"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    EnvoyA -->|mTLS| EnvoyB</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style PodA fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style PodB fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style EnvoyA fill:#fff3e0,stroke:#f57c00</span></span>
+<span class="line"><span style="color:#24292E">    style EnvoyB fill:#fff3e0,stroke:#f57c00</span></span></code></pre>
+<p><strong>流程</strong>:</p>
+<ol>
+<li>Pod A 应用发起请求 → 本地 Envoy</li>
+<li>Envoy A 使用 Pod A 证书建立 mTLS 连接</li>
+<li>Envoy B 验证 Pod A 证书</li>
+<li>Envoy B 提取 Service Account (从证书)</li>
+<li>应用授权策略 (是否允许 Pod A 访问 Pod B)</li>
+<li>允许 → 转发请求到 Pod B 应用</li>
+<li>加密响应返回</li>
+</ol>
+<p><strong>证书管理</strong>:</p>
+<ul>
+<li>Istio CA 签发短期证书 (默认24小时)</li>
+<li>Envoy 自动轮换证书</li>
+<li>基于 SPIFFE 标准</li>
+</ul>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>#### 授权策略 (Authorization Policy)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**Istio 细粒度访问控制**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**示例: 只允许 frontend 访问 backend 的 /api 路径**</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>```yaml</span></span>
+<span class="line"><span>apiVersion: security.istio.io/v1beta1</span></span>
+<span class="line"><span>kind: AuthorizationPolicy</span></span>
+<span class="line"><span>metadata:</span></span>
+<span class="line"><span>  name: backend-authz</span></span>
+<span class="line"><span>  namespace: default</span></span>
+<span class="line"><span>spec:</span></span>
+<span class="line"><span>  selector:</span></span>
+<span class="line"><span>    matchLabels:</span></span>
+<span class="line"><span>      app: backend</span></span>
+<span class="line"><span>  action: ALLOW</span></span>
+<span class="line"><span>  rules:</span></span>
+<span class="line"><span>  - from:</span></span>
+<span class="line"><span>    - source:</span></span>
+<span class="line"><span>        principals: ["cluster.local/ns/default/sa/frontend"]</span></span>
+<span class="line"><span>    to:</span></span>
+<span class="line"><span>    - operation:</span></span>
+<span class="line"><span>        methods: ["GET", "POST"]</span></span>
+<span class="line"><span>        paths: ["/api/*"]</span></span>
+<span class="line"><span>    when:</span></span>
+<span class="line"><span>    - key: request.headers[x-user-role]</span></span>
+<span class="line"><span>      values: ["admin", "user"]</span></span></code></pre>
+<p><strong>规则解读</strong>:</p>
+<ul>
+<li>目标: backend 服务</li>
+<li>允许来源: frontend Service Account</li>
+<li>允许方法: GET, POST</li>
+<li>允许路径: /api/*</li>
+<li>条件: HTTP 头包含 x-user-role</li>
+</ul>
+<p><strong>默认拒绝策略</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">security.istio.io/v1beta1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">AuthorizationPolicy</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">deny-all</span></span>
+<span class="line"><span style="color:#22863A">  namespace</span><span style="color:#24292E">: </span><span style="color:#032F62">default</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  {}  </span><span style="color:#6A737D"># 空规则 = 拒绝所有</span></span></code></pre>
+<p>→ 然后逐个添加 ALLOW 规则
+→ 零信任原则</p>
+<hr>
+<h2 id="secrets管理">Secrets管理</h2>
+<h3 id="51-hashicorp-vault-架构">5.1 HashiCorp Vault 架构</h3>
+<h4 id="vault-核心概念">Vault 核心概念</h4>
+<p><strong>Vault 架构</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph VaultServer["Vault Server"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        Storage["Storage Backend&#x3C;br/>• etcd/Consul&#x3C;br/>• 加密存储所有 Secrets"]</span></span>
+<span class="line"><span style="color:#24292E">        Engines["Secrets Engines&#x3C;br/>• KV (键值对)&#x3C;br/>• Database (动态凭证)&#x3C;br/>• AWS/Azure (云凭证)&#x3C;br/>• PKI (证书)"]</span></span>
+<span class="line"><span style="color:#24292E">        Auth["Auth Methods&#x3C;br/>• Kubernetes (ServiceAccount)&#x3C;br/>• OIDC/LDAP&#x3C;br/>• AppRole"]</span></span>
+<span class="line"><span style="color:#24292E">        Policies["Policies (ACL)&#x3C;br/>path 'secret/data/db' {&#x3C;br/>  capabilities = ['read']&#x3C;br/>}"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        Storage --> Engines</span></span>
+<span class="line"><span style="color:#24292E">        Engines --> Auth</span></span>
+<span class="line"><span style="color:#24292E">        Auth --> Policies</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style VaultServer fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Storage fill:#fff3e0,stroke:#f57c00</span></span>
+<span class="line"><span style="color:#24292E">    style Engines fill:#e8f5e9,stroke:#388e3c</span></span>
+<span class="line"><span style="color:#24292E">    style Auth fill:#f3e5f5,stroke:#7b1fa2</span></span>
+<span class="line"><span style="color:#24292E">    style Policies fill:#fce4ec,stroke:#c2185b</span></span></code></pre>
+<p><strong>初始化与 Unsealing</strong>:</p>
+<ol>
+<li>
+<p><strong>初始化 (一次性)</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">vault</span><span style="color:#032F62"> operator</span><span style="color:#032F62"> init</span></span></code></pre>
+<p>→ 生成5个密钥碎片 (Shamir Secret Sharing)
+→ 生成 Root Token</p>
+</li>
+<li>
+<p><strong>Unsealing (每次启动)</strong>:</p>
+<ul>
+<li>Vault 启动时处于 Sealed 状态 (加密)</li>
+<li>需要3个密钥碎片 Unseal</li>
+<li>Unsealed 后可处理请求</li>
+</ul>
+</li>
+<li>
+<p><strong>Sealed 状态</strong>:</p>
+<ul>
+<li>所有数据加密</li>
+<li>无法访问</li>
+<li>防止内存转储攻击</li>
+</ul>
+</li>
+</ol>
+<p><strong>安全机制</strong>:</p>
+<ul>
+<li>数据加密: AES-256-GCM</li>
+<li>传输加密: TLS</li>
+<li>审计日志: 所有操作记录</li>
+</ul>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>---</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>### 5.2 动态Secrets</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>#### 原理</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**静态 Secrets vs 动态 Secrets**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**静态**:</span></span>
+<span class="line"><span>- 固定密码（如: db_password = "abc123"）</span></span>
+<span class="line"><span>- 长期有效</span></span>
+<span class="line"><span>- 泄露风险高</span></span>
+<span class="line"><span>- 难以轮换</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**动态**:</span></span>
+<span class="line"><span>- 临时凭证（有效期: 1小时）</span></span>
+<span class="line"><span>- 使用后销毁</span></span>
+<span class="line"><span>- 泄露影响小</span></span>
+<span class="line"><span>- 自动轮换</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**Vault 动态数据库凭证流程**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1. **配置数据库连接**:</span></span>
+<span class="line"><span>   ```bash</span></span>
+<span class="line"><span>   vault write database/config/my-postgres \</span></span>
+<span class="line"><span>     plugin_name=postgresql-database-plugin \</span></span>
+<span class="line"><span>     connection_url="postgresql://{{username}}:{{password}}@postgres:5432/mydb" \</span></span>
+<span class="line"><span>     allowed_roles="readonly" \</span></span>
+<span class="line"><span>     username="vault-admin" \</span></span>
+<span class="line"><span>     password="admin-password"</span></span></code></pre>
+<ol start="2">
+<li>
+<p><strong>定义角色</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">vault</span><span style="color:#032F62"> write</span><span style="color:#032F62"> database/roles/readonly</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#032F62">  db_name=my-postgres</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#032F62">  creation_statements="CREATE USER '{{name}}' WITH PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; </span><span style="color:#005CC5">\</span></span>
+<span class="line"><span style="color:#032F62">                      GRANT SELECT ON ALL TABLES IN SCHEMA public TO '{{name}}';"</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#032F62">  default_ttl="1h"</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#032F62">  max_ttl="24h"</span></span></code></pre>
+</li>
+<li>
+<p><strong>应用请求凭证</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">vault</span><span style="color:#032F62"> read</span><span style="color:#032F62"> database/creds/readonly</span></span></code></pre>
+<p>输出:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "username"</span><span style="color:#24292E">: </span><span style="color:#032F62">"v-k8s-readonly-abc123def456"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "password"</span><span style="color:#24292E">: </span><span style="color:#032F62">"A1b2C3d4E5f6..."</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "lease_duration"</span><span style="color:#24292E">: </span><span style="color:#005CC5">3600</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+</li>
+<li>
+<p><strong>Vault 后台操作</strong>:</p>
+<ul>
+<li>a. 连接数据库</li>
+<li>b. 创建临时用户（TTL: 1小时）</li>
+<li>c. 授予只读权限</li>
+<li>d. 返回凭证给应用</li>
+</ul>
+</li>
+<li>
+<p><strong>1小时后</strong>:</p>
+<ul>
+<li>Vault 自动连接数据库</li>
+<li>删除临时用户</li>
+<li>凭证失效</li>
+</ul>
+</li>
+</ol>
+<p><strong>好处</strong>:</p>
+<ul>
+<li>最小权限窗口</li>
+<li>自动清理</li>
+<li>审计追踪（哪个应用何时使用了哪个凭证）</li>
+</ul>
+<hr>
+<h3 id="53-kubernetes集成-vault-agent-injector">5.3 Kubernetes集成 (Vault Agent Injector)</h3>
+<h4 id="sidecar注入模式">Sidecar注入模式</h4>
+<p><strong>架构</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Pod["Pod"]</span></span>
+<span class="line"><span style="color:#24292E">        direction TB</span></span>
+<span class="line"><span style="color:#24292E">        InitContainer["Init Container: Vault Agent&#x3C;br/>• 认证到 Vault (ServiceAccount)&#x3C;br/>• 拉取 Secrets&#x3C;br/>• 写入共享卷"]</span></span>
+<span class="line"><span style="color:#24292E">        Sidecar["Sidecar: Vault Agent&#x3C;br/>• 定期刷新 Secrets&#x3C;br/>• 自动更新文件"]</span></span>
+<span class="line"><span style="color:#24292E">        AppContainer["App Container&#x3C;br/>• 读取文件中的 Secrets&#x3C;br/>• 无需 Vault 客户端"]</span></span>
+<span class="line"><span style="color:#24292E">        Volume["共享卷&#x3C;br/>/vault/secrets/config"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        InitContainer --> Volume</span></span>
+<span class="line"><span style="color:#24292E">        Sidecar --> Volume</span></span>
+<span class="line"><span style="color:#24292E">        Volume --> AppContainer</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Pod fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style InitContainer fill:#fff3e0,stroke:#f57c00</span></span>
+<span class="line"><span style="color:#24292E">    style Sidecar fill:#e8f5e9,stroke:#388e3c</span></span>
+<span class="line"><span style="color:#24292E">    style AppContainer fill:#f3e5f5,stroke:#7b1fa2</span></span>
+<span class="line"><span style="color:#24292E">    style Volume fill:#fce4ec,stroke:#c2185b</span></span></code></pre>
+<p><strong>Deployment 配置</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">apps/v1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">Deployment</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">myapp</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  template</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      annotations</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        vault.hashicorp.com/agent-inject</span><span style="color:#24292E">: </span><span style="color:#032F62">"true"</span></span>
+<span class="line"><span style="color:#22863A">        vault.hashicorp.com/role</span><span style="color:#24292E">: </span><span style="color:#032F62">"myapp"</span></span>
+<span class="line"><span style="color:#22863A">        vault.hashicorp.com/agent-inject-secret-config</span><span style="color:#24292E">: </span><span style="color:#032F62">"secret/data/db"</span></span>
+<span class="line"><span style="color:#22863A">        vault.hashicorp.com/agent-inject-template-config</span><span style="color:#24292E">: </span><span style="color:#D73A49">|</span></span>
+<span class="line"><span style="color:#032F62">          {{- with secret "secret/data/db" -}}</span></span>
+<span class="line"><span style="color:#032F62">          {</span></span>
+<span class="line"><span style="color:#032F62">            "username": "{{ .Data.data.username }}",</span></span>
+<span class="line"><span style="color:#032F62">            "password": "{{ .Data.data.password }}"</span></span>
+<span class="line"><span style="color:#032F62">          }</span></span>
+<span class="line"><span style="color:#032F62">          {{- end }}</span></span>
+<span class="line"><span style="color:#22863A">    spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      serviceAccountName</span><span style="color:#24292E">: </span><span style="color:#032F62">myapp</span></span>
+<span class="line"><span style="color:#22863A">      containers</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">      - </span><span style="color:#22863A">name</span><span style="color:#24292E">: </span><span style="color:#032F62">app</span></span>
+<span class="line"><span style="color:#22863A">        image</span><span style="color:#24292E">: </span><span style="color:#032F62">myapp:v1.0</span></span>
+<span class="line"><span style="color:#22863A">        volumeMounts</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">        - </span><span style="color:#22863A">name</span><span style="color:#24292E">: </span><span style="color:#032F62">vault-secrets</span></span>
+<span class="line"><span style="color:#22863A">          mountPath</span><span style="color:#24292E">: </span><span style="color:#032F62">/vault/secrets</span></span></code></pre>
+<p><strong>流程</strong>:</p>
+<ol>
+<li><strong>Pod 创建 → Webhook 注入 Vault Agent</strong></li>
+<li><strong>Init Container</strong>:
+<ul>
+<li>a. 使用 ServiceAccount Token 认证 Vault</li>
+<li>b. Vault 验证 ServiceAccount</li>
+<li>c. 返回 Vault Token</li>
+<li>d. 拉取 Secret</li>
+<li>e. 渲染模板 → /vault/secrets/config</li>
+</ul>
+</li>
+<li><strong>App 容器启动</strong>:
+<ul>
+<li>读取 /vault/secrets/config</li>
+<li>获取数据库凭证</li>
+</ul>
+</li>
+<li><strong>Sidecar 持续运行</strong>:
+<ul>
+<li>监听 Secret 变化</li>
+<li>自动更新文件</li>
+<li>App 可重新读取（无需重启）</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="54-secrets轮换">5.4 Secrets轮换</h3>
+<h4 id="自动轮换策略">自动轮换策略</h4>
+<p><strong>轮换场景</strong>:</p>
+<ol>
+<li>
+<p><strong>定期轮换</strong>:</p>
+<ul>
+<li>每30天轮换密码</li>
+<li>降低长期暴露风险</li>
+</ul>
+</li>
+<li>
+<p><strong>泄露后轮换</strong>:</p>
+<ul>
+<li>检测到泄露 → 立即轮换</li>
+<li>撤销旧凭证</li>
+</ul>
+</li>
+<li>
+<p><strong>员工离职轮换</strong>:</p>
+<ul>
+<li>员工离职 → 轮换所有访问过的 Secrets</li>
+</ul>
+</li>
+</ol>
+<p><strong>实现方案</strong>:</p>
+<p><strong>方案1: Vault 自动轮换（数据库凭证）</strong></p>
+<ul>
+<li>Vault 管理凭证生命周期</li>
+<li>自动创建、销毁临时凭证</li>
+</ul>
+<p><strong>方案2: External Secrets Operator</strong></p>
+<p><strong>原理</strong>: 同步外部 Secrets 到 Kubernetes</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    Vault["Vault/AWS&#x3C;br/>Secrets Mgr"] -->|同步| ESO["External&#x3C;br/>Secrets Op"]</span></span>
+<span class="line"><span style="color:#24292E">    ESO --> K8sSecret["K8s Secret"]</span></span>
+<span class="line"><span style="color:#24292E">    K8sSecret --> Pod["Pod 使用"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Vault fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style ESO fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style K8sSecret fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Pod fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span></code></pre>
+<p><strong>ExternalSecret 配置</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">external-secrets.io/v1beta1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">ExternalSecret</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">db-secret</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  refreshInterval</span><span style="color:#24292E">: </span><span style="color:#032F62">1h        ← 每小时同步</span></span>
+<span class="line"><span style="color:#22863A">  secretStoreRef</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    name</span><span style="color:#24292E">: </span><span style="color:#032F62">vault-backend</span></span>
+<span class="line"><span style="color:#22863A">  target</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    name</span><span style="color:#24292E">: </span><span style="color:#032F62">db-credentials     ← K8s Secret 名称</span></span>
+<span class="line"><span style="color:#22863A">  data</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">secretKey</span><span style="color:#24292E">: </span><span style="color:#032F62">password</span></span>
+<span class="line"><span style="color:#22863A">    remoteRef</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      key</span><span style="color:#24292E">: </span><span style="color:#032F62">secret/data/db</span></span>
+<span class="line"><span style="color:#22863A">      property</span><span style="color:#24292E">: </span><span style="color:#032F62">password</span></span></code></pre>
+<p><strong>好处</strong>:</p>
+<ul>
+<li>Secret 变化自动同步</li>
+<li>应用无需重启 (取决于如何使用 Secret)</li>
+</ul>
+<p><strong>方案3: 重启 Pod</strong></p>
+<ul>
+<li>Secret 更新 → 触发 Pod 滚动更新</li>
+<li>简单但有停机时间</li>
+</ul>
+<p><strong>方案4: 应用层热重载</strong></p>
+<ul>
+<li>应用监听 Secret 文件变化</li>
+<li>自动重新加载配置</li>
+<li>无停机</li>
+</ul>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>---</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>## 合规与审计</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>### 6.1 合规框架</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>#### CIS Kubernetes Benchmark</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**CIS (Center for Internet Security) Kubernetes 基准**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**5个章节**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1. **Control Plane (控制平面)**:</span></span>
+<span class="line"><span>   - API Server 安全配置</span></span>
+<span class="line"><span>   - etcd 加密</span></span>
+<span class="line"><span>   - Controller Manager 安全</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>2. **Worker Nodes (工作节点)**:</span></span>
+<span class="line"><span>   - kubelet 安全配置</span></span>
+<span class="line"><span>   - 文件权限</span></span>
+<span class="line"><span>   - 内核参数</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>3. **Policies (策略)**:</span></span>
+<span class="line"><span>   - RBAC</span></span>
+<span class="line"><span>   - Pod Security Standards</span></span>
+<span class="line"><span>   - Network Policy</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>4. **Managed Services (托管服务)**:</span></span>
+<span class="line"><span>   - EKS/GKE/AKS 特定配置</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>5. **Managed Services Addons**:</span></span>
+<span class="line"><span>   - 日志</span></span>
+<span class="line"><span>   - 监控</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**评分示例**:</span></span>
+<span class="line"><span></span></span></code></pre>
+<p>[PASS] 1.2.1 Ensure that the —anonymous-auth argument is set to false
+[FAIL] 1.2.5 Ensure that the —kubelet-certificate-authority argument is set
+[WARN] 1.2.10 Ensure that the admission control plugin EventRateLimit is set</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>**扫描工具**:</span></span>
+<span class="line"><span>- kube-bench (Aqua Security)</span></span>
+<span class="line"><span>- Polaris</span></span>
+<span class="line"><span>- kubeaudit</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**修复流程**:</span></span>
+<span class="line"><span>1. 运行 kube-bench</span></span>
+<span class="line"><span>2. 导出报告</span></span>
+<span class="line"><span>3. 修复失败项</span></span>
+<span class="line"><span>4. 重新扫描</span></span>
+<span class="line"><span>5. 持续监控</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>---</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>### 6.2 审计日志</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>#### Kubernetes审计策略</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**审计级别**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1. **None**: 不记录</span></span>
+<span class="line"><span>2. **Metadata**: 记录请求元数据 (用户、时间、资源)</span></span>
+<span class="line"><span>3. **Request**: Metadata + 请求体</span></span>
+<span class="line"><span>4. **RequestResponse**: Request + 响应体</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>**审计策略示例**:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>```yaml</span></span>
+<span class="line"><span>apiVersion: audit.k8s.io/v1</span></span>
+<span class="line"><span>kind: Policy</span></span>
+<span class="line"><span>rules:</span></span>
+<span class="line"><span># 记录 Secret 访问</span></span>
+<span class="line"><span>- level: RequestResponse</span></span>
+<span class="line"><span>  resources:</span></span>
+<span class="line"><span>  - group: ""</span></span>
+<span class="line"><span>    resources: ["secrets"]</span></span>
+<span class="line"><span>  omitStages:</span></span>
+<span class="line"><span>  - RequestReceived</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># 记录 Pod 删除</span></span>
+<span class="line"><span>- level: Request</span></span>
+<span class="line"><span>  verbs: ["delete"]</span></span>
+<span class="line"><span>  resources:</span></span>
+<span class="line"><span>  - group: ""</span></span>
+<span class="line"><span>    resources: ["pods"]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># 忽略只读请求</span></span>
+<span class="line"><span>- level: None</span></span>
+<span class="line"><span>  verbs: ["get", "list", "watch"]</span></span></code></pre>
+<p><strong>审计日志格式</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "kind"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Event"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "apiVersion"</span><span style="color:#24292E">: </span><span style="color:#032F62">"audit.k8s.io/v1"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "level"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Metadata"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "auditID"</span><span style="color:#24292E">: </span><span style="color:#032F62">"abc-123"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "stage"</span><span style="color:#24292E">: </span><span style="color:#032F62">"ResponseComplete"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "requestURI"</span><span style="color:#24292E">: </span><span style="color:#032F62">"/api/v1/namespaces/default/secrets/db-password"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "verb"</span><span style="color:#24292E">: </span><span style="color:#032F62">"get"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "user"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">    "username"</span><span style="color:#24292E">: </span><span style="color:#032F62">"alice"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">    "groups"</span><span style="color:#24292E">: [</span><span style="color:#032F62">"developers"</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#005CC5">  "sourceIPs"</span><span style="color:#24292E">: [</span><span style="color:#032F62">"10.0.0.5"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#005CC5">  "responseStatus"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">    "code"</span><span style="color:#24292E">: </span><span style="color:#005CC5">200</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p><strong>分析</strong>:</p>
+<ul>
+<li>谁 (alice)</li>
+<li>何时 (timestamp)</li>
+<li>做了什么 (get secret)</li>
+<li>结果 (200 OK)</li>
+</ul>
+<p><strong>审计日志用途</strong>:</p>
+<ul>
+<li>安全事件调查</li>
+<li>合规审计</li>
+<li>异常检测</li>
+</ul>
+<hr>
+<h3 id="63-策略即代码-policy-as-code">6.3 策略即代码 (Policy as Code)</h3>
+<h4 id="opa-gatekeeper">OPA Gatekeeper</h4>
+<p><strong>原理</strong>: Open Policy Agent (OPA) + Kubernetes Admission Webhook</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    APIServer["Kubernetes API Server"]</span></span>
+<span class="line"><span style="color:#24292E">    APIServer -->|Webhook| Gatekeeper</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    subgraph Gatekeeper["OPA Gatekeeper"]</span></span>
+<span class="line"><span style="color:#24292E">        PolicyEngine["Policy Engine&#x3C;br/>• Rego 语言编写策略&#x3C;br/>• 评估请求"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style APIServer fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Gatekeeper fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style PolicyEngine fill:#fff3e0,stroke:#f57c00</span></span></code></pre>
+<p><strong>策略示例: 强制镜像仓库</strong></p>
+<p><strong>ConstraintTemplate</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">templates.gatekeeper.sh/v1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">ConstraintTemplate</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">allowedrepos</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  crd</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      names</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        kind</span><span style="color:#24292E">: </span><span style="color:#032F62">AllowedRepos</span></span>
+<span class="line"><span style="color:#22863A">      validation</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">        openAPIV3Schema</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">          properties</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">            repos</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">              type</span><span style="color:#24292E">: </span><span style="color:#032F62">array</span></span>
+<span class="line"><span style="color:#22863A">              items</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">                type</span><span style="color:#24292E">: </span><span style="color:#032F62">string</span></span>
+<span class="line"><span style="color:#22863A">  targets</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">target</span><span style="color:#24292E">: </span><span style="color:#032F62">admission.k8s.gatekeeper.sh</span></span>
+<span class="line"><span style="color:#22863A">    rego</span><span style="color:#24292E">: </span><span style="color:#D73A49">|</span></span>
+<span class="line"><span style="color:#032F62">      package allowedrepos</span></span>
+<span class="line"><span style="color:#032F62">      violation[{"msg": msg}] {</span></span>
+<span class="line"><span style="color:#032F62">        container := input.review.object.spec.containers[_]</span></span>
+<span class="line"><span style="color:#032F62">        not startswith(container.image, input.parameters.repos[_])</span></span>
+<span class="line"><span style="color:#032F62">        msg := sprintf("Image '%v' not from allowed repos", [container.image])</span></span>
+<span class="line"><span style="color:#032F62">      }</span></span></code></pre>
+<p><strong>Constraint</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">apiVersion</span><span style="color:#24292E">: </span><span style="color:#032F62">constraints.gatekeeper.sh/v1beta1</span></span>
+<span class="line"><span style="color:#22863A">kind</span><span style="color:#24292E">: </span><span style="color:#032F62">AllowedRepos</span></span>
+<span class="line"><span style="color:#22863A">metadata</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  name</span><span style="color:#24292E">: </span><span style="color:#032F62">prod-repo-only</span></span>
+<span class="line"><span style="color:#22863A">spec</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">  match</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    kinds</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">apiGroups</span><span style="color:#24292E">: [</span><span style="color:#032F62">""</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#22863A">      kinds</span><span style="color:#24292E">: [</span><span style="color:#032F62">"Pod"</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#22863A">    namespaces</span><span style="color:#24292E">: [</span><span style="color:#032F62">"production"</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#22863A">  parameters</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    repos</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#032F62">"myregistry.com/"</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#032F62">"docker.io/library/"</span></span></code></pre>
+<p><strong>效果</strong>:</p>
+<ul>
+<li>创建 Pod with image: nginx:latest
+→ 拒绝 (不在允许的仓库)</li>
+<li>创建 Pod with image: myregistry.com/nginx:1.21
+→ 允许</li>
+</ul>
+<p><strong>常见策略</strong>:</p>
+<ul>
+<li>强制资源限制</li>
+<li>禁止 latest 标签</li>
+<li>强制 readOnlyRootFilesystem</li>
+<li>禁止特权容器</li>
+<li>强制标签 (owner, team)</li>
+</ul>
+<p><strong>优势</strong>:</p>
+<ul>
+<li>✓ 代码化 (Git 管理)</li>
+<li>✓ 可测试</li>
+<li>✓ 审计追踪</li>
+<li>✓ 统一管理</li>
+</ul>
+<hr>
+<h3 id="64-运行时威胁检测">6.4 运行时威胁检测</h3>
+<h4 id="falco规则深度">Falco规则深度</h4>
+<p><strong>Falco 规则结构</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">rule</span><span style="color:#24292E">: </span><span style="color:#032F62">Shell Execution in Container</span></span>
+<span class="line"><span style="color:#22863A">  desc</span><span style="color:#24292E">: </span><span style="color:#032F62">Detect shell spawned in a container</span></span>
+<span class="line"><span style="color:#22863A">  condition</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    container and</span></span>
+<span class="line"><span style="color:#032F62">    proc.name in (shell_binaries) and</span></span>
+<span class="line"><span style="color:#032F62">    not proc.pname in (allowed_processes)</span></span>
+<span class="line"><span style="color:#22863A">  output</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    Shell spawned in container</span></span>
+<span class="line"><span style="color:#032F62">    (user=%user.name container=%container.name</span></span>
+<span class="line"><span style="color:#032F62">     parent=%proc.pname cmdline=%proc.cmdline)</span></span>
+<span class="line"><span style="color:#22863A">  priority</span><span style="color:#24292E">: </span><span style="color:#032F62">WARNING</span></span>
+<span class="line"><span style="color:#22863A">  tags</span><span style="color:#24292E">: [</span><span style="color:#032F62">shell</span><span style="color:#24292E">, </span><span style="color:#032F62">mitre_execution</span><span style="color:#24292E">]</span></span></code></pre>
+<p><strong>条件字段</strong>:</p>
+<ul>
+<li>container: 过滤容器内进程</li>
+<li>proc.name: 进程名</li>
+<li>proc.pname: 父进程名</li>
+<li>fd.*: 文件描述符 (网络/文件)</li>
+<li>user.name: 用户名</li>
+</ul>
+<p><strong>复杂规则示例: 检测加密货币挖矿</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">rule</span><span style="color:#24292E">: </span><span style="color:#032F62">Cryptocurrency Mining</span></span>
+<span class="line"><span style="color:#22863A">  condition</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    spawned_process and</span></span>
+<span class="line"><span style="color:#032F62">    (proc.cmdline contains "xmrig" or</span></span>
+<span class="line"><span style="color:#032F62">     proc.cmdline contains "minerd" or</span></span>
+<span class="line"><span style="color:#032F62">     proc.cmdline contains "cpuminer" or</span></span>
+<span class="line"><span style="color:#032F62">     (proc.name = "python" and proc.cmdline contains "stratum"))</span></span>
+<span class="line"><span style="color:#22863A">  output</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    Potential crypto mining activity</span></span>
+<span class="line"><span style="color:#032F62">    (cmdline=%proc.cmdline)</span></span>
+<span class="line"><span style="color:#22863A">  priority</span><span style="color:#24292E">: </span><span style="color:#032F62">CRITICAL</span></span></code></pre>
+<p><strong>规则: 检测反向Shell</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">rule</span><span style="color:#24292E">: </span><span style="color:#032F62">Reverse Shell</span></span>
+<span class="line"><span style="color:#22863A">  condition</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    spawned_process and</span></span>
+<span class="line"><span style="color:#032F62">    (proc.name in (bash, sh, zsh) and</span></span>
+<span class="line"><span style="color:#032F62">     (proc.cmdline contains "/dev/tcp" or</span></span>
+<span class="line"><span style="color:#032F62">      proc.cmdline contains "nc" or</span></span>
+<span class="line"><span style="color:#032F62">      proc.cmdline contains "socat"))</span></span>
+<span class="line"><span style="color:#22863A">  output</span><span style="color:#24292E">: </span><span style="color:#D73A49">></span></span>
+<span class="line"><span style="color:#032F62">    Potential reverse shell</span></span>
+<span class="line"><span style="color:#032F62">    (cmdline=%proc.cmdline)</span></span>
+<span class="line"><span style="color:#22863A">  priority</span><span style="color:#24292E">: </span><span style="color:#032F62">CRITICAL</span></span></code></pre>
+<p><strong>Falco + Falcosidekick</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
+<span class="line"><span style="color:#24292E">    Falco["Falco"] -->|检测威胁| Falcosidekick["Falcosidekick"]</span></span>
+<span class="line"><span style="color:#24292E">    Falcosidekick -->|路由告警| Slack["Slack (通知)"]</span></span>
+<span class="line"><span style="color:#24292E">    Falcosidekick --> Webhook["Webhook (自动响应)"]</span></span>
+<span class="line"><span style="color:#24292E">    Falcosidekick --> SIEM["SIEM (日志)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">    style Falco fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Falcosidekick fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#24292E">    style Slack fill:#e8f5e9,stroke:#388e3c</span></span>
+<span class="line"><span style="color:#24292E">    style Webhook fill:#fce4ec,stroke:#c2185b</span></span>
+<span class="line"><span style="color:#24292E">    style SIEM fill:#f3e5f5,stroke:#7b1fa2</span></span></code></pre>
+<p><strong>Webhook 响应示例</strong>:</p>
+<ol>
+<li>Falco 检测到反向 Shell</li>
+<li>触发 Webhook</li>
+<li>Kubernetes 删除 Pod</li>
+<li>通知安全团队</li>
+</ol>
+<hr>
+<h3 id="65-供应链安全">6.5 供应链安全</h3>
+<h4 id="sbom-软件物料清单">SBOM (软件物料清单)</h4>
+<p><strong>定义</strong>: Software Bill of Materials</p>
+<p><strong>目的</strong>: 列出软件中所有组件和依赖</p>
+<p><strong>格式</strong>:</p>
+<ul>
+<li>SPDX (Software Package Data Exchange)</li>
+<li>CycloneDX</li>
+</ul>
+<p><strong>生成 SBOM</strong>:</p>
+<p>使用 Syft:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">syft</span><span style="color:#032F62"> packages</span><span style="color:#032F62"> myimage:v1.0</span><span style="color:#005CC5"> -o</span><span style="color:#032F62"> spdx-json</span><span style="color:#D73A49"> ></span><span style="color:#032F62"> sbom.json</span></span></code></pre>
+<p><strong>输出</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "name"</span><span style="color:#24292E">: </span><span style="color:#032F62">"myimage"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "version"</span><span style="color:#24292E">: </span><span style="color:#032F62">"v1.0"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "packages"</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "name"</span><span style="color:#24292E">: </span><span style="color:#032F62">"nginx"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "version"</span><span style="color:#24292E">: </span><span style="color:#032F62">"1.21.0"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "supplier"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Organization: nginx"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "name"</span><span style="color:#24292E">: </span><span style="color:#032F62">"openssl"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "version"</span><span style="color:#24292E">: </span><span style="color:#032F62">"1.1.1k"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "supplier"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Organization: OpenSSL"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    ...</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p><strong>用途</strong>:</p>
+<ol>
+<li>
+<p><strong>漏洞管理</strong>:</p>
+<ul>
+<li>新 CVE 发布 (如 Log4Shell)</li>
+<li>查询 SBOM → 哪些镜像包含 log4j</li>
+<li>优先修复</li>
+</ul>
+</li>
+<li>
+<p><strong>合规</strong>:</p>
+<ul>
+<li>审计软件成分</li>
+<li>许可证检查</li>
+</ul>
+</li>
+<li>
+<p><strong>供应链攻击检测</strong>:</p>
+<ul>
+<li>对比 SBOM 变化</li>
+<li>检测未授权依赖</li>
+</ul>
+</li>
+</ol>
+<h4 id="签名与证明-sigstore">签名与证明 (Sigstore)</h4>
+<p><strong>Sigstore 工作流</strong>:</p>
+<ol>
+<li>
+<p><strong>构建镜像</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">docker</span><span style="color:#032F62"> build</span><span style="color:#005CC5"> -t</span><span style="color:#032F62"> myimage:v1.0</span><span style="color:#032F62"> .</span></span></code></pre>
+</li>
+<li>
+<p><strong>签名镜像</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">cosign</span><span style="color:#032F62"> sign</span><span style="color:#032F62"> myimage:v1.0</span></span></code></pre>
+<ul>
+<li>使用 OIDC 认证 (GitHub/Google)</li>
+<li>生成签名</li>
+<li>上传到透明日志 (Rekor)</li>
+</ul>
+</li>
+<li>
+<p><strong>生成证明 (Attestation)</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">cosign</span><span style="color:#032F62"> attest</span><span style="color:#005CC5"> --predicate</span><span style="color:#032F62"> sbom.json</span><span style="color:#032F62"> myimage:v1.0</span></span></code></pre>
+<ul>
+<li>将 SBOM 绑定到镜像</li>
+</ul>
+</li>
+<li>
+<p><strong>部署时验证</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">cosign</span><span style="color:#032F62"> verify</span><span style="color:#032F62"> myimage:v1.0</span></span></code></pre>
+<ul>
+<li>检查签名</li>
+<li>验证证书链</li>
+<li>查询透明日志</li>
+</ul>
+</li>
+</ol>
+<p><strong>Admission Controller 集成</strong>:</p>
+<ul>
+<li>Kyverno / OPA Gatekeeper</li>
+<li>拒绝未签名镜像</li>
+</ul>
+<p><strong>policy</strong>:</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#22863A">rules</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">- </span><span style="color:#22863A">name</span><span style="color:#24292E">: </span><span style="color:#032F62">verify-signature</span></span>
+<span class="line"><span style="color:#22863A">  match</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">    resources</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">      kinds</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">      - </span><span style="color:#032F62">Pod</span></span>
+<span class="line"><span style="color:#22863A">  verifyImages</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">  - </span><span style="color:#22863A">imageReferences</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#032F62">"myregistry.com/*"</span></span>
+<span class="line"><span style="color:#22863A">    attestors</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">    - </span><span style="color:#22863A">entries</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#24292E">      - </span><span style="color:#22863A">keyless</span><span style="color:#24292E">:</span></span>
+<span class="line"><span style="color:#22863A">          issuer</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://accounts.google.com"</span></span>
+<span class="line"><span style="color:#22863A">          subject</span><span style="color:#24292E">: </span><span style="color:#032F62">"user@company.com"</span></span></code></pre>
+<hr>
+<h2 id="云原生安全最佳实践">云原生安全最佳实践</h2>
+<h3 id="安全检查清单">安全检查清单</h3>
+<p><strong>✅ 容器安全</strong>:</p>
+<ul>
+<li>□ 使用最小化基础镜像 (alpine, distroless)</li>
+<li>□ 多阶段构建</li>
+<li>□ 非 root 用户运行</li>
+<li>□ 只读根文件系统</li>
+<li>□ 镜像扫描 (Trivy/Grype)</li>
+<li>□ 镜像签名 (Cosign)</li>
+</ul>
+<p><strong>✅ Kubernetes 安全</strong>:</p>
+<ul>
+<li>□ RBAC 启用</li>
+<li>□ 最小权限原则</li>
+<li>□ Pod Security Standards (Restricted)</li>
+<li>□ Network Policy 隔离</li>
+<li>□ Secrets 加密 (etcd)</li>
+<li>□ 审计日志启用</li>
+</ul>
+<p><strong>✅ 网络安全</strong>:</p>
+<ul>
+<li>□ Service Mesh (mTLS)</li>
+<li>□ 入口 TLS 终止</li>
+<li>□ 网络策略 (默认拒绝)</li>
+<li>□ Egress 控制</li>
+</ul>
+<p><strong>✅ Secrets 管理</strong>:</p>
+<ul>
+<li>□ 外部 Secrets 管理器 (Vault)</li>
+<li>□ 动态凭证</li>
+<li>□ 自动轮换</li>
+<li>□ 不在代码中硬编码</li>
+</ul>
+<p><strong>✅ 运行时安全</strong>:</p>
+<ul>
+<li>□ Falco 威胁检测</li>
+<li>□ 只读文件系统</li>
+<li>□ AppArmor/SELinux</li>
+<li>□ Seccomp 过滤</li>
+</ul>
+<p><strong>✅ 供应链安全</strong>:</p>
+<ul>
+<li>□ SBOM 生成</li>
+<li>□ 签名验证</li>
+<li>□ 依赖扫描</li>
+<li>□ 可信镜像仓库</li>
+</ul>
+<p><strong>✅ 合规</strong>:</p>
+<ul>
+<li>□ CIS Benchmark 扫描</li>
+<li>□ Policy as Code (OPA)</li>
+<li>□ 审计日志</li>
+<li>□ 定期渗透测试</li>
+</ul>
+<hr>
+<h2 id="权威资源索引">权威资源索引</h2>
+<h3 id="官方文档">官方文档</h3>
+<ul>
+<li>
+<p><strong>CNCF 云原生安全白皮书</strong>
+<a href="https://www.cncf.io/reports/cloud-native-security-whitepaper/">https://www.cncf.io/reports/cloud-native-security-whitepaper/</a></p>
+</li>
+<li>
+<p><strong>Kubernetes 安全文档</strong>
+<a href="https://kubernetes.io/docs/concepts/security/">https://kubernetes.io/docs/concepts/security/</a></p>
+</li>
+<li>
+<p><strong>HashiCorp Vault 文档</strong>
+<a href="https://developer.hashicorp.com/vault/docs">https://developer.hashicorp.com/vault/docs</a></p>
+</li>
+</ul>
+<h3 id="工具">工具</h3>
+<ul>
+<li>
+<p><strong>Falco (运行时安全)</strong>
+<a href="https://falco.org/docs/">https://falco.org/docs/</a></p>
+</li>
+<li>
+<p><strong>OPA Gatekeeper (策略)</strong>
+<a href="https://open-policy-agent.github.io/gatekeeper/">https://open-policy-agent.github.io/gatekeeper/</a></p>
+</li>
+<li>
+<p><strong>Trivy (镜像扫描)</strong>
+<a href="https://aquasecurity.github.io/trivy/">https://aquasecurity.github.io/trivy/</a></p>
+</li>
+<li>
+<p><strong>Cosign (签名)</strong>
+<a href="https://docs.sigstore.dev/cosign/overview/">https://docs.sigstore.dev/cosign/overview/</a></p>
+</li>
+</ul>
+<h3 id="标准与基准">标准与基准</h3>
+<ul>
+<li>
+<p><strong>CIS Kubernetes Benchmark</strong>
+<a href="https://www.cisecurity.org/benchmark/kubernetes">https://www.cisecurity.org/benchmark/kubernetes</a></p>
+</li>
+<li>
+<p><strong>NIST SP 800-190 (容器安全)</strong>
+<a href="https://csrc.nist.gov/publications/detail/sp/800-190/final">https://csrc.nist.gov/publications/detail/sp/800-190/final</a></p>
+</li>
+<li>
+<p><strong>MITRE ATT&#x26;CK for Containers</strong>
+<a href="https://attack.mitre.org/matrices/enterprise/containers/">https://attack.mitre.org/matrices/enterprise/containers/</a></p>
+</li>
+</ul>
+<h3 id="学习资源">学习资源</h3>
+<ul>
+<li>
+<p><strong>Kubernetes Security Specialist (CKS) 认证</strong>
+<a href="https://www.cncf.io/certification/cks/">https://www.cncf.io/certification/cks/</a></p>
+</li>
+<li>
+<p><strong>《Kubernetes Security》- Liz Rice &#x26; Michael Hausenblas</strong></p>
+</li>
+<li>
+<p><strong>CNCF Security TAG</strong>
+<a href="https://github.com/cncf/tag-security">https://github.com/cncf/tag-security</a></p>
+</li>
+</ul>
+<hr>
+<p><strong>文档版本</strong>: v1.0
+<strong>最后更新</strong>: 2025-01-21
+<strong>适用深度</strong>: ⭐⭐⭐⭐ (高级理论知识)</p>  </div> </article>  </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+      // 初始化 Mermaid - 使用 default 主题以支持内联 style
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'default',  // default 主题会尊重内联 style 定义
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        securityLevel: 'loose'  // 允许自定义样式
+      });
+
+      // 等待 DOM 加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('开始查找 Mermaid 代码块...');
+
+        // 查找所有可能包含 mermaid 的代码块
+        const codeBlocks = document.querySelectorAll('pre code');
+        console.log('找到代码块数量:', codeBlocks.length);
+
+        let mermaidCount = 0;
+        codeBlocks.forEach((block, index) => {
+          // 检查是否是 mermaid 代码块（通过 class 或内容）
+          const isMermaid = block.className.includes('mermaid') ||
+                           block.className.includes('language-mermaid') ||
+                           block.textContent.trim().startsWith('graph') ||
+                           block.textContent.trim().startsWith('sequenceDiagram') ||
+                           block.textContent.trim().startsWith('classDiagram') ||
+                           block.textContent.trim().startsWith('flowchart');
+
+          if (isMermaid) {
+            mermaidCount++;
+            console.log(`找到 Mermaid 代码块 #${mermaidCount}:`, block.className);
+
+            // 获取 Mermaid 代码
+            const code = block.textContent;
+
+            // 创建一个新的 div 元素来渲染图表
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = code;
+            mermaidDiv.style.backgroundColor = '#f9f9f9';
+            mermaidDiv.style.padding = '20px';
+            mermaidDiv.style.borderRadius = '8px';
+            mermaidDiv.style.margin = '20px 0';
+
+            // 替换原来的 pre 标签
+            block.parentElement.replaceWith(mermaidDiv);
+          }
+        });
+
+        console.log(`总共找到 ${mermaidCount} 个 Mermaid 代码块`);
+
+        // 运行 Mermaid 渲染
+        if (mermaidCount > 0) {
+          console.log('开始渲染 Mermaid 图表...');
+          mermaid.run().then(() => {
+            console.log('Mermaid 渲染完成!');
+          }).catch(err => {
+            console.error('Mermaid 渲染出错:', err);
+          });
+        }
+      });
+    </script> </body> </html> 
