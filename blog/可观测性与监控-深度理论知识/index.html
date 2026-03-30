@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="OpenTelemetry标准、分布式追踪Trace、日志聚合Loki、Prometheus指标监控、SLO/SLI告警设计完整理论体系。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>可观测性与监控深度理论知识</title><style>:root{--bg: #ffffff;--text: #1a1a1a;--accent: #2563eb;--accent-hover: #1d4ed8;--gray: #6b7280;--border: #e5e7eb;--code-bg: #f3f4f6}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:color .2s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-decoration:underline}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-decoration:underline}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#e11d48;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:#f6f8fa;padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-decoration:underline}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="OpenTelemetry标准、分布式追踪Trace、日志聚合Loki、Prometheus指标监控、SLO/SLI告警设计完整理论体系。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>可观测性与监控深度理论知识</title><style>:root{--bg: #0a0a0f;--text: #e0e0e8;--accent: #00f0ff;--accent-hover: #00c8d6;--gray: #8888a0;--border: #1e1e2e;--code-bg: #12121e;--glow: 0 0 10px rgba(0, 240, 255, .3);--surface: #111120}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#0f8;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>可观测性与监控深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#云原生架构</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="可观测性与监控深度理论知识">可观测性与监控深度理论知识</h1>
 <blockquote>
 <p><strong>学习深度</strong>: ⭐⭐⭐⭐
@@ -36,7 +36,7 @@
 </ul>
 <h4 id="理论基础控制论中的可观测性">理论基础：控制论中的可观测性</h4>
 <p>源自控制理论的数学定义：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>系统状态方程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>系统状态方程:</span></span>
 <span class="line"><span>x(t+1) = A·x(t) + B·u(t)  (状态转移)</span></span>
 <span class="line"><span>y(t) = C·x(t)             (观测输出)</span></span>
 <span class="line"><span></span></span>
@@ -54,20 +54,20 @@
 </ul>
 <hr>
 <h3 id="12-可观测性的三大支柱">1.2 可观测性的三大支柱</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    O[可观测性 Observability]</span></span>
-<span class="line"><span style="color:#24292E">    O --> M[Metrics&#x3C;br/>指标]</span></span>
-<span class="line"><span style="color:#24292E">    O --> L[Logs&#x3C;br/>日志]</span></span>
-<span class="line"><span style="color:#24292E">    O --> T[Traces&#x3C;br/>追踪]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    O[可观测性 Observability]</span></span>
+<span class="line"><span style="color:#E1E4E8">    O --> M[Metrics&#x3C;br/>指标]</span></span>
+<span class="line"><span style="color:#E1E4E8">    O --> L[Logs&#x3C;br/>日志]</span></span>
+<span class="line"><span style="color:#E1E4E8">    O --> T[Traces&#x3C;br/>追踪]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    M --> MW[What?&#x3C;br/>发生了什么]</span></span>
-<span class="line"><span style="color:#24292E">    L --> LW[Why?&#x3C;br/>为什么发生]</span></span>
-<span class="line"><span style="color:#24292E">    T --> TW[Where?&#x3C;br/>在哪里发生]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M --> MW[What?&#x3C;br/>发生了什么]</span></span>
+<span class="line"><span style="color:#E1E4E8">    L --> LW[Why?&#x3C;br/>为什么发生]</span></span>
+<span class="line"><span style="color:#E1E4E8">    T --> TW[Where?&#x3C;br/>在哪里发生]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style O fill:#f9f,stroke:#333,stroke-width:4px</span></span>
-<span class="line"><span style="color:#24292E">    style M fill:#bbf,stroke:#333,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style L fill:#bfb,stroke:#333,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style T fill:#fbb,stroke:#333,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style O fill:#f9f,stroke:#333,stroke-width:4px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style M fill:#bbf,stroke:#333,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style L fill:#bfb,stroke:#333,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style T fill:#fbb,stroke:#333,stroke-width:2px</span></span></code></pre>
 <h4 id="三大支柱详解">三大支柱详解</h4>
 
 
@@ -130,7 +130,7 @@
 
 <table><thead><tr><th>维度</th><th>Metrics (指标)</th><th>Logs (日志)</th><th>Traces (追踪)</th></tr></thead><tbody><tr><td><strong>数据类型</strong></td><td>数值型时间序列</td><td>离散事件记录</td><td>分布式调用链</td></tr><tr><td><strong>粒度</strong></td><td>聚合（秒/分钟）</td><td>单个事件</td><td>单次请求</td></tr><tr><td><strong>存储成本</strong></td><td>低（高压缩比）</td><td>高</td><td>中</td></tr><tr><td><strong>查询速度</strong></td><td>快</td><td>慢</td><td>中</td></tr><tr><td><strong>回答问题</strong></td><td>”现在流量多大？"</td><td>"这个错误的详细信息？"</td><td>"慢在哪个服务？“</td></tr><tr><td><strong>典型用途</strong></td><td>实时监控、告警</td><td>问题调试、审计</td><td>性能分析、依赖分析</td></tr><tr><td><strong>数据保留</strong></td><td>长期（年）</td><td>中期（月）</td><td>短期（周）</td></tr><tr><td><strong>采样</strong></td><td>通常不采样</td><td>可能采样</td><td>通常采样</td></tr></tbody></table>
 <h4 id="三者关联关系">三者关联关系</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>关联模型：</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>关联模型：</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>指标异常 → 触发告警</span></span>
 <span class="line"><span>    ↓</span></span>
@@ -147,7 +147,7 @@
 <span class="line"><span>4. Metrics: "Payment 服务的 DB 连接池满"</span></span></code></pre>
 <hr>
 <h3 id="13-可观测性成熟度模型">1.3 可观测性成熟度模型</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Level 0 - 无监控:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Level 0 - 无监控:</span></span>
 <span class="line"><span>  • 依赖用户报告问题</span></span>
 <span class="line"><span>  • 手动登录服务器查日志</span></span>
 <span class="line"><span>  • 无法预测故障</span></span>
@@ -189,7 +189,7 @@
 <li><strong>互操作性</strong>: 与现有工具（Prometheus、Jaeger）兼容</li>
 </ol>
 <h4 id="历史演进">历史演进</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间线:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间线:</span></span>
 <span class="line"><span>2016      2017        2019           2021          2024</span></span>
 <span class="line"><span>  ↓         ↓           ↓              ↓             ↓</span></span>
 <span class="line"><span>OpenTracing → OpenCensus → OpenTelemetry → OTel 1.0 → 稳定</span></span>
@@ -201,35 +201,35 @@
 <span class="line"><span>→ 合并为 OpenTelemetry 统一三大支柱</span></span></code></pre>
 <hr>
 <h3 id="22-opentelemetry-架构">2.2 OpenTelemetry 架构</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
-<span class="line"><span style="color:#24292E">    subgraph APP[应用程序 Application]</span></span>
-<span class="line"><span style="color:#24292E">        API[OpenTelemetry API 标准接口&#x3C;br/>• TracerProvider&#x3C;br/>• MeterProvider&#x3C;br/>• LoggerProvider]</span></span>
-<span class="line"><span style="color:#24292E">        SDK[OpenTelemetry SDK 具体实现&#x3C;br/>• 数据采集&#x3C;br/>• 上下文传播&#x3C;br/>• 采样决策&#x3C;br/>• 数据处理]</span></span>
-<span class="line"><span style="color:#24292E">        API --> SDK</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph APP[应用程序 Application]</span></span>
+<span class="line"><span style="color:#E1E4E8">        API[OpenTelemetry API 标准接口&#x3C;br/>• TracerProvider&#x3C;br/>• MeterProvider&#x3C;br/>• LoggerProvider]</span></span>
+<span class="line"><span style="color:#E1E4E8">        SDK[OpenTelemetry SDK 具体实现&#x3C;br/>• 数据采集&#x3C;br/>• 上下文传播&#x3C;br/>• 采样决策&#x3C;br/>• 数据处理]</span></span>
+<span class="line"><span style="color:#E1E4E8">        API --> SDK</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph COLLECTOR[OpenTelemetry Collector 数据网关]</span></span>
-<span class="line"><span style="color:#24292E">        direction LR</span></span>
-<span class="line"><span style="color:#24292E">        REC[Receiver 接收器&#x3C;br/>• OTLP&#x3C;br/>• Jaeger&#x3C;br/>• Zipkin&#x3C;br/>• Prometheus]</span></span>
-<span class="line"><span style="color:#24292E">        PROC[Processor 处理器&#x3C;br/>• 批处理&#x3C;br/>• 采样&#x3C;br/>• 过滤&#x3C;br/>• 富化]</span></span>
-<span class="line"><span style="color:#24292E">        EXP[Exporter 导出器&#x3C;br/>• Prometheus&#x3C;br/>• Jaeger&#x3C;br/>• Zipkin&#x3C;br/>• Elasticsearch]</span></span>
-<span class="line"><span style="color:#24292E">        REC --> PROC --> EXP</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph COLLECTOR[OpenTelemetry Collector 数据网关]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">        REC[Receiver 接收器&#x3C;br/>• OTLP&#x3C;br/>• Jaeger&#x3C;br/>• Zipkin&#x3C;br/>• Prometheus]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PROC[Processor 处理器&#x3C;br/>• 批处理&#x3C;br/>• 采样&#x3C;br/>• 过滤&#x3C;br/>• 富化]</span></span>
+<span class="line"><span style="color:#E1E4E8">        EXP[Exporter 导出器&#x3C;br/>• Prometheus&#x3C;br/>• Jaeger&#x3C;br/>• Zipkin&#x3C;br/>• Elasticsearch]</span></span>
+<span class="line"><span style="color:#E1E4E8">        REC --> PROC --> EXP</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph BACKEND[后端存储 Backend]</span></span>
-<span class="line"><span style="color:#24292E">        PROM[Prometheus&#x3C;br/>指标]</span></span>
-<span class="line"><span style="color:#24292E">        JAEGER[Jaeger&#x3C;br/>追踪]</span></span>
-<span class="line"><span style="color:#24292E">        LOKI[Loki&#x3C;br/>日志]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph BACKEND[后端存储 Backend]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PROM[Prometheus&#x3C;br/>指标]</span></span>
+<span class="line"><span style="color:#E1E4E8">        JAEGER[Jaeger&#x3C;br/>追踪]</span></span>
+<span class="line"><span style="color:#E1E4E8">        LOKI[Loki&#x3C;br/>日志]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    SDK --> REC</span></span>
-<span class="line"><span style="color:#24292E">    EXP --> PROM</span></span>
-<span class="line"><span style="color:#24292E">    EXP --> JAEGER</span></span>
-<span class="line"><span style="color:#24292E">    EXP --> LOKI</span></span>
+<span class="line"><span style="color:#E1E4E8">    SDK --> REC</span></span>
+<span class="line"><span style="color:#E1E4E8">    EXP --> PROM</span></span>
+<span class="line"><span style="color:#E1E4E8">    EXP --> JAEGER</span></span>
+<span class="line"><span style="color:#E1E4E8">    EXP --> LOKI</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style APP fill:#e1f5ff,stroke:#333,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style COLLECTOR fill:#fff4e1,stroke:#333,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style BACKEND fill:#e8f5e9,stroke:#333,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style APP fill:#e1f5ff,stroke:#333,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style COLLECTOR fill:#fff4e1,stroke:#333,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style BACKEND fill:#e8f5e9,stroke:#333,stroke-width:2px</span></span></code></pre>
 <h4 id="核心组件详解">核心组件详解</h4>
 <p><strong>1. OpenTelemetry API</strong>:</p>
 <ul>
@@ -265,7 +265,7 @@
 <hr>
 <h3 id="23-opentelemetry-数据模型">2.3 OpenTelemetry 数据模型</h3>
 <h4 id="trace-数据模型">Trace 数据模型</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Trace (一次完整请求的调用链)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Trace (一次完整请求的调用链)</span></span>
 <span class="line"><span>  └── Span (单个操作)</span></span>
 <span class="line"><span>       ├── Span ID</span></span>
 <span class="line"><span>       ├── Trace ID (所属 Trace)</span></span>
@@ -281,7 +281,7 @@
 <span class="line"><span>       │    └── { timestamp, name, attributes }</span></span>
 <span class="line"><span>       └── Links (关联其他 Span)</span></span></code></pre>
 <p><strong>Span 关系类型</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ChildOf (父子关系):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ChildOf (父子关系):</span></span>
 <span class="line"><span>Parent Span</span></span>
 <span class="line"><span>  └── Child Span (同步调用)</span></span>
 <span class="line"><span></span></span>
@@ -370,7 +370,7 @@
 <table><thead><tr><th>维度</th><th>Histogram</th><th>Summary</th></tr></thead><tbody><tr><td><strong>计算位置</strong></td><td>服务端聚合</td><td>客户端计算</td></tr><tr><td><strong>灵活性</strong></td><td>可后续计算任意分位数</td><td>固定分位数</td></tr><tr><td><strong>性能</strong></td><td>低开销</td><td>高开销（客户端）</td></tr><tr><td><strong>聚合</strong></td><td>可跨实例聚合</td><td>不可聚合</td></tr><tr><td><strong>推荐</strong></td><td>优先使用</td><td>仅特殊场景</td></tr></tbody></table>
 <h4 id="logs-数据模型">Logs 数据模型</h4>
 <p><strong>结构化日志字段</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LogRecord</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LogRecord</span></span>
 <span class="line"><span>  ├── Timestamp (时间戳)</span></span>
 <span class="line"><span>  ├── Severity (级别: DEBUG/INFO/WARN/ERROR/FATAL)</span></span>
 <span class="line"><span>  ├── Body (日志内容)</span></span>
@@ -385,7 +385,7 @@
 <span class="line"><span>       ├── request.id</span></span>
 <span class="line"><span>       └── error.type</span></span></code></pre>
 <p><strong>日志与追踪关联</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 查看某次慢请求的详细日志</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 查看某次慢请求的详细日志</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 从 Trace 获取 TraceId = "abc123"</span></span>
 <span class="line"><span>2. 查询日志系统: WHERE trace_id = "abc123"</span></span>
@@ -395,12 +395,12 @@
 <h3 id="24-上下文传播-context-propagation">2.4 上下文传播 (Context Propagation)</h3>
 <h4 id="核心问题">核心问题</h4>
 <p>分布式系统中，如何跨服务、跨进程传递追踪上下文？</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>客户端  →  API网关  →  服务A  →  服务B  →  数据库</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>客户端  →  API网关  →  服务A  →  服务B  →  数据库</span></span>
 <span class="line"><span>  |          |          |         |         |</span></span>
 <span class="line"><span>如何保证同一个 TraceId 贯穿整个调用链？</span></span></code></pre>
 <h4 id="w3c-trace-context-标准">W3C Trace Context 标准</h4>
 <p><strong>HTTP 头传播</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>请求头:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>请求头:</span></span>
 <span class="line"><span>traceparent: 00-{trace-id}-{parent-span-id}-{trace-flags}</span></span>
 <span class="line"><span>tracestate: vendor1=value1,vendor2=value2</span></span>
 <span class="line"><span></span></span>
@@ -410,7 +410,7 @@
 <span class="line"><span>• parent-span-id: 64-bit 父 Span ID</span></span>
 <span class="line"><span>• trace-flags: 采样标志 (01=采样, 00=不采样)</span></span></code></pre>
 <p><strong>传播流程</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>服务 A:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>服务 A:</span></span>
 <span class="line"><span>1. 生成 TraceId = "abc123"</span></span>
 <span class="line"><span>2. 生成 SpanId = "span-a"</span></span>
 <span class="line"><span>3. 发起 HTTP 请求，注入头:</span></span>
@@ -424,7 +424,7 @@
 <span class="line"><span>5. 继续传播...</span></span></code></pre>
 <h4 id="跨边界传播">跨边界传播</h4>
 <p><strong>消息队列传播</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Producer (生产者):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Producer (生产者):</span></span>
 <span class="line"><span>1. 将 TraceContext 编码到消息属性</span></span>
 <span class="line"><span>2. 发送消息 + 元数据</span></span>
 <span class="line"><span></span></span>
@@ -433,7 +433,7 @@
 <span class="line"><span>2. 恢复 TraceContext</span></span>
 <span class="line"><span>3. 创建新 Span (类型: FollowsFrom)</span></span></code></pre>
 <p><strong>数据库传播</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SQL 注释注入:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SQL 注释注入:</span></span>
 <span class="line"><span>/* traceparent=00-abc123-span-x-01 */</span></span>
 <span class="line"><span>SELECT * FROM users WHERE id = 1;</span></span>
 <span class="line"><span></span></span>
@@ -453,7 +453,7 @@
 <h4 id="采样类型">采样类型</h4>
 <p><strong>1. 头部采样 (Head-based Sampling)</strong></p>
 <p>在请求<strong>开始时</strong>决定是否采样。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>决策点: 请求入口</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>决策点: 请求入口</span></span>
 <span class="line"><span>算法:</span></span>
 <span class="line"><span>  random() &#x3C; sample_rate → 采样</span></span>
 <span class="line"><span></span></span>
@@ -469,7 +469,7 @@
 <span class="line"><span>  • 无法根据结果调整</span></span></code></pre>
 <p><strong>2. 尾部采样 (Tail-based Sampling)</strong></p>
 <p>在请求<strong>结束后</strong>根据特征决定是否保留。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>决策点: 请求完成</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>决策点: 请求完成</span></span>
 <span class="line"><span>算法:</span></span>
 <span class="line"><span>  if (duration > 1s OR status == ERROR):</span></span>
 <span class="line"><span>      保留</span></span>
@@ -487,7 +487,7 @@
 <span class="line"><span>  • 实现复杂（需 Collector 汇聚）</span></span></code></pre>
 <p><strong>3. 自适应采样 (Adaptive Sampling)</strong></p>
 <p>根据流量动态调整采样率。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>算法:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>算法:</span></span>
 <span class="line"><span>1. 目标: 每秒采集 1000 条 Trace</span></span>
 <span class="line"><span>2. 当前 QPS = 10000</span></span>
 <span class="line"><span>3. 采样率 = 1000 / 10000 = 10%</span></span>
@@ -537,7 +537,7 @@
 
 <table><thead><tr><th>策略</th><th>决策时机</th><th>性能开销</th><th>数据完整性</th><th>实现复杂度</th></tr></thead><tbody><tr><td><strong>头部采样</strong></td><td>请求开始</td><td>低</td><td>低（随机丢失）</td><td>低</td></tr><tr><td><strong>尾部采样</strong></td><td>请求结束</td><td>高（需缓冲）</td><td>高（保留关键）</td><td>高</td></tr><tr><td><strong>自适应采样</strong></td><td>动态调整</td><td>中</td><td>中</td><td>中</td></tr><tr><td><strong>混合采样</strong></td><td>多阶段</td><td>中</td><td>高</td><td>高</td></tr></tbody></table>
 <p><strong>推荐策略</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流量 &#x3C; 1000 QPS:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流量 &#x3C; 1000 QPS:</span></span>
 <span class="line"><span>  → 100% 采样</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流量 1000-10000 QPS:</span></span>
@@ -553,7 +553,7 @@
 <h4 id="核心问题-1">核心问题</h4>
 <p>传统单体应用：一个调用栈即可分析性能瓶颈</p>
 <p>分布式系统：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户请求 → 网关 → 服务A → 服务B → 服务C → 数据库</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户请求 → 网关 → 服务A → 服务B → 服务C → 数据库</span></span>
 <span class="line"><span>              ↓      ↓       ↓</span></span>
 <span class="line"><span>             缓存   队列   外部API</span></span>
 <span class="line"><span></span></span>
@@ -568,7 +568,7 @@
 <hr>
 <h3 id="32-trace-结构深度解析">3.2 Trace 结构深度解析</h3>
 <h4 id="span-的生命周期">Span 的生命周期</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Span 创建流程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Span 创建流程:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. Start Span:</span></span>
 <span class="line"><span>   ┌─────────────────────────────────┐</span></span>
@@ -600,7 +600,7 @@
 <span class="line"><span>   │ Status: OK                      │</span></span>
 <span class="line"><span>   └─────────────────────────────────┘</span></span></code></pre>
 <h4 id="span-关系图示">Span 关系图示</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>完整 Trace 示例: 用户下单请求</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>完整 Trace 示例: 用户下单请求</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>Trace ID: order-trace-123</span></span>
 <span class="line"><span>Duration: 1200ms</span></span>
@@ -636,7 +636,7 @@
 <h3 id="33-分布式追踪实现模式">3.3 分布式追踪实现模式</h3>
 <h4 id="模式1-日志关联模式-log-correlation">模式1: 日志关联模式 (Log Correlation)</h4>
 <p><strong>原理</strong>: 在日志中打印 TraceId，事后关联</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 生成 TraceId = "req-001"</span></span>
 <span class="line"><span>2. 所有日志包含 TraceId</span></span>
 <span class="line"><span>   [INFO] [trace=req-001] 用户登录</span></span>
@@ -647,7 +647,7 @@
 <span class="line"><span>缺点: 无调用关系，难以可视化</span></span></code></pre>
 <h4 id="模式2-黑盒追踪模式-black-box-tracing">模式2: 黑盒追踪模式 (Black-box Tracing)</h4>
 <p><strong>原理</strong>: 从网络流量推断调用关系（无需修改应用）</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实现:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实现:</span></span>
 <span class="line"><span>• 网络层抓包（eBPF、Service Mesh）</span></span>
 <span class="line"><span>• 分析请求/响应时序</span></span>
 <span class="line"><span>• 推断调用关系</span></span>
@@ -658,7 +658,7 @@
 <span class="line"><span>缺点: 无业务上下文，推断可能不准确</span></span></code></pre>
 <h4 id="模式3-基于标注的追踪-annotation-based-tracing">模式3: 基于标注的追踪 (Annotation-based Tracing)</h4>
 <p><strong>原理</strong>: 显式标注需要追踪的代码</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>概念示例 (伪代码):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>概念示例 (伪代码):</span></span>
 <span class="line"><span>@Traced(operationName="processPayment")</span></span>
 <span class="line"><span>function processPayment(orderId) {</span></span>
 <span class="line"><span>  // 自动创建 Span</span></span>
@@ -672,7 +672,7 @@
 <span class="line"><span>缺点: 需修改代码，侵入性</span></span></code></pre>
 <h4 id="模式4-中间件劫持模式-middleware-interception">模式4: 中间件劫持模式 (Middleware Interception)</h4>
 <p><strong>原理</strong>: 在框架层自动插桩</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
 <span class="line"><span>1. HTTP 中间件自动创建 Span</span></span>
 <span class="line"><span>2. 数据库驱动自动记录查询</span></span>
 <span class="line"><span>3. RPC 框架自动传播上下文</span></span>
@@ -745,21 +745,21 @@
 <ol>
 <li><strong>根据 TraceId 查询</strong>:</li>
 </ol>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>输入: trace_id = "abc123"</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>输入: trace_id = "abc123"</span></span>
 <span class="line"><span>输出: 完整调用链（所有 Span）</span></span>
 <span class="line"><span>索引: trace_id (主键)</span></span>
 <span class="line"><span>性能: 快（点查询）</span></span></code></pre>
 <ol start="2">
 <li><strong>根据服务+时间查询</strong>:</li>
 </ol>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>输入: service_name = "payment" AND timestamp > "2024-01-21"</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>输入: service_name = "payment" AND timestamp > "2024-01-21"</span></span>
 <span class="line"><span>输出: 该服务的所有 Trace</span></span>
 <span class="line"><span>索引: (service_name, timestamp)</span></span>
 <span class="line"><span>性能: 中</span></span></code></pre>
 <ol start="3">
 <li><strong>根据标签查询</strong>:</li>
 </ol>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>输入: http.status_code = 500 AND duration > 1s</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>输入: http.status_code = 500 AND duration > 1s</span></span>
 <span class="line"><span>输出: 慢+错误的 Trace</span></span>
 <span class="line"><span>索引: 标签倒排索引</span></span>
 <span class="line"><span>性能: 慢（全表扫描风险）</span></span></code></pre>
@@ -773,7 +773,7 @@
 <hr>
 <h3 id="35-追踪可视化分析">3.5 追踪可视化分析</h3>
 <h4 id="gantt-chart-甘特图">Gantt Chart (甘特图)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间轴视图:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间轴视图:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>服务         |  0ms   200ms  400ms  600ms  800ms  1000ms</span></span>
 <span class="line"><span>──────────────┼─────────────────────────────────────────</span></span>
@@ -795,7 +795,7 @@
 <li>异步调用（独立的条）</li>
 </ul>
 <h4 id="service-dependency-graph-服务依赖图">Service Dependency Graph (服务依赖图)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>依赖关系:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>依赖关系:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>           ┌─────────┐</span></span>
 <span class="line"><span>           │   Web   │</span></span>
@@ -819,7 +819,7 @@
 <span class="line"><span>• 错误率（虚线 = 高错误率）</span></span></code></pre>
 <h4 id="critical-path-analysis-关键路径分析">Critical Path Analysis (关键路径分析)</h4>
 <p><strong>定义</strong>: 从根 Span 到叶子 Span 的最长路径</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>示例:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>示例:</span></span>
 <span class="line"><span>Root → Auth (50ms) → Inventory (200ms) → Payment (800ms)</span></span>
 <span class="line"><span>                                            ↑</span></span>
 <span class="line"><span>                                     关键路径瓶颈</span></span>
@@ -831,7 +831,7 @@
 <hr>
 <h2 id="日志聚合与分析">日志聚合与分析</h2>
 <h3 id="41-日志演进史">4.1 日志演进史</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>演进路径:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>演进路径:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 本地文件日志:</span></span>
 <span class="line"><span>   /var/log/app.log</span></span>
@@ -901,7 +901,7 @@
 
 <table><thead><tr><th>维度</th><th>非结构化日志</th><th>结构化日志 (推荐)</th></tr></thead><tbody><tr><td><strong>格式</strong></td><td>纯文本</td><td>JSON/键值对</td></tr><tr><td><strong>示例</strong></td><td><code>User alice logged in</code></td><td><code>{"event":"login", "user":"alice", "ts":...}</code></td></tr><tr><td><strong>可解析性</strong></td><td>需正则表达式</td><td>直接解析</td></tr><tr><td><strong>查询</strong></td><td>全文搜索</td><td>字段过滤</td></tr><tr><td><strong>聚合</strong></td><td>困难</td><td>简单</td></tr><tr><td><strong>性能</strong></td><td>慢</td><td>快</td></tr><tr><td><strong>存储</strong></td><td>大</td><td>可压缩</td></tr></tbody></table>
 <p><strong>结构化日志最佳实践</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "timestamp": "2024-01-21T10:00:00Z",</span></span>
 <span class="line"><span>  "level": "ERROR",</span></span>
 <span class="line"><span>  "service": "payment-service",</span></span>
@@ -980,7 +980,7 @@
 <table><thead><tr><th>级别</th><th>语义</th><th>使用场景</th><th>生产环境</th><th>开发环境</th></tr></thead><tbody><tr><td><strong>FATAL</strong></td><td>致命错误</td><td>系统崩溃</td><td>记录</td><td>记录</td></tr><tr><td><strong>ERROR</strong></td><td>错误</td><td>业务失败、异常</td><td>记录</td><td>记录</td></tr><tr><td><strong>WARN</strong></td><td>警告</td><td>潜在问题、降级</td><td>记录</td><td>记录</td></tr><tr><td><strong>INFO</strong></td><td>信息</td><td>关键业务事件</td><td>记录</td><td>记录</td></tr><tr><td><strong>DEBUG</strong></td><td>调试</td><td>详细执行流程</td><td>不记录</td><td>记录</td></tr><tr><td><strong>TRACE</strong></td><td>追踪</td><td>变量值、循环</td><td>不记录</td><td>按需</td></tr></tbody></table>
 <h4 id="日志级别最佳实践">日志级别最佳实践</h4>
 <p><strong>ERROR vs WARN 判断</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>使用 ERROR:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>使用 ERROR:</span></span>
 <span class="line"><span>• 影响用户体验（请求失败）</span></span>
 <span class="line"><span>• 数据不一致</span></span>
 <span class="line"><span>• 需要立即修复</span></span>
@@ -990,7 +990,7 @@
 <span class="line"><span>• 性能下降但仍可用</span></span>
 <span class="line"><span>• 配置问题但有默认值</span></span></code></pre>
 <p><strong>示例</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ ERROR: "支付失败: 余额不足"</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ ERROR: "支付失败: 余额不足"</span></span>
 <span class="line"><span>✗ WARN: "支付失败: 余额不足"  (错误，应该是 ERROR)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>✓ WARN: "数据库连接重试 3次后成功"</span></span>
@@ -1002,7 +1002,7 @@
 <h3 id="44-日志采集架构">4.4 日志采集架构</h3>
 <h4 id="agent-模式-vs-sidecar-模式">Agent 模式 vs Sidecar 模式</h4>
 <p><strong>Agent 模式</strong> (每个节点一个采集器):</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>节点1:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>节点1:</span></span>
 <span class="line"><span>  ├─ App Container 1 → 写入 stdout</span></span>
 <span class="line"><span>  ├─ App Container 2 → 写入 stdout</span></span>
 <span class="line"><span>  └─ Log Agent (DaemonSet)</span></span>
@@ -1016,7 +1016,7 @@
 <span class="line"><span>  • 单点故障影响所有容器</span></span>
 <span class="line"><span>  • 权限管理复杂</span></span></code></pre>
 <p><strong>Sidecar 模式</strong> (每个应用一个采集器):</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Pod:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Pod:</span></span>
 <span class="line"><span>  ├─ App Container → 写入共享卷</span></span>
 <span class="line"><span>  └─ Log Sidecar</span></span>
 <span class="line"><span>      └─ 读取日志文件 → 发送到中心</span></span>
@@ -1060,7 +1060,7 @@
 <h3 id="45-日志存储优化">4.5 日志存储优化</h3>
 <h4 id="成本优化策略">成本优化策略</h4>
 <p><strong>日志分层存储</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>热数据 (0-7天):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>热数据 (0-7天):</span></span>
 <span class="line"><span>  • 存储: SSD</span></span>
 <span class="line"><span>  • 索引: 全文索引</span></span>
 <span class="line"><span>  • 查询: 秒级</span></span>
@@ -1115,7 +1115,7 @@
 
 <table><thead><tr><th>技术</th><th>压缩比</th><th>性能</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>Gzip</strong></td><td>10:1</td><td>中</td><td>通用</td></tr><tr><td><strong>LZ4</strong></td><td>3:1</td><td>快</td><td>实时日志</td></tr><tr><td><strong>Zstd</strong></td><td>15:1</td><td>快</td><td>推荐</td></tr><tr><td><strong>列式压缩</strong></td><td>50:1</td><td>快（查询）</td><td>结构化日志</td></tr></tbody></table>
 <p><strong>采样策略</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
 <span class="line"><span>1. ERROR/FATAL 日志: 100% 保留</span></span>
 <span class="line"><span>2. WARN 日志: 100% 保留</span></span>
 <span class="line"><span>3. INFO 日志: 10% 采样</span></span>
@@ -1130,7 +1130,7 @@
 <h3 id="46-日志查询优化">4.6 日志查询优化</h3>
 <h4 id="索引策略">索引策略</h4>
 <p><strong>全文索引 vs 字段索引</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>全文索引 (Elasticsearch):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>全文索引 (Elasticsearch):</span></span>
 <span class="line"><span>• 索引内容: 日志消息全文</span></span>
 <span class="line"><span>• 查询: message CONTAINS "timeout"</span></span>
 <span class="line"><span>• 性能: 慢（需扫描倒排索引）</span></span>
@@ -1142,7 +1142,7 @@
 <span class="line"><span>• 性能: 快（小索引）</span></span>
 <span class="line"><span>• 成本: 低（索引大小 &#x3C; 1%）</span></span></code></pre>
 <p><strong>Loki 设计哲学</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>核心思想: "像 Prometheus 一样查询日志"</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>核心思想: "像 Prometheus 一样查询日志"</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>存储:</span></span>
 <span class="line"><span>  • 标签索引（倒排索引）</span></span>
@@ -1158,7 +1158,7 @@
 <span class="line"><span>  ✗ 查询需要解压（略慢）</span></span></code></pre>
 <h4 id="查询模式优化">查询模式优化</h4>
 <p><strong>低效查询</strong> (避免):</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 无标签过滤:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 无标签过滤:</span></span>
 <span class="line"><span>   SELECT * FROM logs WHERE message LIKE '%error%'</span></span>
 <span class="line"><span>   → 全表扫描，极慢</span></span>
 <span class="line"><span></span></span>
@@ -1166,7 +1166,7 @@
 <span class="line"><span>   时间范围: 最近 30 天</span></span>
 <span class="line"><span>   → 数据量巨大</span></span></code></pre>
 <p><strong>高效查询</strong> (推荐):</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ 标签优先:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ 标签优先:</span></span>
 <span class="line"><span>  {service="payment", env="prod"} |= "error"</span></span>
 <span class="line"><span>  → 先通过标签定位，再搜索内容</span></span>
 <span class="line"><span></span></span>
@@ -1182,7 +1182,7 @@
 <h3 id="51-指标设计原则">5.1 指标设计原则</h3>
 <h4 id="use-方法-资源监控">USE 方法 (资源监控)</h4>
 <p><strong>定义</strong>: Utilization (使用率) + Saturation (饱和度) + Errors (错误)</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>应用场景: 硬件资源监控</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>应用场景: 硬件资源监控</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>CPU:</span></span>
 <span class="line"><span>  • Utilization: CPU 使用率 %</span></span>
@@ -1200,7 +1200,7 @@
 <span class="line"><span>  • Errors: 磁盘错误计数</span></span></code></pre>
 <h4 id="red-方法-服务监控">RED 方法 (服务监控)</h4>
 <p><strong>定义</strong>: Rate (请求速率) + Errors (错误率) + Duration (延迟)</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>应用场景: 微服务监控</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>应用场景: 微服务监控</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>Rate (请求速率):</span></span>
 <span class="line"><span>  • http_requests_total (Counter)</span></span>
@@ -1214,13 +1214,13 @@
 <span class="line"><span>  • http_request_duration_seconds (Histogram)</span></span>
 <span class="line"><span>  • 分位数: P50, P95, P99</span></span></code></pre>
 <p><strong>为什么 RED 优于传统监控</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统: 监控 CPU/内存/磁盘</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统: 监控 CPU/内存/磁盘</span></span>
 <span class="line"><span>问题: CPU 低不代表服务健康（可能在排队）</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>RED: 监控用户体验</span></span>
 <span class="line"><span>优势: 直接反映服务质量</span></span></code></pre>
 <h4 id="四大黄金信号-google-sre">四大黄金信号 (Google SRE)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Latency (延迟):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Latency (延迟):</span></span>
 <span class="line"><span>   • 请求处理时间</span></span>
 <span class="line"><span>   • 区分成功/失败请求的延迟</span></span>
 <span class="line"><span></span></span>
@@ -1238,7 +1238,7 @@
 <hr>
 <h3 id="52-prometheus-数据模型">5.2 Prometheus 数据模型</h3>
 <h4 id="时间序列结构">时间序列结构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间序列 = 指标名 + 标签集 + 时间戳值对</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间序列 = 指标名 + 标签集 + 时间戳值对</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>http_requests_total{method="GET", endpoint="/api", status="200"}</span></span>
@@ -1251,7 +1251,7 @@
 <span class="line"><span>• 标签: {method="GET", endpoint="/api", status="200"}</span></span>
 <span class="line"><span>• 数据点: (timestamp, value)</span></span></code></pre>
 <h4 id="指标命名规范">指标命名规范</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>格式: &#x3C;namespace>_&#x3C;subsystem>_&#x3C;name>_&#x3C;unit></span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>格式: &#x3C;namespace>_&#x3C;subsystem>_&#x3C;name>_&#x3C;unit></span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>✓ http_request_duration_seconds</span></span>
@@ -1265,7 +1265,7 @@
 <span class="line"><span>• Gauge 描述当前状态</span></span></code></pre>
 <h4 id="标签设计最佳实践">标签设计最佳实践</h4>
 <p><strong>高基数 vs 低基数</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>低基数标签 (推荐):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>低基数标签 (推荐):</span></span>
 <span class="line"><span>  • method: GET/POST/PUT/DELETE (4 个值)</span></span>
 <span class="line"><span>  • status: 2xx/4xx/5xx (3 个类别)</span></span>
 <span class="line"><span>  • endpoint: /api/users, /api/orders (有限个)</span></span>
@@ -1278,7 +1278,7 @@
 <span class="line"><span>问题:</span></span>
 <span class="line"><span>  高基数 → 时间序列爆炸 → 内存耗尽 → Prometheus 崩溃</span></span></code></pre>
 <p><strong>计算时间序列数</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指标: http_requests_total</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指标: http_requests_total</span></span>
 <span class="line"><span>标签:</span></span>
 <span class="line"><span>  • method: 4 个值</span></span>
 <span class="line"><span>  • endpoint: 100 个值</span></span>
@@ -1298,16 +1298,16 @@
 <h3 id="53-promql-查询语言">5.3 PromQL 查询语言</h3>
 <h4 id="基础查询">基础查询</h4>
 <p><strong>即时查询 (Instant Query)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>http_requests_total</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>http_requests_total</span></span>
 <span class="line"><span>→ 返回当前时刻所有时间序列的最新值</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>http_requests_total{method="GET"}</span></span>
 <span class="line"><span>→ 过滤 method=GET 的时间序列</span></span></code></pre>
 <p><strong>范围查询 (Range Query)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>http_requests_total[5m]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>http_requests_total[5m]</span></span>
 <span class="line"><span>→ 返回最近 5 分钟的所有数据点</span></span></code></pre>
 <h4 id="聚合函数">聚合函数</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>sum(http_requests_total)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>sum(http_requests_total)</span></span>
 <span class="line"><span>→ 所有时间序列的值求和</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>sum(http_requests_total) by (method)</span></span>
@@ -1323,7 +1323,7 @@
 <span class="line"><span>→ 时间序列数量</span></span></code></pre>
 <h4 id="速率计算">速率计算</h4>
 <p><strong>rate() - 平均速率</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>rate(http_requests_total[5m])</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>rate(http_requests_total[5m])</span></span>
 <span class="line"><span>→ 计算每秒平均请求数（最近 5 分钟）</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>算法:</span></span>
@@ -1331,7 +1331,7 @@
 <span class="line"><span></span></span>
 <span class="line"><span>适用: Counter 类型指标</span></span></code></pre>
 <p><strong>irate() - 瞬时速率</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>irate(http_requests_total[5m])</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>irate(http_requests_total[5m])</span></span>
 <span class="line"><span>→ 计算瞬时速率（仅用最后两个数据点）</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>算法:</span></span>
@@ -1341,19 +1341,19 @@
 <span class="line"><span>缺点: 噪声大</span></span></code></pre>
 <h4 id="复杂查询示例">复杂查询示例</h4>
 <p><strong>错误率计算</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>rate(http_requests_total{status=~"5.."}[5m])</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>rate(http_requests_total{status=~"5.."}[5m])</span></span>
 <span class="line"><span>/</span></span>
 <span class="line"><span>rate(http_requests_total[5m])</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>→ 5xx 错误率</span></span></code></pre>
 <p><strong>P95 延迟</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>histogram_quantile(0.95,</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>histogram_quantile(0.95,</span></span>
 <span class="line"><span>  sum(rate(http_request_duration_seconds_bucket[5m])) by (le)</span></span>
 <span class="line"><span>)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>→ 95% 的请求延迟 &#x3C; X 秒</span></span></code></pre>
 <p><strong>预测磁盘满时间</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>predict_linear(node_filesystem_free_bytes[1h], 4*3600)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>predict_linear(node_filesystem_free_bytes[1h], 4*3600)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>→ 基于最近 1 小时趋势，预测 4 小时后磁盘剩余空间</span></span></code></pre>
 <hr>
@@ -1367,7 +1367,7 @@
 <li>团队开始忽略告警</li>
 </ul>
 <p><strong>根本原因</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 为每个指标设置告警</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 为每个指标设置告警</span></span>
 <span class="line"><span>   → CPU > 80% 告警（可能正常高峰）</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>❌ 静态阈值</span></span>
@@ -1377,7 +1377,7 @@
 <span class="line"><span>   → 测试环境告警和生产环境告警同等级</span></span></code></pre>
 <h4 id="告警设计原则">告警设计原则</h4>
 <p><strong>原则1: 仅为症状告警，不为原因告警</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 错误示例:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 错误示例:</span></span>
 <span class="line"><span>   "CPU 使用率 > 80%"</span></span>
 <span class="line"><span>   → 这是原因，不是症状</span></span>
 <span class="line"><span></span></span>
@@ -1385,7 +1385,7 @@
 <span class="line"><span>   "API 延迟 P95 > 1s 持续 5 分钟"</span></span>
 <span class="line"><span>   → 这是用户体验的症状</span></span></code></pre>
 <p><strong>原则2: 告警必须可操作</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 无法操作的告警:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 无法操作的告警:</span></span>
 <span class="line"><span>   "网络流量异常"</span></span>
 <span class="line"><span>   → 然后呢？我该做什么？</span></span>
 <span class="line"><span></span></span>
@@ -1393,7 +1393,7 @@
 <span class="line"><span>   "数据库连接池耗尽，当前连接数 100/100，请扩容或检查慢查询"</span></span>
 <span class="line"><span>   → 明确的行动指南</span></span></code></pre>
 <p><strong>原则3: 使用多窗口、多条件减少误报</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 单阈值告警:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 单阈值告警:</span></span>
 <span class="line"><span>   error_rate > 1%</span></span>
 <span class="line"><span>   → 瞬时抖动触发</span></span>
 <span class="line"><span></span></span>
@@ -1448,7 +1448,7 @@
 <table><thead><tr><th>级别</th><th>定义</th><th>响应时间</th><th>示例</th><th>通知方式</th></tr></thead><tbody><tr><td><strong>P0 (Critical)</strong></td><td>服务完全不可用</td><td>立即（5分钟）</td><td>所有请求 500 错误</td><td>电话 + 短信 + Slack</td></tr><tr><td><strong>P1 (High)</strong></td><td>核心功能受影响</td><td>30 分钟</td><td>支付成功率 &#x3C; 95%</td><td>短信 + Slack</td></tr><tr><td><strong>P2 (Medium)</strong></td><td>部分功能降级</td><td>2 小时</td><td>搜索延迟 > 3s</td><td>Slack + 邮件</td></tr><tr><td><strong>P3 (Low)</strong></td><td>潜在风险</td><td>工作时间处理</td><td>磁盘使用 > 70%</td><td>邮件</td></tr></tbody></table>
 <h4 id="告警规则示例">告警规则示例</h4>
 <p><strong>P0 告警: 服务不可用</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>alert: ServiceDown</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>alert: ServiceDown</span></span>
 <span class="line"><span>expr: up{job="api-server"} == 0</span></span>
 <span class="line"><span>for: 1m</span></span>
 <span class="line"><span>labels:</span></span>
@@ -1458,7 +1458,7 @@
 <span class="line"><span>  description: "{{ $labels.instance }} 已宕机超过 1 分钟"</span></span>
 <span class="line"><span>  runbook: "https://wiki.company.com/runbook/service-down"</span></span></code></pre>
 <p><strong>P1 告警: 高错误率</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>alert: HighErrorRate</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>alert: HighErrorRate</span></span>
 <span class="line"><span>expr: |</span></span>
 <span class="line"><span>  sum(rate(http_requests_total{status=~"5.."}[5m]))</span></span>
 <span class="line"><span>  /</span></span>
@@ -1471,7 +1471,7 @@
 <span class="line"><span>  summary: "错误率超过 5%"</span></span>
 <span class="line"><span>  description: "当前错误率: {{ $value | humanizePercentage }}"</span></span></code></pre>
 <p><strong>P2 告警: 慢请求</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>alert: HighLatency</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>alert: HighLatency</span></span>
 <span class="line"><span>expr: |</span></span>
 <span class="line"><span>  histogram_quantile(0.95,</span></span>
 <span class="line"><span>    sum(rate(http_request_duration_seconds_bucket[5m])) by (le)</span></span>
@@ -1498,7 +1498,7 @@
 <li>违反有经济后果</li>
 </ul>
 <h4 id="关系">关系</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SLA (合同)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SLA (合同)</span></span>
 <span class="line"><span>  ↓ (通常更宽松)</span></span>
 <span class="line"><span>SLO (内部目标)</span></span>
 <span class="line"><span>  ↓ (定义)</span></span>
@@ -1544,7 +1544,7 @@
 <table><thead><tr><th>服务类型</th><th>典型 SLI</th></tr></thead><tbody><tr><td><strong>HTTP API</strong></td><td>可用性、延迟、吞吐量</td></tr><tr><td><strong>存储系统</strong></td><td>持久性、可用性、延迟</td></tr><tr><td><strong>流处理</strong></td><td>吞吐量、数据新鲜度、正确性</td></tr><tr><td><strong>批处理</strong></td><td>完成时间、正确性</td></tr></tbody></table>
 <h4 id="错误预算-error-budget">错误预算 (Error Budget)</h4>
 <p><strong>定义</strong>: 允许的故障时间</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>计算:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>计算:</span></span>
 <span class="line"><span>SLO = 99.9% 可用性</span></span>
 <span class="line"><span>→ 允许不可用 = 1 - 99.9% = 0.1%</span></span>
 <span class="line"><span></span></span>
@@ -1555,7 +1555,7 @@
 <span class="line"><span>• 每月可宕机 43 分钟</span></span>
 <span class="line"><span>• 超出后暂停新功能发布，专注稳定性</span></span></code></pre>
 <p><strong>错误预算策略</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>剩余预算 > 50%:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>剩余预算 > 50%:</span></span>
 <span class="line"><span>  → 加速创新，发布新功能</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>剩余预算 &#x3C; 20%:</span></span>
@@ -1567,7 +1567,7 @@
 <h2 id="可观测性架构设计">可观测性架构设计</h2>
 <h3 id="61-集中式-vs-分布式架构">6.1 集中式 vs 分布式架构</h3>
 <h4 id="集中式架构">集中式架构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌───────┐  ┌───────┐  ┌───────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌───────┐  ┌───────┐  ┌───────┐</span></span>
 <span class="line"><span>│服务 A │  │服务 B │  │服务 C │</span></span>
 <span class="line"><span>└───┬───┘  └───┬───┘  └───┬───┘</span></span>
 <span class="line"><span>    │          │          │</span></span>
@@ -1591,7 +1591,7 @@
 <span class="line"><span>  • 扩展性受限</span></span>
 <span class="line"><span>  • 跨区域延迟高</span></span></code></pre>
 <h4 id="分布式架构-联邦模式">分布式架构 (联邦模式)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────┐        ┌──────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────┐        ┌──────────────┐</span></span>
 <span class="line"><span>│  区域 A      │        │  区域 B      │</span></span>
 <span class="line"><span>│ ┌──────────┐ │        │ ┌──────────┐ │</span></span>
 <span class="line"><span>│ │ 服务 A1  │ │        │ │ 服务 B1  │ │</span></span>
@@ -1620,7 +1620,7 @@
 <hr>
 <h3 id="62-采样与聚合策略">6.2 采样与聚合策略</h3>
 <h4 id="指标聚合金字塔">指标聚合金字塔</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始数据 (10s 粒度):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始数据 (10s 粒度):</span></span>
 <span class="line"><span>  ↓ 保留 1 周</span></span>
 <span class="line"><span>中等聚合 (1min 平均):</span></span>
 <span class="line"><span>  ↓ 保留 1 个月</span></span>
@@ -1636,17 +1636,17 @@
 <span class="line"><span>  1day: 50MB (压缩 20000x)</span></span></code></pre>
 <h4 id="降采样算法">降采样算法</h4>
 <p><strong>平均值保留</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始: [10, 12, 11, 13]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始: [10, 12, 11, 13]</span></span>
 <span class="line"><span>1min 聚合: (10+12+11+13)/4 = 11.5</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>问题: 丢失峰值信息</span></span></code></pre>
 <p><strong>最大值保留</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始: [10, 12, 98, 13]  (有尖峰)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始: [10, 12, 98, 13]  (有尖峰)</span></span>
 <span class="line"><span>1min 聚合: max = 98</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>用途: 保留告警级别的峰值</span></span></code></pre>
 <p><strong>分位数保留</strong> (推荐):</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始: [10, 12, 11, 98, 13]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始: [10, 12, 11, 98, 13]</span></span>
 <span class="line"><span>1min 聚合:</span></span>
 <span class="line"><span>  min: 10</span></span>
 <span class="line"><span>  p50: 12</span></span>
@@ -1658,7 +1658,7 @@
 <hr>
 <h3 id="63-成本优化架构">6.3 成本优化架构</h3>
 <h4 id="分层存储策略">分层存储策略</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据流:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据流:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>高频查询层 (热数据):</span></span>
 <span class="line"><span>  • 时间: 0-7 天</span></span>
@@ -1681,7 +1681,7 @@
 <span class="line"><span>成本节省: 80%+</span></span></code></pre>
 <h4 id="智能采样">智能采样</h4>
 <p><strong>基于重要性采样</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
 <span class="line"><span>1. 错误请求: 100% 采样</span></span>
 <span class="line"><span>2. 慢请求 (>1s): 100% 采样</span></span>
 <span class="line"><span>3. 关键端点 (/payment): 50% 采样</span></span>
@@ -1693,7 +1693,7 @@
 <hr>
 <h3 id="64-可观测性统一平台">6.4 可观测性统一平台</h3>
 <h4 id="grafana-统一视图">Grafana 统一视图</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Grafana 仪表盘:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Grafana 仪表盘:</span></span>
 <span class="line"><span>┌─────────────────────────────────────────┐</span></span>
 <span class="line"><span>│  服务: Payment Service                   │</span></span>
 <span class="line"><span>├─────────────────────────────────────────┤</span></span>
@@ -1714,17 +1714,17 @@
 <span class="line"><span>└─────────────────────────────────────────┘</span></span></code></pre>
 <h4 id="统一查询语言">统一查询语言</h4>
 <p><strong>LogQL (Loki)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{service="payment"} |= "error" | json | duration > 1s</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{service="payment"} |= "error" | json | duration > 1s</span></span></code></pre>
 <p><strong>PromQL (Prometheus)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>rate(http_requests_total{service="payment"}[5m])</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>rate(http_requests_total{service="payment"}[5m])</span></span></code></pre>
 <p><strong>TraceQL (Tempo)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{ span.service.name = "payment" &#x26;&#x26; duration > 1s }</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{ span.service.name = "payment" &#x26;&#x26; duration > 1s }</span></span></code></pre>
 <p><strong>趋势: 统一查询接口</strong></p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Grafana 正在开发统一查询语言，一次查询关联三大支柱数据。</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Grafana 正在开发统一查询语言，一次查询关联三大支柱数据。</span></span></code></pre>
 <hr>
 <h3 id="65-可观测性最佳实践总结">6.5 可观测性最佳实践总结</h3>
 <h4 id="实施路线图">实施路线图</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>阶段 1 - 基础设施 (1-2 周):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>阶段 1 - 基础设施 (1-2 周):</span></span>
 <span class="line"><span>  ✓ 部署 Prometheus + Grafana</span></span>
 <span class="line"><span>  ✓ 采集系统指标 (CPU/内存/磁盘)</span></span>
 <span class="line"><span>  ✓ 配置基础告警</span></span>
@@ -1794,7 +1794,7 @@
 <hr>
 <h2 id="附录-可观测性工具生态">附录: 可观测性工具生态</h2>
 <h3 id="opentelemetry-生态">OpenTelemetry 生态</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据采集:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据采集:</span></span>
 <span class="line"><span>  • OpenTelemetry SDK (多语言)</span></span>
 <span class="line"><span>  • OpenTelemetry Collector</span></span>
 <span class="line"><span>  • 自动插桩库 (Java/Python/.NET/Go/Node.js)</span></span>
@@ -1890,7 +1890,7 @@
       // 初始化 Mermaid - 使用 default 主题以支持内联 style
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'default',  // default 主题会尊重内联 style 定义
+        theme: 'dark',  // dark 主题适配暗色背景
         flowchart: {
           useMaxWidth: true,
           htmlLabels: true,
@@ -1928,7 +1928,7 @@
             const mermaidDiv = document.createElement('div');
             mermaidDiv.className = 'mermaid';
             mermaidDiv.textContent = code;
-            mermaidDiv.style.backgroundColor = '#f9f9f9';
+            mermaidDiv.style.backgroundColor = '#111120';
             mermaidDiv.style.padding = '20px';
             mermaidDiv.style.borderRadius = '8px';
             mermaidDiv.style.margin = '20px 0';
