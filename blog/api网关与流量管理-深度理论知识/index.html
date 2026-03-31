@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="API网关架构设计全景图：网关模式、限流熔断算法、智能路由、WebSocket与流式响应、高可用架构等高级理论知识。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>API网关与流量管理深度理论知识</title><style>:root{--bg: #0d1117;--text: #e6edf3;--accent: #58a6ff;--accent-hover: #1f6feb;--gray: #8b949e;--border: #30363d;--code-bg: #161b22;--glow: 0 0 10px rgba(88, 166, 255, .3);--surface: #161b22}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="API网关架构设计全景图：网关模式、限流熔断算法、智能路由、WebSocket与流式响应、高可用架构等高级理论知识。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>API网关与流量管理深度理论知识</title><style>:root{--bg: #ffffff;--text: #24292f;--accent: #0969da;--accent-hover: #0550ae;--gray: #57606a;--border: #d0d7de;--code-bg: #f6f8fa;--glow: 0 0 10px rgba(9, 105, 218, .2);--surface: #f6f8fa}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#cf222e;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>API网关与流量管理深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#云原生架构</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="api网关与流量管理深度理论知识">API网关与流量管理深度理论知识</h1>
 <blockquote>
 <p><strong>学习深度</strong>: ⭐⭐⭐⭐
@@ -21,14 +21,14 @@
 <h3 id="11-为什么需要api网关">1.1 为什么需要API网关</h3>
 <h4 id="微服务架构的挑战">微服务架构的挑战</h4>
 <p><strong>单体应用时代</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>客户端 → 单一应用 → 数据库</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>客户端 → 单一应用 → 数据库</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>简单但局限:</span></span>
 <span class="line"><span>• 单点故障</span></span>
 <span class="line"><span>• 难以扩展</span></span>
 <span class="line"><span>• 技术栈锁定</span></span></code></pre>
 <p><strong>微服务时代</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>客户端需要调用多个服务:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>客户端需要调用多个服务:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>移动App → 用户服务 (user-service:8001)</span></span>
 <span class="line"><span>       → 订单服务 (order-service:8002)</span></span>
@@ -45,33 +45,33 @@
 <span class="line"><span>❌ 安全暴露(内部服务直接暴露)</span></span></code></pre>
 <h4 id="api网关解决方案">API网关解决方案</h4>
 <p><strong>定义</strong>: API网关是微服务架构中的<strong>单一入口点</strong>,封装内部系统架构。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Clients["客户端层"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Web[Web App]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Mobile[Mobile App]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Third[3rd Party]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Clients["客户端层"]</span></span>
+<span class="line"><span style="color:#24292E">        Web[Web App]</span></span>
+<span class="line"><span style="color:#24292E">        Mobile[Mobile App]</span></span>
+<span class="line"><span style="color:#24292E">        Third[3rd Party]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway["API Gateway&#x3C;br/>单一入口&#x3C;br/>• 认证/授权&#x3C;br/>• 限流/熔断&#x3C;br/>• 路由/负载均衡&#x3C;br/>• 协议转换&#x3C;br/>• 监控/日志"]</span></span>
+<span class="line"><span style="color:#24292E">    Gateway["API Gateway&#x3C;br/>单一入口&#x3C;br/>• 认证/授权&#x3C;br/>• 限流/熔断&#x3C;br/>• 路由/负载均衡&#x3C;br/>• 协议转换&#x3C;br/>• 监控/日志"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Services["微服务层"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        User[用户服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Order[订单服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Payment[支付服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Services["微服务层"]</span></span>
+<span class="line"><span style="color:#24292E">        User[用户服务]</span></span>
+<span class="line"><span style="color:#24292E">        Order[订单服务]</span></span>
+<span class="line"><span style="color:#24292E">        Payment[支付服务]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Web --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Mobile --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Third --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> User</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> Order</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> Payment</span></span>
+<span class="line"><span style="color:#24292E">    Web --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Mobile --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Third --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> User</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> Order</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> Payment</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Adv["优势:&#x3C;br/>✓ 客户端简化(只需一个端点)&#x3C;br/>✓ 统一认证&#x3C;br/>✓ 内部服务隐藏&#x3C;br/>✓ 协议适配&#x3C;br/>✓ 集中式监控"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Adv["优势:&#x3C;br/>✓ 客户端简化(只需一个端点)&#x3C;br/>✓ 统一认证&#x3C;br/>✓ 内部服务隐藏&#x3C;br/>✓ 协议适配&#x3C;br/>✓ 集中式监控"]</span></span></code></pre>
 <hr>
 <h3 id="12-api网关的核心职责">1.2 API网关的核心职责</h3>
 <h4 id="1-请求路由-request-routing">1. 请求路由 (Request Routing)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>功能: 根据请求路径转发到对应服务</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>功能: 根据请求路径转发到对应服务</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>GET /api/users/123      → 用户服务</span></span>
@@ -84,92 +84,92 @@
 <span class="line"><span>• 基于头部: X-API-Version: v2 → v2-service</span></span>
 <span class="line"><span>• 基于参数: ?region=us → us-cluster</span></span></code></pre>
 <h4 id="2-认证与授权-authentication--authorization">2. 认证与授权 (Authentication &#x26; Authorization)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant C as 客户端</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant G as API网关</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant S as 后端服务</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">sequenceDiagram</span></span>
+<span class="line"><span style="color:#24292E">    participant C as 客户端</span></span>
+<span class="line"><span style="color:#24292E">    participant G as API网关</span></span>
+<span class="line"><span style="color:#24292E">    participant S as 后端服务</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    C->>G: 请求 + JWT Token</span></span>
-<span class="line"><span style="color:#E1E4E8">    Note over G: 验证 Token&#x3C;br/>• 签名验证&#x3C;br/>• 过期检查&#x3C;br/>• 黑名单检查</span></span>
-<span class="line"><span style="color:#E1E4E8">    Note over G: 提取用户信息&#x3C;br/>(user_id, roles)</span></span>
-<span class="line"><span style="color:#E1E4E8">    G->>S: 转发请求(附加用户上下文)</span></span>
-<span class="line"><span style="color:#E1E4E8">    Note over S: 信任网关&#x3C;br/>无需再认证</span></span>
-<span class="line"><span style="color:#E1E4E8">    S->>G: 响应</span></span>
-<span class="line"><span style="color:#E1E4E8">    G->>C: 响应</span></span>
+<span class="line"><span style="color:#24292E">    C->>G: 请求 + JWT Token</span></span>
+<span class="line"><span style="color:#24292E">    Note over G: 验证 Token&#x3C;br/>• 签名验证&#x3C;br/>• 过期检查&#x3C;br/>• 黑名单检查</span></span>
+<span class="line"><span style="color:#24292E">    Note over G: 提取用户信息&#x3C;br/>(user_id, roles)</span></span>
+<span class="line"><span style="color:#24292E">    G->>S: 转发请求(附加用户上下文)</span></span>
+<span class="line"><span style="color:#24292E">    Note over S: 信任网关&#x3C;br/>无需再认证</span></span>
+<span class="line"><span style="color:#24292E">    S->>G: 响应</span></span>
+<span class="line"><span style="color:#24292E">    G->>C: 响应</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over C,S: 好处:&#x3C;br/>• 统一认证(避免每个服务重复实现)&#x3C;br/>• 内部服务安全(不暴露外网)</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note over C,S: 好处:&#x3C;br/>• 统一认证(避免每个服务重复实现)&#x3C;br/>• 内部服务安全(不暴露外网)</span></span></code></pre>
 <p>认证 (Authentication): 你是谁?
 授权 (Authorization): 你能做什么?</p>
 <h4 id="3-协议转换-protocol-translation">3. 协议转换 (Protocol Translation)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    Client["客户端&#x3C;br/>(HTTP/REST)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway["API网关&#x3C;br/>(协议转换)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Backend["后端服务&#x3C;br/>(gRPC)"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    Client["客户端&#x3C;br/>(HTTP/REST)"]</span></span>
+<span class="line"><span style="color:#24292E">    Gateway["API网关&#x3C;br/>(协议转换)"]</span></span>
+<span class="line"><span style="color:#24292E">    Backend["后端服务&#x3C;br/>(gRPC)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Client --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> Backend</span></span>
+<span class="line"><span style="color:#24292E">    Client --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> Backend</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note["转换类型:&#x3C;br/>• HTTP → gRPC&#x3C;br/>• WebSocket → HTTP&#x3C;br/>• SOAP → REST&#x3C;br/>• GraphQL → 多个REST调用"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note["转换类型:&#x3C;br/>• HTTP → gRPC&#x3C;br/>• WebSocket → HTTP&#x3C;br/>• SOAP → REST&#x3C;br/>• GraphQL → 多个REST调用"]</span></span></code></pre>
 <p>场景: 客户端和后端使用不同协议</p>
 <h4 id="4-请求聚合-request-aggregation">4. 请求聚合 (Request Aggregation)</h4>
 <p>问题: 客户端需要多个服务的数据</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Traditional["传统方式: 慢!"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        App1[移动App]</span></span>
-<span class="line"><span style="color:#E1E4E8">        U1[用户服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        O1[订单服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        P1[支付服务]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Traditional["传统方式: 慢!"]</span></span>
+<span class="line"><span style="color:#24292E">        App1[移动App]</span></span>
+<span class="line"><span style="color:#24292E">        U1[用户服务]</span></span>
+<span class="line"><span style="color:#24292E">        O1[订单服务]</span></span>
+<span class="line"><span style="color:#24292E">        P1[支付服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        App1 -->|请求1| U1</span></span>
-<span class="line"><span style="color:#E1E4E8">        App1 -->|请求2| O1</span></span>
-<span class="line"><span style="color:#E1E4E8">        App1 -->|请求3| P1</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">        App1 -->|请求1| U1</span></span>
+<span class="line"><span style="color:#24292E">        App1 -->|请求2| O1</span></span>
+<span class="line"><span style="color:#24292E">        App1 -->|请求3| P1</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Aggregation["API网关聚合: 快!"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        App2[移动App]</span></span>
-<span class="line"><span style="color:#E1E4E8">        GW[API网关&#x3C;br/>单一请求]</span></span>
-<span class="line"><span style="color:#E1E4E8">        U2[用户服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        O2[订单服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        P2[支付服务]</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Aggregation["API网关聚合: 快!"]</span></span>
+<span class="line"><span style="color:#24292E">        App2[移动App]</span></span>
+<span class="line"><span style="color:#24292E">        GW[API网关&#x3C;br/>单一请求]</span></span>
+<span class="line"><span style="color:#24292E">        U2[用户服务]</span></span>
+<span class="line"><span style="color:#24292E">        O2[订单服务]</span></span>
+<span class="line"><span style="color:#24292E">        P2[支付服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        App2 -->|1次请求| GW</span></span>
-<span class="line"><span style="color:#E1E4E8">        GW -->|并行调用| U2</span></span>
-<span class="line"><span style="color:#E1E4E8">        GW -->|并行调用| O2</span></span>
-<span class="line"><span style="color:#E1E4E8">        GW -->|并行调用| P2</span></span>
-<span class="line"><span style="color:#E1E4E8">        U2 --> GW</span></span>
-<span class="line"><span style="color:#E1E4E8">        O2 --> GW</span></span>
-<span class="line"><span style="color:#E1E4E8">        P2 --> GW</span></span>
-<span class="line"><span style="color:#E1E4E8">        GW -->|聚合响应| App2</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<span class="line"><span style="color:#24292E">        App2 -->|1次请求| GW</span></span>
+<span class="line"><span style="color:#24292E">        GW -->|并行调用| U2</span></span>
+<span class="line"><span style="color:#24292E">        GW -->|并行调用| O2</span></span>
+<span class="line"><span style="color:#24292E">        GW -->|并行调用| P2</span></span>
+<span class="line"><span style="color:#24292E">        U2 --> GW</span></span>
+<span class="line"><span style="color:#24292E">        O2 --> GW</span></span>
+<span class="line"><span style="color:#24292E">        P2 --> GW</span></span>
+<span class="line"><span style="color:#24292E">        GW -->|聚合响应| App2</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span></code></pre>
 <p><strong>GraphQL模式</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="graphql"><code><span class="line"><span style="color:#F97583">query</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#FFAB70">  user</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">id</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">123</span><span style="color:#E1E4E8">) {</span></span>
-<span class="line"><span style="color:#FFAB70">    name</span></span>
-<span class="line"><span style="color:#FFAB70">    orders</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#FFAB70">      id</span></span>
-<span class="line"><span style="color:#FFAB70">      amount</span></span>
-<span class="line"><span style="color:#E1E4E8">    }</span></span>
-<span class="line"><span style="color:#FFAB70">    payments</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#FFAB70">      status</span></span>
-<span class="line"><span style="color:#E1E4E8">    }</span></span>
-<span class="line"><span style="color:#E1E4E8">  }</span></span>
-<span class="line"><span style="color:#E1E4E8">}</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="graphql"><code><span class="line"><span style="color:#D73A49">query</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  user</span><span style="color:#24292E">(</span><span style="color:#E36209">id</span><span style="color:#24292E">: </span><span style="color:#005CC5">123</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#E36209">    name</span></span>
+<span class="line"><span style="color:#E36209">    orders</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">      id</span></span>
+<span class="line"><span style="color:#E36209">      amount</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#E36209">    payments</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">      status</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6A737D"># → API网关解析查询,调用多个服务,组装结果</span></span></code></pre>
 <h4 id="5-响应缓存-response-caching">5. 响应缓存 (Response Caching)</h4>
 <p>原理: 缓存不常变化的响应</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Request[GET /api/products/123]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check{检查缓存}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hit[命中: 直接返回&#x3C;br/>避免后端调用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Miss[未命中: 调用后端&#x3C;br/>缓存结果]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Request[GET /api/products/123]</span></span>
+<span class="line"><span style="color:#24292E">    Check{检查缓存}</span></span>
+<span class="line"><span style="color:#24292E">    Hit[命中: 直接返回&#x3C;br/>避免后端调用]</span></span>
+<span class="line"><span style="color:#24292E">    Miss[未命中: 调用后端&#x3C;br/>缓存结果]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Request --> Check</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check -->|命中| Hit</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check -->|未命中| Miss</span></span>
+<span class="line"><span style="color:#24292E">    Request --> Check</span></span>
+<span class="line"><span style="color:#24292E">    Check -->|命中| Hit</span></span>
+<span class="line"><span style="color:#24292E">    Check -->|未命中| Miss</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cache["缓存策略:&#x3C;br/>• TTL: 缓存 5 分钟&#x3C;br/>• 标签失效: 产品更新时清除相关缓存&#x3C;br/>• 条件缓存: 仅缓存 GET 请求&#x3C;br/>• 用户隔离: 每个用户独立缓存&#x3C;br/>&#x3C;br/>性能提升:&#x3C;br/>• 响应时间: 200ms → 5ms&#x3C;br/>• 后端负载: 降低 80%+"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Cache["缓存策略:&#x3C;br/>• TTL: 缓存 5 分钟&#x3C;br/>• 标签失效: 产品更新时清除相关缓存&#x3C;br/>• 条件缓存: 仅缓存 GET 请求&#x3C;br/>• 用户隔离: 每个用户独立缓存&#x3C;br/>&#x3C;br/>性能提升:&#x3C;br/>• 响应时间: 200ms → 5ms&#x3C;br/>• 后端负载: 降低 80%+"]</span></span></code></pre>
 <h4 id="6-流量管理-traffic-management">6. 流量管理 (Traffic Management)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>功能:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>功能:</span></span>
 <span class="line"><span>• 限流 (Rate Limiting): 防止过载</span></span>
 <span class="line"><span>• 熔断 (Circuit Breaking): 故障隔离</span></span>
 <span class="line"><span>• 负载均衡 (Load Balancing): 流量分发</span></span>
@@ -232,40 +232,40 @@
 
 <table><thead><tr><th>维度</th><th>反向代理 (Nginx)</th><th>API网关 (Kong)</th><th>服务网格 (Istio)</th></tr></thead><tbody><tr><td><strong>层次</strong></td><td>L4/L7 负载均衡</td><td>L7 应用层</td><td>L4-L7 全栈</td></tr><tr><td><strong>认证</strong></td><td>基础 (Basic Auth)</td><td>高级 (OAuth/JWT)</td><td>支持 (通过插件)</td></tr><tr><td><strong>路由</strong></td><td>简单路径匹配</td><td>复杂规则 (头部/参数/权重)</td><td>动态服务发现</td></tr><tr><td><strong>限流</strong></td><td>简单 (请求/秒)</td><td>高级 (用户/API/配额)</td><td>分布式限流</td></tr><tr><td><strong>可观测性</strong></td><td>日志</td><td>日志+指标</td><td>全链路追踪</td></tr><tr><td><strong>部署位置</strong></td><td>边缘</td><td>边缘</td><td>Sidecar (每服务)</td></tr><tr><td><strong>适用场景</strong></td><td>简单代理</td><td>微服务API管理</td><td>服务间通信</td></tr></tbody></table>
 <p><strong>架构对比</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Proxy["反向代理"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C1[客户端] --> N[Nginx] --> SC[服务集群]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Proxy["反向代理"]</span></span>
+<span class="line"><span style="color:#24292E">        C1[客户端] --> N[Nginx] --> SC[服务集群]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Gateway["API网关"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C2[客户端] --> K["Kong&#x3C;br/>(插件丰富)"] --> MS[微服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Gateway["API网关"]</span></span>
+<span class="line"><span style="color:#24292E">        C2[客户端] --> K["Kong&#x3C;br/>(插件丰富)"] --> MS[微服务]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Mesh["服务网格"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C3[客户端] --> AG[API网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">        AG --> SA["服务A&#x3C;br/>+ Envoy Sidecar"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        SA --> SB["服务B&#x3C;br/>+ Envoy Sidecar"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    subgraph Mesh["服务网格"]</span></span>
+<span class="line"><span style="color:#24292E">        C3[客户端] --> AG[API网关]</span></span>
+<span class="line"><span style="color:#24292E">        AG --> SA["服务A&#x3C;br/>+ Envoy Sidecar"]</span></span>
+<span class="line"><span style="color:#24292E">        SA --> SB["服务B&#x3C;br/>+ Envoy Sidecar"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span></code></pre>
 <hr>
 <h2 id="api网关模式">API网关模式</h2>
 <h3 id="21-单一api网关模式-single-gateway">2.1 单一API网关模式 (Single Gateway)</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Clients["所有客户端"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Web[Web App]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Mobile[Mobile App]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Third[3rd Party]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Clients["所有客户端"]</span></span>
+<span class="line"><span style="color:#24292E">        Web[Web App]</span></span>
+<span class="line"><span style="color:#24292E">        Mobile[Mobile App]</span></span>
+<span class="line"><span style="color:#24292E">        Third[3rd Party]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway[API Gateway&#x3C;br/>单一网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Services[所有微服务]</span></span>
+<span class="line"><span style="color:#24292E">    Gateway[API Gateway&#x3C;br/>单一网关]</span></span>
+<span class="line"><span style="color:#24292E">    Services[所有微服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Web --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Mobile --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Third --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> Services</span></span>
+<span class="line"><span style="color:#24292E">    Web --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Mobile --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Third --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> Services</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优势:&#x3C;br/>✓ 架构简单&#x3C;br/>✓ 集中管理&#x3C;br/>✓ 统一监控"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["劣势:&#x3C;br/>❌ 单点故障风险&#x3C;br/>❌ 性能瓶颈(所有流量经过)&#x3C;br/>❌ 团队耦合(多团队共享配置)&#x3C;br/>❌ 扩展困难(水平扩展有限)"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Pros["优势:&#x3C;br/>✓ 架构简单&#x3C;br/>✓ 集中管理&#x3C;br/>✓ 统一监控"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["劣势:&#x3C;br/>❌ 单点故障风险&#x3C;br/>❌ 性能瓶颈(所有流量经过)&#x3C;br/>❌ 团队耦合(多团队共享配置)&#x3C;br/>❌ 扩展困难(水平扩展有限)"]</span></span></code></pre>
 <p><strong>适用场景</strong>:</p>
 <ul>
 <li>小规模应用 (&#x3C; 10 个微服务)</li>
@@ -276,7 +276,7 @@
 <h3 id="22-bff模式-backend-for-frontend">2.2 BFF模式 (Backend For Frontend)</h3>
 <h4 id="核心思想">核心思想</h4>
 <p><strong>问题</strong>: 不同客户端需求差异大</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Web端:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Web端:</span></span>
 <span class="line"><span>  • 需要完整数据</span></span>
 <span class="line"><span>  • 大屏幕,可展示详细信息</span></span>
 <span class="line"><span>  • 高带宽</span></span>
@@ -291,41 +291,41 @@
 <span class="line"><span>  • 低功耗</span></span>
 <span class="line"><span>  • 间歇性连接</span></span></code></pre>
 <p><strong>解决方案</strong>: 为每种客户端定制专属API网关</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Web[Web App]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Mobile[Mobile App]</span></span>
-<span class="line"><span style="color:#E1E4E8">    IoT[IoT Device]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Web[Web App]</span></span>
+<span class="line"><span style="color:#24292E">    Mobile[Mobile App]</span></span>
+<span class="line"><span style="color:#24292E">    IoT[IoT Device]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    WebBFF["Web BFF&#x3C;br/>• 完整数据&#x3C;br/>• GraphQL"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    MobileBFF["Mobile BFF&#x3C;br/>• 精简数据&#x3C;br/>• REST"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    IoTBFF["IoT BFF&#x3C;br/>• 极简数据&#x3C;br/>• MQTT"]</span></span>
+<span class="line"><span style="color:#24292E">    WebBFF["Web BFF&#x3C;br/>• 完整数据&#x3C;br/>• GraphQL"]</span></span>
+<span class="line"><span style="color:#24292E">    MobileBFF["Mobile BFF&#x3C;br/>• 精简数据&#x3C;br/>• REST"]</span></span>
+<span class="line"><span style="color:#24292E">    IoTBFF["IoT BFF&#x3C;br/>• 极简数据&#x3C;br/>• MQTT"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Backend["共享后端服务"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        User[用户服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Order[订单服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Payment[支付服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Backend["共享后端服务"]</span></span>
+<span class="line"><span style="color:#24292E">        User[用户服务]</span></span>
+<span class="line"><span style="color:#24292E">        Order[订单服务]</span></span>
+<span class="line"><span style="color:#24292E">        Payment[支付服务]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Web --> WebBFF</span></span>
-<span class="line"><span style="color:#E1E4E8">    Mobile --> MobileBFF</span></span>
-<span class="line"><span style="color:#E1E4E8">    IoT --> IoTBFF</span></span>
+<span class="line"><span style="color:#24292E">    Web --> WebBFF</span></span>
+<span class="line"><span style="color:#24292E">    Mobile --> MobileBFF</span></span>
+<span class="line"><span style="color:#24292E">    IoT --> IoTBFF</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    WebBFF --> User</span></span>
-<span class="line"><span style="color:#E1E4E8">    WebBFF --> Order</span></span>
-<span class="line"><span style="color:#E1E4E8">    WebBFF --> Payment</span></span>
+<span class="line"><span style="color:#24292E">    WebBFF --> User</span></span>
+<span class="line"><span style="color:#24292E">    WebBFF --> Order</span></span>
+<span class="line"><span style="color:#24292E">    WebBFF --> Payment</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    MobileBFF --> User</span></span>
-<span class="line"><span style="color:#E1E4E8">    MobileBFF --> Order</span></span>
-<span class="line"><span style="color:#E1E4E8">    MobileBFF --> Payment</span></span>
+<span class="line"><span style="color:#24292E">    MobileBFF --> User</span></span>
+<span class="line"><span style="color:#24292E">    MobileBFF --> Order</span></span>
+<span class="line"><span style="color:#24292E">    MobileBFF --> Payment</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    IoTBFF --> User</span></span>
-<span class="line"><span style="color:#E1E4E8">    IoTBFF --> Order</span></span>
-<span class="line"><span style="color:#E1E4E8">    IoTBFF --> Payment</span></span>
+<span class="line"><span style="color:#24292E">    IoTBFF --> User</span></span>
+<span class="line"><span style="color:#24292E">    IoTBFF --> Order</span></span>
+<span class="line"><span style="color:#24292E">    IoTBFF --> Payment</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note["特点:&#x3C;br/>• 每个BFF由对应前端团队维护&#x3C;br/>• BFF只服务特定客户端&#x3C;br/>• 可独立部署和扩展"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note["特点:&#x3C;br/>• 每个BFF由对应前端团队维护&#x3C;br/>• BFF只服务特定客户端&#x3C;br/>• 可独立部署和扩展"]</span></span></code></pre>
 <h4 id="bff-优势与劣势">BFF 优势与劣势</h4>
 <p><strong>优势</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ 客户端定制化:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ 客户端定制化:</span></span>
 <span class="line"><span>  • Web BFF 返回完整HTML友好数据</span></span>
 <span class="line"><span>  • Mobile BFF 压缩数据,减少字段</span></span>
 <span class="line"><span></span></span>
@@ -340,7 +340,7 @@
 <span class="line"><span>✓ 独立演进:</span></span>
 <span class="line"><span>  • 移动端新版本不影响Web端</span></span></code></pre>
 <p><strong>劣势</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 重复逻辑:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>❌ 重复逻辑:</span></span>
 <span class="line"><span>  • 多个BFF可能重复实现相同功能(如认证)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>❌ 维护成本:</span></span>
@@ -355,47 +355,47 @@
 <hr>
 <h3 id="23-微网关模式-micro-gateway">2.3 微网关模式 (Micro Gateway)</h3>
 <p>思想: 每个服务有自己的网关</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Client[客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global["全局网关&#x3C;br/>(基础功能: 认证、SSL)"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Client[客户端]</span></span>
+<span class="line"><span style="color:#24292E">    Global["全局网关&#x3C;br/>(基础功能: 认证、SSL)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    UMG[用户服务微网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    OMG[订单服务微网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    PMG[支付服务微网关]</span></span>
+<span class="line"><span style="color:#24292E">    UMG[用户服务微网关]</span></span>
+<span class="line"><span style="color:#24292E">    OMG[订单服务微网关]</span></span>
+<span class="line"><span style="color:#24292E">    PMG[支付服务微网关]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    US[用户服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    OS[订单服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    PS[支付服务]</span></span>
+<span class="line"><span style="color:#24292E">    US[用户服务]</span></span>
+<span class="line"><span style="color:#24292E">    OS[订单服务]</span></span>
+<span class="line"><span style="color:#24292E">    PS[支付服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Client --> Global</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global --> UMG</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global --> OMG</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global --> PMG</span></span>
+<span class="line"><span style="color:#24292E">    Client --> Global</span></span>
+<span class="line"><span style="color:#24292E">    Global --> UMG</span></span>
+<span class="line"><span style="color:#24292E">    Global --> OMG</span></span>
+<span class="line"><span style="color:#24292E">    Global --> PMG</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    UMG --> US</span></span>
-<span class="line"><span style="color:#E1E4E8">    OMG --> OS</span></span>
-<span class="line"><span style="color:#E1E4E8">    PMG --> PS</span></span>
+<span class="line"><span style="color:#24292E">    UMG --> US</span></span>
+<span class="line"><span style="color:#24292E">    OMG --> OS</span></span>
+<span class="line"><span style="color:#24292E">    PMG --> PS</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Resp["每个微网关职责:&#x3C;br/>• 服务特定的限流策略&#x3C;br/>• 服务特定的缓存策略&#x3C;br/>• 请求验证&#x3C;br/>• 响应转换"]</span></span>
+<span class="line"><span style="color:#24292E">    Resp["每个微网关职责:&#x3C;br/>• 服务特定的限流策略&#x3C;br/>• 服务特定的缓存策略&#x3C;br/>• 请求验证&#x3C;br/>• 响应转换"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优势:&#x3C;br/>✓ 细粒度控制&#x3C;br/>✓ 服务自治"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["劣势:&#x3C;br/>❌ 复杂度高&#x3C;br/>❌ 网络跳数增加"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Pros["优势:&#x3C;br/>✓ 细粒度控制&#x3C;br/>✓ 服务自治"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["劣势:&#x3C;br/>❌ 复杂度高&#x3C;br/>❌ 网络跳数增加"]</span></span></code></pre>
 <hr>
 <h3 id="24-网关分层模式-layered-gateway">2.4 网关分层模式 (Layered Gateway)</h3>
 <p>多层网关架构:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    L1["Layer 1: 边缘网关 (Edge Gateway)&#x3C;br/>• 全局限流&#x3C;br/>• DDoS防护&#x3C;br/>• SSL终止&#x3C;br/>• 地理路由"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    L1["Layer 1: 边缘网关 (Edge Gateway)&#x3C;br/>• 全局限流&#x3C;br/>• DDoS防护&#x3C;br/>• SSL终止&#x3C;br/>• 地理路由"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L2["Layer 2: 聚合网关 (Aggregation)&#x3C;br/>• BFF逻辑&#x3C;br/>• 请求聚合&#x3C;br/>• 协议转换"]</span></span>
+<span class="line"><span style="color:#24292E">    L2["Layer 2: 聚合网关 (Aggregation)&#x3C;br/>• BFF逻辑&#x3C;br/>• 请求聚合&#x3C;br/>• 协议转换"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L3["Layer 3: 微网关 (Micro Gateway)&#x3C;br/>• 服务特定限流&#x3C;br/>• 服务熔断&#x3C;br/>• 缓存"]</span></span>
+<span class="line"><span style="color:#24292E">    L3["Layer 3: 微网关 (Micro Gateway)&#x3C;br/>• 服务特定限流&#x3C;br/>• 服务熔断&#x3C;br/>• 缓存"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Services[后端微服务]</span></span>
+<span class="line"><span style="color:#24292E">    Services[后端微服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L1 --> L2 --> L3 --> Services</span></span>
+<span class="line"><span style="color:#24292E">    L1 --> L2 --> L3 --> Services</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优势:&#x3C;br/>• 职责分离&#x3C;br/>• 每层独立扩展"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["劣势:&#x3C;br/>• 延迟累加&#x3C;br/>• 运维复杂"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Pros["优势:&#x3C;br/>• 职责分离&#x3C;br/>• 每层独立扩展"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["劣势:&#x3C;br/>• 延迟累加&#x3C;br/>• 运维复杂"]</span></span></code></pre>
 <hr>
 <h3 id="25-网关模式选型">2.5 网关模式选型</h3>
 
@@ -440,29 +440,29 @@
 
 <table><thead><tr><th>模式</th><th>复杂度</th><th>延迟</th><th>灵活性</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>单一网关</strong></td><td>低</td><td>低</td><td>低</td><td>小型应用、MVP</td></tr><tr><td><strong>BFF</strong></td><td>中</td><td>中</td><td>高</td><td>多客户端、不同需求</td></tr><tr><td><strong>微网关</strong></td><td>高</td><td>高</td><td>极高</td><td>大规模、服务自治</td></tr><tr><td><strong>分层网关</strong></td><td>极高</td><td>高</td><td>极高</td><td>企业级、复杂安全需求</td></tr></tbody></table>
 <p><strong>决策树</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Start{客户端类型 > 1?}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Q2{服务数量 > 50?}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Q3{全球部署?}</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Start{客户端类型 > 1?}</span></span>
+<span class="line"><span style="color:#24292E">    Q2{服务数量 > 50?}</span></span>
+<span class="line"><span style="color:#24292E">    Q3{全球部署?}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Single[单一网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    BFF[BFF]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Micro[微网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Layered[分层网关]</span></span>
+<span class="line"><span style="color:#24292E">    Single[单一网关]</span></span>
+<span class="line"><span style="color:#24292E">    BFF[BFF]</span></span>
+<span class="line"><span style="color:#24292E">    Micro[微网关]</span></span>
+<span class="line"><span style="color:#24292E">    Layered[分层网关]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Start -->|否| Single</span></span>
-<span class="line"><span style="color:#E1E4E8">    Start -->|是| BFF</span></span>
-<span class="line"><span style="color:#E1E4E8">    BFF --> Q2</span></span>
-<span class="line"><span style="color:#E1E4E8">    Q2 -->|否| BFF</span></span>
-<span class="line"><span style="color:#E1E4E8">    Q2 -->|是| Micro</span></span>
-<span class="line"><span style="color:#E1E4E8">    Micro --> Q3</span></span>
-<span class="line"><span style="color:#E1E4E8">    Q3 -->|否| Micro</span></span>
-<span class="line"><span style="color:#E1E4E8">    Q3 -->|是| Layered</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Start -->|否| Single</span></span>
+<span class="line"><span style="color:#24292E">    Start -->|是| BFF</span></span>
+<span class="line"><span style="color:#24292E">    BFF --> Q2</span></span>
+<span class="line"><span style="color:#24292E">    Q2 -->|否| BFF</span></span>
+<span class="line"><span style="color:#24292E">    Q2 -->|是| Micro</span></span>
+<span class="line"><span style="color:#24292E">    Micro --> Q3</span></span>
+<span class="line"><span style="color:#24292E">    Q3 -->|否| Micro</span></span>
+<span class="line"><span style="color:#24292E">    Q3 -->|是| Layered</span></span></code></pre>
 <hr>
 <h2 id="限流与熔断">限流与熔断</h2>
 <h3 id="31-限流原理-rate-limiting">3.1 限流原理 (Rate Limiting)</h3>
 <h4 id="为什么需要限流">为什么需要限流</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题场景:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题场景:</span></span>
 <span class="line"><span>• 恶意攻击: 爬虫、DDoS</span></span>
 <span class="line"><span>• 流量突发: 营销活动、热点事件</span></span>
 <span class="line"><span>• 资源保护: 防止数据库过载</span></span>
@@ -474,23 +474,23 @@
 <h3 id="32-限流算法">3.2 限流算法</h3>
 <h4 id="1-固定窗口计数器-fixed-window-counter">1. 固定窗口计数器 (Fixed Window Counter)</h4>
 <p>原理: 每个时间窗口内限制请求数量</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Principle["原理: 每个时间窗口内限制请求数量&#x3C;br/>&#x3C;br/>示例: 限制每分钟100个请求"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Principle["原理: 每个时间窗口内限制请求数量&#x3C;br/>&#x3C;br/>示例: 限制每分钟100个请求"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Window["时间窗口:&#x3C;br/>[00:00 - 01:00]: 100 请求 ✓&#x3C;br/>[01:00 - 02:00]: 100 请求 ✓"]</span></span>
+<span class="line"><span style="color:#24292E">    Window["时间窗口:&#x3C;br/>[00:00 - 01:00]: 100 请求 ✓&#x3C;br/>[01:00 - 02:00]: 100 请求 ✓"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Impl["实现:&#x3C;br/>• 计数器: counter = 0&#x3C;br/>• 每个请求: counter++&#x3C;br/>• 窗口结束: counter = 0"]</span></span>
+<span class="line"><span style="color:#24292E">    Impl["实现:&#x3C;br/>• 计数器: counter = 0&#x3C;br/>• 每个请求: counter++&#x3C;br/>• 窗口结束: counter = 0"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优点:&#x3C;br/>✓ 简单&#x3C;br/>✓ 内存占用低 (O(1))"]</span></span>
+<span class="line"><span style="color:#24292E">    Pros["优点:&#x3C;br/>✓ 简单&#x3C;br/>✓ 内存占用低 (O(1))"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["缺点:&#x3C;br/>❌ 临界问题:&#x3C;br/>   [00:00:30 - 00:01:00]: 100 请求&#x3C;br/>   [00:01:00 - 00:01:30]: 100 请求&#x3C;br/>   → 1分钟内200请求(超限2倍)&#x3C;br/>&#x3C;br/>❌ 流量不平滑"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["缺点:&#x3C;br/>❌ 临界问题:&#x3C;br/>   [00:00:30 - 00:01:00]: 100 请求&#x3C;br/>   [00:01:00 - 00:01:30]: 100 请求&#x3C;br/>   → 1分钟内200请求(超限2倍)&#x3C;br/>&#x3C;br/>❌ 流量不平滑"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Principle --> Window --> Impl</span></span>
-<span class="line"><span style="color:#E1E4E8">    Impl --> Pros</span></span>
-<span class="line"><span style="color:#E1E4E8">    Impl --> Cons</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Principle --> Window --> Impl</span></span>
+<span class="line"><span style="color:#24292E">    Impl --> Pros</span></span>
+<span class="line"><span style="color:#24292E">    Impl --> Cons</span></span></code></pre>
 <h4 id="2-滑动窗口计数器-sliding-window-counter">2. 滑动窗口计数器 (Sliding Window Counter)</h4>
 <p>原理: 窗口随时间滑动</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实现:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实现:</span></span>
 <span class="line"><span>• 将窗口分为多个小格子</span></span>
 <span class="line"><span>• 每个格子记录请求数</span></span>
 <span class="line"><span>• 计算当前时间往前N秒的请求总数</span></span>
@@ -514,49 +514,49 @@
 <span class="line"><span>❌ 实现复杂</span></span></code></pre>
 <h4 id="3-漏桶算法-leaky-bucket">3. 漏桶算法 (Leaky Bucket)</h4>
 <p>原理: 请求像水滴入桶,以恒定速率流出</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Requests["请求 ↓ ↓ ↓"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Bucket["漏桶&#x3C;br/>▓▓▓▓▓&#x3C;br/>▓▓▓▓▓&#x3C;br/>← 桶容量 (burst size)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Process["恒定速率流出 ↓&#x3C;br/>处理请求"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Requests["请求 ↓ ↓ ↓"]</span></span>
+<span class="line"><span style="color:#24292E">    Bucket["漏桶&#x3C;br/>▓▓▓▓▓&#x3C;br/>▓▓▓▓▓&#x3C;br/>← 桶容量 (burst size)"]</span></span>
+<span class="line"><span style="color:#24292E">    Process["恒定速率流出 ↓&#x3C;br/>处理请求"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Requests --> Bucket --> Process</span></span>
+<span class="line"><span style="color:#24292E">    Requests --> Bucket --> Process</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Algorithm["算法:&#x3C;br/>1. 请求到达 → 加入桶&#x3C;br/>2. 桶满 → 拒绝&#x3C;br/>3. 以固定速率从桶中取出请求处理"]</span></span>
+<span class="line"><span style="color:#24292E">    Algorithm["算法:&#x3C;br/>1. 请求到达 → 加入桶&#x3C;br/>2. 桶满 → 拒绝&#x3C;br/>3. 以固定速率从桶中取出请求处理"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Params["参数:&#x3C;br/>• bucket_size: 桶容量&#x3C;br/>• leak_rate: 流出速率 (请求/秒)"]</span></span>
+<span class="line"><span style="color:#24292E">    Params["参数:&#x3C;br/>• bucket_size: 桶容量&#x3C;br/>• leak_rate: 流出速率 (请求/秒)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优点:&#x3C;br/>✓ 流量整形: 输出速率恒定&#x3C;br/>✓ 平滑突发流量"]</span></span>
+<span class="line"><span style="color:#24292E">    Pros["优点:&#x3C;br/>✓ 流量整形: 输出速率恒定&#x3C;br/>✓ 平滑突发流量"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["缺点:&#x3C;br/>❌ 响应慢: 请求在桶中排队&#x3C;br/>❌ 无法应对合理的突发(即使服务有能力)"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["缺点:&#x3C;br/>❌ 响应慢: 请求在桶中排队&#x3C;br/>❌ 无法应对合理的突发(即使服务有能力)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Bucket --> Algorithm</span></span>
-<span class="line"><span style="color:#E1E4E8">    Algorithm --> Params</span></span>
-<span class="line"><span style="color:#E1E4E8">    Params --> Pros</span></span>
-<span class="line"><span style="color:#E1E4E8">    Params --> Cons</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Bucket --> Algorithm</span></span>
+<span class="line"><span style="color:#24292E">    Algorithm --> Params</span></span>
+<span class="line"><span style="color:#24292E">    Params --> Pros</span></span>
+<span class="line"><span style="color:#24292E">    Params --> Cons</span></span></code></pre>
 <h4 id="4-令牌桶算法-token-bucket">4. 令牌桶算法 (Token Bucket)</h4>
 <p>原理: 以恒定速率生成令牌,请求消耗令牌</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Generate["以固定速率生成令牌 ↓"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Bucket["令牌桶&#x3C;br/>🪙🪙🪙&#x3C;br/>← 桶容量"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Consume["请求消耗令牌 ↓"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Generate["以固定速率生成令牌 ↓"]</span></span>
+<span class="line"><span style="color:#24292E">    Bucket["令牌桶&#x3C;br/>🪙🪙🪙&#x3C;br/>← 桶容量"]</span></span>
+<span class="line"><span style="color:#24292E">    Consume["请求消耗令牌 ↓"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Generate --> Bucket --> Consume</span></span>
+<span class="line"><span style="color:#24292E">    Generate --> Bucket --> Consume</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Algorithm["算法:&#x3C;br/>1. 以固定速率 r 生成令牌(如 100 令牌/秒)&#x3C;br/>2. 令牌存入桶(容量 b)&#x3C;br/>3. 桶满时丢弃多余令牌&#x3C;br/>4. 请求到达:&#x3C;br/>   • 有令牌 → 消耗令牌 → 处理请求&#x3C;br/>   • 无令牌 → 拒绝请求"]</span></span>
+<span class="line"><span style="color:#24292E">    Algorithm["算法:&#x3C;br/>1. 以固定速率 r 生成令牌(如 100 令牌/秒)&#x3C;br/>2. 令牌存入桶(容量 b)&#x3C;br/>3. 桶满时丢弃多余令牌&#x3C;br/>4. 请求到达:&#x3C;br/>   • 有令牌 → 消耗令牌 → 处理请求&#x3C;br/>   • 无令牌 → 拒绝请求"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Params["参数:&#x3C;br/>• bucket_size (b): 令牌桶容量&#x3C;br/>• refill_rate (r): 令牌生成速率"]</span></span>
+<span class="line"><span style="color:#24292E">    Params["参数:&#x3C;br/>• bucket_size (b): 令牌桶容量&#x3C;br/>• refill_rate (r): 令牌生成速率"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Example["示例: 限制 100 req/s,允许突发 200&#x3C;br/>• bucket_size = 200&#x3C;br/>• refill_rate = 100 令牌/秒&#x3C;br/>&#x3C;br/>场景1: 平稳流量&#x3C;br/>  → 每秒消耗 100 令牌,每秒补充 100 → 稳定&#x3C;br/>&#x3C;br/>场景2: 突发流量&#x3C;br/>  → 短时间 200 req/s → 消耗桶内存量 200 令牌 ✓&#x3C;br/>  → 桶空后 → 仅 100 req/s (补充速率)"]</span></span>
+<span class="line"><span style="color:#24292E">    Example["示例: 限制 100 req/s,允许突发 200&#x3C;br/>• bucket_size = 200&#x3C;br/>• refill_rate = 100 令牌/秒&#x3C;br/>&#x3C;br/>场景1: 平稳流量&#x3C;br/>  → 每秒消耗 100 令牌,每秒补充 100 → 稳定&#x3C;br/>&#x3C;br/>场景2: 突发流量&#x3C;br/>  → 短时间 200 req/s → 消耗桶内存量 200 令牌 ✓&#x3C;br/>  → 桶空后 → 仅 100 req/s (补充速率)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优点:&#x3C;br/>✓ 允许合理突发&#x3C;br/>✓ 流量平滑&#x3C;br/>✓ 业界标准(AWS、Google 都用)"]</span></span>
+<span class="line"><span style="color:#24292E">    Pros["优点:&#x3C;br/>✓ 允许合理突发&#x3C;br/>✓ 流量平滑&#x3C;br/>✓ 业界标准(AWS、Google 都用)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["缺点:&#x3C;br/>❌ 实现稍复杂"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["缺点:&#x3C;br/>❌ 实现稍复杂"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Bucket --> Algorithm</span></span>
-<span class="line"><span style="color:#E1E4E8">    Algorithm --> Params</span></span>
-<span class="line"><span style="color:#E1E4E8">    Params --> Example</span></span>
-<span class="line"><span style="color:#E1E4E8">    Example --> Pros</span></span>
-<span class="line"><span style="color:#E1E4E8">    Example --> Cons</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Bucket --> Algorithm</span></span>
+<span class="line"><span style="color:#24292E">    Algorithm --> Params</span></span>
+<span class="line"><span style="color:#24292E">    Params --> Example</span></span>
+<span class="line"><span style="color:#24292E">    Example --> Pros</span></span>
+<span class="line"><span style="color:#24292E">    Example --> Cons</span></span></code></pre>
 <h4 id="限流算法对比">限流算法对比</h4>
 
 
@@ -608,13 +608,13 @@
 <hr>
 <h3 id="33-限流维度">3.3 限流维度</h3>
 <h4 id="1-全局限流-global-rate-limit">1. 全局限流 (Global Rate Limit)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制: 整个API网关的总流量</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制: 整个API网关的总流量</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例: 10,000 req/s</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>场景: 保护后端总体资源</span></span></code></pre>
 <h4 id="2-用户级限流-user-level">2. 用户级限流 (User-level)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制: 每个用户的请求频率</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制: 每个用户的请求频率</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例: 每用户 100 req/min</span></span>
 <span class="line"><span></span></span>
@@ -624,7 +624,7 @@
 <span class="line"><span></span></span>
 <span class="line"><span>场景: 防止单用户滥用</span></span></code></pre>
 <h4 id="3-api级限流-api-level">3. API级限流 (API-level)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制: 每个API端点的频率</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制: 每个API端点的频率</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>• /api/search: 10 req/s (昂贵查询)</span></span>
@@ -632,27 +632,27 @@
 <span class="line"><span></span></span>
 <span class="line"><span>场景: 保护特定资源</span></span></code></pre>
 <h4 id="4-组合限流">4. 组合限流</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Request[请求到达]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global{全局限流&#x3C;br/>1000 req/s}</span></span>
-<span class="line"><span style="color:#E1E4E8">    User{单用户限流&#x3C;br/>10 req/min}</span></span>
-<span class="line"><span style="color:#E1E4E8">    IP{单IP限流&#x3C;br/>100 req/min}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Reject[拒绝]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Allow[允许]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Request[请求到达]</span></span>
+<span class="line"><span style="color:#24292E">    Global{全局限流&#x3C;br/>1000 req/s}</span></span>
+<span class="line"><span style="color:#24292E">    User{单用户限流&#x3C;br/>10 req/min}</span></span>
+<span class="line"><span style="color:#24292E">    IP{单IP限流&#x3C;br/>100 req/min}</span></span>
+<span class="line"><span style="color:#24292E">    Reject[拒绝]</span></span>
+<span class="line"><span style="color:#24292E">    Allow[允许]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Request --> Global</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global -->|超限| Reject</span></span>
-<span class="line"><span style="color:#E1E4E8">    Global -->|通过| User</span></span>
-<span class="line"><span style="color:#E1E4E8">    User -->|超限| Reject</span></span>
-<span class="line"><span style="color:#E1E4E8">    User -->|通过| IP</span></span>
-<span class="line"><span style="color:#E1E4E8">    IP -->|超限| Reject</span></span>
-<span class="line"><span style="color:#E1E4E8">    IP -->|通过| Allow</span></span>
+<span class="line"><span style="color:#24292E">    Request --> Global</span></span>
+<span class="line"><span style="color:#24292E">    Global -->|超限| Reject</span></span>
+<span class="line"><span style="color:#24292E">    Global -->|通过| User</span></span>
+<span class="line"><span style="color:#24292E">    User -->|超限| Reject</span></span>
+<span class="line"><span style="color:#24292E">    User -->|通过| IP</span></span>
+<span class="line"><span style="color:#24292E">    IP -->|超限| Reject</span></span>
+<span class="line"><span style="color:#24292E">    IP -->|通过| Allow</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note["多维度限流示例: 支付API&#x3C;br/>• 全局: 1000 req/s&#x3C;br/>• 单用户: 10 req/min&#x3C;br/>• 单IP: 100 req/min&#x3C;br/>&#x3C;br/>决策:&#x3C;br/>if (global_limit OR user_limit OR ip_limit exceeded):&#x3C;br/>    reject&#x3C;br/>else:&#x3C;br/>    allow"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note["多维度限流示例: 支付API&#x3C;br/>• 全局: 1000 req/s&#x3C;br/>• 单用户: 10 req/min&#x3C;br/>• 单IP: 100 req/min&#x3C;br/>&#x3C;br/>决策:&#x3C;br/>if (global_limit OR user_limit OR ip_limit exceeded):&#x3C;br/>    reject&#x3C;br/>else:&#x3C;br/>    allow"]</span></span></code></pre>
 <hr>
 <h3 id="34-分布式限流">3.4 分布式限流</h3>
 <h4 id="问题">问题</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>单机限流局限:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>单机限流局限:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>场景: 3个API网关实例</span></span>
 <span class="line"><span>限制: 每用户 100 req/min</span></span>
@@ -664,27 +664,27 @@
 <span class="line"><span>→ 总计 300 req/min ❌ (超限3倍)</span></span></code></pre>
 <h4 id="解决方案">解决方案</h4>
 <p><strong>1. 集中式限流 (Centralized)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    G1[网关1]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G2[网关2]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G3[网关3]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Redis[(Redis&#x3C;br/>共享计数器)]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    G1[网关1]</span></span>
+<span class="line"><span style="color:#24292E">    G2[网关2]</span></span>
+<span class="line"><span style="color:#24292E">    G3[网关3]</span></span>
+<span class="line"><span style="color:#24292E">    Redis[(Redis&#x3C;br/>共享计数器)]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    G1 -->|查询/更新| Redis</span></span>
-<span class="line"><span style="color:#E1E4E8">    G2 -->|查询/更新| Redis</span></span>
-<span class="line"><span style="color:#E1E4E8">    G3 -->|查询/更新| Redis</span></span>
+<span class="line"><span style="color:#24292E">    G1 -->|查询/更新| Redis</span></span>
+<span class="line"><span style="color:#24292E">    G2 -->|查询/更新| Redis</span></span>
+<span class="line"><span style="color:#24292E">    G3 -->|查询/更新| Redis</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Flow["流程:&#x3C;br/>1. 请求到达网关&#x3C;br/>2. 网关查询 Redis: INCR user:123:counter&#x3C;br/>3. Redis 返回当前计数&#x3C;br/>4. 网关判断是否超限"]</span></span>
+<span class="line"><span style="color:#24292E">    Flow["流程:&#x3C;br/>1. 请求到达网关&#x3C;br/>2. 网关查询 Redis: INCR user:123:counter&#x3C;br/>3. Redis 返回当前计数&#x3C;br/>4. 网关判断是否超限"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优点:&#x3C;br/>✓ 精确&#x3C;br/>✓ 全局视图"]</span></span>
+<span class="line"><span style="color:#24292E">    Pros["优点:&#x3C;br/>✓ 精确&#x3C;br/>✓ 全局视图"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["缺点:&#x3C;br/>❌ Redis 成为瓶颈&#x3C;br/>❌ 网络延迟&#x3C;br/>❌ 单点故障"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["缺点:&#x3C;br/>❌ Redis 成为瓶颈&#x3C;br/>❌ 网络延迟&#x3C;br/>❌ 单点故障"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Redis --> Flow</span></span>
-<span class="line"><span style="color:#E1E4E8">    Flow --> Pros</span></span>
-<span class="line"><span style="color:#E1E4E8">    Flow --> Cons</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Redis --> Flow</span></span>
+<span class="line"><span style="color:#24292E">    Flow --> Pros</span></span>
+<span class="line"><span style="color:#24292E">    Flow --> Cons</span></span></code></pre>
 <p><strong>2. 分布式令牌桶</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>改进: 每个网关本地令牌桶,定期同步</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>改进: 每个网关本地令牌桶,定期同步</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>算法:</span></span>
 <span class="line"><span>1. 全局限制 1000 req/s</span></span>
@@ -698,7 +698,7 @@
 <span class="line"><span>缺点:</span></span>
 <span class="line"><span>❌ 不完全精确(可能超限 10-20%)</span></span></code></pre>
 <p><strong>3. Gossip 协议同步</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>思想: 网关间互相同步状态</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>思想: 网关间互相同步状态</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 网关1 处理请求 → 本地计数</span></span>
@@ -716,32 +716,32 @@
 <h3 id="35-熔断器原理-circuit-breaker">3.5 熔断器原理 (Circuit Breaker)</h3>
 <h4 id="为什么需要熔断">为什么需要熔断</h4>
 <p>问题: 级联故障</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    Client[客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway[API网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SA[服务A]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SB[服务B 故障&#x3C;br/>响应慢]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    Client[客户端]</span></span>
+<span class="line"><span style="color:#24292E">    Gateway[API网关]</span></span>
+<span class="line"><span style="color:#24292E">    SA[服务A]</span></span>
+<span class="line"><span style="color:#24292E">    SB[服务B 故障&#x3C;br/>响应慢]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Client --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> SA</span></span>
-<span class="line"><span style="color:#E1E4E8">    SA --> SB</span></span>
+<span class="line"><span style="color:#24292E">    Client --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> SA</span></span>
+<span class="line"><span style="color:#24292E">    SA --> SB</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cascade["雪崩过程:&#x3C;br/>1. 服务B 响应慢&#x3C;br/>2. 服务A 请求堆积(等待B)&#x3C;br/>3. 服务A 资源耗尽&#x3C;br/>4. API网关请求堆积&#x3C;br/>5. 整个系统瘫痪&#x3C;br/>&#x3C;br/>熔断器解决:&#x3C;br/>• 快速失败&#x3C;br/>• 隔离故障&#x3C;br/>• 自动恢复"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Cascade["雪崩过程:&#x3C;br/>1. 服务B 响应慢&#x3C;br/>2. 服务A 请求堆积(等待B)&#x3C;br/>3. 服务A 资源耗尽&#x3C;br/>4. API网关请求堆积&#x3C;br/>5. 整个系统瘫痪&#x3C;br/>&#x3C;br/>熔断器解决:&#x3C;br/>• 快速失败&#x3C;br/>• 隔离故障&#x3C;br/>• 自动恢复"]</span></span></code></pre>
 <h4 id="熔断器状态机">熔断器状态机</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">stateDiagram-v2</span></span>
-<span class="line"><span style="color:#E1E4E8">    [*] --> Closed</span></span>
-<span class="line"><span style="color:#E1E4E8">    Closed --> Open: 错误率超阈值</span></span>
-<span class="line"><span style="color:#E1E4E8">    Open --> HalfOpen: 超时后</span></span>
-<span class="line"><span style="color:#E1E4E8">    HalfOpen --> Closed: 成功</span></span>
-<span class="line"><span style="color:#E1E4E8">    HalfOpen --> Open: 失败</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">stateDiagram-v2</span></span>
+<span class="line"><span style="color:#24292E">    [*] --> Closed</span></span>
+<span class="line"><span style="color:#24292E">    Closed --> Open: 错误率超阈值</span></span>
+<span class="line"><span style="color:#24292E">    Open --> HalfOpen: 超时后</span></span>
+<span class="line"><span style="color:#24292E">    HalfOpen --> Closed: 成功</span></span>
+<span class="line"><span style="color:#24292E">    HalfOpen --> Open: 失败</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Closed: Closed (闭合 - 正常)&#x3C;br/>• 所有请求正常转发&#x3C;br/>• 记录成功/失败次数&#x3C;br/>• 失败率超阈值(如 50%) → Open</span></span>
+<span class="line"><span style="color:#24292E">    Closed: Closed (闭合 - 正常)&#x3C;br/>• 所有请求正常转发&#x3C;br/>• 记录成功/失败次数&#x3C;br/>• 失败率超阈值(如 50%) → Open</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Open: Open (开启 - 熔断)&#x3C;br/>• 直接拒绝所有请求(快速失败)&#x3C;br/>• 返回预定义响应或降级服务&#x3C;br/>• 持续时间(如 30 秒) → Half-Open</span></span>
+<span class="line"><span style="color:#24292E">    Open: Open (开启 - 熔断)&#x3C;br/>• 直接拒绝所有请求(快速失败)&#x3C;br/>• 返回预定义响应或降级服务&#x3C;br/>• 持续时间(如 30 秒) → Half-Open</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    HalfOpen: Half-Open (半开 - 试探)&#x3C;br/>• 允许少量请求(如 5 个)&#x3C;br/>• 测试服务是否恢复&#x3C;br/>• 成功 → Closed (恢复)&#x3C;br/>• 失败 → Open (继续熔断)</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    HalfOpen: Half-Open (半开 - 试探)&#x3C;br/>• 允许少量请求(如 5 个)&#x3C;br/>• 测试服务是否恢复&#x3C;br/>• 成功 → Closed (恢复)&#x3C;br/>• 失败 → Open (继续熔断)</span></span></code></pre>
 <h4 id="熔断参数">熔断参数</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>关键参数:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>关键参数:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 失败阈值 (Failure Threshold):</span></span>
 <span class="line"><span>   • 错误率 > 50% → 熔断</span></span>
@@ -808,37 +808,37 @@
 
 <table><thead><tr><th>维度</th><th>限流 (Rate Limiting)</th><th>熔断 (Circuit Breaking)</th><th>降级 (Fallback)</th></tr></thead><tbody><tr><td><strong>目的</strong></td><td>保护服务不过载</td><td>快速失败,隔离故障</td><td>保证核心功能</td></tr><tr><td><strong>触发条件</strong></td><td>请求频率过高</td><td>错误率过高</td><td>依赖服务不可用</td></tr><tr><td><strong>响应</strong></td><td>拒绝请求 (429)</td><td>快速失败 (503)</td><td>返回降级数据</td></tr><tr><td><strong>恢复</strong></td><td>窗口结束</td><td>自动试探</td><td>依赖恢复</td></tr><tr><td><strong>示例</strong></td><td>每秒最多 100 请求</td><td>错误率 > 50% 停止调用</td><td>返回缓存数据</td></tr></tbody></table>
 <p><strong>组合使用</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Request[请求到达]</span></span>
-<span class="line"><span style="color:#E1E4E8">    RateLimit{限流检查}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Circuit{熔断检查&#x3C;br/>下游服务是否健康}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Call[调用下游服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Fallback[降级处理&#x3C;br/>返回缓存/默认值]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Success[成功]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Request[请求到达]</span></span>
+<span class="line"><span style="color:#24292E">    RateLimit{限流检查}</span></span>
+<span class="line"><span style="color:#24292E">    Circuit{熔断检查&#x3C;br/>下游服务是否健康}</span></span>
+<span class="line"><span style="color:#24292E">    Call[调用下游服务]</span></span>
+<span class="line"><span style="color:#24292E">    Fallback[降级处理&#x3C;br/>返回缓存/默认值]</span></span>
+<span class="line"><span style="color:#24292E">    Success[成功]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Request --> RateLimit</span></span>
-<span class="line"><span style="color:#E1E4E8">    RateLimit -->|通过| Circuit</span></span>
-<span class="line"><span style="color:#E1E4E8">    RateLimit -->|超限| Fallback</span></span>
-<span class="line"><span style="color:#E1E4E8">    Circuit -->|健康| Call</span></span>
-<span class="line"><span style="color:#E1E4E8">    Circuit -->|熔断| Fallback</span></span>
-<span class="line"><span style="color:#E1E4E8">    Call -->|成功| Success</span></span>
-<span class="line"><span style="color:#E1E4E8">    Call -->|失败| Fallback</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Request --> RateLimit</span></span>
+<span class="line"><span style="color:#24292E">    RateLimit -->|通过| Circuit</span></span>
+<span class="line"><span style="color:#24292E">    RateLimit -->|超限| Fallback</span></span>
+<span class="line"><span style="color:#24292E">    Circuit -->|健康| Call</span></span>
+<span class="line"><span style="color:#24292E">    Circuit -->|熔断| Fallback</span></span>
+<span class="line"><span style="color:#24292E">    Call -->|成功| Success</span></span>
+<span class="line"><span style="color:#24292E">    Call -->|失败| Fallback</span></span></code></pre>
 <hr>
 <h2 id="智能路由">智能路由</h2>
 <h3 id="41-负载均衡算法">4.1 负载均衡算法</h3>
 <h4 id="1-轮询-round-robin">1. 轮询 (Round Robin)</h4>
 <p>原理: 依次分配请求</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    Req1[请求1] --> A[服务器 A]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Req2[请求2] --> B[服务器 B]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Req3[请求3] --> C[服务器 C]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Req4[请求4] --> A</span></span>
-<span class="line"><span style="color:#E1E4E8">    Req5[请求5] --> B</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    Req1[请求1] --> A[服务器 A]</span></span>
+<span class="line"><span style="color:#24292E">    Req2[请求2] --> B[服务器 B]</span></span>
+<span class="line"><span style="color:#24292E">    Req3[请求3] --> C[服务器 C]</span></span>
+<span class="line"><span style="color:#24292E">    Req4[请求4] --> A</span></span>
+<span class="line"><span style="color:#24292E">    Req5[请求5] --> B</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note["服务器: [A, B, C]&#x3C;br/>请求按顺序循环分配&#x3C;br/>&#x3C;br/>优点:&#x3C;br/>✓ 简单&#x3C;br/>✓ 公平&#x3C;br/>&#x3C;br/>缺点:&#x3C;br/>❌ 忽略服务器性能差异&#x3C;br/>❌ 忽略服务器负载"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note["服务器: [A, B, C]&#x3C;br/>请求按顺序循环分配&#x3C;br/>&#x3C;br/>优点:&#x3C;br/>✓ 简单&#x3C;br/>✓ 公平&#x3C;br/>&#x3C;br/>缺点:&#x3C;br/>❌ 忽略服务器性能差异&#x3C;br/>❌ 忽略服务器负载"]</span></span></code></pre>
 <h4 id="2-加权轮询-weighted-round-robin">2. 加权轮询 (Weighted Round Robin)</h4>
 <p>原理: 根据权重分配</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>示例:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>示例:</span></span>
 <span class="line"><span>服务器: A(权重3), B(权重2), C(权重1)</span></span>
 <span class="line"><span>请求分配: A, A, A, B, B, C (循环)</span></span>
 <span class="line"><span></span></span>
@@ -846,25 +846,25 @@
 <span class="line"><span>• 新服务器预热: 权重从低到高</span></span>
 <span class="line"><span>• 异构服务器: 性能强的权重高</span></span></code></pre>
 <h4 id="3-最少连接-least-connections">3. 最少连接 (Least Connections)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Request[新请求]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check{选择连接数最少的服务器}</span></span>
-<span class="line"><span style="color:#E1E4E8">    A["服务器 A&#x3C;br/>5 连接"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B["服务器 B&#x3C;br/>3 连接 ← 最少"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C["服务器 C&#x3C;br/>7 连接"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Request[新请求]</span></span>
+<span class="line"><span style="color:#24292E">    Check{选择连接数最少的服务器}</span></span>
+<span class="line"><span style="color:#24292E">    A["服务器 A&#x3C;br/>5 连接"]</span></span>
+<span class="line"><span style="color:#24292E">    B["服务器 B&#x3C;br/>3 连接 ← 最少"]</span></span>
+<span class="line"><span style="color:#24292E">    C["服务器 C&#x3C;br/>7 连接"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Request --> Check</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check --> B</span></span>
+<span class="line"><span style="color:#24292E">    Request --> Check</span></span>
+<span class="line"><span style="color:#24292E">    Check --> B</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优点:&#x3C;br/>✓ 动态均衡&#x3C;br/>✓ 适应长连接"]</span></span>
+<span class="line"><span style="color:#24292E">    Pros["优点:&#x3C;br/>✓ 动态均衡&#x3C;br/>✓ 适应长连接"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["缺点:&#x3C;br/>❌ 需要维护连接数&#x3C;br/>❌ 不考虑请求处理时间"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["缺点:&#x3C;br/>❌ 需要维护连接数&#x3C;br/>❌ 不考虑请求处理时间"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Check --> Pros</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check --> Cons</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Check --> Pros</span></span>
+<span class="line"><span style="color:#24292E">    Check --> Cons</span></span></code></pre>
 <h4 id="4-最快响应-least-response-time">4. 最快响应 (Least Response Time)</h4>
 <p>原理: 选择响应时间最短的服务器</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实现:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实现:</span></span>
 <span class="line"><span>1. 记录每个服务器的平均响应时间</span></span>
 <span class="line"><span>2. 选择最快的</span></span>
 <span class="line"><span></span></span>
@@ -880,57 +880,57 @@
 <span class="line"><span>❌ 需要持续测量</span></span>
 <span class="line"><span>❌ 响应时间波动大</span></span></code></pre>
 <h4 id="5-一致性哈希-consistent-hashing">5. 一致性哈希 (Consistent Hashing)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    User[用户请求]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash{hash(user_id) % 3}</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[服务器 A]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B[服务器 B]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C[服务器 C]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    User[用户请求]</span></span>
+<span class="line"><span style="color:#24292E">    Hash{hash(user_id) % 3}</span></span>
+<span class="line"><span style="color:#24292E">    A[服务器 A]</span></span>
+<span class="line"><span style="color:#24292E">    B[服务器 B]</span></span>
+<span class="line"><span style="color:#24292E">    C[服务器 C]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    User --> Hash</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash -->|0| A</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash -->|1| B</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash -->|2| C</span></span>
+<span class="line"><span style="color:#24292E">    User --> Hash</span></span>
+<span class="line"><span style="color:#24292E">    Hash -->|0| A</span></span>
+<span class="line"><span style="color:#24292E">    Hash -->|1| B</span></span>
+<span class="line"><span style="color:#24292E">    Hash -->|2| C</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Purpose["用途: 保证同一用户请求路由到同一服务器"]</span></span>
+<span class="line"><span style="color:#24292E">    Purpose["用途: 保证同一用户请求路由到同一服务器"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pros["优点:&#x3C;br/>✓ 会话亲和性&#x3C;br/>✓ 缓存命中率高"]</span></span>
+<span class="line"><span style="color:#24292E">    Pros["优点:&#x3C;br/>✓ 会话亲和性&#x3C;br/>✓ 缓存命中率高"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Cons["缺点:&#x3C;br/>❌ 负载可能不均&#x3C;br/>❌ 服务器变化影响大&#x3C;br/>&#x3C;br/>改进: 虚拟节点&#x3C;br/>• 每个物理服务器对应多个虚拟节点&#x3C;br/>• 减少服务器变化影响"]</span></span>
+<span class="line"><span style="color:#24292E">    Cons["缺点:&#x3C;br/>❌ 负载可能不均&#x3C;br/>❌ 服务器变化影响大&#x3C;br/>&#x3C;br/>改进: 虚拟节点&#x3C;br/>• 每个物理服务器对应多个虚拟节点&#x3C;br/>• 减少服务器变化影响"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Hash --> Purpose</span></span>
-<span class="line"><span style="color:#E1E4E8">    Purpose --> Pros</span></span>
-<span class="line"><span style="color:#E1E4E8">    Purpose --> Cons</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Hash --> Purpose</span></span>
+<span class="line"><span style="color:#24292E">    Purpose --> Pros</span></span>
+<span class="line"><span style="color:#24292E">    Purpose --> Cons</span></span></code></pre>
 <hr>
 <h3 id="42-基于内容的路由-content-based-routing">4.2 基于内容的路由 (Content-Based Routing)</h3>
 <h4 id="路由规则类型">路由规则类型</h4>
 <p><strong>1. 基于路径 (Path-based)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
 <span class="line"><span>/api/v1/*     → 服务 v1</span></span>
 <span class="line"><span>/api/v2/*     → 服务 v2</span></span>
 <span class="line"><span>/api/admin/*  → 管理服务</span></span></code></pre>
 <p><strong>2. 基于头部 (Header-based)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
 <span class="line"><span>X-API-Version: v1  → 服务 v1</span></span>
 <span class="line"><span>X-API-Version: v2  → 服务 v2</span></span>
 <span class="line"><span>X-Region: US       → 美国集群</span></span>
 <span class="line"><span>X-Region: EU       → 欧洲集群</span></span></code></pre>
 <p><strong>3. 基于参数 (Query-based)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
 <span class="line"><span>?version=beta  → Beta 环境</span></span>
 <span class="line"><span>?region=asia   → 亚洲服务器</span></span></code></pre>
 <p><strong>4. 基于权重 (Weight-based)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Traffic[100% 流量]</span></span>
-<span class="line"><span style="color:#E1E4E8">    V1["旧版本&#x3C;br/>90% 流量"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    V2["新版本&#x3C;br/>10% 流量"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Traffic[100% 流量]</span></span>
+<span class="line"><span style="color:#24292E">    V1["旧版本&#x3C;br/>90% 流量"]</span></span>
+<span class="line"><span style="color:#24292E">    V2["新版本&#x3C;br/>10% 流量"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Traffic -->|90%| V1</span></span>
-<span class="line"><span style="color:#E1E4E8">    Traffic -->|10%| V2</span></span>
+<span class="line"><span style="color:#24292E">    Traffic -->|90%| V1</span></span>
+<span class="line"><span style="color:#24292E">    Traffic -->|10%| V2</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Config["灰度发布配置:&#x3C;br/>upstream v1 weight=90;&#x3C;br/>upstream v2 weight=10;"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Config["灰度发布配置:&#x3C;br/>upstream v1 weight=90;&#x3C;br/>upstream v2 weight=10;"]</span></span></code></pre>
 <p><strong>5. 基于用户 (User-based)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>规则:</span></span>
 <span class="line"><span>if user_id in [beta_users]:</span></span>
 <span class="line"><span>    route to v2</span></span>
 <span class="line"><span>else:</span></span>
@@ -941,124 +941,124 @@
 <h3 id="43-金丝雀发布-canary-deployment">4.3 金丝雀发布 (Canary Deployment)</h3>
 <h4 id="原理">原理</h4>
 <p>目标: 渐进式发布,降低风险</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Start[开始部署新版本]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Deploy5["部署到 5% 服务器&#x3C;br/>(金丝雀)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Monitor["观察指标&#x3C;br/>• 错误率&#x3C;br/>• 延迟&#x3C;br/>• 吞吐量&#x3C;br/>• 业务指标(转化率)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check{指标正常?}</span></span>
-<span class="line"><span style="color:#E1E4E8">    Increase["增加流量&#x3C;br/>5% → 25% → 50% → 100%"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Rollback[回滚]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Complete[部署完成]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Start[开始部署新版本]</span></span>
+<span class="line"><span style="color:#24292E">    Deploy5["部署到 5% 服务器&#x3C;br/>(金丝雀)"]</span></span>
+<span class="line"><span style="color:#24292E">    Monitor["观察指标&#x3C;br/>• 错误率&#x3C;br/>• 延迟&#x3C;br/>• 吞吐量&#x3C;br/>• 业务指标(转化率)"]</span></span>
+<span class="line"><span style="color:#24292E">    Check{指标正常?}</span></span>
+<span class="line"><span style="color:#24292E">    Increase["增加流量&#x3C;br/>5% → 25% → 50% → 100%"]</span></span>
+<span class="line"><span style="color:#24292E">    Rollback[回滚]</span></span>
+<span class="line"><span style="color:#24292E">    Complete[部署完成]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Start --> Deploy5</span></span>
-<span class="line"><span style="color:#E1E4E8">    Deploy5 --> Monitor</span></span>
-<span class="line"><span style="color:#E1E4E8">    Monitor --> Check</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check -->|是| Increase</span></span>
-<span class="line"><span style="color:#E1E4E8">    Check -->|否| Rollback</span></span>
-<span class="line"><span style="color:#E1E4E8">    Increase --> Monitor</span></span>
-<span class="line"><span style="color:#E1E4E8">    Increase --> Complete</span></span>
+<span class="line"><span style="color:#24292E">    Start --> Deploy5</span></span>
+<span class="line"><span style="color:#24292E">    Deploy5 --> Monitor</span></span>
+<span class="line"><span style="color:#24292E">    Monitor --> Check</span></span>
+<span class="line"><span style="color:#24292E">    Check -->|是| Increase</span></span>
+<span class="line"><span style="color:#24292E">    Check -->|否| Rollback</span></span>
+<span class="line"><span style="color:#24292E">    Increase --> Monitor</span></span>
+<span class="line"><span style="color:#24292E">    Increase --> Complete</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Traffic["流量分配:&#x3C;br/>┌──────────────────────────────────┐&#x3C;br/>│  100% 流量                        │&#x3C;br/>├──────────────────────────────────┤&#x3C;br/>│  5%  → v2 (金丝雀)                │&#x3C;br/>│  95% → v1 (稳定版)                │&#x3C;br/>└──────────────────────────────────┘"]</span></span>
+<span class="line"><span style="color:#24292E">    Traffic["流量分配:&#x3C;br/>┌──────────────────────────────────┐&#x3C;br/>│  100% 流量                        │&#x3C;br/>├──────────────────────────────────┤&#x3C;br/>│  5%  → v2 (金丝雀)                │&#x3C;br/>│  95% → v1 (稳定版)                │&#x3C;br/>└──────────────────────────────────┘"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Decision["决策:&#x3C;br/>if (v2_error_rate &#x3C; v1_error_rate + 1%):&#x3C;br/>    增加流量到 v2&#x3C;br/>else:&#x3C;br/>    回滚"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Decision["决策:&#x3C;br/>if (v2_error_rate &#x3C; v1_error_rate + 1%):&#x3C;br/>    增加流量到 v2&#x3C;br/>else:&#x3C;br/>    回滚"]</span></span></code></pre>
 <h4 id="金丝雀策略">金丝雀策略</h4>
 <p><strong>策略1: 基于用户</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>• 内部员工先使用 v2</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>• 内部员工先使用 v2</span></span>
 <span class="line"><span>• Beta 用户群</span></span>
 <span class="line"><span>• 地理区域(先上美国西部)</span></span></code></pre>
 <p><strong>策略2: 基于流量</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>• 流量镜像: v2 不处理请求,仅记录日志</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>• 流量镜像: v2 不处理请求,仅记录日志</span></span>
 <span class="line"><span>• 影子流量: 复制流量到 v2,不返回响应</span></span></code></pre>
 <hr>
 <h3 id="44-ab-测试路由">4.4 A/B 测试路由</h3>
 <p>目标: 测试不同版本的效果</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    User[用户]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash{hash(user_id) % 2}</span></span>
-<span class="line"><span style="color:#E1E4E8">    AlgoA[算法A]</span></span>
-<span class="line"><span style="color:#E1E4E8">    AlgoB[算法B]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Collect[数据收集]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Analysis["分析结果:&#x3C;br/>• 算法A: 点击率 15%&#x3C;br/>• 算法B: 点击率 18%&#x3C;br/>→ 选择算法B"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    User[用户]</span></span>
+<span class="line"><span style="color:#24292E">    Hash{hash(user_id) % 2}</span></span>
+<span class="line"><span style="color:#24292E">    AlgoA[算法A]</span></span>
+<span class="line"><span style="color:#24292E">    AlgoB[算法B]</span></span>
+<span class="line"><span style="color:#24292E">    Collect[数据收集]</span></span>
+<span class="line"><span style="color:#24292E">    Analysis["分析结果:&#x3C;br/>• 算法A: 点击率 15%&#x3C;br/>• 算法B: 点击率 18%&#x3C;br/>→ 选择算法B"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    User --> Hash</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash -->|0| AlgoA</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash -->|1| AlgoB</span></span>
-<span class="line"><span style="color:#E1E4E8">    AlgoA --> Collect</span></span>
-<span class="line"><span style="color:#E1E4E8">    AlgoB --> Collect</span></span>
-<span class="line"><span style="color:#E1E4E8">    Collect --> Analysis</span></span>
+<span class="line"><span style="color:#24292E">    User --> Hash</span></span>
+<span class="line"><span style="color:#24292E">    Hash -->|0| AlgoA</span></span>
+<span class="line"><span style="color:#24292E">    Hash -->|1| AlgoB</span></span>
+<span class="line"><span style="color:#24292E">    AlgoA --> Collect</span></span>
+<span class="line"><span style="color:#24292E">    AlgoB --> Collect</span></span>
+<span class="line"><span style="color:#24292E">    Collect --> Analysis</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Key["关键:&#x3C;br/>• 随机分配(避免偏差)&#x3C;br/>• 用户一致性(同一用户始终看到同一版本)&#x3C;br/>• 统计显著性(样本量足够)"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Key["关键:&#x3C;br/>• 随机分配(避免偏差)&#x3C;br/>• 用户一致性(同一用户始终看到同一版本)&#x3C;br/>• 统计显著性(样本量足够)"]</span></span></code></pre>
 <p>示例: 测试两种推荐算法</p>
 <hr>
 <h3 id="45-智能流量分配">4.5 智能流量分配</h3>
 <h4 id="自适应路由">自适应路由</h4>
 <p>原理: 根据实时性能动态调整流量</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Monitor["监控每个服务实例的性能:&#x3C;br/>• 响应时间&#x3C;br/>• CPU 使用率&#x3C;br/>• 错误率"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Monitor["监控每个服务实例的性能:&#x3C;br/>• 响应时间&#x3C;br/>• CPU 使用率&#x3C;br/>• 错误率"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Score["计算健康分数:&#x3C;br/>health_score = f(latency, cpu, error_rate)"]</span></span>
+<span class="line"><span style="color:#24292E">    Score["计算健康分数:&#x3C;br/>health_score = f(latency, cpu, error_rate)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Weight["分配流量比例:&#x3C;br/>weight = health_score / Σ(all_health_scores)"]</span></span>
+<span class="line"><span style="color:#24292E">    Weight["分配流量比例:&#x3C;br/>weight = health_score / Σ(all_health_scores)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Example["示例:&#x3C;br/>实例A: health=90 → 权重 45%&#x3C;br/>实例B: health=80 → 权重 40%&#x3C;br/>实例C: health=30 → 权重 15% (性能差,少分配)"]</span></span>
+<span class="line"><span style="color:#24292E">    Example["示例:&#x3C;br/>实例A: health=90 → 权重 45%&#x3C;br/>实例B: health=80 → 权重 40%&#x3C;br/>实例C: health=30 → 权重 15% (性能差,少分配)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Monitor --> Score --> Weight --> Example</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Monitor --> Score --> Weight --> Example</span></span></code></pre>
 <h4 id="地理路由-geo-routing">地理路由 (Geo-Routing)</h4>
 <p>原理: 根据用户位置路由到最近数据中心</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    User[用户请求]</span></span>
-<span class="line"><span style="color:#E1E4E8">    IP[识别用户IP地址]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Geo[查询GeoIP数据库&#x3C;br/>→ 地理位置]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Route{路由决策}</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    User[用户请求]</span></span>
+<span class="line"><span style="color:#24292E">    IP[识别用户IP地址]</span></span>
+<span class="line"><span style="color:#24292E">    Geo[查询GeoIP数据库&#x3C;br/>→ 地理位置]</span></span>
+<span class="line"><span style="color:#24292E">    Route{路由决策}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    US[美国东部数据中心]</span></span>
-<span class="line"><span style="color:#E1E4E8">    EU[欧洲数据中心]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Asia[亚洲数据中心]</span></span>
+<span class="line"><span style="color:#24292E">    US[美国东部数据中心]</span></span>
+<span class="line"><span style="color:#24292E">    EU[欧洲数据中心]</span></span>
+<span class="line"><span style="color:#24292E">    Asia[亚洲数据中心]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    User --> IP --> Geo --> Route</span></span>
-<span class="line"><span style="color:#E1E4E8">    Route -->|美国用户| US</span></span>
-<span class="line"><span style="color:#E1E4E8">    Route -->|欧洲用户| EU</span></span>
-<span class="line"><span style="color:#E1E4E8">    Route -->|亚洲用户| Asia</span></span>
+<span class="line"><span style="color:#24292E">    User --> IP --> Geo --> Route</span></span>
+<span class="line"><span style="color:#24292E">    Route -->|美国用户| US</span></span>
+<span class="line"><span style="color:#24292E">    Route -->|欧洲用户| EU</span></span>
+<span class="line"><span style="color:#24292E">    Route -->|亚洲用户| Asia</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Adv["优势:&#x3C;br/>✓ 降低延迟&#x3C;br/>✓ 数据合规(GDPR)"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Adv["优势:&#x3C;br/>✓ 降低延迟&#x3C;br/>✓ 数据合规(GDPR)"]</span></span></code></pre>
 <hr>
 <h2 id="websocket与流式响应">WebSocket与流式响应</h2>
 <h3 id="51-websocket协议基础">5.1 WebSocket协议基础</h3>
 <h4 id="http-vs-websocket">HTTP vs WebSocket</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph HTTP["HTTP (请求-响应模型)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C1[客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">        S1[服务器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C1 -->|请求| S1</span></span>
-<span class="line"><span style="color:#E1E4E8">        S1 -->|响应| C1</span></span>
-<span class="line"><span style="color:#E1E4E8">        Note1["[连接关闭]&#x3C;br/>&#x3C;br/>问题:&#x3C;br/>• 单向通信&#x3C;br/>• 服务器无法主动推送&#x3C;br/>• 每次请求都有 HTTP 头开销"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph HTTP["HTTP (请求-响应模型)"]</span></span>
+<span class="line"><span style="color:#24292E">        C1[客户端]</span></span>
+<span class="line"><span style="color:#24292E">        S1[服务器]</span></span>
+<span class="line"><span style="color:#24292E">        C1 -->|请求| S1</span></span>
+<span class="line"><span style="color:#24292E">        S1 -->|响应| C1</span></span>
+<span class="line"><span style="color:#24292E">        Note1["[连接关闭]&#x3C;br/>&#x3C;br/>问题:&#x3C;br/>• 单向通信&#x3C;br/>• 服务器无法主动推送&#x3C;br/>• 每次请求都有 HTTP 头开销"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph WS["WebSocket (全双工通信)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C2[客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">        S2[服务器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C2 &#x3C;-->|双向通信| S2</span></span>
-<span class="line"><span style="color:#E1E4E8">        Note2["[连接保持]&#x3C;br/>&#x3C;br/>优势:&#x3C;br/>• 实时通信&#x3C;br/>• 低延迟&#x3C;br/>• 低开销(无重复头)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    subgraph WS["WebSocket (全双工通信)"]</span></span>
+<span class="line"><span style="color:#24292E">        C2[客户端]</span></span>
+<span class="line"><span style="color:#24292E">        S2[服务器]</span></span>
+<span class="line"><span style="color:#24292E">        C2 &#x3C;-->|双向通信| S2</span></span>
+<span class="line"><span style="color:#24292E">        Note2["[连接保持]&#x3C;br/>&#x3C;br/>优势:&#x3C;br/>• 实时通信&#x3C;br/>• 低延迟&#x3C;br/>• 低开销(无重复头)"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span></code></pre>
 <h4 id="websocket-握手过程">WebSocket 握手过程</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant C as 客户端</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant S as 服务器</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">sequenceDiagram</span></span>
+<span class="line"><span style="color:#24292E">    participant C as 客户端</span></span>
+<span class="line"><span style="color:#24292E">    participant S as 服务器</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over C,S: 1. HTTP 升级请求</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>S: GET /chat HTTP/1.1&#x3C;br/>Host: example.com&#x3C;br/>Upgrade: websocket&#x3C;br/>Connection: Upgrade&#x3C;br/>Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==&#x3C;br/>Sec-WebSocket-Version: 13</span></span>
+<span class="line"><span style="color:#24292E">    Note over C,S: 1. HTTP 升级请求</span></span>
+<span class="line"><span style="color:#24292E">    C->>S: GET /chat HTTP/1.1&#x3C;br/>Host: example.com&#x3C;br/>Upgrade: websocket&#x3C;br/>Connection: Upgrade&#x3C;br/>Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==&#x3C;br/>Sec-WebSocket-Version: 13</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over C,S: 2. 服务器响应</span></span>
-<span class="line"><span style="color:#E1E4E8">    S->>C: HTTP/1.1 101 Switching Protocols&#x3C;br/>Upgrade: websocket&#x3C;br/>Connection: Upgrade&#x3C;br/>Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=</span></span>
+<span class="line"><span style="color:#24292E">    Note over C,S: 2. 服务器响应</span></span>
+<span class="line"><span style="color:#24292E">    S->>C: HTTP/1.1 101 Switching Protocols&#x3C;br/>Upgrade: websocket&#x3C;br/>Connection: Upgrade&#x3C;br/>Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over C,S: 3. 协议切换成功 → WebSocket 连接建立</span></span>
+<span class="line"><span style="color:#24292E">    Note over C,S: 3. 协议切换成功 → WebSocket 连接建立</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over C,S: 4. 双向数据帧传输...</span></span>
-<span class="line"><span style="color:#E1E4E8">    C&#x3C;&#x3C;->>S: WebSocket 数据帧</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note over C,S: 4. 双向数据帧传输...</span></span>
+<span class="line"><span style="color:#24292E">    C&#x3C;&#x3C;->>S: WebSocket 数据帧</span></span></code></pre>
 <hr>
 <h3 id="52-api网关处理websocket">5.2 API网关处理WebSocket</h3>
 <h4 id="挑战">挑战</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题:</span></span>
 <span class="line"><span>1. 长连接管理:</span></span>
 <span class="line"><span>   • HTTP 请求秒级,WebSocket 可能持续数小时</span></span>
 <span class="line"><span>   • 连接数爆炸</span></span>
@@ -1072,20 +1072,20 @@
 <span class="line"><span>   • WebSocket 需要更长(或无限)</span></span></code></pre>
 <h4 id="解决方案-1">解决方案</h4>
 <p><strong>1. 会话亲和性 (Session Affinity)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Client[客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash{hash(client_id)}</span></span>
-<span class="line"><span style="color:#E1E4E8">    SA[服务器A]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SB[服务器B]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SC[服务器C]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Client[客户端]</span></span>
+<span class="line"><span style="color:#24292E">    Hash{hash(client_id)}</span></span>
+<span class="line"><span style="color:#24292E">    SA[服务器A]</span></span>
+<span class="line"><span style="color:#24292E">    SB[服务器B]</span></span>
+<span class="line"><span style="color:#24292E">    SC[服务器C]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Client -->|握手| Hash</span></span>
-<span class="line"><span style="color:#E1E4E8">    Hash --> SA</span></span>
-<span class="line"><span style="color:#E1E4E8">    Client -.后续消息&#x3C;br/>始终路由到.-> SA</span></span>
+<span class="line"><span style="color:#24292E">    Client -->|握手| Hash</span></span>
+<span class="line"><span style="color:#24292E">    Hash --> SA</span></span>
+<span class="line"><span style="color:#24292E">    Client -.后续消息&#x3C;br/>始终路由到.-> SA</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note["原理: 同一客户端的所有消息路由到同一后端&#x3C;br/>&#x3C;br/>实现:&#x3C;br/>• 一致性哈希: hash(client_id) → 服务器&#x3C;br/>• Sticky Sessions: 基于 Cookie"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note["原理: 同一客户端的所有消息路由到同一后端&#x3C;br/>&#x3C;br/>实现:&#x3C;br/>• 一致性哈希: hash(client_id) → 服务器&#x3C;br/>• Sticky Sessions: 基于 Cookie"]</span></span></code></pre>
 <p><strong>2. 连接池管理</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>限制:</span></span>
 <span class="line"><span>• 单个网关最大 WebSocket 连接数: 10,000</span></span>
 <span class="line"><span>• 超过 → 拒绝新连接</span></span>
 <span class="line"><span></span></span>
@@ -1094,25 +1094,25 @@
 <span class="line"><span>• 连接建立/断开速率</span></span>
 <span class="line"><span>• 每个用户连接数(防滥用)</span></span></code></pre>
 <p><strong>3. 心跳检测 (Heartbeat)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant S as 服务器</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant C as 客户端</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">sequenceDiagram</span></span>
+<span class="line"><span style="color:#24292E">    participant S as 服务器</span></span>
+<span class="line"><span style="color:#24292E">    participant C as 客户端</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over S,C: 目的: 检测僵尸连接</span></span>
+<span class="line"><span style="color:#24292E">    Note over S,C: 目的: 检测僵尸连接</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    S->>C: Ping (每 30 秒)</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>S: Pong</span></span>
-<span class="line"><span style="color:#E1E4E8">    S->>C: Ping (30秒后)</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>S: Pong</span></span>
-<span class="line"><span style="color:#E1E4E8">    S->>C: Ping (30秒后)</span></span>
-<span class="line"><span style="color:#E1E4E8">    Note over S,C: 超时 60 秒无响应</span></span>
-<span class="line"><span style="color:#E1E4E8">    S->>C: 关闭连接</span></span>
+<span class="line"><span style="color:#24292E">    S->>C: Ping (每 30 秒)</span></span>
+<span class="line"><span style="color:#24292E">    C->>S: Pong</span></span>
+<span class="line"><span style="color:#24292E">    S->>C: Ping (30秒后)</span></span>
+<span class="line"><span style="color:#24292E">    C->>S: Pong</span></span>
+<span class="line"><span style="color:#24292E">    S->>C: Ping (30秒后)</span></span>
+<span class="line"><span style="color:#24292E">    Note over S,C: 超时 60 秒无响应</span></span>
+<span class="line"><span style="color:#24292E">    S->>C: 关闭连接</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over S,C: 好处:&#x3C;br/>✓ 及时释放资源&#x3C;br/>✓ 检测网络断开</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Note over S,C: 好处:&#x3C;br/>✓ 及时释放资源&#x3C;br/>✓ 检测网络断开</span></span></code></pre>
 <hr>
 <h3 id="53-流式响应-streaming-response">5.3 流式响应 (Streaming Response)</h3>
 <h4 id="server-sent-events-sse">Server-Sent Events (SSE)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>特点:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>特点:</span></span>
 <span class="line"><span>• 单向: 服务器 → 客户端</span></span>
 <span class="line"><span>• 基于 HTTP</span></span>
 <span class="line"><span>• 文本格式(EventStream)</span></span>
@@ -1138,7 +1138,7 @@
 <span class="line"><span>• 进度更新</span></span>
 <span class="line"><span>• 通知推送</span></span></code></pre>
 <h4 id="chunked-transfer-encoding">Chunked Transfer Encoding</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: HTTP 响应分块传输</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: HTTP 响应分块传输</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>HTTP/1.1 200 OK</span></span>
@@ -1155,43 +1155,43 @@
 <span class="line"><span>• 大文件下载</span></span>
 <span class="line"><span>• 流式生成内容(LLM 响应)</span></span></code></pre>
 <h4 id="grpc-streaming">gRPC Streaming</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Types["gRPC 流式类型"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        T1["1. 服务器流式 (Server Streaming):&#x3C;br/>客户端 → 请求 → 服务器&#x3C;br/>客户端 ← 流式响应 ← 服务器"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Types["gRPC 流式类型"]</span></span>
+<span class="line"><span style="color:#24292E">        T1["1. 服务器流式 (Server Streaming):&#x3C;br/>客户端 → 请求 → 服务器&#x3C;br/>客户端 ← 流式响应 ← 服务器"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        T2["2. 客户端流式 (Client Streaming):&#x3C;br/>客户端 → 流式请求 → 服务器&#x3C;br/>客户端 ← 响应 ← 服务器"]</span></span>
+<span class="line"><span style="color:#24292E">        T2["2. 客户端流式 (Client Streaming):&#x3C;br/>客户端 → 流式请求 → 服务器&#x3C;br/>客户端 ← 响应 ← 服务器"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        T3["3. 双向流式 (Bidirectional):&#x3C;br/>客户端 ↔ 流式通信 ↔ 服务器"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">        T3["3. 双向流式 (Bidirectional):&#x3C;br/>客户端 ↔ 流式通信 ↔ 服务器"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Example["示例: 实时翻译&#x3C;br/>• 客户端流式发送音频&#x3C;br/>• 服务器流式返回翻译文本"]</span></span>
+<span class="line"><span style="color:#24292E">    Example["示例: 实时翻译&#x3C;br/>• 客户端流式发送音频&#x3C;br/>• 服务器流式返回翻译文本"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Types --> Example</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Types --> Example</span></span></code></pre>
 <hr>
 <h3 id="54-流式响应在-llm-中的应用">5.4 流式响应在 LLM 中的应用</h3>
 <h4 id="传统-vs-流式">传统 vs 流式</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Traditional["传统 (非流式)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        U1["用户: '写一篇文章'"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        W1[等待... 30秒]</span></span>
-<span class="line"><span style="color:#E1E4E8">        R1[返回完整文章&#x3C;br/>5000字]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Traditional["传统 (非流式)"]</span></span>
+<span class="line"><span style="color:#24292E">        U1["用户: '写一篇文章'"]</span></span>
+<span class="line"><span style="color:#24292E">        W1[等待... 30秒]</span></span>
+<span class="line"><span style="color:#24292E">        R1[返回完整文章&#x3C;br/>5000字]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        U1 --> W1 --> R1</span></span>
-<span class="line"><span style="color:#E1E4E8">        UX1["用户体验: ❌ 长时间空白等待"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">        U1 --> W1 --> R1</span></span>
+<span class="line"><span style="color:#24292E">        UX1["用户体验: ❌ 长时间空白等待"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Streaming["流式 (Streaming)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        U2["用户: '写一篇文章'"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        O1["'标题: xxx' (1秒)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        O2["'第一段...' (2秒)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        O3["'第二段...' (3秒)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        O4["...&#x3C;br/>完成 (30秒)"]</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Streaming["流式 (Streaming)"]</span></span>
+<span class="line"><span style="color:#24292E">        U2["用户: '写一篇文章'"]</span></span>
+<span class="line"><span style="color:#24292E">        O1["'标题: xxx' (1秒)"]</span></span>
+<span class="line"><span style="color:#24292E">        O2["'第一段...' (2秒)"]</span></span>
+<span class="line"><span style="color:#24292E">        O3["'第二段...' (3秒)"]</span></span>
+<span class="line"><span style="color:#24292E">        O4["...&#x3C;br/>完成 (30秒)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        U2 --> O1 --> O2 --> O3 --> O4</span></span>
-<span class="line"><span style="color:#E1E4E8">        UX2["用户体验: ✓ 即时反馈,类似打字效果"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<span class="line"><span style="color:#24292E">        U2 --> O1 --> O2 --> O3 --> O4</span></span>
+<span class="line"><span style="color:#24292E">        UX2["用户体验: ✓ 即时反馈,类似打字效果"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span></code></pre>
 <h4 id="实现流式响应">实现流式响应</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>OpenAI API 流式:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>OpenAI API 流式:</span></span>
 <span class="line"><span>POST /v1/chat/completions</span></span>
 <span class="line"><span>{</span></span>
 <span class="line"><span>  "model": "gpt-4",</span></span>
@@ -1216,67 +1216,67 @@
 <h2 id="api网关架构设计">API网关架构设计</h2>
 <h3 id="61-高可用架构">6.1 高可用架构</h3>
 <h4 id="1-多实例部署">1. 多实例部署</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    LB[负载均衡器 L4/L7]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G1[网关实例1]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G2[网关实例2]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G3[网关实例3]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Services[后端服务集群]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    LB[负载均衡器 L4/L7]</span></span>
+<span class="line"><span style="color:#24292E">    G1[网关实例1]</span></span>
+<span class="line"><span style="color:#24292E">    G2[网关实例2]</span></span>
+<span class="line"><span style="color:#24292E">    G3[网关实例3]</span></span>
+<span class="line"><span style="color:#24292E">    Services[后端服务集群]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    LB --> G1</span></span>
-<span class="line"><span style="color:#E1E4E8">    LB --> G2</span></span>
-<span class="line"><span style="color:#E1E4E8">    LB --> G3</span></span>
+<span class="line"><span style="color:#24292E">    LB --> G1</span></span>
+<span class="line"><span style="color:#24292E">    LB --> G2</span></span>
+<span class="line"><span style="color:#24292E">    LB --> G3</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    G1 --> Services</span></span>
-<span class="line"><span style="color:#E1E4E8">    G2 --> Services</span></span>
-<span class="line"><span style="color:#E1E4E8">    G3 --> Services</span></span>
+<span class="line"><span style="color:#24292E">    G1 --> Services</span></span>
+<span class="line"><span style="color:#24292E">    G2 --> Services</span></span>
+<span class="line"><span style="color:#24292E">    G3 --> Services</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Key["要点:&#x3C;br/>• 无状态设计(状态存 Redis)&#x3C;br/>• 水平扩展&#x3C;br/>• 故障自动切换"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Key["要点:&#x3C;br/>• 无状态设计(状态存 Redis)&#x3C;br/>• 水平扩展&#x3C;br/>• 故障自动切换"]</span></span></code></pre>
 <h4 id="2-多区域部署">2. 多区域部署</h4>
 <p>全球架构:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph US["美国区域"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        USG[网关集群]</span></span>
-<span class="line"><span style="color:#E1E4E8">        USDC[美国数据中心]</span></span>
-<span class="line"><span style="color:#E1E4E8">        USG --> USDC</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph US["美国区域"]</span></span>
+<span class="line"><span style="color:#24292E">        USG[网关集群]</span></span>
+<span class="line"><span style="color:#24292E">        USDC[美国数据中心]</span></span>
+<span class="line"><span style="color:#24292E">        USG --> USDC</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph EU["欧洲区域"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        EUG[网关集群]</span></span>
-<span class="line"><span style="color:#E1E4E8">        EUDC[欧洲数据中心]</span></span>
-<span class="line"><span style="color:#E1E4E8">        EUG --> EUDC</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph EU["欧洲区域"]</span></span>
+<span class="line"><span style="color:#24292E">        EUG[网关集群]</span></span>
+<span class="line"><span style="color:#24292E">        EUDC[欧洲数据中心]</span></span>
+<span class="line"><span style="color:#24292E">        EUG --> EUDC</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Route["路由:&#x3C;br/>• DNS 地理路由&#x3C;br/>• Anycast IP"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Route["路由:&#x3C;br/>• DNS 地理路由&#x3C;br/>• Anycast IP"]</span></span></code></pre>
 <hr>
 <h3 id="62-性能优化">6.2 性能优化</h3>
 <h4 id="1-连接复用-connection-pooling">1. 连接复用 (Connection Pooling)</h4>
 <p>问题: 每次请求都建立 TCP 连接 → 慢</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Traditional["传统方式"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        R1[请求1] --> Conn1[建立连接] --> Proc1[处理] --> Close1[关闭]</span></span>
-<span class="line"><span style="color:#E1E4E8">        R2[请求2] --> Conn2[建立连接] --> Proc2[处理] --> Close2[关闭]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Traditional["传统方式"]</span></span>
+<span class="line"><span style="color:#24292E">        R1[请求1] --> Conn1[建立连接] --> Proc1[处理] --> Close1[关闭]</span></span>
+<span class="line"><span style="color:#24292E">        R2[请求2] --> Conn2[建立连接] --> Proc2[处理] --> Close2[关闭]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Pool["连接池方式"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        P[预建立 100 个连接]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Req1[请求1] --> Get1[从池中获取] --> Process1[处理] --> Return1[归还]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Req2[请求2] --> Get2[复用连接] --> Process2[处理] --> Return2[归还]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Pool["连接池方式"]</span></span>
+<span class="line"><span style="color:#24292E">        P[预建立 100 个连接]</span></span>
+<span class="line"><span style="color:#24292E">        Req1[请求1] --> Get1[从池中获取] --> Process1[处理] --> Return1[归还]</span></span>
+<span class="line"><span style="color:#24292E">        Req2[请求2] --> Get2[复用连接] --> Process2[处理] --> Return2[归还]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Perf["性能提升:&#x3C;br/>• 延迟: -50ms (省去 TCP 握手)&#x3C;br/>• 吞吐: +200%"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Perf["性能提升:&#x3C;br/>• 延迟: -50ms (省去 TCP 握手)&#x3C;br/>• 吞吐: +200%"]</span></span></code></pre>
 <h4 id="2-响应缓存">2. 响应缓存</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    Request["GET /api/products?category=electronics"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Key["key = hash(method + path + query + headers)&#x3C;br/>= md5('GET:/api/products:category=electronics')"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    Request["GET /api/products?category=electronics"]</span></span>
+<span class="line"><span style="color:#24292E">    Key["key = hash(method + path + query + headers)&#x3C;br/>= md5('GET:/api/products:category=electronics')"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Strategy["策略:&#x3C;br/>• 静态内容: 缓存 1 小时&#x3C;br/>• 用户数据: 缓存 5 分钟&#x3C;br/>• 动态内容: 不缓存"]</span></span>
+<span class="line"><span style="color:#24292E">    Strategy["策略:&#x3C;br/>• 静态内容: 缓存 1 小时&#x3C;br/>• 用户数据: 缓存 5 分钟&#x3C;br/>• 动态内容: 不缓存"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Invalidation["失效策略:&#x3C;br/>• TTL: 时间过期&#x3C;br/>• LRU: 空间不足时淘汰最久未用&#x3C;br/>• 主动失效: 数据更新时清除"]</span></span>
+<span class="line"><span style="color:#24292E">    Invalidation["失效策略:&#x3C;br/>• TTL: 时间过期&#x3C;br/>• LRU: 空间不足时淘汰最久未用&#x3C;br/>• 主动失效: 数据更新时清除"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Request --> Key --> Strategy --> Invalidation</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Request --> Key --> Strategy --> Invalidation</span></span></code></pre>
 <h4 id="3-协议优化">3. 协议优化</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>HTTP/2 优势:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>HTTP/2 优势:</span></span>
 <span class="line"><span>• 多路复用: 单连接并发多个请求</span></span>
 <span class="line"><span>• 头部压缩: HPACK 算法</span></span>
 <span class="line"><span>• 服务器推送: 主动推送资源</span></span>
@@ -1289,28 +1289,28 @@
 <h3 id="63-安全架构">6.3 安全架构</h3>
 <h4 id="1-ddos-防护">1. DDoS 防护</h4>
 <p>层次化防护:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    L1["Layer 1: 网络层 (L3/L4)&#x3C;br/>• 流量清洗&#x3C;br/>• IP 黑名单&#x3C;br/>• SYN Flood 防护"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    L1["Layer 1: 网络层 (L3/L4)&#x3C;br/>• 流量清洗&#x3C;br/>• IP 黑名单&#x3C;br/>• SYN Flood 防护"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L2["Layer 2: 应用层 (L7)&#x3C;br/>• 速率限制&#x3C;br/>• 行为分析(区分人/机器人)&#x3C;br/>• CAPTCHA 挑战"]</span></span>
+<span class="line"><span style="color:#24292E">    L2["Layer 2: 应用层 (L7)&#x3C;br/>• 速率限制&#x3C;br/>• 行为分析(区分人/机器人)&#x3C;br/>• CAPTCHA 挑战"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L3["Layer 3: 业务层&#x3C;br/>• 业务逻辑限流&#x3C;br/>• 降级非关键功能"]</span></span>
+<span class="line"><span style="color:#24292E">    L3["Layer 3: 业务层&#x3C;br/>• 业务逻辑限流&#x3C;br/>• 降级非关键功能"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L1 --> L2 --> L3</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    L1 --> L2 --> L3</span></span></code></pre>
 <h4 id="2-身份验证">2. 身份验证</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    MFA["多因素认证 (MFA)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F1["1. 你知道的: 密码"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F2["2. 你拥有的: 手机 (OTP)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F3["3. 你是的: 生物特征"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    MFA["多因素认证 (MFA)"]</span></span>
+<span class="line"><span style="color:#24292E">    F1["1. 你知道的: 密码"]</span></span>
+<span class="line"><span style="color:#24292E">    F2["2. 你拥有的: 手机 (OTP)"]</span></span>
+<span class="line"><span style="color:#24292E">    F3["3. 你是的: 生物特征"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    MFA --> F1</span></span>
-<span class="line"><span style="color:#E1E4E8">    MFA --> F2</span></span>
-<span class="line"><span style="color:#E1E4E8">    MFA --> F3</span></span>
+<span class="line"><span style="color:#24292E">    MFA --> F1</span></span>
+<span class="line"><span style="color:#24292E">    MFA --> F2</span></span>
+<span class="line"><span style="color:#24292E">    MFA --> F3</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway["API网关集成:&#x3C;br/>• JWT 验证&#x3C;br/>• OAuth 2.0 / OIDC&#x3C;br/>• mTLS (双向 TLS)"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Gateway["API网关集成:&#x3C;br/>• JWT 验证&#x3C;br/>• OAuth 2.0 / OIDC&#x3C;br/>• mTLS (双向 TLS)"]</span></span></code></pre>
 <h4 id="3-数据加密">3. 数据加密</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传输加密:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传输加密:</span></span>
 <span class="line"><span>• TLS 1.3</span></span>
 <span class="line"><span>• 强加密套件 (AES-256)</span></span>
 <span class="line"><span></span></span>
@@ -1321,59 +1321,59 @@
 <hr>
 <h3 id="64-可观测性">6.4 可观测性</h3>
 <h4 id="1-指标-metrics">1. 指标 (Metrics)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Golden["黄金信号 (RED)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Rate[Rate: 请求速率]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Errors[Errors: 错误率]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Duration[Duration: 延迟]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Golden["黄金信号 (RED)"]</span></span>
+<span class="line"><span style="color:#24292E">        Rate[Rate: 请求速率]</span></span>
+<span class="line"><span style="color:#24292E">        Errors[Errors: 错误率]</span></span>
+<span class="line"><span style="color:#24292E">        Duration[Duration: 延迟]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Infra["基础设施"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        CPU[CPU/内存使用率]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Conn[连接数]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Queue[队列深度]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Infra["基础设施"]</span></span>
+<span class="line"><span style="color:#24292E">        CPU[CPU/内存使用率]</span></span>
+<span class="line"><span style="color:#24292E">        Conn[连接数]</span></span>
+<span class="line"><span style="color:#24292E">        Queue[队列深度]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Business["业务指标"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        API[API 调用量 Top 10]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Active[用户活跃度]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Revenue[收入相关 API]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Business["业务指标"]</span></span>
+<span class="line"><span style="color:#24292E">        API[API 调用量 Top 10]</span></span>
+<span class="line"><span style="color:#24292E">        Active[用户活跃度]</span></span>
+<span class="line"><span style="color:#24292E">        Revenue[收入相关 API]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Metrics[关键指标] --> Golden</span></span>
-<span class="line"><span style="color:#E1E4E8">    Metrics --> Infra</span></span>
-<span class="line"><span style="color:#E1E4E8">    Metrics --> Business</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Metrics[关键指标] --> Golden</span></span>
+<span class="line"><span style="color:#24292E">    Metrics --> Infra</span></span>
+<span class="line"><span style="color:#24292E">    Metrics --> Business</span></span></code></pre>
 <h4 id="2-日志-logging">2. 日志 (Logging)</h4>
 <p>结构化日志:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
-<span class="line"><span style="color:#79B8FF">  "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2024-01-21T10:00:00Z"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "trace_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"abc123"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "method"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"GET"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "path"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/api/users/123"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "status"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">200</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "duration_ms"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">45</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "user_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"u-456"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "ip"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"1.2.3.4"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "user_agent"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"..."</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "upstream"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"user-service-v2"</span></span>
-<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "timestamp"</span><span style="color:#24292E">: </span><span style="color:#032F62">"2024-01-21T10:00:00Z"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "trace_id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"abc123"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "method"</span><span style="color:#24292E">: </span><span style="color:#032F62">"GET"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "path"</span><span style="color:#24292E">: </span><span style="color:#032F62">"/api/users/123"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "status"</span><span style="color:#24292E">: </span><span style="color:#005CC5">200</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "duration_ms"</span><span style="color:#24292E">: </span><span style="color:#005CC5">45</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "user_id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"u-456"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "ip"</span><span style="color:#24292E">: </span><span style="color:#032F62">"1.2.3.4"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "user_agent"</span><span style="color:#24292E">: </span><span style="color:#032F62">"..."</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "upstream"</span><span style="color:#24292E">: </span><span style="color:#032F62">"user-service-v2"</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
 <p>用途:
 • 调试
 • 审计
 • 安全分析</p>
 <h4 id="3-分布式追踪">3. 分布式追踪</h4>
 <p>追踪链路:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    Client[客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway[API网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SA[服务A]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SB[服务B]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    Client[客户端]</span></span>
+<span class="line"><span style="color:#24292E">    Gateway[API网关]</span></span>
+<span class="line"><span style="color:#24292E">    SA[服务A]</span></span>
+<span class="line"><span style="color:#24292E">    SB[服务B]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Client --> Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway --> SA</span></span>
-<span class="line"><span style="color:#E1E4E8">    SA --> SB</span></span>
+<span class="line"><span style="color:#24292E">    Client --> Gateway</span></span>
+<span class="line"><span style="color:#24292E">    Gateway --> SA</span></span>
+<span class="line"><span style="color:#24292E">    SA --> SB</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Trace["Trace:&#x3C;br/>├─ Span: API网关 (50ms)&#x3C;br/>   ├─ Span: 认证 (5ms)&#x3C;br/>   ├─ Span: 限流检查 (1ms)&#x3C;br/>   └─ Span: 路由到服务A (44ms)&#x3C;br/>      └─ Span: 服务A调用服务B (40ms)&#x3C;br/>&#x3C;br/>分析: 瓶颈在服务B"]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    Trace["Trace:&#x3C;br/>├─ Span: API网关 (50ms)&#x3C;br/>   ├─ Span: 认证 (5ms)&#x3C;br/>   ├─ Span: 限流检查 (1ms)&#x3C;br/>   └─ Span: 路由到服务A (44ms)&#x3C;br/>      └─ Span: 服务A调用服务B (40ms)&#x3C;br/>&#x3C;br/>分析: 瓶颈在服务B"]</span></span></code></pre>
 <hr>
 <h3 id="65-api网关产品对比">6.5 API网关产品对比</h3>
 
@@ -1434,7 +1434,7 @@
 <hr>
 <h2 id="最佳实践总结">最佳实践总结</h2>
 <h3 id="api网关设计清单">API网关设计清单</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✅ 架构设计:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✅ 架构设计:</span></span>
 <span class="line"><span>  □ 选择合适的网关模式(单一/BFF/分层)</span></span>
 <span class="line"><span>  □ 无状态设计</span></span>
 <span class="line"><span>  □ 多实例部署(至少 3 个)</span></span>
@@ -1534,7 +1534,7 @@
       // 初始化 Mermaid - 使用 default 主题以支持内联 style
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',  // dark 主题适配暗色背景
+        theme: 'default',  // default 主题适配亮色背景
         flowchart: {
           useMaxWidth: true,
           htmlLabels: true,
@@ -1572,7 +1572,7 @@
             const mermaidDiv = document.createElement('div');
             mermaidDiv.className = 'mermaid';
             mermaidDiv.textContent = code;
-            mermaidDiv.style.backgroundColor = '#161b22';
+            mermaidDiv.style.backgroundColor = '#f6f8fa';
             mermaidDiv.style.padding = '20px';
             mermaidDiv.style.borderRadius = '8px';
             mermaidDiv.style.margin = '20px 0';

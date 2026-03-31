@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="开源本地优先AI助手完整架构解析：Gateway网关设计、Agent引擎、消息应用集成、会话管理机制、隐私安全设计及自托管部署方案。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>Clawdbot架构理论指南</title><style>:root{--bg: #0d1117;--text: #e6edf3;--accent: #58a6ff;--accent-hover: #1f6feb;--gray: #8b949e;--border: #30363d;--code-bg: #161b22;--glow: 0 0 10px rgba(88, 166, 255, .3);--surface: #161b22}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="开源本地优先AI助手完整架构解析：Gateway网关设计、Agent引擎、消息应用集成、会话管理机制、隐私安全设计及自托管部署方案。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>Clawdbot架构理论指南</title><style>:root{--bg: #ffffff;--text: #24292f;--accent: #0969da;--accent-hover: #0550ae;--gray: #57606a;--border: #d0d7de;--code-bg: #f6f8fa;--glow: 0 0 10px rgba(9, 105, 218, .2);--surface: #f6f8fa}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#cf222e;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>Clawdbot架构理论指南</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#云原生架构</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="clawdbot-架构理论指南">Clawdbot 架构理论指南</h1>
 <h2 id="一概述">一、概述</h2>
 <p>Clawdbot 是一个开源的、本地优先的个人 AI 助手系统，由 Peter Steinberger（PSPDFKit 创始人）开发。它的核心理念是将 AI 能力集成到用户日常使用的消息应用中，同时保持完全的隐私控制和数据主权。</p>
@@ -13,44 +13,44 @@
 </ul>
 <h2 id="二系统架构">二、系统架构</h2>
 <h3 id="21-整体架构设计">2.1 整体架构设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "用户层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A[WhatsApp客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B[Telegram客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C[其他消息应用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "用户层"</span></span>
+<span class="line"><span style="color:#24292E">        A[WhatsApp客户端]</span></span>
+<span class="line"><span style="color:#24292E">        B[Telegram客户端]</span></span>
+<span class="line"><span style="color:#24292E">        C[其他消息应用]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "Clawdbot核心"</span></span>
-<span class="line"><span style="color:#E1E4E8">        D[Gateway网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">        E[Agent引擎]</span></span>
-<span class="line"><span style="color:#E1E4E8">        F[Channel适配器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        G[配置管理器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "Clawdbot核心"</span></span>
+<span class="line"><span style="color:#24292E">        D[Gateway网关]</span></span>
+<span class="line"><span style="color:#24292E">        E[Agent引擎]</span></span>
+<span class="line"><span style="color:#24292E">        F[Channel适配器]</span></span>
+<span class="line"><span style="color:#24292E">        G[配置管理器]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "AI服务层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        H[Claude API]</span></span>
-<span class="line"><span style="color:#E1E4E8">        I[OpenAI API]</span></span>
-<span class="line"><span style="color:#E1E4E8">        J[本地模型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "AI服务层"</span></span>
+<span class="line"><span style="color:#24292E">        H[Claude API]</span></span>
+<span class="line"><span style="color:#24292E">        I[OpenAI API]</span></span>
+<span class="line"><span style="color:#24292E">        J[本地模型]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "存储层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        K[会话存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L[配置文件]</span></span>
-<span class="line"><span style="color:#E1E4E8">        M[工作空间]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "存储层"</span></span>
+<span class="line"><span style="color:#24292E">        K[会话存储]</span></span>
+<span class="line"><span style="color:#24292E">        L[配置文件]</span></span>
+<span class="line"><span style="color:#24292E">        M[工作空间]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    A --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> H</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> I</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> J</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> K</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
-<span class="line"><span style="color:#E1E4E8">    G --> L</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> M</span></span>
+<span class="line"><span style="color:#24292E">    A --> F</span></span>
+<span class="line"><span style="color:#24292E">    B --> F</span></span>
+<span class="line"><span style="color:#24292E">    C --> F</span></span>
+<span class="line"><span style="color:#24292E">    F --> D</span></span>
+<span class="line"><span style="color:#24292E">    D --> E</span></span>
+<span class="line"><span style="color:#24292E">    E --> H</span></span>
+<span class="line"><span style="color:#24292E">    E --> I</span></span>
+<span class="line"><span style="color:#24292E">    E --> J</span></span>
+<span class="line"><span style="color:#24292E">    E --> K</span></span>
+<span class="line"><span style="color:#24292E">    D --> G</span></span>
+<span class="line"><span style="color:#24292E">    G --> L</span></span>
+<span class="line"><span style="color:#24292E">    E --> M</span></span>
 <span class="line"></span></code></pre>
 <h3 id="22-核心组件说明">2.2 核心组件说明</h3>
 <h4 id="gateway网关">Gateway（网关）</h4>
@@ -79,23 +79,23 @@
 </ul>
 <h2 id="三工作原理">三、工作原理</h2>
 <h3 id="31-消息处理流程">3.1 消息处理流程</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant U as 用户</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant C as Channel适配器</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant G as Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant A as Agent引擎</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant M as AI模型</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">sequenceDiagram</span></span>
+<span class="line"><span style="color:#24292E">    participant U as 用户</span></span>
+<span class="line"><span style="color:#24292E">    participant C as Channel适配器</span></span>
+<span class="line"><span style="color:#24292E">    participant G as Gateway</span></span>
+<span class="line"><span style="color:#24292E">    participant A as Agent引擎</span></span>
+<span class="line"><span style="color:#24292E">    participant M as AI模型</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    U->>C: 发送消息</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>G: 转发标准化消息</span></span>
-<span class="line"><span style="color:#E1E4E8">    G->>A: 路由到对应Agent</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>A: 加载会话上下文</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>M: 调用AI模型</span></span>
-<span class="line"><span style="color:#E1E4E8">    M->>A: 返回生成结果</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>A: 执行工具调用（如需要）</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>G: 返回处理结果</span></span>
-<span class="line"><span style="color:#E1E4E8">    G->>C: 转发响应</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>U: 显示回复</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    U->>C: 发送消息</span></span>
+<span class="line"><span style="color:#24292E">    C->>G: 转发标准化消息</span></span>
+<span class="line"><span style="color:#24292E">    G->>A: 路由到对应Agent</span></span>
+<span class="line"><span style="color:#24292E">    A->>A: 加载会话上下文</span></span>
+<span class="line"><span style="color:#24292E">    A->>M: 调用AI模型</span></span>
+<span class="line"><span style="color:#24292E">    M->>A: 返回生成结果</span></span>
+<span class="line"><span style="color:#24292E">    A->>A: 执行工具调用（如需要）</span></span>
+<span class="line"><span style="color:#24292E">    A->>G: 返回处理结果</span></span>
+<span class="line"><span style="color:#24292E">    G->>C: 转发响应</span></span>
+<span class="line"><span style="color:#24292E">    C->>U: 显示回复</span></span></code></pre>
 <h3 id="32-会话管理机制">3.2 会话管理机制</h3>
 <p>Clawdbot 采用分层的会话管理策略：</p>
 <p><strong>会话隔离</strong></p>
@@ -117,19 +117,19 @@
 <li>Agent 间可通过 ACP（Agent Control Protocol）通信</li>
 </ul>
 <h3 id="33-安全与隐私设计">3.3 安全与隐私设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户数据] --> B[本地加密存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[Gateway访问控制]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[设备配对验证]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[Token授权]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[API调用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[外部AI服务]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    A[用户数据] --> B[本地加密存储]</span></span>
+<span class="line"><span style="color:#24292E">    B --> C[Gateway访问控制]</span></span>
+<span class="line"><span style="color:#24292E">    C --> D[设备配对验证]</span></span>
+<span class="line"><span style="color:#24292E">    D --> E[Token授权]</span></span>
+<span class="line"><span style="color:#24292E">    E --> F[API调用]</span></span>
+<span class="line"><span style="color:#24292E">    F --> G[外部AI服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style B fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style D fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style E fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style G fill:#FFB6C1</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style B fill:#90EE90</span></span>
+<span class="line"><span style="color:#24292E">    style C fill:#90EE90</span></span>
+<span class="line"><span style="color:#24292E">    style D fill:#90EE90</span></span>
+<span class="line"><span style="color:#24292E">    style E fill:#90EE90</span></span>
+<span class="line"><span style="color:#24292E">    style G fill:#FFB6C1</span></span></code></pre>
 <p><strong>隐私保护措施</strong>：</p>
 <ul>
 <li><strong>本地优先</strong>：所有会话历史默认存储在本地</li>
@@ -201,39 +201,39 @@
 </ul>
 <h2 id="五技术架构深度解析">五、技术架构深度解析</h2>
 <h3 id="51-gateway-架构设计">5.1 Gateway 架构设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "Gateway核心"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A[WebSocket服务器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B[HTTP服务器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C[路由引擎]</span></span>
-<span class="line"><span style="color:#E1E4E8">        D[状态管理器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "Gateway核心"</span></span>
+<span class="line"><span style="color:#24292E">        A[WebSocket服务器]</span></span>
+<span class="line"><span style="color:#24292E">        B[HTTP服务器]</span></span>
+<span class="line"><span style="color:#24292E">        C[路由引擎]</span></span>
+<span class="line"><span style="color:#24292E">        D[状态管理器]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "服务层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        E[设备管理]</span></span>
-<span class="line"><span style="color:#E1E4E8">        F[会话管理]</span></span>
-<span class="line"><span style="color:#E1E4E8">        G[健康检查]</span></span>
-<span class="line"><span style="color:#E1E4E8">        H[日志系统]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "服务层"</span></span>
+<span class="line"><span style="color:#24292E">        E[设备管理]</span></span>
+<span class="line"><span style="color:#24292E">        F[会话管理]</span></span>
+<span class="line"><span style="color:#24292E">        G[健康检查]</span></span>
+<span class="line"><span style="color:#24292E">        H[日志系统]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "扩展层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        I[Canvas画布]</span></span>
-<span class="line"><span style="color:#E1E4E8">        J[Browser控制]</span></span>
-<span class="line"><span style="color:#E1E4E8">        K[Webhook服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L[DNS服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "扩展层"</span></span>
+<span class="line"><span style="color:#24292E">        I[Canvas画布]</span></span>
+<span class="line"><span style="color:#24292E">        J[Browser控制]</span></span>
+<span class="line"><span style="color:#24292E">        K[Webhook服务]</span></span>
+<span class="line"><span style="color:#24292E">        L[DNS服务]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> H</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> I</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> J</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> K</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> L</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    A --> C</span></span>
+<span class="line"><span style="color:#24292E">    B --> C</span></span>
+<span class="line"><span style="color:#24292E">    C --> D</span></span>
+<span class="line"><span style="color:#24292E">    D --> E</span></span>
+<span class="line"><span style="color:#24292E">    D --> F</span></span>
+<span class="line"><span style="color:#24292E">    D --> G</span></span>
+<span class="line"><span style="color:#24292E">    D --> H</span></span>
+<span class="line"><span style="color:#24292E">    E --> I</span></span>
+<span class="line"><span style="color:#24292E">    E --> J</span></span>
+<span class="line"><span style="color:#24292E">    E --> K</span></span>
+<span class="line"><span style="color:#24292E">    E --> L</span></span></code></pre>
 <p><strong>Gateway 核心职责</strong>：</p>
 <ol>
 <li>
@@ -262,17 +262,17 @@
 </li>
 </ol>
 <h3 id="52-agent-执行模型">5.2 Agent 执行模型</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">stateDiagram-v2</span></span>
-<span class="line"><span style="color:#E1E4E8">    [*] --> 接收消息</span></span>
-<span class="line"><span style="color:#E1E4E8">    接收消息 --> 加载上下文</span></span>
-<span class="line"><span style="color:#E1E4E8">    加载上下文 --> 模型推理</span></span>
-<span class="line"><span style="color:#E1E4E8">    模型推理 --> 工具调用判断</span></span>
-<span class="line"><span style="color:#E1E4E8">    工具调用判断 --> 执行工具: 需要工具</span></span>
-<span class="line"><span style="color:#E1E4E8">    工具调用判断 --> 生成响应: 无需工具</span></span>
-<span class="line"><span style="color:#E1E4E8">    执行工具 --> 模型推理: 继续推理</span></span>
-<span class="line"><span style="color:#E1E4E8">    生成响应 --> 保存上下文</span></span>
-<span class="line"><span style="color:#E1E4E8">    保存上下文 --> 返回结果</span></span>
-<span class="line"><span style="color:#E1E4E8">    返回结果 --> [*]</span></span></code></pre>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">stateDiagram-v2</span></span>
+<span class="line"><span style="color:#24292E">    [*] --> 接收消息</span></span>
+<span class="line"><span style="color:#24292E">    接收消息 --> 加载上下文</span></span>
+<span class="line"><span style="color:#24292E">    加载上下文 --> 模型推理</span></span>
+<span class="line"><span style="color:#24292E">    模型推理 --> 工具调用判断</span></span>
+<span class="line"><span style="color:#24292E">    工具调用判断 --> 执行工具: 需要工具</span></span>
+<span class="line"><span style="color:#24292E">    工具调用判断 --> 生成响应: 无需工具</span></span>
+<span class="line"><span style="color:#24292E">    执行工具 --> 模型推理: 继续推理</span></span>
+<span class="line"><span style="color:#24292E">    生成响应 --> 保存上下文</span></span>
+<span class="line"><span style="color:#24292E">    保存上下文 --> 返回结果</span></span>
+<span class="line"><span style="color:#24292E">    返回结果 --> [*]</span></span></code></pre>
 <p><strong>Agent 执行流程</strong>：</p>
 <ol>
 <li><strong>消息接收</strong>：从 Gateway 接收标准化消息</li>
@@ -283,17 +283,17 @@
 <li><strong>状态保存</strong>：更新会话上下文到存储</li>
 </ol>
 <h3 id="53-channel-适配层设计">5.3 Channel 适配层设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[WhatsApp Web] --> B[WhatsApp适配器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C[Telegram Bot API] --> D[Telegram适配器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E[其他平台] --> F[通用适配器]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    A[WhatsApp Web] --> B[WhatsApp适配器]</span></span>
+<span class="line"><span style="color:#24292E">    C[Telegram Bot API] --> D[Telegram适配器]</span></span>
+<span class="line"><span style="color:#24292E">    E[其他平台] --> F[通用适配器]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B --> G[统一消息接口]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G</span></span>
+<span class="line"><span style="color:#24292E">    B --> G[统一消息接口]</span></span>
+<span class="line"><span style="color:#24292E">    D --> G</span></span>
+<span class="line"><span style="color:#24292E">    F --> G</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    G --> H[消息标准化]</span></span>
-<span class="line"><span style="color:#E1E4E8">    H --> I[Gateway]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    G --> H[消息标准化]</span></span>
+<span class="line"><span style="color:#24292E">    H --> I[Gateway]</span></span></code></pre>
 <p><strong>适配器设计原则</strong>：</p>
 <ol>
 <li>
@@ -323,29 +323,29 @@
 </ol>
 <h2 id="六数据流与存储">六、数据流与存储</h2>
 <h3 id="61-数据流向图">6.1 数据流向图</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户输入] --> B{消息类型}</span></span>
-<span class="line"><span style="color:#E1E4E8">    B -->|文本| C[文本处理]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B -->|图片| D[图片处理]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B -->|文件| E[文件处理]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    A[用户输入] --> B{消息类型}</span></span>
+<span class="line"><span style="color:#24292E">    B -->|文本| C[文本处理]</span></span>
+<span class="line"><span style="color:#24292E">    B -->|图片| D[图片处理]</span></span>
+<span class="line"><span style="color:#24292E">    B -->|文件| E[文件处理]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    C --> F[Gateway路由]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F</span></span>
+<span class="line"><span style="color:#24292E">    C --> F[Gateway路由]</span></span>
+<span class="line"><span style="color:#24292E">    D --> F</span></span>
+<span class="line"><span style="color:#24292E">    E --> F</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[Agent处理]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G --> H{需要AI?}</span></span>
-<span class="line"><span style="color:#E1E4E8">    H -->|是| I[调用AI API]</span></span>
-<span class="line"><span style="color:#E1E4E8">    H -->|否| J[本地处理]</span></span>
+<span class="line"><span style="color:#24292E">    F --> G[Agent处理]</span></span>
+<span class="line"><span style="color:#24292E">    G --> H{需要AI?}</span></span>
+<span class="line"><span style="color:#24292E">    H -->|是| I[调用AI API]</span></span>
+<span class="line"><span style="color:#24292E">    H -->|否| J[本地处理]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    I --> K[响应生成]</span></span>
-<span class="line"><span style="color:#E1E4E8">    J --> K</span></span>
+<span class="line"><span style="color:#24292E">    I --> K[响应生成]</span></span>
+<span class="line"><span style="color:#24292E">    J --> K</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    K --> L[保存会话]</span></span>
-<span class="line"><span style="color:#E1E4E8">    L --> M[返回用户]</span></span>
+<span class="line"><span style="color:#24292E">    K --> L[保存会话]</span></span>
+<span class="line"><span style="color:#24292E">    L --> M[返回用户]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style L fill:#FFE4B5</span></span>
-<span class="line"><span style="color:#E1E4E8">    style I fill:#FFB6C1</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style L fill:#FFE4B5</span></span>
+<span class="line"><span style="color:#24292E">    style I fill:#FFB6C1</span></span></code></pre>
 <h3 id="62-存储架构">6.2 存储架构</h3>
 <p><strong>配置存储</strong>：</p>
 <ul>
@@ -389,16 +389,16 @@
 <li>热加载，无需重启服务</li>
 </ul>
 <h3 id="72-自定义-agent">7.2 自定义 Agent</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[创建Agent配置] --> B[选择AI模型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[配置工作空间]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[设置技能集]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[定义行为规则]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[配置路由规则]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[启动Agent实例]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    A[创建Agent配置] --> B[选择AI模型]</span></span>
+<span class="line"><span style="color:#24292E">    B --> C[配置工作空间]</span></span>
+<span class="line"><span style="color:#24292E">    C --> D[设置技能集]</span></span>
+<span class="line"><span style="color:#24292E">    D --> E[定义行为规则]</span></span>
+<span class="line"><span style="color:#24292E">    E --> F[配置路由规则]</span></span>
+<span class="line"><span style="color:#24292E">    F --> G[启动Agent实例]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style A fill:#E6E6FA</span></span>
-<span class="line"><span style="color:#E1E4E8">    style G fill:#90EE90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style A fill:#E6E6FA</span></span>
+<span class="line"><span style="color:#24292E">    style G fill:#90EE90</span></span></code></pre>
 <p><strong>Agent 定制选项</strong>：</p>
 <ol>
 <li>
@@ -442,17 +442,17 @@
 </ul>
 <h2 id="八部署模式">八、部署模式</h2>
 <h3 id="81-本地模式">8.1 本地模式</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户设备] --> B[Clawdbot Gateway]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[本地Agent]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[本地存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> E[外部AI API]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    A[用户设备] --> B[Clawdbot Gateway]</span></span>
+<span class="line"><span style="color:#24292E">    B --> C[本地Agent]</span></span>
+<span class="line"><span style="color:#24292E">    C --> D[本地存储]</span></span>
+<span class="line"><span style="color:#24292E">    C --> E[外部AI API]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style A fill:#E6E6FA</span></span>
-<span class="line"><span style="color:#E1E4E8">    style B fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style D fill:#FFE4B5</span></span>
-<span class="line"><span style="color:#E1E4E8">    style E fill:#FFB6C1</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style A fill:#E6E6FA</span></span>
+<span class="line"><span style="color:#24292E">    style B fill:#90EE90</span></span>
+<span class="line"><span style="color:#24292E">    style C fill:#90EE90</span></span>
+<span class="line"><span style="color:#24292E">    style D fill:#FFE4B5</span></span>
+<span class="line"><span style="color:#24292E">    style E fill:#FFB6C1</span></span></code></pre>
 <p><strong>特点</strong>：</p>
 <ul>
 <li>完全在用户设备上运行</li>
@@ -461,17 +461,17 @@
 <li>需要设备保持在线</li>
 </ul>
 <h3 id="82-服务器模式">8.2 服务器模式</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户设备1] --> D[远程Gateway]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B[用户设备2] --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    C[用户设备3] --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[Agent集群]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[共享存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> G[AI服务]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    A[用户设备1] --> D[远程Gateway]</span></span>
+<span class="line"><span style="color:#24292E">    B[用户设备2] --> D</span></span>
+<span class="line"><span style="color:#24292E">    C[用户设备3] --> D</span></span>
+<span class="line"><span style="color:#24292E">    D --> E[Agent集群]</span></span>
+<span class="line"><span style="color:#24292E">    E --> F[共享存储]</span></span>
+<span class="line"><span style="color:#24292E">    E --> G[AI服务]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style D fill:#87CEEB</span></span>
-<span class="line"><span style="color:#E1E4E8">    style E fill:#87CEEB</span></span>
-<span class="line"><span style="color:#E1E4E8">    style F fill:#FFE4B5</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style D fill:#87CEEB</span></span>
+<span class="line"><span style="color:#24292E">    style E fill:#87CEEB</span></span>
+<span class="line"><span style="color:#24292E">    style F fill:#FFE4B5</span></span></code></pre>
 <p><strong>特点</strong>：</p>
 <ul>
 <li>部署在云服务器或 VPS</li>
@@ -508,19 +508,19 @@
 <li>优先级调度</li>
 </ul>
 <h3 id="92-资源管理">9.2 资源管理</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[资源监控] --> B[CPU使用率]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C[内存占用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> D[网络流量]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> E[存储空间]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
+<span class="line"><span style="color:#24292E">    A[资源监控] --> B[CPU使用率]</span></span>
+<span class="line"><span style="color:#24292E">    A --> C[内存占用]</span></span>
+<span class="line"><span style="color:#24292E">    A --> D[网络流量]</span></span>
+<span class="line"><span style="color:#24292E">    A --> E[存储空间]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B --> F[告警系统]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F</span></span>
+<span class="line"><span style="color:#24292E">    B --> F[告警系统]</span></span>
+<span class="line"><span style="color:#24292E">    C --> F</span></span>
+<span class="line"><span style="color:#24292E">    D --> F</span></span>
+<span class="line"><span style="color:#24292E">    E --> F</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[自动调优]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> H[降级策略]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    F --> G[自动调优]</span></span>
+<span class="line"><span style="color:#24292E">    F --> H[降级策略]</span></span></code></pre>
 <p><strong>资源限制</strong>：</p>
 <ul>
 <li>会话数量限制</li>
@@ -539,23 +539,23 @@
 <li>资源耗尽攻击</li>
 </ul>
 <h3 id="102-安全措施">10.2 安全措施</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[安全层次] --> B[网络安全]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C[认证授权]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> D[数据安全]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> E[运行时安全]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    A[安全层次] --> B[网络安全]</span></span>
+<span class="line"><span style="color:#24292E">    A --> C[认证授权]</span></span>
+<span class="line"><span style="color:#24292E">    A --> D[数据安全]</span></span>
+<span class="line"><span style="color:#24292E">    A --> E[运行时安全]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B --> B1[TLS加密]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> B2[防火墙规则]</span></span>
+<span class="line"><span style="color:#24292E">    B --> B1[TLS加密]</span></span>
+<span class="line"><span style="color:#24292E">    B --> B2[防火墙规则]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    C --> C1[设备配对]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> C2[Token验证]</span></span>
+<span class="line"><span style="color:#24292E">    C --> C1[设备配对]</span></span>
+<span class="line"><span style="color:#24292E">    C --> C2[Token验证]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    D --> D1[本地加密]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> D2[传输加密]</span></span>
+<span class="line"><span style="color:#24292E">    D --> D1[本地加密]</span></span>
+<span class="line"><span style="color:#24292E">    D --> D2[传输加密]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    E --> E1[沙箱隔离]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> E2[权限控制]</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    E --> E1[沙箱隔离]</span></span>
+<span class="line"><span style="color:#24292E">    E --> E2[权限控制]</span></span></code></pre>
 <p><strong>安全实践</strong>：</p>
 <ol>
 <li>
@@ -593,21 +593,21 @@
 </ol>
 <h2 id="十一与传统-ai-助手的对比">十一、与传统 AI 助手的对比</h2>
 <h3 id="111-架构对比">11.1 架构对比</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "传统AI助手"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A1[Web界面] --> B1[云端服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B1 --> C1[集中式存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B1 --> D1[AI模型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "传统AI助手"</span></span>
+<span class="line"><span style="color:#24292E">        A1[Web界面] --> B1[云端服务]</span></span>
+<span class="line"><span style="color:#24292E">        B1 --> C1[集中式存储]</span></span>
+<span class="line"><span style="color:#24292E">        B1 --> D1[AI模型]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "Clawdbot"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A2[消息应用] --> B2[本地Gateway]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B2 --> C2[本地存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B2 --> D2[可选AI服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph "Clawdbot"</span></span>
+<span class="line"><span style="color:#24292E">        A2[消息应用] --> B2[本地Gateway]</span></span>
+<span class="line"><span style="color:#24292E">        B2 --> C2[本地存储]</span></span>
+<span class="line"><span style="color:#24292E">        B2 --> D2[可选AI服务]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style C1 fill:#FFB6C1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C2 fill:#90EE90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style C1 fill:#FFB6C1</span></span>
+<span class="line"><span style="color:#24292E">    style C2 fill:#90EE90</span></span></code></pre>
 <h3 id="112-特性对比">11.2 特性对比</h3>
 
 
@@ -719,7 +719,7 @@
       // 初始化 Mermaid - 使用 default 主题以支持内联 style
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',  // dark 主题适配暗色背景
+        theme: 'default',  // default 主题适配亮色背景
         flowchart: {
           useMaxWidth: true,
           htmlLabels: true,
@@ -757,7 +757,7 @@
             const mermaidDiv = document.createElement('div');
             mermaidDiv.className = 'mermaid';
             mermaidDiv.textContent = code;
-            mermaidDiv.style.backgroundColor = '#161b22';
+            mermaidDiv.style.backgroundColor = '#f6f8fa';
             mermaidDiv.style.padding = '20px';
             mermaidDiv.style.borderRadius = '8px';
             mermaidDiv.style.margin = '20px 0';

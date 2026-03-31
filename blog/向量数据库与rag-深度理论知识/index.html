@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="向量检索算法HNSW/IVF、Embedding技术、RAG架构原理、混合检索BM25、知识图谱GraphRAG及Pinecone/Weaviate架构解析。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>向量数据库与RAG深度理论知识</title><style>:root{--bg: #0d1117;--text: #e6edf3;--accent: #58a6ff;--accent-hover: #1f6feb;--gray: #8b949e;--border: #30363d;--code-bg: #161b22;--glow: 0 0 10px rgba(88, 166, 255, .3);--surface: #161b22}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="向量检索算法HNSW/IVF、Embedding技术、RAG架构原理、混合检索BM25、知识图谱GraphRAG及Pinecone/Weaviate架构解析。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>向量数据库与RAG深度理论知识</title><style>:root{--bg: #ffffff;--text: #24292f;--accent: #0969da;--accent-hover: #0550ae;--gray: #57606a;--border: #d0d7de;--code-bg: #f6f8fa;--glow: 0 0 10px rgba(9, 105, 218, .2);--surface: #f6f8fa}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;color:var(--text);line-height:1.6;font-size:16px}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#cf222e;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>向量数据库与RAG深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="向量数据库与rag深度理论知识">向量数据库与RAG深度理论知识</h1>
 <blockquote>
 <p><strong>学习深度</strong>: ⭐⭐⭐⭐
@@ -22,7 +22,7 @@
 <h3 id="11-为什么需要向量数据库">1.1 为什么需要向量数据库</h3>
 <h4 id="传统数据库的局限性">传统数据库的局限性</h4>
 <p><strong>传统关系数据库 (SQL)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询模式: 精确匹配</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询模式: 精确匹配</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>SELECT * FROM products WHERE name = 'iPhone 15'</span></span>
@@ -33,7 +33,7 @@
 <span class="line"><span>• 无法处理模糊查询</span></span>
 <span class="line"><span>• 无法跨模态检索（文本搜图片）</span></span></code></pre>
 <p><strong>传统全文搜索 (Elasticsearch)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询模式: 关键词匹配 + TF-IDF</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询模式: 关键词匹配 + TF-IDF</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>"机器学习算法" → 包含"机器"+"学习"+"算法"的文档</span></span>
@@ -44,7 +44,7 @@
 <span class="line"><span>• 同义词、多语言支持弱</span></span></code></pre>
 <h4 id="向量数据库的革命性突破">向量数据库的革命性突破</h4>
 <p><strong>核心思想</strong>: 将数据转为高维向量（Embedding），在向量空间中进行相似度搜索。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询流程:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询流程:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 传统数据库:</span></span>
 <span class="line"><span>   用户查询 "苹果手机" → 精确匹配 → 仅返回包含"苹果手机"的结果</span></span>
@@ -68,7 +68,7 @@
 <h3 id="12-向量空间的数学基础">1.2 向量空间的数学基础</h3>
 <h4 id="向量表示">向量表示</h4>
 <p><strong>定义</strong>: 将对象映射到 n 维空间的点</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>文本示例:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>文本示例:</span></span>
 <span class="line"><span>"猫" → [0.2, 0.8, 0.1, 0.3, ...] (768维)</span></span>
 <span class="line"><span>"狗" → [0.3, 0.7, 0.2, 0.4, ...]</span></span>
 <span class="line"><span></span></span>
@@ -77,7 +77,7 @@
 <span class="line"><span>dog.jpg → [0.15, 0.85, 0.1, ...]</span></span></code></pre>
 <h4 id="相似度度量">相似度度量</h4>
 <p><strong>1. 欧几里得距离 (L2 Distance)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: d(a, b) = √(Σ(aᵢ - bᵢ)²)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: d(a, b) = √(Σ(aᵢ - bᵢ)²)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>几何含义: 两点间的直线距离</span></span>
 <span class="line"><span></span></span>
@@ -86,7 +86,7 @@
 <span class="line"><span>• 受向量模长影响</span></span>
 <span class="line"><span>• 适用: 位置敏感的场景</span></span></code></pre>
 <p><strong>2. 余弦相似度 (Cosine Similarity)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: cos(θ) = (a · b) / (||a|| × ||b||)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: cos(θ) = (a · b) / (||a|| × ||b||)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>取值范围: [-1, 1]</span></span>
 <span class="line"><span>• 1: 完全相同</span></span>
@@ -98,14 +98,14 @@
 <span class="line"><span>• 归一化后等价于内积</span></span>
 <span class="line"><span>• 适用: 文本、语义搜索（最常用）</span></span></code></pre>
 <p><strong>3. 内积 (Dot Product)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: a · b = Σ(aᵢ × bᵢ)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: a · b = Σ(aᵢ × bᵢ)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>特点:</span></span>
 <span class="line"><span>• 同时考虑方向和模长</span></span>
 <span class="line"><span>• 计算最快</span></span>
 <span class="line"><span>• 适用: 预先归一化的向量</span></span></code></pre>
 <p><strong>4. 曼哈顿距离 (L1 Distance)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: d(a, b) = Σ|aᵢ - bᵢ|</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: d(a, b) = Σ|aᵢ - bᵢ|</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>特点:</span></span>
 <span class="line"><span>• 对异常值鲁棒</span></span>
@@ -156,7 +156,7 @@
 <h3 id="13-维度灾难-curse-of-dimensionality">1.3 维度灾难 (Curse of Dimensionality)</h3>
 <h4 id="问题本质">问题本质</h4>
 <p><strong>现象</strong>: 高维空间中，所有点之间的距离趋于相等。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实验:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实验:</span></span>
 <span class="line"><span>随机生成 1000 个点，计算最近邻和最远邻的距离比</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>维度    最近/最远距离比</span></span>
@@ -165,7 +165,7 @@
 <span class="line"><span>100维   0.80  (区分度低)</span></span>
 <span class="line"><span>1000维  0.95  (几乎无法区分)</span></span></code></pre>
 <p><strong>数学解释</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>高维空间中，球体体积集中在表面附近</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>高维空间中，球体体积集中在表面附近</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>n 维单位球体积:</span></span>
 <span class="line"><span>V_n = π^(n/2) / Γ(n/2 + 1)</span></span>
@@ -175,17 +175,17 @@
 <span class="line"><span>→ 距离趋于相等</span></span></code></pre>
 <h4 id="解决方案">解决方案</h4>
 <p><strong>1. 降维 (Dimensionality Reduction)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>技术:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>技术:</span></span>
 <span class="line"><span>• PCA (主成分分析)</span></span>
 <span class="line"><span>• t-SNE (可视化)</span></span>
 <span class="line"><span>• UMAP (保持拓扑结构)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>目标: 1536维 → 256维 (保留 95%+ 信息)</span></span></code></pre>
 <p><strong>2. 量化 (Quantization)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>• Product Quantization (PQ): 向量分段，码本压缩</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>• Product Quantization (PQ): 向量分段，码本压缩</span></span>
 <span class="line"><span>• Scalar Quantization (SQ): float32 → int8</span></span></code></pre>
 <p><strong>3. 近似搜索</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>放弃精确搜索，使用近似算法:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>放弃精确搜索，使用近似算法:</span></span>
 <span class="line"><span>• HNSW (Hierarchical Navigable Small World)</span></span>
 <span class="line"><span>• IVF (Inverted File Index)</span></span>
 <span class="line"><span>• Annoy (Approximate Nearest Neighbors Oh Yeah)</span></span></code></pre>
@@ -193,7 +193,7 @@
 <h2 id="向量检索算法">向量检索算法</h2>
 <h3 id="21-暴力搜索-brute-force">2.1 暴力搜索 (Brute Force)</h3>
 <h4 id="原理">原理</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>算法:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>算法:</span></span>
 <span class="line"><span>1. 计算查询向量与所有向量的相似度</span></span>
 <span class="line"><span>2. 排序</span></span>
 <span class="line"><span>3. 返回 Top-K</span></span>
@@ -239,7 +239,7 @@
 <h3 id="22-局部敏感哈希-lsh---locality-sensitive-hashing">2.2 局部敏感哈希 (LSH - Locality Sensitive Hashing)</h3>
 <h4 id="核心思想">核心思想</h4>
 <p><strong>目标</strong>: 将相似向量哈希到同一个桶中。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统哈希: 完全不同的输入 → 完全不同的哈希值</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统哈希: 完全不同的输入 → 完全不同的哈希值</span></span>
 <span class="line"><span>LSH:      相似的输入 → 相似的哈希值</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>原理:</span></span>
@@ -247,7 +247,7 @@
 <span class="line"><span>2. P(h(a) = h(b)) = similarity(a, b)</span></span>
 <span class="line"><span>3. 只在同一桶内搜索</span></span></code></pre>
 <h4 id="随机投影-lsh">随机投影 LSH</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 使用随机超平面划分空间</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 使用随机超平面划分空间</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>算法:</span></span>
 <span class="line"><span>1. 生成随机向量 r₁, r₂, ..., rₖ</span></span>
@@ -268,7 +268,7 @@
 <li><strong>适用场景</strong>: 海量数据初筛</li>
 </ul>
 <p><strong>权衡</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>哈希函数数量 k:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>哈希函数数量 k:</span></span>
 <span class="line"><span>• k 太小 → 假阳性高（不相似的也在同一桶）</span></span>
 <span class="line"><span>• k 太大 → 假阴性高（相似的分到不同桶）</span></span>
 <span class="line"><span></span></span>
@@ -278,43 +278,43 @@
 <h3 id="23-倒排索引-ivf---inverted-file-index">2.3 倒排索引 (IVF - Inverted File Index)</h3>
 <h4 id="核心思想-1">核心思想</h4>
 <p><strong>类比</strong>: 图书馆分类法 - 先找类别，再在类别内精确搜索。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>步骤:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>步骤:</span></span>
 <span class="line"><span>1. 训练阶段: 将向量空间聚类为 n 个簇</span></span>
 <span class="line"><span>2. 索引阶段: 每个向量分配到最近的簇</span></span>
 <span class="line"><span>3. 查询阶段:</span></span>
 <span class="line"><span>   a. 找到查询向量最近的 m 个簇 (m &#x3C;&#x3C; n)</span></span>
 <span class="line"><span>   b. 仅在这 m 个簇内暴力搜索</span></span></code></pre>
 <h4 id="ivf-架构">IVF 架构</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph VectorSpace["向量空间"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        subgraph C1["Cluster 1"]</span></span>
-<span class="line"><span style="color:#E1E4E8">            V1["v1, v5&#x3C;br/>v9, v12"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        end</span></span>
-<span class="line"><span style="color:#E1E4E8">        subgraph C2["Cluster 2"]</span></span>
-<span class="line"><span style="color:#E1E4E8">            V2["v2, v7&#x3C;br/>v15, v20"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        end</span></span>
-<span class="line"><span style="color:#E1E4E8">        subgraph C3["Cluster 3"]</span></span>
-<span class="line"><span style="color:#E1E4E8">            V3["v3, v8&#x3C;br/>v14"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        end</span></span>
-<span class="line"><span style="color:#E1E4E8">        subgraph C4["Cluster 4"]</span></span>
-<span class="line"><span style="color:#E1E4E8">            V4["v4, v11&#x3C;br/>v18"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        end</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph VectorSpace["向量空间"]</span></span>
+<span class="line"><span style="color:#24292E">        subgraph C1["Cluster 1"]</span></span>
+<span class="line"><span style="color:#24292E">            V1["v1, v5&#x3C;br/>v9, v12"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">        subgraph C2["Cluster 2"]</span></span>
+<span class="line"><span style="color:#24292E">            V2["v2, v7&#x3C;br/>v15, v20"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">        subgraph C3["Cluster 3"]</span></span>
+<span class="line"><span style="color:#24292E">            V3["v3, v8&#x3C;br/>v14"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">        subgraph C4["Cluster 4"]</span></span>
+<span class="line"><span style="color:#24292E">            V4["v4, v11&#x3C;br/>v18"]</span></span>
+<span class="line"><span style="color:#24292E">        end</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Query["查询向量 query"] --> Step1["计算与各簇中心距离"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Step1 --> Step2["选择最近的 2 个簇&#x3C;br/>Cluster 1, 3"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Step2 --> Step3["仅搜索这两个簇内的向量"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Step3 --> Result["返回 Top-K"]</span></span>
+<span class="line"><span style="color:#24292E">    Query["查询向量 query"] --> Step1["计算与各簇中心距离"]</span></span>
+<span class="line"><span style="color:#24292E">    Step1 --> Step2["选择最近的 2 个簇&#x3C;br/>Cluster 1, 3"]</span></span>
+<span class="line"><span style="color:#24292E">    Step2 --> Step3["仅搜索这两个簇内的向量"]</span></span>
+<span class="line"><span style="color:#24292E">    Step3 --> Result["返回 Top-K"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Step2 -.搜索.-> C1</span></span>
-<span class="line"><span style="color:#E1E4E8">    Step2 -.搜索.-> C3</span></span>
+<span class="line"><span style="color:#24292E">    Step2 -.搜索.-> C1</span></span>
+<span class="line"><span style="color:#24292E">    Step2 -.搜索.-> C3</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style C1 fill:#e1f5ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C2 fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C3 fill:#e1ffe1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C4 fill:#ffe1f5</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Query fill:#ffd700</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Result fill:#90ee90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style C1 fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style C2 fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style C3 fill:#e1ffe1</span></span>
+<span class="line"><span style="color:#24292E">    style C4 fill:#ffe1f5</span></span>
+<span class="line"><span style="color:#24292E">    style Query fill:#ffd700</span></span>
+<span class="line"><span style="color:#24292E">    style Result fill:#90ee90</span></span></code></pre>
 <h4 id="ivf-变体">IVF 变体</h4>
 <p><strong>IVF-Flat</strong>:</p>
 <ul>
@@ -351,7 +351,7 @@
 
 <table><thead><tr><th>参数</th><th>影响</th></tr></thead><tbody><tr><td><strong>簇数量 (nlist)</strong></td><td>越多 → 查询越快，但召回率下降</td></tr><tr><td><strong>探测簇数 (nprobe)</strong></td><td>越多 → 召回率越高，但查询越慢</td></tr></tbody></table>
 <p><strong>推荐配置</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据量 100万:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据量 100万:</span></span>
 <span class="line"><span>  nlist = 1000 (√n 经验值)</span></span>
 <span class="line"><span>  nprobe = 10-50</span></span>
 <span class="line"><span></span></span>
@@ -370,48 +370,48 @@
 <p><strong>HNSW 创新</strong>: 将小世界网络应用于向量检索。</p>
 <hr>
 <h4 id="hnsw-多层图结构">HNSW 多层图结构</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Layer2["Layer 2 (稀疏,长距离跳跃)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L2_v1["v1"] &#x3C;--> L2_v100["v100"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L2_v100 &#x3C;--> L2_v500["v500"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer2["Layer 2 (稀疏,长距离跳跃)"]</span></span>
+<span class="line"><span style="color:#24292E">        L2_v1["v1"] &#x3C;--> L2_v100["v100"]</span></span>
+<span class="line"><span style="color:#24292E">        L2_v100 &#x3C;--> L2_v500["v500"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Layer1["Layer 1 (中等密度)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L1_v1["v1"] &#x3C;--> L1_v10["v10"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L1_v10 &#x3C;--> L1_v50["v50"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L1_v50 &#x3C;--> L1_v100["v100"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L1_v100 &#x3C;--> L1_v200["v200"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L1_v200 &#x3C;--> L1_v500["v500"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer1["Layer 1 (中等密度)"]</span></span>
+<span class="line"><span style="color:#24292E">        L1_v1["v1"] &#x3C;--> L1_v10["v10"]</span></span>
+<span class="line"><span style="color:#24292E">        L1_v10 &#x3C;--> L1_v50["v50"]</span></span>
+<span class="line"><span style="color:#24292E">        L1_v50 &#x3C;--> L1_v100["v100"]</span></span>
+<span class="line"><span style="color:#24292E">        L1_v100 &#x3C;--> L1_v200["v200"]</span></span>
+<span class="line"><span style="color:#24292E">        L1_v200 &#x3C;--> L1_v500["v500"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph Layer0["Layer 0 (密集,短距离连接)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_v1["v1"] &#x3C;--> L0_v2["v2"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_v2 &#x3C;--> L0_v3["v3"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_v3 &#x3C;--> L0_dots1["..."]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_dots1 &#x3C;--> L0_v98["v98"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_v98 &#x3C;--> L0_v99["v99"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_v99 &#x3C;--> L0_v100["v100"]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L0_v100 &#x3C;--> L0_dots2["...(所有节点)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"><span style="color:#24292E">    subgraph Layer0["Layer 0 (密集,短距离连接)"]</span></span>
+<span class="line"><span style="color:#24292E">        L0_v1["v1"] &#x3C;--> L0_v2["v2"]</span></span>
+<span class="line"><span style="color:#24292E">        L0_v2 &#x3C;--> L0_v3["v3"]</span></span>
+<span class="line"><span style="color:#24292E">        L0_v3 &#x3C;--> L0_dots1["..."]</span></span>
+<span class="line"><span style="color:#24292E">        L0_dots1 &#x3C;--> L0_v98["v98"]</span></span>
+<span class="line"><span style="color:#24292E">        L0_v98 &#x3C;--> L0_v99["v99"]</span></span>
+<span class="line"><span style="color:#24292E">        L0_v99 &#x3C;--> L0_v100["v100"]</span></span>
+<span class="line"><span style="color:#24292E">        L0_v100 &#x3C;--> L0_dots2["...(所有节点)"]</span></span>
+<span class="line"><span style="color:#24292E">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L2_v1 -.下降.-> L1_v1</span></span>
-<span class="line"><span style="color:#E1E4E8">    L2_v100 -.下降.-> L1_v100</span></span>
-<span class="line"><span style="color:#E1E4E8">    L2_v500 -.下降.-> L1_v500</span></span>
+<span class="line"><span style="color:#24292E">    L2_v1 -.下降.-> L1_v1</span></span>
+<span class="line"><span style="color:#24292E">    L2_v100 -.下降.-> L1_v100</span></span>
+<span class="line"><span style="color:#24292E">    L2_v500 -.下降.-> L1_v500</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    L1_v1 -.下降.-> L0_v1</span></span>
-<span class="line"><span style="color:#E1E4E8">    L1_v100 -.下降.-> L0_v100</span></span>
-<span class="line"><span style="color:#E1E4E8">    L1_v500 -.下降.-> L0_dots2</span></span>
+<span class="line"><span style="color:#24292E">    L1_v1 -.下降.-> L0_v1</span></span>
+<span class="line"><span style="color:#24292E">    L1_v100 -.下降.-> L0_v100</span></span>
+<span class="line"><span style="color:#24292E">    L1_v500 -.下降.-> L0_dots2</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style Layer2 fill:#ffe1e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Layer1 fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Layer0 fill:#e1f5ff</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style Layer2 fill:#ffe1e1</span></span>
+<span class="line"><span style="color:#24292E">    style Layer1 fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style Layer0 fill:#e1f5ff</span></span></code></pre>
 <p><strong>特点:</strong></p>
 <ul>
 <li>上层: 少量节点，长距离边 → 快速定位区域</li>
 <li>下层: 全部节点，短距离边 → 精确搜索</li>
 </ul>
 <h4 id="搜索算法">搜索算法</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询流程:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>查询流程:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 从最高层的入口点开始</span></span>
 <span class="line"><span>2. 贪心搜索: 每次移动到最近的邻居</span></span>
@@ -427,7 +427,7 @@
 <span class="line"><span>Layer 0: v120 → v121 → v122 (最终搜索)</span></span>
 <span class="line"><span>返回: v122, v121, v119 (Top-3)</span></span></code></pre>
 <h4 id="构建算法">构建算法</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>插入新向量 v:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>插入新向量 v:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 随机分配层数 l (指数分布)</span></span>
 <span class="line"><span>   P(l) = e^(-l/ln(M))  (M=16 典型值)</span></span>
@@ -437,7 +437,7 @@
 <span class="line"><span>4. 每层保留最多 M 个邻居 (M=16-32)</span></span>
 <span class="line"><span>5. 使用启发式选择"多样性"的邻居</span></span></code></pre>
 <p><strong>邻居选择启发式</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>目标: 选择既近又多样的邻居</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>目标: 选择既近又多样的邻居</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>算法:</span></span>
 <span class="line"><span>1. 候选集 C = 当前节点的所有潜在邻居</span></span>
@@ -555,7 +555,7 @@
 
 <table><thead><tr><th>算法</th><th>原理</th><th>时间复杂度</th><th>召回率</th><th>内存</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>暴力搜索</strong></td><td>全量计算</td><td>O(n×d)</td><td>100%</td><td>低</td><td>&#x3C; 1万数据</td></tr><tr><td><strong>LSH</strong></td><td>随机投影哈希</td><td>O(k×d)</td><td>70-90%</td><td>低</td><td>海量数据粗排</td></tr><tr><td><strong>IVF</strong></td><td>聚类 + 倒排</td><td>O(m×d)</td><td>85-95%</td><td>中</td><td>通用场景</td></tr><tr><td><strong>HNSW</strong></td><td>多层图导航</td><td>O(log n×d)</td><td>95-99%</td><td>高</td><td>低延迟需求</td></tr><tr><td><strong>PQ</strong></td><td>向量量化</td><td>O(n×d/c)</td><td>80-90%</td><td>极低</td><td>内存受限</td></tr></tbody></table>
 <p><strong>选型建议</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据量 &#x3C; 1万:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>数据量 &#x3C; 1万:</span></span>
 <span class="line"><span>  → 暴力搜索</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>数据量 1万-100万:</span></span>
@@ -574,7 +574,7 @@
 <h3 id="31-embedding-的本质">3.1 Embedding 的本质</h3>
 <h4 id="什么是-embedding">什么是 Embedding</h4>
 <p><strong>定义</strong>: 将离散对象映射到连续向量空间的过程。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>映射:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>映射:</span></span>
 <span class="line"><span>"猫" → [0.2, 0.8, 0.1, 0.3, ...] (768维)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>目标:</span></span>
@@ -583,7 +583,7 @@
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>distance("猫", "狗") &#x3C; distance("猫", "汽车")</span></span></code></pre>
 <p><strong>历史演进</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间线:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>时间线:</span></span>
 <span class="line"><span>2003  →  2013   →   2017    →    2018     →    2022</span></span>
 <span class="line"><span>Word2Vec  GloVe   Transformer   BERT       GPT-3     OpenAI Ada</span></span>
 <span class="line"><span>(词向量) (全局统计) (注意力机制) (双向编码) (大规模) (专用Embedding)</span></span></code></pre>
@@ -591,7 +591,7 @@
 <h3 id="32-embedding-模型分类">3.2 Embedding 模型分类</h3>
 <h4 id="文本-embedding">文本 Embedding</h4>
 <p><strong>Word Embedding (词向量)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模型: Word2Vec, GloVe</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模型: Word2Vec, GloVe</span></span>
 <span class="line"><span>原理: 词的上下文决定词义</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>局限性:</span></span>
@@ -599,20 +599,20 @@
 <span class="line"><span>  "银行"(river bank) vs "银行"(financial bank)</span></span>
 <span class="line"><span>• 无法处理 OOV (Out of Vocabulary)</span></span></code></pre>
 <p><strong>Sentence Embedding (句子向量)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模型: Sentence-BERT, Universal Sentence Encoder</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模型: Sentence-BERT, Universal Sentence Encoder</span></span>
 <span class="line"><span>原理: 编码整个句子的语义</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>优势:</span></span>
 <span class="line"><span>• 上下文感知</span></span>
 <span class="line"><span>• 长文本理解</span></span></code></pre>
 <p><strong>Document Embedding (文档向量)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模型: Doc2Vec, LDA</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模型: Doc2Vec, LDA</span></span>
 <span class="line"><span>原理: 编码文档主题</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>适用: 长文档相似度、主题建模</span></span></code></pre>
 <h4 id="多模态-embedding">多模态 Embedding</h4>
 <p><strong>CLIP (Contrastive Language-Image Pretraining)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 文本和图像映射到同一向量空间</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 文本和图像映射到同一向量空间</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>能力:</span></span>
 <span class="line"><span>• 文本查图片: "一只橘猫" → [图片]</span></span>
@@ -633,7 +633,7 @@
 <h3 id="33-embedding-模型选择">3.3 Embedding 模型选择</h3>
 <h4 id="关键维度">关键维度</h4>
 <p><strong>1. 向量维度</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>维度越高 → 表达能力越强，但计算/存储成本越高</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>维度越高 → 表达能力越强，但计算/存储成本越高</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>常见维度:</span></span>
 <span class="line"><span>• 384: 轻量级（Sentence-BERT Mini）</span></span>
@@ -646,7 +646,7 @@
 <span class="line"><span>• 通用任务（文档检索）: 768-1536 维</span></span>
 <span class="line"><span>• 复杂任务（多语言、跨模态）: 1536+ 维</span></span></code></pre>
 <p><strong>2. 训练语料</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>通用模型 vs 领域模型:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>通用模型 vs 领域模型:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>通用模型 (OpenAI Ada-002):</span></span>
 <span class="line"><span>  • 训练数据: 海量互联网文本</span></span>
@@ -662,7 +662,7 @@
 <span class="line"><span>• 通用场景 → 通用模型</span></span>
 <span class="line"><span>• 垂直领域（医疗/法律/金融）→ 领域模型</span></span></code></pre>
 <p><strong>3. 多语言支持</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>单语言 vs 多语言:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>单语言 vs 多语言:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>单语言 (BERT English):</span></span>
 <span class="line"><span>  • 仅英语训练</span></span>
@@ -729,14 +729,14 @@
 <h3 id="34-embedding-质量评估">3.4 Embedding 质量评估</h3>
 <h4 id="评估指标">评估指标</h4>
 <p><strong>1. 检索准确率</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Recall@K:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Recall@K:</span></span>
 <span class="line"><span>前 K 个结果中相关文档的比例</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>查询: "Python 编程入门"</span></span>
 <span class="line"><span>前 10 个结果中，8 个相关 → Recall@10 = 0.8</span></span></code></pre>
 <p><strong>2. 平均倒数排名 (MRR - Mean Reciprocal Rank)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MRR = (1/|Q|) × Σ(1/rank_i)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MRR = (1/|Q|) × Σ(1/rank_i)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>查询 1: 第1个结果相关 → 1/1 = 1.0</span></span>
@@ -744,13 +744,13 @@
 <span class="line"><span>查询 3: 第2个结果相关 → 1/2 = 0.5</span></span>
 <span class="line"><span>MRR = (1.0 + 0.33 + 0.5) / 3 = 0.61</span></span></code></pre>
 <p><strong>3. NDCG (Normalized Discounted Cumulative Gain)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>考虑排名位置的加权指标</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>考虑排名位置的加权指标</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>DCG@K = Σ(rel_i / log₂(i+1))</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>优点: 排名越靠前权重越大</span></span></code></pre>
 <h4 id="benchmark-数据集">Benchmark 数据集</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MTEB (Massive Text Embedding Benchmark):</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MTEB (Massive Text Embedding Benchmark):</span></span>
 <span class="line"><span>• 56 个数据集</span></span>
 <span class="line"><span>• 8 种任务类型</span></span>
 <span class="line"><span>• 112 种语言</span></span>
@@ -765,7 +765,7 @@
 <hr>
 <h3 id="35-embedding-微调-fine-tuning">3.5 Embedding 微调 (Fine-tuning)</h3>
 <h4 id="为什么需要微调">为什么需要微调</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>通用模型问题:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>通用模型问题:</span></span>
 <span class="line"><span>查询: "如何治疗糖尿病？"</span></span>
 <span class="line"><span>通用模型可能返回:</span></span>
 <span class="line"><span>  ✗ "糖尿病的定义"</span></span>
@@ -776,7 +776,7 @@
 <span class="line"><span>原因: 通用模型未针对特定任务优化</span></span></code></pre>
 <h4 id="微调策略">微调策略</h4>
 <p><strong>1. 对比学习 (Contrastive Learning)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>目标: 拉近正样本，推远负样本</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>目标: 拉近正样本，推远负样本</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>训练数据:</span></span>
 <span class="line"><span>(查询, 正文档, 负文档₁, 负文档₂, ...)</span></span>
@@ -787,7 +787,7 @@
 <span class="line"><span>正样本: 人工标注或点击日志</span></span>
 <span class="line"><span>负样本: 随机采样或难负例挖掘</span></span></code></pre>
 <p><strong>2. 三元组损失 (Triplet Loss)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>训练数据:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>训练数据:</span></span>
 <span class="line"><span>(锚点 a, 正样本 p, 负样本 n)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>目标:</span></span>
@@ -798,7 +798,7 @@
 <span class="line"><span>正样本: "Python 入门指南"</span></span>
 <span class="line"><span>负样本: "Java 编程"</span></span></code></pre>
 <p><strong>3. 知识蒸馏</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>教师模型: 大型高性能模型 (GPT-4)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>教师模型: 大型高性能模型 (GPT-4)</span></span>
 <span class="line"><span>学生模型: 小型快速模型 (MiniLM)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>训练: 学生模型学习教师模型的输出</span></span>
@@ -808,22 +808,22 @@
 <h3 id="41-rag-的诞生背景">4.1 RAG 的诞生背景</h3>
 <h4 id="llm-的局限性">LLM 的局限性</h4>
 <p><strong>问题 1: 知识截止日期</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>GPT-4 训练数据截止 2023年4月</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>GPT-4 训练数据截止 2023年4月</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>用户: "2024年美国大选结果是什么？"</span></span>
 <span class="line"><span>LLM: "我不知道，我的知识截止到 2023年4月"</span></span></code></pre>
 <p><strong>问题 2: 幻觉 (Hallucination)</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户: "我们公司2023年Q4营收是多少？"</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户: "我们公司2023年Q4营收是多少？"</span></span>
 <span class="line"><span>LLM: "根据我的了解，贵公司 Q4 营收为 500 万美元"</span></span>
 <span class="line"><span>           ↑ 完全编造的数字</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>原因: LLM 倾向于生成"听起来合理"的内容</span></span></code></pre>
 <p><strong>问题 3: 无法访问私有数据</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>企业内部文档、数据库、API → LLM 无法访问</span></span></code></pre>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>企业内部文档、数据库、API → LLM 无法访问</span></span></code></pre>
 <h4 id="rag-解决方案">RAG 解决方案</h4>
 <p><strong>RAG (Retrieval-Augmented Generation)</strong> = 检索增强生成</p>
 <p><strong>核心思想</strong>: 先检索相关文档，再基于文档生成回答。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统 LLM:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统 LLM:</span></span>
 <span class="line"><span>用户问题 → LLM → 直接生成答案 (可能错误)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>RAG:</span></span>
@@ -838,42 +838,42 @@
 <h3 id="42-rag-基础架构">4.2 RAG 基础架构</h3>
 <p><strong>RAG 完整流程:</strong></p>
 <h4 id="1-离线索引阶段-indexing">1. 离线索引阶段 (Indexing)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    Doc["文档库&#x3C;br/>doc1.pdf&#x3C;br/>doc2.txt&#x3C;br/>doc3.md"] --> Chunk["文档分块 (Chunking)&#x3C;br/>• 512 tokens&#x3C;br/>• 重叠 50"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Chunk --> Embed["Embedding 模型&#x3C;br/>(向量化)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Embed --> VectorDB["向量数据库 (存储)&#x3C;br/>Pinecone/Weaviate"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    Doc["文档库&#x3C;br/>doc1.pdf&#x3C;br/>doc2.txt&#x3C;br/>doc3.md"] --> Chunk["文档分块 (Chunking)&#x3C;br/>• 512 tokens&#x3C;br/>• 重叠 50"]</span></span>
+<span class="line"><span style="color:#24292E">    Chunk --> Embed["Embedding 模型&#x3C;br/>(向量化)"]</span></span>
+<span class="line"><span style="color:#24292E">    Embed --> VectorDB["向量数据库 (存储)&#x3C;br/>Pinecone/Weaviate"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style Doc fill:#e1f5ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Chunk fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Embed fill:#ffe1ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style VectorDB fill:#e1ffe1</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style Doc fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style Chunk fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style Embed fill:#ffe1ff</span></span>
+<span class="line"><span style="color:#24292E">    style VectorDB fill:#e1ffe1</span></span></code></pre>
 <h4 id="2-在线查询阶段-query">2. 在线查询阶段 (Query)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    UserQ["用户问题:&#x3C;br/>'如何配置Kubernetes?'"] --> QEmbed["问题 Embedding&#x3C;br/>(向量化)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    QEmbed --> Retrieval["向量检索 (Top-K)&#x3C;br/>返回最相关的 5个文档块"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Retrieval --> Rerank["重排序 (可选)&#x3C;br/>精排 Top-3"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Rerank --> Prompt["Prompt 构造&#x3C;br/>上下文: [检索的文档]&#x3C;br/>问题: [用户问题]&#x3C;br/>指令: 基于上下文回答，不要编造"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Prompt --> LLM["LLM 生成&#x3C;br/>GPT-4"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    LLM --> Answer["生成答案 + 引用来源"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    UserQ["用户问题:&#x3C;br/>'如何配置Kubernetes?'"] --> QEmbed["问题 Embedding&#x3C;br/>(向量化)"]</span></span>
+<span class="line"><span style="color:#24292E">    QEmbed --> Retrieval["向量检索 (Top-K)&#x3C;br/>返回最相关的 5个文档块"]</span></span>
+<span class="line"><span style="color:#24292E">    Retrieval --> Rerank["重排序 (可选)&#x3C;br/>精排 Top-3"]</span></span>
+<span class="line"><span style="color:#24292E">    Rerank --> Prompt["Prompt 构造&#x3C;br/>上下文: [检索的文档]&#x3C;br/>问题: [用户问题]&#x3C;br/>指令: 基于上下文回答，不要编造"]</span></span>
+<span class="line"><span style="color:#24292E">    Prompt --> LLM["LLM 生成&#x3C;br/>GPT-4"]</span></span>
+<span class="line"><span style="color:#24292E">    LLM --> Answer["生成答案 + 引用来源"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style UserQ fill:#ffd700</span></span>
-<span class="line"><span style="color:#E1E4E8">    style QEmbed fill:#e1f5ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Retrieval fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Rerank fill:#ffe1ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Prompt fill:#e1ffe1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style LLM fill:#ffe1e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Answer fill:#90ee90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style UserQ fill:#ffd700</span></span>
+<span class="line"><span style="color:#24292E">    style QEmbed fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style Retrieval fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style Rerank fill:#ffe1ff</span></span>
+<span class="line"><span style="color:#24292E">    style Prompt fill:#e1ffe1</span></span>
+<span class="line"><span style="color:#24292E">    style LLM fill:#ffe1e1</span></span>
+<span class="line"><span style="color:#24292E">    style Answer fill:#90ee90</span></span></code></pre>
 <hr>
 <h3 id="43-文档分块策略-chunking">4.3 文档分块策略 (Chunking)</h3>
 <h4 id="为什么需要分块">为什么需要分块</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题:</span></span>
 <span class="line"><span>• 整个文档 Embedding → 信息密度低，检索不精确</span></span>
 <span class="line"><span>• LLM 上下文窗口有限（GPT-4: 128K tokens）</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>解决方案: 将长文档切分为小块</span></span></code></pre>
 <h4 id="分块方法">分块方法</h4>
 <p><strong>1. 固定大小分块 (Fixed-size Chunking)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>参数:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>参数:</span></span>
 <span class="line"><span>• chunk_size: 512 tokens</span></span>
 <span class="line"><span>• overlap: 50 tokens (避免关键信息被截断)</span></span>
 <span class="line"><span></span></span>
@@ -886,7 +886,7 @@
 <span class="line"><span>优点: 简单、可控</span></span>
 <span class="line"><span>缺点: 可能切断语义</span></span></code></pre>
 <p><strong>2. 语义分块 (Semantic Chunking)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 根据语义边界切分</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 根据语义边界切分</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>方法:</span></span>
 <span class="line"><span>• 句子边界: 以句号、问号、感叹号为界</span></span>
@@ -896,7 +896,7 @@
 <span class="line"><span>优点: 保持语义完整性</span></span>
 <span class="line"><span>缺点: 块大小不均匀</span></span></code></pre>
 <p><strong>3. 滑动窗口 (Sliding Window)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方法: 固定大小 + 固定步长</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方法: 固定大小 + 固定步长</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>参数:</span></span>
 <span class="line"><span>• window_size: 512 tokens</span></span>
@@ -905,7 +905,7 @@
 <span class="line"><span>优点: 信息覆盖全面</span></span>
 <span class="line"><span>缺点: 存储量大（2倍）</span></span></code></pre>
 <p><strong>4. 层次分块 (Hierarchical Chunking)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>结构:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>结构:</span></span>
 <span class="line"><span>文档 → 章节 → 段落 → 句子</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>索引策略:</span></span>
@@ -953,7 +953,7 @@
 <hr>
 <h3 id="44-rag-提示工程-prompt-engineering">4.4 RAG 提示工程 (Prompt Engineering)</h3>
 <h4 id="基础-prompt-模板">基础 Prompt 模板</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>系统提示:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>系统提示:</span></span>
 <span class="line"><span>"你是一个问答助手。请根据以下上下文回答用户问题。</span></span>
 <span class="line"><span>如果上下文中没有相关信息，请明确说明'根据提供的信息无法回答'。</span></span>
 <span class="line"><span>不要编造信息。"</span></span>
@@ -969,7 +969,7 @@
 <span class="line"><span>请回答:</span></span></code></pre>
 <h4 id="高级-prompt-技巧">高级 Prompt 技巧</h4>
 <p><strong>1. 引用要求</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指令: "请在回答中标注信息来源，格式为 [1], [2]"</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指令: "请在回答中标注信息来源，格式为 [1], [2]"</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例回答:</span></span>
 <span class="line"><span>"Kubernetes 通过控制平面管理容器化应用 [1]。</span></span>
@@ -979,14 +979,14 @@
 <span class="line"><span>[1] 文档: kubernetes-overview.pdf, 第3页</span></span>
 <span class="line"><span>[2] 文档: k8s-architecture.md, 第12行</span></span></code></pre>
 <p><strong>2. 答案结构化</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指令: "请按以下格式回答：</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指令: "请按以下格式回答：</span></span>
 <span class="line"><span>1. 简短总结（1-2句话）</span></span>
 <span class="line"><span>2. 详细说明</span></span>
 <span class="line"><span>3. 相关链接或参考"</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>好处: 答案更易读、可操作</span></span></code></pre>
 <p><strong>3. 思维链 (Chain-of-Thought)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指令: "请先分析上下文，再给出答案。格式为：</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>指令: "请先分析上下文，再给出答案。格式为：</span></span>
 <span class="line"><span>分析: [推理过程]</span></span>
 <span class="line"><span>答案: [最终答案]"</span></span>
 <span class="line"><span></span></span>
@@ -997,7 +997,7 @@
 <h3 id="45-rag-性能优化">4.5 RAG 性能优化</h3>
 <h4 id="检索优化">检索优化</h4>
 <p><strong>1. 查询改写 (Query Rewriting)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 用户查询往往不完整或不准确</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 用户查询往往不完整或不准确</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>原始查询: "k8s 配置"</span></span>
@@ -1008,7 +1008,7 @@
 <span class="line"><span>• 同义词扩展: "k8s" → "Kubernetes"</span></span>
 <span class="line"><span>• 查询分解: 复杂问题 → 多个子问题</span></span></code></pre>
 <p><strong>2. 假设性文档嵌入 (HyDE - Hypothetical Document Embeddings)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 让 LLM 先生成"假设的答案文档"，再检索</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 让 LLM 先生成"假设的答案文档"，再检索</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 用户问题: "如何优化数据库查询？"</span></span>
@@ -1019,7 +1019,7 @@
 <span class="line"><span></span></span>
 <span class="line"><span>原因: 文档-文档相似度 > 问题-文档相似度</span></span></code></pre>
 <p><strong>3. 多查询融合 (Multi-Query Fusion)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方法: 生成多个相关查询，合并结果</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方法: 生成多个相关查询，合并结果</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>原始: "Python 异步编程"</span></span>
@@ -1031,7 +1031,7 @@
 <span class="line"><span>检索: 每个查询 Top-5，合并后去重 → Top-10</span></span>
 <span class="line"><span>好处: 提高召回率</span></span></code></pre>
 <h4 id="重排序-re-ranking">重排序 (Re-ranking)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 向量检索基于语义相似度，可能不符合业务需求</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 向量检索基于语义相似度，可能不符合业务需求</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>解决方案: 两阶段检索</span></span>
 <span class="line"><span></span></span>
@@ -1046,7 +1046,7 @@
 <span class="line"><span>• LLM-based Reranker: 用 LLM 评分</span></span>
 <span class="line"><span>• 规则 based: 关键词匹配、新鲜度、权威性</span></span></code></pre>
 <p><strong>重排序因子</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. 语义相关性 (Embedding 相似度)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. 语义相关性 (Embedding 相似度)</span></span>
 <span class="line"><span>2. 关键词匹配 (BM25 分数)</span></span>
 <span class="line"><span>3. 文档新鲜度 (发布时间)</span></span>
 <span class="line"><span>4. 文档权威性 (来源、引用次数)</span></span>
@@ -1057,7 +1057,7 @@
 <h3 id="46-rag-评估指标">4.6 RAG 评估指标</h3>
 <h4 id="检索质量指标">检索质量指标</h4>
 <p><strong>1. 上下文精确率 (Context Precision)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 检索到的文档中，相关文档的比例</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 检索到的文档中，相关文档的比例</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>计算:</span></span>
 <span class="line"><span>Context Precision = 相关文档数 / 检索到的总文档数</span></span>
@@ -1065,7 +1065,7 @@
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>检索 10 个文档，7 个相关 → 0.7</span></span></code></pre>
 <p><strong>2. 上下文召回率 (Context Recall)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 所有相关文档中，被检索到的比例</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 所有相关文档中，被检索到的比例</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>计算:</span></span>
 <span class="line"><span>Context Recall = 检索到的相关文档数 / 所有相关文档数</span></span>
@@ -1074,13 +1074,13 @@
 <span class="line"><span>共 20 个相关文档，检索到 15 个 → 0.75</span></span></code></pre>
 <h4 id="生成质量指标">生成质量指标</h4>
 <p><strong>3. 答案相关性 (Answer Relevance)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 生成的答案是否回答了用户问题</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 生成的答案是否回答了用户问题</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>评估方法:</span></span>
 <span class="line"><span>• 人工标注</span></span>
 <span class="line"><span>• LLM 评分: 让 GPT-4 评估答案质量</span></span></code></pre>
 <p><strong>4. 忠实度 (Faithfulness)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 答案是否忠实于上下文，没有幻觉</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 答案是否忠实于上下文，没有幻觉</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>评估:</span></span>
 <span class="line"><span>• 统计答案中的陈述</span></span>
@@ -1091,11 +1091,11 @@
 <span class="line"><span>上下文: "Kubernetes 支持多种容器运行时"</span></span>
 <span class="line"><span>→ 忠实度低（上下文未提及 Docker）</span></span></code></pre>
 <p><strong>5. 答案正确性 (Answer Correctness)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 答案在事实层面是否正确</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 答案在事实层面是否正确</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>评估: 与标准答案对比（需要黄金标准）</span></span></code></pre>
 <h4 id="rag-综合评估框架">RAG 综合评估框架</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>RAGAS (Retrieval-Augmented Generation Assessment):</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>RAGAS (Retrieval-Augmented Generation Assessment):</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>指标:</span></span>
 <span class="line"><span>1. Context Precision (上下文精确率)</span></span>
@@ -1108,14 +1108,14 @@
 <h2 id="混合检索技术-hybrid-search">混合检索技术 (Hybrid Search)</h2>
 <h3 id="51-混合检索的必要性">5.1 混合检索的必要性</h3>
 <h4 id="语义检索的局限">语义检索的局限</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景 1: 精确匹配需求</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景 1: 精确匹配需求</span></span>
 <span class="line"><span>用户查询: "iPhone 15 Pro Max 512GB"</span></span>
 <span class="line"><span>语义检索可能返回:</span></span>
 <span class="line"><span>  • "iPhone 15 Pro 256GB" (语义相近，但容量不符)</span></span>
 <span class="line"><span>  • "iPhone 14 Pro Max 512GB" (容量对，但型号不符)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>问题: 语义相似 ≠ 符合需求</span></span></code></pre>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景 2: 专业术语</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景 2: 专业术语</span></span>
 <span class="line"><span>用户查询: "TCP/IP 协议"</span></span>
 <span class="line"><span>语义检索可能返回:</span></span>
 <span class="line"><span>  • "网络通信协议" (泛化)</span></span>
@@ -1123,7 +1123,7 @@
 <span class="line"><span></span></span>
 <span class="line"><span>期望: 精确匹配 "TCP/IP"</span></span></code></pre>
 <h4 id="关键词检索的局限">关键词检索的局限</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 同义词/改写</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 同义词/改写</span></span>
 <span class="line"><span>用户查询: "机器学习算法"</span></span>
 <span class="line"><span>关键词检索:</span></span>
 <span class="line"><span>  • 仅匹配包含"机器学习算法"的文档</span></span>
@@ -1132,7 +1132,7 @@
 <span class="line"><span>问题: 无法理解语义等价</span></span></code></pre>
 <h4 id="混合检索解决方案">混合检索解决方案</h4>
 <p><strong>核心思想</strong>: 结合语义检索和关键词检索的优势。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>混合检索 = 语义检索 (Embedding) + 关键词检索 (BM25)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>混合检索 = 语义检索 (Embedding) + 关键词检索 (BM25)</span></span>
 <span class="line"><span>           ↓                        ↓</span></span>
 <span class="line"><span>        理解语义                  精确匹配</span></span>
 <span class="line"><span>        ↓                        ↓</span></span>
@@ -1144,7 +1144,7 @@
 <h4 id="bm25-best-matching-25">BM25 (Best Matching 25)</h4>
 <p><strong>定位</strong>: TF-IDF 的改进版，文本检索的黄金标准。</p>
 <p><strong>核心公式</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>BM25(q, d) = Σ IDF(qᵢ) × [TF(qᵢ,d) × (k₁+1)] / [TF(qᵢ,d) + k₁×(1 - b + b×|d|/avgdl)]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>BM25(q, d) = Σ IDF(qᵢ) × [TF(qᵢ,d) × (k₁+1)] / [TF(qᵢ,d) + k₁×(1 - b + b×|d|/avgdl)]</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>其中:</span></span>
 <span class="line"><span>• q: 查询</span></span>
@@ -1173,7 +1173,7 @@
 <hr>
 <h3 id="53-混合检索融合算法">5.3 混合检索融合算法</h3>
 <h4 id="1-倒数排名融合-rrf---reciprocal-rank-fusion">1. 倒数排名融合 (RRF - Reciprocal Rank Fusion)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 将排名转为分数，而非直接使用相似度分数</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 将排名转为分数，而非直接使用相似度分数</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>公式:</span></span>
 <span class="line"><span>RRF(d) = Σ [1 / (k + rank_s(d))]</span></span>
@@ -1201,7 +1201,7 @@
 <li>简单有效</li>
 </ul>
 <h4 id="2-加权融合-weighted-fusion">2. 加权融合 (Weighted Fusion)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>公式:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>公式:</span></span>
 <span class="line"><span>Score(d) = α × Score_semantic(d) + (1-α) × Score_keyword(d)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>其中:</span></span>
@@ -1213,7 +1213,7 @@
 <span class="line"><span>• α = 0.5: 平衡</span></span>
 <span class="line"><span>• α = 0.3: 偏重关键词（专业术语场景）</span></span></code></pre>
 <h4 id="3-分布式融合-distribution-based-fusion">3. 分布式融合 (Distribution-based Fusion)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 将两个检索结果的分数归一化到标准分布</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 将两个检索结果的分数归一化到标准分布</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>步骤:</span></span>
 <span class="line"><span>1. 计算语义分数的均值 μ₁ 和标准差 σ₁</span></span>
@@ -1227,30 +1227,30 @@
 <hr>
 <h3 id="54-混合检索架构">5.4 混合检索架构</h3>
 <p><strong>混合检索完整架构:</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    UserQuery["用户查询: '深度学习优化算法'"] --> Preprocess["查询预处理&#x3C;br/>• 分词: ['深度', '学习', '优化', '算法']&#x3C;br/>• Embedding: [0.2, 0.8, ...]"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    UserQuery["用户查询: '深度学习优化算法'"] --> Preprocess["查询预处理&#x3C;br/>• 分词: ['深度', '学习', '优化', '算法']&#x3C;br/>• Embedding: [0.2, 0.8, ...]"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Preprocess --> VectorSearch["语义检索&#x3C;br/>(Vector DB)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Preprocess --> KeywordSearch["关键词检索&#x3C;br/>(BM25)"]</span></span>
+<span class="line"><span style="color:#24292E">    Preprocess --> VectorSearch["语义检索&#x3C;br/>(Vector DB)"]</span></span>
+<span class="line"><span style="color:#24292E">    Preprocess --> KeywordSearch["关键词检索&#x3C;br/>(BM25)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    VectorSearch --> Top100_1["Top-100 文档"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    KeywordSearch --> Top100_2["Top-100 文档"]</span></span>
+<span class="line"><span style="color:#24292E">    VectorSearch --> Top100_1["Top-100 文档"]</span></span>
+<span class="line"><span style="color:#24292E">    KeywordSearch --> Top100_2["Top-100 文档"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Top100_1 --> Fusion["结果融合 (RRF)&#x3C;br/>• 合并两个结果列表&#x3C;br/>• 计算 RRF 分数&#x3C;br/>• 去重"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Top100_2 --> Fusion</span></span>
+<span class="line"><span style="color:#24292E">    Top100_1 --> Fusion["结果融合 (RRF)&#x3C;br/>• 合并两个结果列表&#x3C;br/>• 计算 RRF 分数&#x3C;br/>• 去重"]</span></span>
+<span class="line"><span style="color:#24292E">    Top100_2 --> Fusion</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Fusion --> Top50["Top-50 文档"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Top50 --> Rerank["重排序 (可选)&#x3C;br/>• Cross-Encoder&#x3C;br/>• LLM Reranker"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Rerank --> Top10["Top-10 文档"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Top10 --> RAG["返回给 RAG 系统"]</span></span>
+<span class="line"><span style="color:#24292E">    Fusion --> Top50["Top-50 文档"]</span></span>
+<span class="line"><span style="color:#24292E">    Top50 --> Rerank["重排序 (可选)&#x3C;br/>• Cross-Encoder&#x3C;br/>• LLM Reranker"]</span></span>
+<span class="line"><span style="color:#24292E">    Rerank --> Top10["Top-10 文档"]</span></span>
+<span class="line"><span style="color:#24292E">    Top10 --> RAG["返回给 RAG 系统"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style UserQuery fill:#ffd700</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Preprocess fill:#e1f5ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style VectorSearch fill:#ffe1ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style KeywordSearch fill:#ffe1ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Fusion fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Rerank fill:#e1ffe1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style RAG fill:#90ee90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style UserQuery fill:#ffd700</span></span>
+<span class="line"><span style="color:#24292E">    style Preprocess fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style VectorSearch fill:#ffe1ff</span></span>
+<span class="line"><span style="color:#24292E">    style KeywordSearch fill:#ffe1ff</span></span>
+<span class="line"><span style="color:#24292E">    style Fusion fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style Rerank fill:#e1ffe1</span></span>
+<span class="line"><span style="color:#24292E">    style RAG fill:#90ee90</span></span></code></pre>
 <hr>
 <h3 id="55-混合检索性能对比">5.5 混合检索性能对比</h3>
 
@@ -1292,7 +1292,7 @@
 
 <table><thead><tr><th>检索方式</th><th>精确匹配</th><th>语义理解</th><th>召回率</th><th>精确率</th><th>推荐场景</th></tr></thead><tbody><tr><td><strong>纯语义</strong></td><td>弱</td><td>强</td><td>高</td><td>中</td><td>通用对话</td></tr><tr><td><strong>纯关键词</strong></td><td>强</td><td>弱</td><td>中</td><td>高</td><td>专业文档</td></tr><tr><td><strong>混合检索</strong></td><td>强</td><td>强</td><td>最高</td><td>高</td><td>生产推荐</td></tr></tbody></table>
 <p><strong>实验数据</strong> (BEIR Benchmark):</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>任务: 跨领域文档检索</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>任务: 跨领域文档检索</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>纯语义 (DPR):      NDCG@10 = 0.452</span></span>
 <span class="line"><span>纯关键词 (BM25):   NDCG@10 = 0.438</span></span>
@@ -1302,7 +1302,7 @@
 <h3 id="61-知识图谱基础">6.1 知识图谱基础</h3>
 <h4 id="什么是知识图谱">什么是知识图谱</h4>
 <p><strong>定义</strong>: 以图结构存储实体及其关系的知识库。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>图结构:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>图结构:</span></span>
 <span class="line"><span>    (人物)          (关系)        (人物)</span></span>
 <span class="line"><span>     Alice ─────── 是朋友 ─────── Bob</span></span>
 <span class="line"><span>       │                           │</span></span>
@@ -1355,7 +1355,7 @@
 <hr>
 <h3 id="62-知识图谱增强-rag">6.2 知识图谱增强 RAG</h3>
 <h4 id="为什么需要知识图谱">为什么需要知识图谱</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 多跳推理</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 多跳推理</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>用户问题: "Alice 的同事毕业于哪所大学？"</span></span>
 <span class="line"><span></span></span>
@@ -1368,31 +1368,31 @@
 <span class="line"><span>  → 答案: MIT</span></span></code></pre>
 <h4 id="kg-rag-架构">KG-RAG 架构</h4>
 <p><strong>知识图谱增强 RAG (KG-RAG):</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    UserQ["用户问题: '苹果公司 CEO 的母校是什么?'"] --> NER["1. 实体识别 (NER)&#x3C;br/>识别: '苹果公司', 'CEO', '母校'"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    UserQ["用户问题: '苹果公司 CEO 的母校是什么?'"] --> NER["1. 实体识别 (NER)&#x3C;br/>识别: '苹果公司', 'CEO', '母校'"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    NER --> KGQuery["2. 知识图谱查询&#x3C;br/>苹果公司 → CEO → 谁?&#x3C;br/>结果: Tim Cook&#x3C;br/>&#x3C;br/>Tim Cook → 毕业于 → 哪里?&#x3C;br/>结果: 杜克大学"]</span></span>
+<span class="line"><span style="color:#24292E">    NER --> KGQuery["2. 知识图谱查询&#x3C;br/>苹果公司 → CEO → 谁?&#x3C;br/>结果: Tim Cook&#x3C;br/>&#x3C;br/>Tim Cook → 毕业于 → 哪里?&#x3C;br/>结果: 杜克大学"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    KGQuery --> SubGraph["3. 子图提取&#x3C;br/>提取相关三元组:&#x3C;br/>• (苹果公司, CEO, Tim Cook)&#x3C;br/>• (Tim Cook, 毕业于, 杜克大学)&#x3C;br/>• (Tim Cook, 学位, MBA)"]</span></span>
+<span class="line"><span style="color:#24292E">    KGQuery --> SubGraph["3. 子图提取&#x3C;br/>提取相关三元组:&#x3C;br/>• (苹果公司, CEO, Tim Cook)&#x3C;br/>• (Tim Cook, 毕业于, 杜克大学)&#x3C;br/>• (Tim Cook, 学位, MBA)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    SubGraph --> VectorRet["4. 向量检索(补充信息)&#x3C;br/>检索包含 'Tim Cook 杜克大学' 的文档"]</span></span>
+<span class="line"><span style="color:#24292E">    SubGraph --> VectorRet["4. 向量检索(补充信息)&#x3C;br/>检索包含 'Tim Cook 杜克大学' 的文档"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    VectorRet --> LLMGen["5. LLM 生成&#x3C;br/>输入:&#x3C;br/>• 知识图谱三元组&#x3C;br/>• 检索到的文档&#x3C;br/>• 用户问题"]</span></span>
+<span class="line"><span style="color:#24292E">    VectorRet --> LLMGen["5. LLM 生成&#x3C;br/>输入:&#x3C;br/>• 知识图谱三元组&#x3C;br/>• 检索到的文档&#x3C;br/>• 用户问题"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    LLMGen --> Output["输出:&#x3C;br/>'苹果公司 CEO Tim Cook 毕业于杜克大学,&#x3C;br/>并获得 MBA 学位。'"]</span></span>
+<span class="line"><span style="color:#24292E">    LLMGen --> Output["输出:&#x3C;br/>'苹果公司 CEO Tim Cook 毕业于杜克大学,&#x3C;br/>并获得 MBA 学位。'"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style UserQ fill:#ffd700</span></span>
-<span class="line"><span style="color:#E1E4E8">    style NER fill:#e1f5ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style KGQuery fill:#ffe1ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style SubGraph fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style VectorRet fill:#e1ffe1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style LLMGen fill:#ffe1e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Output fill:#90ee90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style UserQ fill:#ffd700</span></span>
+<span class="line"><span style="color:#24292E">    style NER fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style KGQuery fill:#ffe1ff</span></span>
+<span class="line"><span style="color:#24292E">    style SubGraph fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style VectorRet fill:#e1ffe1</span></span>
+<span class="line"><span style="color:#24292E">    style LLMGen fill:#ffe1e1</span></span>
+<span class="line"><span style="color:#24292E">    style Output fill:#90ee90</span></span></code></pre>
 <hr>
 <h3 id="63-graphrag-microsoft-研究">6.3 GraphRAG (Microsoft 研究)</h3>
 <h4 id="核心创新">核心创新</h4>
 <p><strong>传统 RAG 问题</strong>: 难以回答需要全局理解的问题。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: "这个数据集的主要主题是什么？"</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: "这个数据集的主要主题是什么？"</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>传统 RAG:</span></span>
 <span class="line"><span>  → 检索到几个局部文档</span></span>
@@ -1403,7 +1403,7 @@
 <span class="line"><span>  → 识别社区/主题</span></span>
 <span class="line"><span>  → 全局总结</span></span></code></pre>
 <h4 id="graphrag-架构">GraphRAG 架构</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. 知识图谱构建:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. 知识图谱构建:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>文档集</span></span>
 <span class="line"><span>  ↓</span></span>
@@ -1472,7 +1472,7 @@
 <h3 id="64-知识图谱嵌入-knowledge-graph-embedding">6.4 知识图谱嵌入 (Knowledge Graph Embedding)</h3>
 <h4 id="目标">目标</h4>
 <p>将知识图谱的实体和关系映射到向量空间，同时保留图结构。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>三元组: (Alice, 朋友, Bob)</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>三元组: (Alice, 朋友, Bob)</span></span>
 <span class="line"><span>→</span></span>
 <span class="line"><span>向量表示:</span></span>
 <span class="line"><span>  E(Alice) = [0.2, 0.8, ...]</span></span>
@@ -1483,7 +1483,7 @@
 <span class="line"><span>  E(Alice) + R(朋友) ≈ E(Bob)</span></span></code></pre>
 <h4 id="经典模型">经典模型</h4>
 <p><strong>1. TransE (Translational Embedding)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>假设: h + r ≈ t</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>假设: h + r ≈ t</span></span>
 <span class="line"><span>其中:</span></span>
 <span class="line"><span>  h: 头实体向量</span></span>
 <span class="line"><span>  r: 关系向量</span></span>
@@ -1499,7 +1499,7 @@
 <span class="line"><span>优点: 简单、有效</span></span>
 <span class="line"><span>缺点: 无法处理复杂关系（1-N, N-N）</span></span></code></pre>
 <p><strong>2. RotatE (Rotational Embedding)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>假设: t = h ◦ r</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>假设: t = h ◦ r</span></span>
 <span class="line"><span>其中:</span></span>
 <span class="line"><span>  ◦ 表示复数乘法（旋转）</span></span>
 <span class="line"><span></span></span>
@@ -1508,14 +1508,14 @@
 <span class="line"><span></span></span>
 <span class="line"><span>优点: 可处理对称/反对称/组合关系</span></span></code></pre>
 <p><strong>3. ComplEx (Complex Embeddings)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>使用复数向量表示实体</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>使用复数向量表示实体</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>评分函数:</span></span>
 <span class="line"><span>  φ(h,r,t) = Re(⟨h, r, conj(t)⟩)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>优点: 表达能力强</span></span></code></pre>
 <h4 id="应用-混合检索">应用: 混合检索</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>向量数据库 + 知识图谱嵌入:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>向量数据库 + 知识图谱嵌入:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 文本 Embedding: "苹果公司"</span></span>
 <span class="line"><span>   → 语义向量 [0.2, 0.8, ...]</span></span>
@@ -1596,7 +1596,7 @@
 <hr>
 <h3 id="72-分布式架构模式">7.2 分布式架构模式</h3>
 <h4 id="1-分片-sharding">1. 分片 (Sharding)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 将向量数据水平分片到多个节点</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 将向量数据水平分片到多个节点</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>策略:</span></span>
 <span class="line"><span>• 哈希分片: hash(id) % N</span></span>
@@ -1611,7 +1611,7 @@
 <span class="line"><span>→ 并行查询所有节点</span></span>
 <span class="line"><span>→ 聚合 Top-K</span></span></code></pre>
 <h4 id="2-复制-replication">2. 复制 (Replication)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>目的: 高可用 + 读扩展</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>目的: 高可用 + 读扩展</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>架构:</span></span>
 <span class="line"><span>Primary (主节点): 处理写入</span></span>
@@ -1624,20 +1624,20 @@
 <span class="line"><span>Read → 负载均衡 → 任一 Replica</span></span></code></pre>
 <h4 id="3-混合架构">3. 混合架构</h4>
 <p><strong>Pinecone 架构 (推测):</strong></p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway["API Gateway"] --> MetaStore["Metadata Store&#x3C;br/>(PostgreSQL)&#x3C;br/>• 索引元数据&#x3C;br/>• 过滤索引"]</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
+<span class="line"><span style="color:#24292E">    Gateway["API Gateway"] --> MetaStore["Metadata Store&#x3C;br/>(PostgreSQL)&#x3C;br/>• 索引元数据&#x3C;br/>• 过滤索引"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    MetaStore --> Pod1["Pod 1&#x3C;br/>HNSW&#x3C;br/>(向量索引)"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    MetaStore --> Pod2["Pod 2&#x3C;br/>HNSW&#x3C;br/>(向量索引)"]</span></span>
+<span class="line"><span style="color:#24292E">    MetaStore --> Pod1["Pod 1&#x3C;br/>HNSW&#x3C;br/>(向量索引)"]</span></span>
+<span class="line"><span style="color:#24292E">    MetaStore --> Pod2["Pod 2&#x3C;br/>HNSW&#x3C;br/>(向量索引)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Pod1 -.并行查询.-> Aggreg["聚合结果"]</span></span>
-<span class="line"><span style="color:#E1E4E8">    Pod2 -.并行查询.-> Aggreg</span></span>
+<span class="line"><span style="color:#24292E">    Pod1 -.并行查询.-> Aggreg["聚合结果"]</span></span>
+<span class="line"><span style="color:#24292E">    Pod2 -.并行查询.-> Aggreg</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style Gateway fill:#e1f5ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style MetaStore fill:#ffe1ff</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Pod1 fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Pod2 fill:#fff4e1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style Aggreg fill:#90ee90</span></span></code></pre>
+<span class="line"><span style="color:#24292E">    style Gateway fill:#e1f5ff</span></span>
+<span class="line"><span style="color:#24292E">    style MetaStore fill:#ffe1ff</span></span>
+<span class="line"><span style="color:#24292E">    style Pod1 fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style Pod2 fill:#fff4e1</span></span>
+<span class="line"><span style="color:#24292E">    style Aggreg fill:#90ee90</span></span></code></pre>
 <p><strong>查询流程:</strong></p>
 <ol>
 <li>API Gateway → Metadata Store (过滤)</li>
@@ -1648,7 +1648,7 @@
 <hr>
 <h3 id="73-过滤与元数据">7.3 过滤与元数据</h3>
 <h4 id="问题-向量检索--业务过滤">问题: 向量检索 + 业务过滤</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 电商搜索</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: 电商搜索</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>需求:</span></span>
 <span class="line"><span>"找相似商品，但必须是:</span></span>
@@ -1659,7 +1659,7 @@
 <span class="line"><span>挑战: 向量索引不支持复杂过滤</span></span></code></pre>
 <h4 id="解决方案-1">解决方案</h4>
 <p><strong>1. 预过滤 (Pre-filtering)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 先用元数据过滤: price &#x3C; 100 AND brand = 'Nike'</span></span>
 <span class="line"><span>   → 候选集: 10万个商品</span></span>
 <span class="line"><span>2. 在候选集中向量检索</span></span>
@@ -1668,7 +1668,7 @@
 <span class="line"><span>优点: 精确</span></span>
 <span class="line"><span>缺点: 候选集过小时召回不足</span></span></code></pre>
 <p><strong>2. 后过滤 (Post-filtering)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 向量检索 Top-100</span></span>
 <span class="line"><span>2. 应用过滤条件</span></span>
 <span class="line"><span>   → 过滤后剩余 8 个</span></span>
@@ -1677,7 +1677,7 @@
 <span class="line"><span>优点: 召回充分</span></span>
 <span class="line"><span>缺点: 可能需要多次查询</span></span></code></pre>
 <p><strong>3. 混合索引 (Hybrid Indexing)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Weaviate 方案:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Weaviate 方案:</span></span>
 <span class="line"><span>• 向量索引 (HNSW)</span></span>
 <span class="line"><span>• 元数据倒排索引</span></span>
 <span class="line"><span></span></span>
@@ -1686,7 +1686,7 @@
 <hr>
 <h3 id="74-成本优化策略">7.4 成本优化策略</h3>
 <h4 id="1-维度降低">1. 维度降低</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方法:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方法:</span></span>
 <span class="line"><span>• PCA: 1536维 → 512维</span></span>
 <span class="line"><span>• Matryoshka Embedding: 渐进式维度（可裁剪）</span></span>
 <span class="line"><span></span></span>
@@ -1697,7 +1697,7 @@
 <span class="line"><span>768  | 0.5x | 2x       | 1-2%</span></span>
 <span class="line"><span>384  | 0.25x| 4x       | 3-5%</span></span></code></pre>
 <h4 id="2-量化-quantization">2. 量化 (Quantization)</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>类型:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>类型:</span></span>
 <span class="line"><span>• Scalar Quantization: float32 → int8</span></span>
 <span class="line"><span>  → 4x 压缩</span></span>
 <span class="line"><span>• Product Quantization: 分段编码</span></span>
@@ -1706,7 +1706,7 @@
 <span class="line"><span>精度损失: 2-5% (可接受)</span></span>
 <span class="line"><span>成本节省: 75%+</span></span></code></pre>
 <h4 id="3-分层存储">3. 分层存储</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>热数据 (&#x3C; 7天):</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>热数据 (&#x3C; 7天):</span></span>
 <span class="line"><span>  • SSD + 全精度</span></span>
 <span class="line"><span>  • 低延迟 (&#x3C;10ms)</span></span>
 <span class="line"><span></span></span>
@@ -1720,7 +1720,7 @@
 <hr>
 <h2 id="附录-最佳实践总结">附录: 最佳实践总结</h2>
 <h3 id="向量数据库选型决策树">向量数据库选型决策树</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>开始</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>开始</span></span>
 <span class="line"><span>  ↓</span></span>
 <span class="line"><span>数据量 &#x3C; 10万?</span></span>
 <span class="line"><span>  ├─ 是 → Chroma / FAISS (嵌入式)</span></span>
@@ -1735,7 +1735,7 @@
 <span class="line"><span>  ├─ 是 → Qdrant (Rust 实现)</span></span>
 <span class="line"><span>  └─ 否 → Milvus (社区活跃)</span></span></code></pre>
 <h3 id="rag-优化-checklist">RAG 优化 Checklist</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✅ 文档预处理:</span></span>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✅ 文档预处理:</span></span>
 <span class="line"><span>  □ 分块大小: 512 tokens</span></span>
 <span class="line"><span>  □ 重叠: 50 tokens</span></span>
 <span class="line"><span>  □ 移除噪声 (页眉、页脚)</span></span>
@@ -1817,7 +1817,7 @@
       // 初始化 Mermaid - 使用 default 主题以支持内联 style
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',  // dark 主题适配暗色背景
+        theme: 'default',  // default 主题适配亮色背景
         flowchart: {
           useMaxWidth: true,
           htmlLabels: true,
@@ -1855,7 +1855,7 @@
             const mermaidDiv = document.createElement('div');
             mermaidDiv.className = 'mermaid';
             mermaidDiv.textContent = code;
-            mermaidDiv.style.backgroundColor = '#161b22';
+            mermaidDiv.style.backgroundColor = '#f6f8fa';
             mermaidDiv.style.padding = '20px';
             mermaidDiv.style.borderRadius = '8px';
             mermaidDiv.style.margin = '20px 0';
