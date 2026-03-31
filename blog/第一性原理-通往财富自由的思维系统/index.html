@@ -2725,13 +2725,13 @@
       // 初始化 Mermaid - 使用 default 主题以支持内联 style
       mermaid.initialize({
         startOnLoad: false,
-        theme: 'dark',  // 深色主题
+        theme: 'dark',
         flowchart: {
-          useMaxWidth: true,
+          useMaxWidth: false,
           htmlLabels: true,
           curve: 'basis'
         },
-        securityLevel: 'loose'  // 允许自定义样式
+        securityLevel: 'loose'
       });
 
       // 等待 DOM 加载完成
@@ -2767,6 +2767,7 @@
             mermaidDiv.style.padding = '20px';
             mermaidDiv.style.borderRadius = '8px';
             mermaidDiv.style.margin = '20px 0';
+            mermaidDiv.style.overflowX = 'auto';
 
             // 替换原来的 pre 标签
             block.parentElement.replaceWith(mermaidDiv);
