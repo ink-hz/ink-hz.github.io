@@ -2462,6 +2462,36 @@
             mermaidDiv.style.borderRadius = '8px';
             mermaidDiv.style.margin = '20px 0';
             mermaidDiv.style.overflowX = 'auto';
+            mermaidDiv.style.cursor = 'grab';
+
+            // 添加鼠标拖拽功能
+            let isDragging = false;
+            let startX, scrollLeft;
+
+            mermaidDiv.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              mermaidDiv.style.cursor = 'grabbing';
+              startX = e.pageX - mermaidDiv.offsetLeft;
+              scrollLeft = mermaidDiv.scrollLeft;
+            });
+
+            mermaidDiv.addEventListener('mouseleave', () => {
+              isDragging = false;
+              mermaidDiv.style.cursor = 'grab';
+            });
+
+            mermaidDiv.addEventListener('mouseup', () => {
+              isDragging = false;
+              mermaidDiv.style.cursor = 'grab';
+            });
+
+            mermaidDiv.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              e.preventDefault();
+              const x = e.pageX - mermaidDiv.offsetLeft;
+              const walk = (x - startX) * 2;
+              mermaidDiv.scrollLeft = scrollLeft - walk;
+            });
 
             // 替换原来的 pre 标签
             block.parentElement.replaceWith(mermaidDiv);
