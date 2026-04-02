@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="用户旅程的本质是产品经理对用户意图的硬编码预判。当大模型跨过工具使用的可用门槛，是时候回到第一性原理：用户只需要表达意图，平台自己理解并执行。本文拆解从&#34;固定UI+预设旅程&#34;到&#34;意图即操作+能力自生长&#34;的架构范式跳跃。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>【干掉用户旅程】意图驱动的业务平台架构设计</title><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#cf222e;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>【干掉用户旅程】意图驱动的业务平台架构设计</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/3/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#架构设计</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="干掉用户旅程意图驱动的业务平台架构设计">【干掉用户旅程】意图驱动的业务平台架构设计</h1>
 <blockquote>
 <p>当你的用户还在菜单和 Dashboard 之间反复横跳时，他们真正想做的只是表达一个意图。</p>
@@ -7,7 +7,7 @@
 <hr>
 <h2 id="一传统业务平台的本质硬编码的意图预判">一、传统业务平台的本质：硬编码的意图预判</h2>
 <p>打开任何一个 SaaS 平台——CRM、ERP、运维监控、数据分析——你看到的都是同一个范式：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>产品经理设计用户旅程 → UX 画页面流转 → 前端开发页面 → 用户按预设路径点击操作</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>产品经理设计用户旅程 → UX 画页面流转 → 前端开发页面 → 用户按预设路径点击操作</span></span></code></pre>
 <p>这个范式有一个隐含假设：<strong>用户的需求可以被预判和归类。</strong> 产品经理定义”先看 Dashboard，再点列表，再进详情页”这样的固定路径，前端把路径做成页面流转。</p>
 <p>但这个假设正在崩塌：</p>
 <ul>
@@ -20,7 +20,7 @@
 <hr>
 <h2 id="二范式跳跃从用户旅程到意图即操作">二、范式跳跃：从用户旅程到意图即操作</h2>
 <p>大模型能力跨过”工具使用”的可用门槛后，一个新范式成为可能：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>旧范式：产品经理设计用户旅程 → 固定 UI → 用户按预设路径操作</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>旧范式：产品经理设计用户旅程 → 固定 UI → 用户按预设路径操作</span></span>
 <span class="line"><span>        人是操作者，平台是工具，能力由开发团队预建</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>新范式：用户表达意图（自然语言）→ Agent 大脑理解意图 → 原子工具执行 → 最合适的方式呈现结果</span></span>
@@ -134,7 +134,7 @@
 <p>四层能力叠加，让业务平台从一个需要人操作的工具，进化为一个会自我进化、按需生长的智能体。</p>
 <h3 id="31-层次一能力原子化与工具体系">3.1 层次一：能力原子化与工具体系</h3>
 <p>平台能力的暴露不是选择一种接口形式，而是<strong>同一个能力对不同消费者开不同的口</strong>：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                         ┌─ Skill（编排层）─────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                         ┌─ Skill（编排层）─────────────────┐</span></span>
 <span class="line"><span>                         │  固化的多步工作流                   │</span></span>
 <span class="line"><span>                         │  来源：经验固化自动提炼              │</span></span>
 <span class="line"><span>                         │  消耗：零 token（确定性执行）        │</span></span>
@@ -158,7 +158,7 @@
 </ol>
 <h3 id="32-层次三经验自固化越用越快越省">3.2 层次三：经验自固化——越用越快越省</h3>
 <p>Agent 大脑处理同类问题时，行动路径会逐渐收敛。当系统发现某类场景下 Agent 的行动序列高度相似（相似度 > 80%），将这些行动模式提炼为确定性工作流，后续同类场景直接执行，不再消耗 LLM 推理资源。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>第 1~100 次：Agent 自主编排工具调用（灵活，消耗 token）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>第 1~100 次：Agent 自主编排工具调用（灵活，消耗 token）</span></span>
 <span class="line"><span>第 101 次：  系统发现历史轨迹高度相似 → 自动提炼为确定性工作流 DAG</span></span>
 <span class="line"><span>第 102 次起：同类场景直接走固化流程（零 token，确定性执行）</span></span>
 <span class="line"><span>             固化流程覆盖不了的长尾场景 → 回退到 Agent 自主决策</span></span></code></pre>
@@ -206,12 +206,12 @@
 
 <table><thead><tr><th>步骤</th><th>动作</th><th>关键设计点</th></tr></thead><tbody><tr><td>1. 行动轨迹记录</td><td>Agent 每次处理任务，完整记录触发条件→工具调用序列→每步输入输出→最终结论</td><td>结构化日志，可分析</td></tr><tr><td>2. 模式识别</td><td>对历史轨迹聚类分析——相似度、分支逻辑可枚举性、结论收敛性</td><td>行为分析引擎</td></tr><tr><td>3. 工作流提炼</td><td>将高相似度轨迹抽象为 DAG（工具调用序列 + 分支条件 + 异常处理）</td><td>结构化制品，非任意代码</td></tr><tr><td>4. 人工确认</td><td>审批后才激活——不能让 AI 自己决定自动化什么</td><td>审批 + 理由记录</td></tr><tr><td>5. 灰度执行</td><td>固化流程与 Agent 并行运行，对比结果一致率 > 95% 后正式替代</td><td>可回滚</td></tr><tr><td>6. 漂移监控</td><td>持续监控效果指标，效果下降时自动退回 Agent 模式，触发重新学习</td><td>闭环自愈</td></tr></tbody></table>
 <p><strong>经济价值</strong>：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>无固化：每天 1000 次业务操作 × 每次 ~5 次 LLM 调用 = 持续高 token 消耗</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>无固化：每天 1000 次业务操作 × 每次 ~5 次 LLM 调用 = 持续高 token 消耗</span></span>
 <span class="line"><span>有固化：80% 常见场景走固化流程（零 token）+ 20% 长尾走 Agent（有 token）</span></span>
 <span class="line"><span>       → token 成本降至 ~20%，且随时间持续下降</span></span></code></pre>
 <h3 id="33-层次四能力自生产schema-约束下的-ai-自主工程">3.3 层次四：能力自生产——Schema 约束下的 AI 自主工程</h3>
 <p>不只是让 Agent 调用已有工具，而是让 Agent <strong>自主识别能力缺口，自主生产新的规则、新的子 Agent、新的工作流</strong>——平台自己”长出新器官”。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>AI 辅助工程：人设计 → AI 辅助编码 → 人测试 → 人部署</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>AI 辅助工程：人设计 → AI 辅助编码 → 人测试 → 人部署</span></span>
 <span class="line"><span>AI 自主工程：AI 感知缺口 → AI 生成制品 → AI 验证 → 人审批 → AI 部署 → AI 监控</span></span>
 <span class="line"><span>                                                      ↑</span></span>
 <span class="line"><span>                                                唯一的人工环节</span></span></code></pre>
@@ -331,7 +331,7 @@
 <hr>
 <h2 id="五业务自动化的自动驾驶分级">五、业务自动化的”自动驾驶”分级</h2>
 <p>类比自动驾驶的分级，业务平台的智能化也有清晰的演进阶梯：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>L0  人工操作    人看数据、人改配置、人做决策</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>L0  人工操作    人看数据、人改配置、人做决策</span></span>
 <span class="line"><span>L1  辅助决策    AI 辅助分析，但人做最终决策          ← 大多数平台现状</span></span>
 <span class="line"><span>L2  有条件自主  Agent 自主处理常规场景，异常场景人介入</span></span>
 <span class="line"><span>L3  高度自主    80% 场景走固化工作流，Agent 处理长尾，人只做审批</span></span>
@@ -347,7 +347,7 @@
 <hr>
 <h2 id="六自演进闭环智能体的新陈代谢">六、自演进闭环——智能体的”新陈代谢”</h2>
 <p>四层能力叠加后，一个完整的自演进闭环形成——这是智能体平台区别于传统平台的根本标志：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>外部输入（新需求 / 业务变化 / 用户反馈 / 效果退化）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>外部输入（新需求 / 业务变化 / 用户反馈 / 效果退化）</span></span>
 <span class="line"><span>        │</span></span>
 <span class="line"><span>        ▼</span></span>
 <span class="line"><span>🧠 Agent 大脑感知能力缺口</span></span>
@@ -379,7 +379,7 @@
 <hr>
 <h2 id="七超智体间协作意图级通信">七、超智体间协作——意图级通信</h2>
 <p>当多个智能体平台共存时，它们之间的协作范式也在跃迁：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Level 1：API 耦合（传统系统间）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Level 1：API 耦合（传统系统间）</span></span>
 <span class="line"><span>  A 调用 B.getData(params)</span></span>
 <span class="line"><span>  → A 必须知道 B 的接口定义，B 改接口 A 就挂</span></span>
 <span class="line"><span>  → 紧耦合</span></span>
@@ -454,7 +454,7 @@
 
 <table><thead><tr><th>现有系统</th><th>智能体化后的位置</th><th>变化本质</th></tr></thead><tbody><tr><td>各业务模块</td><td>原子工具（MCP Tool）</td><td>从人通过 UI 操作 → Agent 通过工具调用</td></tr><tr><td>固定 Dashboard</td><td>Agent 按需组装的呈现原语</td><td>从预建页面 → 对话中嵌入的可视化</td></tr><tr><td>人工编写的规则</td><td>AI 自主生产 + Schema 校验 + 人审批</td><td>从人写规则 → AI 生成 + 人审批</td></tr><tr><td>用户操作手册</td><td>Agent 的长期记忆 + 固化工作流</td><td>从人背流程 → 系统自动沉淀</td></tr></tbody></table>
 <p>演进分四个阶段：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>阶段一（打地基）：能力原子化 + Schema 体系 + 验证流水线</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>阶段一（打地基）：能力原子化 + Schema 体系 + 验证流水线</span></span>
 <span class="line"><span>阶段二（MVP）  ：对话界面上线 + Agent 大脑 + 基础自主执行</span></span>
 <span class="line"><span>阶段三（固化）  ：经验固化引擎 + 能力自生产 + 全场景覆盖</span></span>
 <span class="line"><span>阶段四（全自主）：完整自演进闭环 + 传统 UI 可选关闭</span></span></code></pre>
@@ -462,7 +462,7 @@
 <hr>
 <h2 id="写在最后">写在最后</h2>
 <p>我们正在经历的，不是”给产品加个 AI 功能”，而是<strong>产品形态本身的代际跃迁</strong>。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>工具时代：人 → 固定 UI → 各模块独立操作 → 人脑串联结果</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>工具时代：人 → 固定 UI → 各模块独立操作 → 人脑串联结果</span></span>
 <span class="line"><span>智能体时代：人 → 对话 → Agent 大脑 → 原子工具 → Agent 自动串联</span></span></code></pre>
 <p>传统平台的每个模块都是智能体的”器官”。智能体化是给这些器官加上”大脑”（Agent Brain）、“自生长能力”（工厂 Agent）和”肌肉记忆”（经验固化），并把”固定 UI + 用户旅程”这层皮肤替换为”意图即操作的对话界面”。</p>
 <p><strong>底层能力完全继承，上层范式彻底重塑。</strong></p>

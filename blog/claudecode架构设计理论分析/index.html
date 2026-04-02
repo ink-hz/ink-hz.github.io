@@ -1,12 +1,12 @@
 <!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="基于源码的深度拆解：Agent循环引擎、四层插件化能力模型、五层纵深安全防御、九大事件钩子、MCP开放生态、上下文分层管理。不是给IDE加个聊天窗口，是重新定义人和代码的交互方式。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>Claude Code 架构设计深度拆解：AI编程Agent的操作系统级设计</title><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#cf222e;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>Claude Code 架构设计深度拆解：AI编程Agent的操作系统级设计</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/4/2</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#架构设计</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="claude-code-架构设计深度拆解ai编程agent的操作系统级设计">Claude Code 架构设计深度拆解：AI编程Agent的操作系统级设计</h1>
 <blockquote>
 <p>大多数AI编程工具的架构是”IDE + 聊天窗口”。Claude Code的架构是”Agent操作系统 + 工具生态”。这不是程度差异，是范式差异。</p>
 </blockquote>
 <hr>
 <h2 id="系统架构总览">系统架构总览</h2>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔══════════════════════════════════════════════════════════════════════════╗</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔══════════════════════════════════════════════════════════════════════════╗</span></span>
 <span class="line"><span>║                    Claude Code 系统架构总览                               ║</span></span>
 <span class="line"><span>╠══════════════════════════════════════════════════════════════════════════╣</span></span>
 <span class="line"><span>║                                                                        ║</span></span>
@@ -59,7 +59,7 @@
 <span class="line"><span>╚══════════════════════════════════════════════════════════════════════════╝</span></span></code></pre>
 <h2 id="一ai编程助手的本质从补全到自主">一、AI编程助手的本质：从补全到自主</h2>
 <p>打开任何一个AI编程工具——Copilot、Cursor、Codeium——你看到的都是同一个范式：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>人写代码 → AI 补全/建议 → 人确认 → 人继续写</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>人写代码 → AI 补全/建议 → 人确认 → 人继续写</span></span></code></pre>
 <p>这个范式有一个隐含假设：<strong>人是编程的主体，AI是辅助工具。</strong> 人决定写什么、改什么、在哪里改，AI只在人的操作间隙提供建议。</p>
 <p>但这个假设正在崩塌：</p>
 <ul>
@@ -72,7 +72,7 @@
 <hr>
 <h2 id="二范式跳跃从补全到agent循环">二、范式跳跃：从补全到Agent循环</h2>
 <p>Claude Code的核心设计决策不是”做一个更好的补全工具”，而是<strong>把AI从辅助者变成执行者</strong>。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>旧范式：人写代码 → AI 补全 → 人确认 → 人继续</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>旧范式：人写代码 → AI 补全 → 人确认 → 人继续</span></span>
 <span class="line"><span>        人是操作者，AI是建议器，能力边界由IDE功能决定</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>新范式：人表达意图 → Agent 理解意图 → Agent 自主规划 → 调用工具执行 → 结果反馈 → 继续或退出</span></span>
@@ -125,7 +125,7 @@
 <h2 id="三agent循环引擎核心执行架构">三、Agent循环引擎——核心执行架构</h2>
 <h3 id="31-agent主循环的完整链路">3.1 Agent主循环的完整链路</h3>
 <p>Claude Code的Agent循环不是简单的”输入→输出”，而是一个<strong>持续运转的决策引擎</strong>。每次工具执行的结果重新进入LLM上下文，触发下一轮推理，形成闭环。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│                     Agent 主循环完整链路                          │</span></span>
 <span class="line"><span>├─────────────────────────────────────────────────────────────────┤</span></span>
 <span class="line"><span>│                                                                 │</span></span>
@@ -205,7 +205,7 @@
 <span class="line"><span>└─────────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="32-消息处理管道">3.2 消息处理管道</h3>
 <p>Agent循环中的每条消息都经过标准化的处理管道：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户/工具输出</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户/工具输出</span></span>
 <span class="line"><span>    ↓</span></span>
 <span class="line"><span>消息序列化（JSON格式）</span></span>
 <span class="line"><span>    {role: "user|assistant",</span></span>
@@ -229,7 +229,7 @@
 <h3 id="33-自迭代机制stop-hook驱动的反思循环">3.3 自迭代机制——Stop Hook驱动的反思循环</h3>
 <p>这是Claude Code最精巧的设计之一。Ralph Wiggum插件展示了完整的实现：</p>
 <p><strong>状态文件</strong>（<code>.claude/ralph-loop.local.md</code>）：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────┐</span></span>
 <span class="line"><span>│  YAML Frontmatter                │</span></span>
 <span class="line"><span>│  iteration: 3                    │  ← 当前迭代次数</span></span>
 <span class="line"><span>│  max_iterations: 10              │  ← 最大迭代限制</span></span>
@@ -238,7 +238,7 @@
 <span class="line"><span>│  原始 Prompt 文本                 │  ← 每次迭代重新注入</span></span>
 <span class="line"><span>└──────────────────────────────────┘</span></span></code></pre>
 <p><strong>Stop Hook 判定流程</strong>：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Claude 尝试退出</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Claude 尝试退出</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>读取 .claude/ralph-loop.local.md</span></span>
@@ -261,7 +261,7 @@
 <p><strong>本质：这不是简单的重试，而是”带记忆的自我改进”。</strong> Claude看到自己上一轮的全部工作结果，基于此进行反思和优化。</p>
 <h3 id="34-多agent并行调度">3.4 多Agent并行调度</h3>
 <p>Feature-Dev插件展示了复杂的多Agent编排模式：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Phase 1: 需求理解</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Phase 1: 需求理解</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>Phase 2: 代码库探索（3个Agent并行）</span></span>
@@ -294,7 +294,7 @@
 <h2 id="四四层插件化能力模型能力解耦与自由组合">四、四层插件化能力模型——能力解耦与自由组合</h2>
 <p>Claude Code的能力不是铁板一块，而是由四种正交组件自由组合。每种组件有独立的生命周期、触发机制和配置规范。</p>
 <h3 id="41-四层组件全景">4.1 四层组件全景</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│                    插件（Plugin）                              │</span></span>
 <span class="line"><span>│                                                              │</span></span>
 <span class="line"><span>│  ┌─ Commands ─────────────────┐  ┌─ Agents ───────────────┐ │</span></span>
@@ -338,7 +338,7 @@
 <span class="line"><span>│  └────────────────────────────────────────────────────────┘  │</span></span>
 <span class="line"><span>└──────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="42-五种组件的交互关系">4.2 五种组件的交互关系</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                           用户</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                           用户</span></span>
 <span class="line"><span>                            │</span></span>
 <span class="line"><span>                     /command 或 自然语言</span></span>
 <span class="line"><span>                            │</span></span>
@@ -387,7 +387,7 @@
 <span class="line"><span>                    │ (外部工具桥)   │     stdio/SSE/HTTP/WS</span></span>
 <span class="line"><span>                    └───────────────┘</span></span></code></pre>
 <h3 id="43-插件的完整生命周期">4.3 插件的完整生命周期</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>发现 (Discovery)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>发现 (Discovery)</span></span>
 <span class="line"><span>    │  扫描位置：</span></span>
 <span class="line"><span>    │  · ~/.claude/plugins/（全局）</span></span>
 <span class="line"><span>    │  · .claude-plugin/（项目）</span></span>
@@ -424,7 +424,7 @@
 <p><strong>“约定优于配置”的设计原则</strong>：把文件放到正确的目录，系统自动识别并注册。不需要中央注册表，不需要编写加载代码。插件开发的门槛降到了”会写Markdown”的程度。</p>
 <h3 id="43-agent触发的决策机制">4.3 Agent触发的决策机制</h3>
 <p>Agent不是随机触发的，而是基于description中的<code>&#x3C;example></code>块进行精确匹配：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent描述中定义的触发模式：</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent描述中定义的触发模式：</span></span>
 <span class="line"><span>┌───────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│  &#x3C;example>                                    │</span></span>
 <span class="line"><span>│  Context: [场景描述]                            │</span></span>
@@ -482,7 +482,7 @@
 <h2 id="五九大事件钩子agent生命周期的神经系统">五、九大事件钩子——Agent生命周期的神经系统</h2>
 <p>钩子是Claude Code架构中最关键的扩展机制。它将Agent的完整生命周期抽象为9个标准事件，每个事件点都开放拦截和扩展。</p>
 <h3 id="51-事件全景与执行时序">5.1 事件全景与执行时序</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─── 会话生命周期 ────────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─── 会话生命周期 ────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│                                                             │</span></span>
 <span class="line"><span>│  SessionStart ──→ [项目检测、上下文预加载、环境变量设置]        │</span></span>
 <span class="line"><span>│       │                                                     │</span></span>
@@ -520,7 +520,7 @@
 <span class="line"><span>└─────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="52-钩子配置的两种格式">5.2 钩子配置的两种格式</h3>
 <p><strong>插件钩子</strong>（<code>hooks/hooks.json</code>）——需要包装在 <code>hooks</code> 字段中：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "description": "插件描述",</span></span>
 <span class="line"><span>  "hooks": {</span></span>
 <span class="line"><span>    "PreToolUse": [</span></span>
@@ -543,7 +543,7 @@
 <span class="line"><span>  }</span></span>
 <span class="line"><span>}</span></span></code></pre>
 <p><strong>用户钩子</strong>（<code>.claude/settings.json</code>）——直接定义，无包装：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "PreToolUse": [</span></span>
 <span class="line"><span>    {</span></span>
 <span class="line"><span>      "matcher": "Bash",</span></span>
@@ -640,7 +640,7 @@
 <p><strong>最佳实践：命令钩子做快速过滤，提示钩子做深度判断。两者互补，不互斥。</strong></p>
 <h3 id="55-钩子输入输出数据格式">5.5 钩子输入/输出数据格式</h3>
 <p><strong>钩子接收的输入</strong>：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "session_id": "abc123",</span></span>
 <span class="line"><span>  "transcript_path": "/path/to/transcript.txt",   ← 完整会话记录</span></span>
 <span class="line"><span>  "cwd": "/current/working/dir",</span></span>
@@ -651,7 +651,7 @@
 <span class="line"><span>  "tool_result": "..."                              ← PostToolUse时可用</span></span>
 <span class="line"><span>}</span></span></code></pre>
 <p><strong>PreToolUse钩子返回</strong>：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "hookSpecificOutput": {</span></span>
 <span class="line"><span>    "permissionDecision": "allow|deny|ask",        ← 权限决策</span></span>
 <span class="line"><span>    "updatedInput": {"file_path": "new_path"}      ← 可修改工具输入</span></span>
@@ -659,7 +659,7 @@
 <span class="line"><span>  "systemMessage": "安全警告：检测到敏感路径写入"</span></span>
 <span class="line"><span>}</span></span></code></pre>
 <p><strong>Stop钩子返回</strong>：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "decision": "approve|block",</span></span>
 <span class="line"><span>  "reason": "重新注入的prompt文本",                  ← block时必需</span></span>
 <span class="line"><span>  "systemMessage": "🔄 迭代 3/10"</span></span>
@@ -668,7 +668,7 @@
 <h2 id="六五层纵深安全模型自主不等于失控">六、五层纵深安全模型——自主不等于失控</h2>
 <p>AI Agent执行代码操作的核心矛盾：<strong>自主性越高，风险越大。</strong> Claude Code的解法不是在”全开”和”全关”之间选一个，而是设计了五层递进的信任光谱。</p>
 <h3 id="安全决策数据流">安全决策数据流</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent发起工具调用</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent发起工具调用</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>┌─────────┐    命中deny     ┌─────────┐</span></span>
@@ -710,7 +710,7 @@
 <span class="line"><span>│  执行    │──→ PostToolUse Hook ──→ 结果回传</span></span>
 <span class="line"><span>└─────────┘</span></span></code></pre>
 <h3 id="61-五层防御全景">6.1 五层防御全景</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌────────────────────────────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌────────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│  Level 5: 企业策略层（最高优先级，不可被下层覆盖）                  │</span></span>
 <span class="line"><span>│                                                                │</span></span>
 <span class="line"><span>│  managed-settings.json                                         │</span></span>
@@ -769,7 +769,7 @@
 <span class="line"><span>└────────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="62-配置优先级settings-hierarchy">6.2 配置优先级（Settings Hierarchy）</h3>
 <p>从低到高，高层覆盖低层：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Claude Code 默认设置</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Claude Code 默认设置</span></span>
 <span class="line"><span>    ↓ 覆盖</span></span>
 <span class="line"><span>~/.claude/settings.json                ← 用户全局设置</span></span>
 <span class="line"><span>    ↓ 覆盖</span></span>
@@ -838,7 +838,7 @@
 <table><thead><tr><th>检测模式</th><th>匹配内容</th><th>风险等级</th></tr></thead><tbody><tr><td>命令注入</td><td><code>os.system()</code>, <code>child_process.exec()</code></td><td>Critical</td></tr><tr><td>XSS</td><td><code>innerHTML</code>, <code>dangerouslySetInnerHTML</code></td><td>Critical</td></tr><tr><td>代码执行</td><td><code>eval()</code>, <code>exec()</code>, <code>new Function()</code></td><td>Critical</td></tr><tr><td>反序列化</td><td><code>pickle.loads()</code></td><td>High</td></tr><tr><td>GitHub Actions注入</td><td><code>${{ }}</code> in workflows</td><td>High</td></tr><tr><td>硬编码凭证</td><td><code>API_KEY = "..."</code>, <code>SECRET = "..."</code></td><td>High</td></tr><tr><td>SQL注入</td><td>字符串拼接SQL</td><td>Medium</td></tr><tr><td>路径遍历</td><td><code>../</code> in file paths</td><td>Medium</td></tr><tr><td>不安全HTTP</td><td><code>http://</code> (非https)</td><td>Low</td></tr></tbody></table>
 <h3 id="64-权限评估级联完整决策流程">6.4 权限评估级联——完整决策流程</h3>
 <p>当Agent发起一次工具调用时，权限系统的评估顺序是精确定义的。理解这个级联关系是理解安全模型的关键：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent发起工具调用（tool_name + tool_input）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent发起工具调用（tool_name + tool_input）</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>Step 1: managed-settings检查（最高优先级）</span></span>
@@ -893,7 +893,7 @@
 </ul>
 <h3 id="65-prompt-cache与安全的交互">6.5 Prompt Cache与安全的交互</h3>
 <p>Prompt Cache是性能优化的关键，但与安全模型有微妙的交互：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>正常情况：</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>正常情况：</span></span>
 <span class="line"><span>    系统提示（含安全规则）→ Cache命中 → 零额外token成本</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>异常情况（曾导致12倍token成本的bug）：</span></span>
@@ -961,7 +961,7 @@
 
 <table><thead><tr><th>特性</th><th>stdio</th><th>SSE</th><th>HTTP</th><th>WebSocket</th></tr></thead><tbody><tr><td><strong>传输方式</strong></td><td>进程stdin/stdout</td><td>HTTP+SSE流</td><td>REST请求/响应</td><td>双向连接</td></tr><tr><td><strong>连接状态</strong></td><td>有状态</td><td>有状态</td><td>无状态</td><td>有状态</td></tr><tr><td><strong>认证方式</strong></td><td>环境变量</td><td>OAuth自动</td><td>Headers</td><td>Headers</td></tr><tr><td><strong>最佳场景</strong></td><td>本地工具/DB</td><td>云端SaaS</td><td>内部API</td><td>实时监控</td></tr><tr><td><strong>延迟</strong></td><td>最低</td><td>中等</td><td>中等</td><td>低</td></tr><tr><td><strong>进程管理</strong></td><td>Claude管理生命周期</td><td>外部服务</td><td>外部服务</td><td>外部服务</td></tr></tbody></table>
 <h3 id="72-mcp工具命名规范">7.2 MCP工具命名规范</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>mcp__plugin_&#x3C;插件名>_&#x3C;服务器名>__&#x3C;工具名></span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>mcp__plugin_&#x3C;插件名>_&#x3C;服务器名>__&#x3C;工具名></span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例：</span></span>
 <span class="line"><span>mcp__plugin_asana_asana__asana_create_task</span></span>
@@ -977,7 +977,7 @@
 <hr>
 <h2 id="八上下文管理agent智能的基础设施">八、上下文管理——Agent智能的基础设施</h2>
 <h3 id="81-claudemd层级加载">8.1 CLAUDE.md层级加载</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/CLAUDE.md                    → 全局偏好（个人级）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/CLAUDE.md                    → 全局偏好（个人级）</span></span>
 <span class="line"><span>    ↓ 继承</span></span>
 <span class="line"><span>项目根目录/CLAUDE.md                    → 项目规范（团队级）</span></span>
 <span class="line"><span>    ↓ 覆盖</span></span>
@@ -985,7 +985,7 @@
 <span class="line"><span>    ↓ 覆盖</span></span>
 <span class="line"><span>.claude/settings.local.json            → 本地个人配置（不入库）</span></span></code></pre>
 <h3 id="82-项目自动检测sessionstart钩子">8.2 项目自动检测（SessionStart钩子）</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>会话开始</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>会话开始</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ├─ 检测 package.json     → PROJECT_TYPE=nodejs</span></span>
 <span class="line"><span>    │   └─ 检测 tsconfig.json → USES_TYPESCRIPT=true</span></span>
@@ -1000,7 +1000,7 @@
 <span class="line"><span>环境变量通过 $CLAUDE_ENV_FILE 持久化，整个会话可用</span></span></code></pre>
 <h3 id="83-上下文压缩的完整生命周期">8.3 上下文压缩的完整生命周期</h3>
 <p>压缩不是简单的”删掉旧消息”。它是一个有状态、有断路器、有副作用的复杂流程：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>上下文token估算</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>上下文token估算</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ├─ &#x3C; 80% 窗口 → 不触发，继续正常执行</span></span>
 <span class="line"><span>    │</span></span>
@@ -1047,7 +1047,7 @@
 <p><strong>为什么断路器阈值是3次？</strong> 这是一个工程权衡：1次太激进（可能是临时的大输出），5次太宽松（已经浪费了大量token）。3次在”给系统一次恢复机会”和”及时止损”之间取得平衡。</p>
 <h3 id="84-toolsearch脱延工具的自动管理">8.4 ToolSearch——脱延工具的自动管理</h3>
 <p>当MCP生态扩大后，所有工具的Schema描述可能占据大量上下文窗口。ToolSearch机制自动管理工具的”在场”和”缺席”：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MCP工具注册</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MCP工具注册</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>上下文占比评估</span></span>
@@ -1088,7 +1088,7 @@
 <h2 id="九task系统后台agent的并行执行引擎">九、Task系统——后台Agent的并行执行引擎</h2>
 <p>这是Claude Code中一个完整的后台任务管理系统，本质是<strong>在后台启动独立的Agent循环</strong>，支持多Agent并行执行和协调。</p>
 <h3 id="91-task生命周期">9.1 Task生命周期</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>TaskCreate（创建任务）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>TaskCreate（创建任务）</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    │  参数：subject, description, activeForm, metadata</span></span>
 <span class="line"><span>    │  返回：taskId</span></span>
@@ -1158,7 +1158,7 @@
 <table><thead><tr><th>工具</th><th>职责</th><th>关键参数</th></tr></thead><tbody><tr><td><strong>TaskCreate</strong></td><td>创建后台任务</td><td>subject, description, activeForm</td></tr><tr><td><strong>TaskUpdate</strong></td><td>更新状态/依赖</td><td>status, addBlocks, addBlockedBy, owner</td></tr><tr><td><strong>TaskGet</strong></td><td>读取任务详情</td><td>taskId</td></tr><tr><td><strong>TaskList</strong></td><td>列出所有任务</td><td>—</td></tr><tr><td><strong>TaskOutput</strong></td><td>读取后台输出</td><td>taskId, block(是否阻塞等待), timeout</td></tr><tr><td><strong>TaskStop</strong></td><td>终止运行中任务</td><td>taskId</td></tr></tbody></table>
 <h3 id="93-任务依赖与编排">9.3 任务依赖与编排</h3>
 <p>Task系统支持声明式的依赖关系：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>TaskCreate("设计API接口")         → taskId: 1</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>TaskCreate("设计API接口")         → taskId: 1</span></span>
 <span class="line"><span>TaskCreate("实现API接口")         → taskId: 2</span></span>
 <span class="line"><span>TaskCreate("编写API测试")         → taskId: 3</span></span>
 <span class="line"><span></span></span>
@@ -1171,7 +1171,7 @@
 <h2 id="十memory系统跨会话的持久化知识库">十、Memory系统——跨会话的持久化知识库</h2>
 <p>Memory不是上下文管理的一部分——它是<strong>跨会话的长期记忆</strong>，每次新会话自动加载，持续增量更新。</p>
 <h3 id="memory读写全流程">Memory读写全流程</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔═══ 写入流程 ═══════════════════════════════════════════════════════╗</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔═══ 写入流程 ═══════════════════════════════════════════════════════╗</span></span>
 <span class="line"><span>║                                                                    ║</span></span>
 <span class="line"><span>║  对话中学到新信息（用户角色/偏好/项目状态/外部引用）                   ║</span></span>
 <span class="line"><span>║      │                                                             ║</span></span>
@@ -1204,7 +1204,7 @@
 <span class="line"><span>║                                                                    ║</span></span>
 <span class="line"><span>╚════════════════════════════════════════════════════════════════════╝</span></span></code></pre>
 <h3 id="101-memory架构">10.1 Memory架构</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/projects/&#x3C;project-hash>/memory/</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/projects/&#x3C;project-hash>/memory/</span></span>
 <span class="line"><span>├── MEMORY.md                    ← 索引文件（指针，非内容）</span></span>
 <span class="line"><span>├── user_role.md                 ← 用户信息记忆</span></span>
 <span class="line"><span>├── feedback_testing.md          ← 行为反馈记忆</span></span>
@@ -1248,19 +1248,19 @@
 
 <table><thead><tr><th>类型</th><th>存什么</th><th>何时存</th><th>怎么用</th></tr></thead><tbody><tr><td><strong>user</strong></td><td>用户角色、偏好、知识背景</td><td>学到用户信息时</td><td>定制回答方式和深度</td></tr><tr><td><strong>feedback</strong></td><td>用户对行为的纠正和确认</td><td>用户纠正或确认做法时</td><td>避免重复犯错，保持已验证的做法</td></tr><tr><td><strong>project</strong></td><td>在进的工作、截止日期、决策</td><td>学到项目状态时</td><td>理解任务背景和优先级</td></tr><tr><td><strong>reference</strong></td><td>外部系统的位置和用途</td><td>学到外部资源时</td><td>知道去哪里找信息</td></tr></tbody></table>
 <h3 id="103-记忆文件格式">10.3 记忆文件格式</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#005CC5;font-weight:bold">---</span></span>
-<span class="line"><span style="color:#24292E">name: 测试偏好</span></span>
-<span class="line"><span style="color:#24292E">description: 用户要求集成测试使用真实数据库而非mock</span></span>
-<span class="line"><span style="color:#24292E">type: feedback</span></span>
-<span class="line"><span style="color:#005CC5;font-weight:bold">---</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#79B8FF;font-weight:bold">---</span></span>
+<span class="line"><span style="color:#E1E4E8">name: 测试偏好</span></span>
+<span class="line"><span style="color:#E1E4E8">description: 用户要求集成测试使用真实数据库而非mock</span></span>
+<span class="line"><span style="color:#E1E4E8">type: feedback</span></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">---</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">集成测试必须连接真实数据库，不使用mock。</span></span>
+<span class="line"><span style="color:#E1E4E8">集成测试必须连接真实数据库，不使用mock。</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E;font-weight:bold">**Why:**</span><span style="color:#24292E"> 上季度mock测试通过但生产迁移失败，mock与真实行为有偏差。</span></span>
+<span class="line"><span style="color:#E1E4E8;font-weight:bold">**Why:**</span><span style="color:#E1E4E8"> 上季度mock测试通过但生产迁移失败，mock与真实行为有偏差。</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E;font-weight:bold">**How to apply:**</span><span style="color:#24292E"> 写测试时默认使用测试数据库连接，除非用户明确要求mock。</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8;font-weight:bold">**How to apply:**</span><span style="color:#E1E4E8"> 写测试时默认使用测试数据库连接，除非用户明确要求mock。</span></span></code></pre>
 <h3 id="104-加载与限制">10.4 加载与限制</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SessionStart</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SessionStart</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>自动加载 MEMORY.md 索引到上下文</span></span>
@@ -1276,7 +1276,7 @@
 <hr>
 <h2 id="十一多层缓存策略token经济学的工程实现">十一、多层缓存策略——Token经济学的工程实现</h2>
 <p>Claude Code的每个设计决策都有token成本评估。缓存是控制成本的核心基础设施，分五层递进：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌────────────────────────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│  L5: 会话级缓存                                             │</span></span>
 <span class="line"><span>│  · Remote session 24h持久化                                 │</span></span>
 <span class="line"><span>│  · JSONL transcript 持久化到 ~/.claude/sessions/            │</span></span>
@@ -1304,7 +1304,7 @@
 <span class="line"><span>│  · 动态工具变更时才invalidate                                │</span></span>
 <span class="line"><span>└────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="token生命周期一次工具调用的成本构成">Token生命周期——一次工具调用的成本构成</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入 "读取src/app.ts并修复bug"</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入 "读取src/app.ts并修复bug"</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>┌─ 系统提示 ─────────────────────────────────────────┐</span></span>
@@ -1377,7 +1377,7 @@
 <h2 id="十二容错与恢复graceful-degradation设计哲学">十二、容错与恢复——Graceful Degradation设计哲学</h2>
 <p>Claude Code的容错策略不是Fail-Fast（快速失败），而是<strong>Fail-Safe（安全降级）</strong>——优先保持会话连续性，能恢复的绝不中断。</p>
 <h3 id="121-容错机制全景">12.1 容错机制全景</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─── 场景 ──────────────────── 策略 ──────────────────── 目标 ───┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─── 场景 ──────────────────── 策略 ──────────────────── 目标 ───┐</span></span>
 <span class="line"><span>│                                                                 │</span></span>
 <span class="line"><span>│  Image处理失败            → 自动剥离image blocks      → 不中断对话 │</span></span>
 <span class="line"><span>│  Diff渲染超时             → 5秒后fallback到纯文本     → 不阻塞流程 │</span></span>
@@ -1390,7 +1390,7 @@
 <span class="line"><span>│                                                                 │</span></span>
 <span class="line"><span>└─────────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="122-会话恢复机制">12.2 会话恢复机制</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>正常会话</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>正常会话</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ├─ 中断（网络断开/终端关闭/SSH断连）</span></span>
 <span class="line"><span>    │   └─ 会话状态已持久化到 ~/.claude/sessions/*.jsonl</span></span>
@@ -1511,7 +1511,7 @@
 <table><thead><tr><th>事件</th><th>触发时机</th><th>支持的Hook类型</th><th>关键用途</th></tr></thead><tbody><tr><td><strong>SessionStart</strong></td><td>会话初始化</td><td>command</td><td>项目检测、上下文预加载</td></tr><tr><td><strong>SessionEnd</strong></td><td>会话结束</td><td>command</td><td>状态保存、清理（1.5s超时，可配）</td></tr><tr><td><strong>UserPromptSubmit</strong></td><td>用户输入后</td><td>prompt/command</td><td>输入验证、规则注入</td></tr><tr><td><strong>PreToolUse</strong></td><td>工具执行前</td><td>prompt/command</td><td>安全检查、权限验证、输入修改</td></tr><tr><td><strong>PostToolUse</strong></td><td>工具执行后</td><td>prompt/command</td><td>结果处理、日志记录</td></tr><tr><td><strong>PreCompact</strong></td><td>上下文压缩前</td><td>command</td><td>保留关键信息</td></tr><tr><td><strong>Stop</strong></td><td>主Agent尝试退出</td><td>prompt/command</td><td>完成检查、自迭代驱动</td></tr><tr><td><strong>SubagentStop</strong></td><td>子Agent完成</td><td>prompt/command</td><td>质量检查</td></tr><tr><td><strong>Notification</strong></td><td>系统通知</td><td>command</td><td>事件路由、外部告警</td></tr><tr><td><strong>PermissionDenied</strong></td><td>权限被自动拒绝</td><td>command</td><td>可返回<code>{retry: true}</code>让模型重试</td></tr><tr><td><strong>CwdChanged</strong></td><td>工作目录切换</td><td>command</td><td>direnv集成、环境自动加载</td></tr><tr><td><strong>FileChanged</strong></td><td>文件变动</td><td>command</td><td>响应式工作流</td></tr><tr><td><strong>TaskCreated</strong></td><td>任务创建时</td><td>command</td><td>任务拦截和增强</td></tr><tr><td><strong>TeammateIdle</strong></td><td>团队Agent空闲</td><td>command</td><td>多Agent协作调度</td></tr><tr><td><strong>TaskCompleted</strong></td><td>任务完成时</td><td>command</td><td>清理、通知、后续触发</td></tr></tbody></table>
 <h3 id="hook条件执行if字段">Hook条件执行（if字段）</h3>
 <p>Hook不一定每次都执行。<code>if</code>字段支持条件匹配，减少不必要的进程开销：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
 <span class="line"><span>  "PreToolUse": [</span></span>
 <span class="line"><span>    {</span></span>
 <span class="line"><span>      "matcher": "Bash",</span></span>
@@ -1601,7 +1601,7 @@
 <table><thead><tr><th>工具</th><th>副作用</th><th>默认权限</th><th>特殊能力</th></tr></thead><tbody><tr><td><strong>Read</strong></td><td>无</td><td>allow</td><td>PDF(限20页)、Jupyter、图片、行号范围</td></tr><tr><td><strong>Write</strong></td><td>创建/覆盖文件</td><td>ask</td><td>必须先Read才能Write已有文件</td></tr><tr><td><strong>Edit</strong></td><td>修改文件片段</td><td>ask</td><td>精确字符串替换、replace_all模式</td></tr><tr><td><strong>Bash</strong></td><td>执行任意命令</td><td>ask</td><td>沙箱隔离、超时控制、后台执行</td></tr><tr><td><strong>Grep</strong></td><td>无</td><td>allow</td><td>ripgrep引擎、多行匹配、行号、head_limit</td></tr><tr><td><strong>Glob</strong></td><td>无</td><td>allow</td><td>文件模式匹配、按修改时间排序</td></tr><tr><td><strong>WebFetch</strong></td><td>无</td><td>ask</td><td>15分钟缓存、HTML→Markdown、域名过滤</td></tr><tr><td><strong>WebSearch</strong></td><td>无</td><td>ask</td><td>域名白名单/黑名单</td></tr><tr><td><strong>Agent</strong></td><td>启动子Agent</td><td>allow</td><td>model覆盖、worktree隔离、后台执行</td></tr><tr><td><strong>Skill</strong></td><td>无</td><td>allow</td><td>加载Skill知识到上下文</td></tr></tbody></table>
 <h3 id="142-bash工具的沙箱细节">14.2 Bash工具的沙箱细节</h3>
 <p>Bash是唯一支持沙箱隔离的工具，隔离维度：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ 网络隔离 ────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ 网络隔离 ────────────────────────────────────────┐</span></span>
 <span class="line"><span>│  allowLocalBinding: false     ← 禁止监听本地端口   │</span></span>
 <span class="line"><span>│  allowAllUnixSockets: false   ← 禁止Unix Socket    │</span></span>
 <span class="line"><span>│  allowedDomains: [...]        ← 域名白名单          │</span></span>
@@ -1651,7 +1651,7 @@
 
 <table><thead><tr><th>Effort</th><th>推理深度</th><th>适用场景</th><th>Token消耗</th></tr></thead><tbody><tr><td><strong>low</strong></td><td>快速回复，最少思考</td><td>简单问题、文件读取、格式化</td><td>最低</td></tr><tr><td><strong>medium</strong></td><td>平衡速度和质量</td><td>常规编码、代码审查</td><td>中等</td></tr><tr><td><strong>high</strong></td><td>深度思考，完整推理链</td><td>架构决策、复杂bug定位、安全分析</td><td>最高</td></tr></tbody></table>
 <h3 id="152-extended-thinking自适应思考">15.2 Extended Thinking（自适应思考）</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>模型能力检测</span></span>
@@ -1697,7 +1697,7 @@
 <p><code>modelOverrides</code>配置允许将picker中的模型名映射到具体的后端模型标识符。</p>
 <hr>
 <h2 id="十六cron定时系统会话级的后台调度">十六、Cron定时系统——会话级的后台调度</h2>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>CronCreate</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>CronCreate</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    │  参数：cron表达式（5字段标准格式）、prompt、recurring标志</span></span>
 <span class="line"><span>    │  示例："7 * * * *" → 每小时第7分钟执行</span></span>
@@ -1715,7 +1715,7 @@
 <p><strong>设计约束</strong>：Cron任务仅存活于当前会话，不写入磁盘。会话结束即消失。这是有意的设计——避免用户忘记的定时任务在后台无限消耗资源。</p>
 <hr>
 <h2 id="十七worktree隔离git级别的工程隔离">十七、Worktree隔离——Git级别的工程隔离</h2>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主项目工作目录</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主项目工作目录</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    │  EnterWorktree(name: "feature-x")</span></span>
 <span class="line"><span>    │</span></span>
@@ -1736,7 +1736,7 @@
 <hr>
 <h2 id="十八remote-session与ide集成">十八、Remote Session与IDE集成</h2>
 <h3 id="181-remote-control">18.1 Remote Control</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>本地终端                           远程服务</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>本地终端                           远程服务</span></span>
 <span class="line"><span>    │                                │</span></span>
 <span class="line"><span>    │  claude --remote               │</span></span>
 <span class="line"><span>    │  ─────────────────────────────→│</span></span>
@@ -1757,7 +1757,7 @@
 <li><strong>Fork from here</strong>：从历史某个点分叉出新会话</li>
 </ul>
 <h3 id="183-voice-mode">18.3 Voice Mode</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>按住说话（push-to-talk）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>按住说话（push-to-talk）</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>SoX音频捕获 → WebSocket streaming → 语音识别</span></span>
@@ -2137,7 +2137,7 @@
 <h2 id="二十二系统演化从changelog看架构决策">二十二、系统演化——从CHANGELOG看架构决策</h2>
 <p>Claude Code的架构不是一次性设计出来的，而是在60+个版本的迭代中逐步演化。以下是关键的架构级变更：</p>
 <h3 id="221-重大架构变更时间线">22.1 重大架构变更时间线</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>v2.1.72  ┃  Skill与Command合并为统一模型（大重构）</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>v2.1.72  ┃  Skill与Command合并为统一模型（大重构）</span></span>
 <span class="line"><span>         ┃  ← 之前两者独立，触发机制不同，维护成本高</span></span>
 <span class="line"><span>         ┃  → 之后统一为"Markdown描述 + frontmatter配置"</span></span>
 <span class="line"><span>         ┃</span></span>
@@ -2208,7 +2208,7 @@
 <table><thead><tr><th>版本</th><th>泄漏原因</th><th>修复方式</th><th>架构启示</th></tr></thead><tbody><tr><td>v2.1.74</td><td>API流缓冲区未释放</td><td>显式释放</td><td>流式处理需要显式生命周期管理</td></tr><tr><td>v2.1.74</td><td>Agent完成后状态未回收</td><td>完成即释放</td><td>SubAgent需要清晰的终止协议</td></tr><tr><td>v2.1.74</td><td>Teammate保留完整对话历史</td><td>只保留摘要</td><td>长期运行的Agent需要上下文裁剪</td></tr><tr><td>v2.1.89</td><td>LRU缓存键保留大JSON输入</td><td>限制键大小</td><td>缓存策略需要大小感知</td></tr></tbody></table>
 <h3 id="223-skillcommand合并的设计决策v2172">22.3 Skill/Command合并的设计决策（v2.1.72）</h3>
 <p>这是Claude Code最大的一次重构，值得深入分析：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>合并前（v2.1.71及以前）：</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>合并前（v2.1.71及以前）：</span></span>
 <span class="line"><span>    Skill：独立的知识注入机制</span></span>
 <span class="line"><span>        触发：基于description的模糊匹配</span></span>
 <span class="line"><span>        加载：三级渐进式</span></span>
@@ -2270,7 +2270,7 @@
 <h2 id="二十三agent-teams多agent协作的高级模式">二十三、Agent Teams——多Agent协作的高级模式</h2>
 <p>Agent Teams是Claude Code的实验性功能，代表了多Agent协作的下一步演化。</p>
 <h3 id="多agent通信拓扑">多Agent通信拓扑</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│                      主 Agent                                 │</span></span>
 <span class="line"><span>│                  （用户直接交互）                               │</span></span>
 <span class="line"><span>│                                                              │</span></span>
@@ -2307,7 +2307,7 @@
 <span class="line"><span>   防护：Teammate不能创建新Teammate（防止无限递归）</span></span>
 <span class="line"><span>   终止：Ctrl+F 杀死所有后台Agent</span></span></code></pre>
 <h3 id="231-两种teammate类型">23.1 两种Teammate类型</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ In-Process Teammate ──────────────────────────┐</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ In-Process Teammate ──────────────────────────┐</span></span>
 <span class="line"><span>│                                                 │</span></span>
 <span class="line"><span>│  · 在主Agent进程内运行                           │</span></span>
 <span class="line"><span>│  · 共享内存空间                                  │</span></span>
@@ -2326,7 +2326,7 @@
 <span class="line"><span>│                                                 │</span></span>
 <span class="line"><span>└─────────────────────────────────────────────────┘</span></span></code></pre>
 <h3 id="232-协作事件流">23.2 协作事件流</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主Agent</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主Agent</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ├─ 创建 Teammate（in-process 或 tmux）</span></span>
 <span class="line"><span>    │</span></span>
@@ -2380,7 +2380,7 @@
 <hr>
 <h2 id="二十四mcp-oauth深度认证状态机">二十四、MCP OAuth深度——认证状态机</h2>
 <p>MCP的OAuth实现不是简单的”跳转→获取token”，而是一个处理多种边缘情况的状态机：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>初始状态</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>初始状态</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
 <span class="line"><span>发现阶段</span></span>
@@ -2412,19 +2412,19 @@
 <hr>
 <h2 id="二十五transcript版本控制与会话fork">二十五、Transcript版本控制与会话Fork</h2>
 <h3 id="251-transcript持久化格式">25.1 Transcript持久化格式</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/sessions/</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/sessions/</span></span>
 <span class="line"><span>├── session-abc123.jsonl       ← 消息序列（JSON Lines）</span></span>
 <span class="line"><span>├── session-abc123-results/    ← 大型工具结果文件（>50KB）</span></span>
 <span class="line"><span>└── session-abc123-hooks/      ← 大型Hook输出文件（>50KB）</span></span></code></pre>
 <p>每条消息通过 <code>parentUuid</code> 链接形成有向链表：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>msg-001 (user) → msg-002 (assistant) → msg-003 (tool_result)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>msg-001 (user) → msg-002 (assistant) → msg-003 (tool_result)</span></span>
 <span class="line"><span>                                          │</span></span>
 <span class="line"><span>                                          ├→ msg-004 (继续)</span></span>
 <span class="line"><span>                                          │</span></span>
 <span class="line"><span>                                          └→ msg-004' (fork分支)</span></span></code></pre>
 <h3 id="252-fork语义">25.2 Fork语义</h3>
 <p>从任意历史消息点分叉出新的对话分支：</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始对话：A → B → C → D → E</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始对话：A → B → C → D → E</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>从C点Fork：A → B → C → D' → E' → F'</span></span>
 <span class="line"><span>                    │</span></span>
@@ -2449,7 +2449,7 @@
 <hr>
 <h2 id="写在最后">写在最后</h2>
 <p>我们正在经历的，不是”给终端加个AI助手”，而是<strong>开发者与代码交互方式的代际跃迁</strong>。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>补全时代：人写代码 → AI 猜下一行 → 人确认 → 人继续写</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>补全时代：人写代码 → AI 猜下一行 → 人确认 → 人继续写</span></span>
 <span class="line"><span>Agent时代：人表达意图 → Agent 理解 → Agent 规划 → Agent 执行 → 人审批结果</span></span></code></pre>
 <p>Claude Code的每个工具（Read、Write、Bash、Grep……）都是Agent的”器官”。它的架构是给这些器官加上”大脑”（Agent循环引擎）、“免疫系统”（五层安全模型）、“神经系统”（九大事件钩子）、“生长能力”（插件生态+MCP协议），并把”人操作终端”这层交互替换为”人表达意图，Agent自主执行”。</p>
 <p><strong>底层能力完全继承（文件操作、代码搜索、命令执行），上层范式彻底重塑（从人操作到Agent操作）。</strong></p>

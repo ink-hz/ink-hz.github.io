@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="CAP定理、多模数据库选型、对象存储MinIO、Redis Cluster缓存架构、数据血缘治理及Lambda/Kappa架构完整解析。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>数据存储架构深度理论知识</title><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#cf222e;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>数据存储架构深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#云原生架构</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="数据存储架构深度理论知识">数据存储架构深度理论知识</h1>
 <blockquote>
 <p><strong>学习深度</strong>: ⭐⭐⭐⭐
@@ -21,7 +21,7 @@
 <h3 id="11-cap-定理">1.1 CAP 定理</h3>
 <h4 id="理论基础">理论基础</h4>
 <p><strong>CAP 定理</strong>: 分布式系统最多只能同时满足三个特性中的两个。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>CAP 三要素:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>CAP 三要素:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>C - Consistency (一致性):</span></span>
 <span class="line"><span>  • 所有节点在同一时间看到相同的数据</span></span>
@@ -35,13 +35,13 @@
 <span class="line"><span>  • 网络分区时系统仍能继续运行</span></span>
 <span class="line"><span>  • 节点间通信失败不影响系统整体</span></span></code></pre>
 <h4 id="cap-权衡">CAP 权衡</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
-<span class="line"><span style="color:#24292E">    A["数据中心 A&#x3C;br/>节点1, 节点2"]</span></span>
-<span class="line"><span style="color:#24292E">    B["数据中心 B&#x3C;br/>节点3, 节点4"]</span></span>
-<span class="line"><span style="color:#24292E">    A -.网络分区.-> B</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    A["数据中心 A&#x3C;br/>节点1, 节点2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    B["数据中心 B&#x3C;br/>节点3, 节点4"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A -.网络分区.-> B</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style B fill:#e1f5ff,stroke:#01579b,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style B fill:#e1f5ff,stroke:#01579b,stroke-width:2px</span></span></code></pre>
 <p><strong>选择1: CP (牺牲可用性)</strong>:</p>
 <ul>
 <li>A侧写入 → 等待与B同步</li>
@@ -87,7 +87,7 @@
 
 <table><thead><tr><th>类型</th><th>示例</th><th>特点</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>CP</strong></td><td>HBase, MongoDB (默认), Redis Sentinel</td><td>强一致性，可能阻塞</td><td>金融交易、库存管理</td></tr><tr><td><strong>AP</strong></td><td>Cassandra, DynamoDB, Riak</td><td>最终一致性，高可用</td><td>社交网络、日志系统</td></tr><tr><td><strong>CA</strong></td><td>单体数据库 (MySQL 单机)</td><td>不考虑分区容错</td><td>非分布式场景</td></tr></tbody></table>
 <p><strong>现实世界的权衡</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实际上不是二选一，而是一个连续光谱:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>实际上不是二选一，而是一个连续光谱:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>强一致性 ←──────────────────────────→ 最终一致性</span></span>
 <span class="line"><span> (CP倾向)                              (AP倾向)</span></span>
@@ -103,7 +103,7 @@
 <hr>
 <h3 id="12-base-模型">1.2 BASE 模型</h3>
 <p><strong>定义</strong>: AP 系统的设计哲学，与 ACID 相对。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>BASE:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>BASE:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>BA - Basically Available (基本可用):</span></span>
 <span class="line"><span>  • 系统大部分时间可用</span></span>
@@ -123,7 +123,7 @@
 <span class="line"><span>3. 几秒后传播到所有节点（最终一致）</span></span></code></pre>
 <hr>
 <h3 id="13-一致性模型">1.3 一致性模型</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>一致性强度排序（从强到弱）:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>一致性强度排序（从强到弱）:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 线性一致性 (Linearizability):</span></span>
 <span class="line"><span>   • 最强保证</span></span>
@@ -151,68 +151,68 @@
 <hr>
 <h2 id="多模数据库选型">多模数据库选型</h2>
 <h3 id="21-数据库分类">2.1 数据库分类</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
-<span class="line"><span style="color:#24292E">    subgraph "关系型数据库 (RDBMS)"</span></span>
-<span class="line"><span style="color:#24292E">        A["MySQL, PostgreSQL, Oracle&#x3C;br/>• 表格结构,SQL查询&#x3C;br/>• ACID事务"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "关系型数据库 (RDBMS)"</span></span>
+<span class="line"><span style="color:#E1E4E8">        A["MySQL, PostgreSQL, Oracle&#x3C;br/>• 表格结构,SQL查询&#x3C;br/>• ACID事务"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "文档数据库 (Document DB)"</span></span>
-<span class="line"><span style="color:#24292E">        B["MongoDB, CouchDB&#x3C;br/>• JSON/BSON 文档&#x3C;br/>• 灵活 Schema"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "文档数据库 (Document DB)"</span></span>
+<span class="line"><span style="color:#E1E4E8">        B["MongoDB, CouchDB&#x3C;br/>• JSON/BSON 文档&#x3C;br/>• 灵活 Schema"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "键值数据库 (Key-Value DB)"</span></span>
-<span class="line"><span style="color:#24292E">        C["Redis, DynamoDB, Riak&#x3C;br/>• 简单 get/set&#x3C;br/>• 极高性能"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "键值数据库 (Key-Value DB)"</span></span>
+<span class="line"><span style="color:#E1E4E8">        C["Redis, DynamoDB, Riak&#x3C;br/>• 简单 get/set&#x3C;br/>• 极高性能"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "列式数据库 (Columnar DB)"</span></span>
-<span class="line"><span style="color:#24292E">        D["Cassandra, HBase, ClickHouse&#x3C;br/>• 列存储,高压缩比&#x3C;br/>• 分析查询优化"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "列式数据库 (Columnar DB)"</span></span>
+<span class="line"><span style="color:#E1E4E8">        D["Cassandra, HBase, ClickHouse&#x3C;br/>• 列存储,高压缩比&#x3C;br/>• 分析查询优化"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "图数据库 (Graph DB)"</span></span>
-<span class="line"><span style="color:#24292E">        E["Neo4j, JanusGraph&#x3C;br/>• 节点+边,关系查询&#x3C;br/>• 社交网络、知识图谱"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "图数据库 (Graph DB)"</span></span>
+<span class="line"><span style="color:#E1E4E8">        E["Neo4j, JanusGraph&#x3C;br/>• 节点+边,关系查询&#x3C;br/>• 社交网络、知识图谱"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "时序数据库 (Time-Series DB)"</span></span>
-<span class="line"><span style="color:#24292E">        F["InfluxDB, TimescaleDB, Prometheus&#x3C;br/>• 时间戳数据&#x3C;br/>• 监控、IoT"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "时序数据库 (Time-Series DB)"</span></span>
+<span class="line"><span style="color:#E1E4E8">        F["InfluxDB, TimescaleDB, Prometheus&#x3C;br/>• 时间戳数据&#x3C;br/>• 监控、IoT"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style F fill:#e0f2f1,stroke:#00796b,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style F fill:#e0f2f1,stroke:#00796b,stroke-width:2px</span></span></code></pre>
 <hr>
 <h3 id="22-关系型数据库深度">2.2 关系型数据库深度</h3>
 <h4 id="postgresql-架构">PostgreSQL 架构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    A["客户端接口层"] --> B["执行引擎层"]</span></span>
-<span class="line"><span style="color:#24292E">    B --> C["存储层"]</span></span>
-<span class="line"><span style="color:#24292E">    C --> D["磁盘文件"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    A["客户端接口层"] --> B["执行引擎层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    B --> C["存储层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    C --> D["磁盘文件"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "客户端接口层"</span></span>
-<span class="line"><span style="color:#24292E">        A1["• SQL Parser 解析器&#x3C;br/>• Rewriter 重写器&#x3C;br/>• Planner 查询优化器"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "客户端接口层"</span></span>
+<span class="line"><span style="color:#E1E4E8">        A1["• SQL Parser 解析器&#x3C;br/>• Rewriter 重写器&#x3C;br/>• Planner 查询优化器"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "执行引擎层"</span></span>
-<span class="line"><span style="color:#24292E">        B1["• Executor 执行器&#x3C;br/>• Function Manager 函数管理器&#x3C;br/>• Transaction Manager 事务管理器"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "执行引擎层"</span></span>
+<span class="line"><span style="color:#E1E4E8">        B1["• Executor 执行器&#x3C;br/>• Function Manager 函数管理器&#x3C;br/>• Transaction Manager 事务管理器"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    subgraph "存储层"</span></span>
-<span class="line"><span style="color:#24292E">        C1["• Buffer Manager 缓冲区管理器&#x3C;br/>• Access Methods B-tree等&#x3C;br/>• Storage Manager 存储管理器"]</span></span>
-<span class="line"><span style="color:#24292E">    end</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph "存储层"</span></span>
+<span class="line"><span style="color:#E1E4E8">        C1["• Buffer Manager 缓冲区管理器&#x3C;br/>• Access Methods B-tree等&#x3C;br/>• Storage Manager 存储管理器"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    A -.-> A1</span></span>
-<span class="line"><span style="color:#24292E">    B -.-> B1</span></span>
-<span class="line"><span style="color:#24292E">    C -.-> C1</span></span>
+<span class="line"><span style="color:#E1E4E8">    A -.-> A1</span></span>
+<span class="line"><span style="color:#E1E4E8">    B -.-> B1</span></span>
+<span class="line"><span style="color:#E1E4E8">    C -.-> C1</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style D fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
 <h4 id="mvcc-多版本并发控制">MVCC (多版本并发控制)</h4>
 <p><strong>核心思想</strong>: 读不阻塞写，写不阻塞读。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理:</span></span>
 <span class="line"><span>• 每行数据保留多个版本</span></span>
 <span class="line"><span>• 每个事务看到一致性快照</span></span>
 <span class="line"><span>• 无需加读锁</span></span>
@@ -295,7 +295,7 @@
 
 <table><thead><tr><th>级别</th><th>脏读</th><th>不可重复读</th><th>幻读</th><th>实现方式</th><th>性能</th></tr></thead><tbody><tr><td><strong>Read Uncommitted</strong></td><td>可能</td><td>可能</td><td>可能</td><td>无锁</td><td>最高</td></tr><tr><td><strong>Read Committed</strong></td><td>避免</td><td>可能</td><td>可能</td><td>读时获取快照</td><td>高</td></tr><tr><td><strong>Repeatable Read</strong></td><td>避免</td><td>避免</td><td>可能</td><td>事务开始时快照</td><td>中</td></tr><tr><td><strong>Serializable</strong></td><td>避免</td><td>避免</td><td>避免</td><td>串行化检测</td><td>低</td></tr></tbody></table>
 <p><strong>问题示例</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>脏读 (Dirty Read):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>脏读 (Dirty Read):</span></span>
 <span class="line"><span>T1: UPDATE account SET balance = 1100</span></span>
 <span class="line"><span>T2: SELECT balance → 1100 (读到未提交数据)</span></span>
 <span class="line"><span>T1: ROLLBACK</span></span>
@@ -313,7 +313,7 @@
 <hr>
 <h3 id="23-文档数据库-mongodb">2.3 文档数据库 (MongoDB)</h3>
 <h4 id="数据模型">数据模型</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>文档结构 (JSON-like):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>文档结构 (JSON-like):</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>{</span></span>
 <span class="line"><span>  "_id": ObjectId("507f1f77bcf86cd799439011"),</span></span>
@@ -397,7 +397,7 @@
 
 <table><thead><tr><th>维度</th><th>PostgreSQL</th><th>MongoDB</th></tr></thead><tbody><tr><td><strong>数据模型</strong></td><td>关系表格</td><td>灵活文档</td></tr><tr><td><strong>Schema</strong></td><td>严格定义</td><td>动态变化</td></tr><tr><td><strong>事务</strong></td><td>强ACID</td><td>单文档ACID, 跨文档弱</td></tr><tr><td><strong>查询</strong></td><td>SQL (强大)</td><td>MongoDB Query Language</td></tr><tr><td><strong>JOIN</strong></td><td>高效</td><td>不支持/低效</td></tr><tr><td><strong>扩展性</strong></td><td>垂直扩展为主</td><td>水平分片</td></tr><tr><td><strong>写入性能</strong></td><td>中</td><td>高</td></tr><tr><td><strong>一致性</strong></td><td>强</td><td>可调</td></tr><tr><td><strong>适用场景</strong></td><td>关系数据、复杂查询</td><td>半结构化、高写入</td></tr></tbody></table>
 <p><strong>选型指南</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>使用 PostgreSQL:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>使用 PostgreSQL:</span></span>
 <span class="line"><span>• 数据有明确关系（用户-订单-商品）</span></span>
 <span class="line"><span>• 需要复杂 JOIN</span></span>
 <span class="line"><span>• 需要强一致性事务</span></span>
@@ -411,7 +411,7 @@
 <hr>
 <h3 id="24-键值数据库-redis">2.4 键值数据库 (Redis)</h3>
 <h4 id="redis-数据结构">Redis 数据结构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>5 种基础数据结构:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>5 种基础数据结构:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. String (字符串):</span></span>
 <span class="line"><span>   • 存储: 文本、数字、二进制</span></span>
@@ -445,7 +445,7 @@
 <span class="line"><span>• Streams: 消息流</span></span></code></pre>
 <h4 id="redis-持久化">Redis 持久化</h4>
 <p><strong>1. RDB (Redis Database Backup)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 定期快照整个数据集</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 定期快照整个数据集</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. fork() 创建子进程</span></span>
@@ -466,7 +466,7 @@
 <span class="line"><span>save 300 10   # 300秒内至少10个key变化</span></span>
 <span class="line"><span>save 60 10000 # 60秒内至少10000个key变化</span></span></code></pre>
 <p><strong>2. AOF (Append Only File)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 记录每个写命令</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 记录每个写命令</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 客户端写命令 → 追加到AOF缓冲区</span></span>
@@ -490,7 +490,7 @@
 <span class="line"><span>旧AOF: SET key1 1; SET key1 2; SET key1 3</span></span>
 <span class="line"><span>重写后: SET key1 3 (合并为最终状态)</span></span></code></pre>
 <p><strong>3. 混合持久化 (RDB + AOF)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Redis 4.0+ 推荐方案:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Redis 4.0+ 推荐方案:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>• AOF文件 = RDB快照 + AOF增量</span></span>
 <span class="line"><span>• 兼具快速恢复和完整性</span></span>
@@ -500,7 +500,7 @@
 <hr>
 <h3 id="25-列式数据库-clickhouse">2.5 列式数据库 (ClickHouse)</h3>
 <h4 id="列存储-vs-行存储">列存储 vs 行存储</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>行存储 (Row-Oriented):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>行存储 (Row-Oriented):</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>磁盘布局:</span></span>
 <span class="line"><span>| Row1: id=1, name=Alice, age=30    |</span></span>
@@ -567,7 +567,7 @@
 
 <table><thead><tr><th>操作</th><th>行存储</th><th>列存储</th></tr></thead><tbody><tr><td><strong>全表扫描（少量列）</strong></td><td>慢</td><td>快（10-100x）</td></tr><tr><td><strong>聚合查询</strong></td><td>慢</td><td>快</td></tr><tr><td><strong>单行查询</strong></td><td>快</td><td>慢</td></tr><tr><td><strong>更新/删除</strong></td><td>快</td><td>慢</td></tr><tr><td><strong>压缩比</strong></td><td>低</td><td>高（5-10x）</td></tr></tbody></table>
 <p><strong>使用场景</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ClickHouse (列存储):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ClickHouse (列存储):</span></span>
 <span class="line"><span>• 日志分析</span></span>
 <span class="line"><span>• 实时报表</span></span>
 <span class="line"><span>• 数据仓库</span></span>
@@ -583,38 +583,38 @@
 <span class="line"><span>→ 性能提升 50x+</span></span></code></pre>
 <hr>
 <h3 id="26-多模数据库选型决策树">2.6 多模数据库选型决策树</h3>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">flowchart TD</span></span>
-<span class="line"><span style="color:#24292E">    Start["数据有复杂关系(JOIN)?"] --> |是| PG1["PostgreSQL (关系型)"]</span></span>
-<span class="line"><span style="color:#24292E">    Start --> |否| Q2["需要强ACID事务?"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Start["数据有复杂关系(JOIN)?"] --> |是| PG1["PostgreSQL (关系型)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Start --> |否| Q2["需要强ACID事务?"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Q2 --> |是| PG2["PostgreSQL"]</span></span>
-<span class="line"><span style="color:#24292E">    Q2 --> |否| Q3["Schema频繁变化?"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q2 --> |是| PG2["PostgreSQL"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q2 --> |否| Q3["Schema频繁变化?"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Q3 --> |是| Mongo["MongoDB (文档型)"]</span></span>
-<span class="line"><span style="color:#24292E">    Q3 --> |否| Q4["查询模式?"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q3 --> |是| Mongo["MongoDB (文档型)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q3 --> |否| Q4["查询模式?"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Q4 --> |简单KV访问| Redis["Redis (键值型)"]</span></span>
-<span class="line"><span style="color:#24292E">    Q4 --> |复杂关系查询| Neo4j["Neo4j (图数据库)"]</span></span>
-<span class="line"><span style="color:#24292E">    Q4 --> |时序数据| Influx["InfluxDB (时序数据库)"]</span></span>
-<span class="line"><span style="color:#24292E">    Q4 --> |分析查询| Click["ClickHouse (列式数据库)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q4 --> |简单KV访问| Redis["Redis (键值型)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q4 --> |复杂关系查询| Neo4j["Neo4j (图数据库)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q4 --> |时序数据| Influx["InfluxDB (时序数据库)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q4 --> |分析查询| Click["ClickHouse (列式数据库)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Q4 --> Q5["数据量?"]</span></span>
-<span class="line"><span style="color:#24292E">    Q5 --> |"&#x3C; 1TB"| Single["单机数据库"]</span></span>
-<span class="line"><span style="color:#24292E">    Q5 --> |"1TB - 10TB"| Shard["分片/分区"]</span></span>
-<span class="line"><span style="color:#24292E">    Q5 --> |"> 10TB"| Dist["分布式数据库&#x3C;br/>(Cassandra/TiDB)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q4 --> Q5["数据量?"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q5 --> |"&#x3C; 1TB"| Single["单机数据库"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q5 --> |"1TB - 10TB"| Shard["分片/分区"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Q5 --> |"> 10TB"| Dist["分布式数据库&#x3C;br/>(Cassandra/TiDB)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style PG1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style PG2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Mongo fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Redis fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Neo4j fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Influx fill:#e0f2f1,stroke:#00796b,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Click fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style PG1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style PG2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Mongo fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Redis fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Neo4j fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Influx fill:#e0f2f1,stroke:#00796b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Click fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
 <hr>
 <h2 id="对象存储架构">对象存储架构</h2>
 <h3 id="31-对象存储原理">3.1 对象存储原理</h3>
 <h4 id="对象存储-vs-文件存储-vs-块存储">对象存储 vs 文件存储 vs 块存储</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>块存储 (Block Storage):</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>块存储 (Block Storage):</span></span>
 <span class="line"><span>• 原理: 固定大小块（如4KB）</span></span>
 <span class="line"><span>• 接口: 块设备（/dev/sdb）</span></span>
 <span class="line"><span>• 适用: 数据库、虚拟机磁盘</span></span>
@@ -689,7 +689,7 @@
 <hr>
 <h3 id="32-s3-api-标准">3.2 S3 API 标准</h3>
 <h4 id="核心概念">核心概念</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>术语:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>术语:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>Bucket (桶):</span></span>
 <span class="line"><span>• 顶层容器</span></span>
@@ -710,7 +710,7 @@
 <span class="line"><span>• 保留对象的多个版本</span></span>
 <span class="line"><span>• 防止误删除</span></span></code></pre>
 <h4 id="s3-api-操作">S3 API 操作</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>桶操作:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>桶操作:</span></span>
 <span class="line"><span>• CreateBucket: 创建桶</span></span>
 <span class="line"><span>• DeleteBucket: 删除桶</span></span>
 <span class="line"><span>• ListBuckets: 列出所有桶</span></span>
@@ -732,30 +732,30 @@
 <hr>
 <h3 id="33-minio-架构">3.3 MinIO 架构</h3>
 <h4 id="分布式架构">分布式架构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    Client["客户端 (S3 API)"] --> LB["负载均衡器"]</span></span>
-<span class="line"><span style="color:#24292E">    LB --> Node1["MinIO Node 1"]</span></span>
-<span class="line"><span style="color:#24292E">    LB --> Node2["MinIO Node 2"]</span></span>
-<span class="line"><span style="color:#24292E">    LB --> Node3["MinIO Node 3"]</span></span>
-<span class="line"><span style="color:#24292E">    LB --> Node4["MinIO Node 4"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Client["客户端 (S3 API)"] --> LB["负载均衡器"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    LB --> Node1["MinIO Node 1"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    LB --> Node2["MinIO Node 2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    LB --> Node3["MinIO Node 3"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    LB --> Node4["MinIO Node 4"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Node1 --> Disk1["磁盘1-4"]</span></span>
-<span class="line"><span style="color:#24292E">    Node2 --> Disk2["磁盘5-8"]</span></span>
-<span class="line"><span style="color:#24292E">    Node3 --> Disk3["磁盘9-12"]</span></span>
-<span class="line"><span style="color:#24292E">    Node4 --> Disk4["磁盘13-16"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node1 --> Disk1["磁盘1-4"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node2 --> Disk2["磁盘5-8"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node3 --> Disk3["磁盘9-12"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Node4 --> Disk4["磁盘13-16"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Note1["特点:&#x3C;br/>• 对等节点(无主节点)&#x3C;br/>• 数据分片+纠删码&#x3C;br/>• 高可用(N/2容错)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note1["特点:&#x3C;br/>• 对等节点(无主节点)&#x3C;br/>• 数据分片+纠删码&#x3C;br/>• 高可用(N/2容错)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Client fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style LB fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Node1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Node2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Node3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Node4 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Note1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Client fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style LB fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Node1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Node2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Node3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Node4 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Note1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <h4 id="纠删码-erasure-coding">纠删码 (Erasure Coding)</h4>
 <p><strong>原理</strong>: 数据分片 + 冗余校验，比副本更节省空间。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>示例: EC 4+2 (4个数据块 + 2个校验块)</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>示例: EC 4+2 (4个数据块 + 2个校验块)</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>原始文件: 4MB</span></span>
 <span class="line"><span>    ↓ 分片</span></span>
@@ -829,7 +829,7 @@
 <hr>
 <h3 id="34-对象存储优化">3.4 对象存储优化</h3>
 <h4 id="1-分层存储-storage-tiering">1. 分层存储 (Storage Tiering)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>生命周期管理:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>生命周期管理:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>热数据 (0-30天):</span></span>
 <span class="line"><span>  • SSD 存储</span></span>
@@ -857,7 +857,7 @@
 <span class="line"><span>• 365天后 → 转为归档</span></span>
 <span class="line"><span>• 7年后 → 删除（合规要求）</span></span></code></pre>
 <h4 id="2-cdn-加速">2. CDN 加速</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>架构:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>架构:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>用户 (中国)</span></span>
 <span class="line"><span>  ↓</span></span>
@@ -877,7 +877,7 @@
 <span class="line"><span>• 用户延迟降低 40x</span></span>
 <span class="line"><span>• 源站负载降低 95%</span></span></code></pre>
 <h4 id="3-预签名url-presigned-url">3. 预签名URL (Presigned URL)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 如何让用户直接上传到对象存储，而不经过应用服务器？</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 如何让用户直接上传到对象存储，而不经过应用服务器？</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>方案: 预签名URL</span></span>
 <span class="line"><span></span></span>
@@ -904,7 +904,7 @@
 <h2 id="缓存架构设计">缓存架构设计</h2>
 <h3 id="41-缓存模式">4.1 缓存模式</h3>
 <h4 id="1-cache-aside-旁路缓存">1. Cache-Aside (旁路缓存)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>读流程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>读流程:</span></span>
 <span class="line"><span>1. 应用查询缓存</span></span>
 <span class="line"><span>2. 缓存命中 → 返回</span></span>
 <span class="line"><span>3. 缓存未命中:</span></span>
@@ -945,7 +945,7 @@
 <span class="line"><span>❌ 首次访问慢（缓存冷启动）</span></span>
 <span class="line"><span>❌ 缓存和数据库可能不一致</span></span></code></pre>
 <h4 id="2-read-through-读穿透">2. Read-Through (读穿透)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 缓存层自动加载数据</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 缓存层自动加载数据</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 应用查询缓存</span></span>
@@ -960,7 +960,7 @@
 <span class="line"><span></span></span>
 <span class="line"><span>适用: 缓存中间件支持（如DynamoDB DAX）</span></span></code></pre>
 <h4 id="3-write-through-写穿透">3. Write-Through (写穿透)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 写缓存时同步写数据库</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 写缓存时同步写数据库</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 应用写缓存</span></span>
@@ -974,7 +974,7 @@
 <span class="line"><span>❌ 写入延迟高（同步写两次）</span></span>
 <span class="line"><span>❌ 浪费写入（可能未读取）</span></span></code></pre>
 <h4 id="4-write-behind-写回">4. Write-Behind (写回)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 异步批量写入数据库</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 异步批量写入数据库</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>流程:</span></span>
 <span class="line"><span>1. 应用写缓存</span></span>
@@ -993,28 +993,28 @@
 <hr>
 <h3 id="42-redis-cluster-架构">4.2 Redis Cluster 架构</h3>
 <h4 id="集群拓扑">集群拓扑</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    Client["客户端 (智能路由)"]</span></span>
-<span class="line"><span style="color:#24292E">    Client --> M1["Master 1&#x3C;br/>Slot: 0-5460"]</span></span>
-<span class="line"><span style="color:#24292E">    Client --> M2["Master 2&#x3C;br/>Slot: 5461-10922"]</span></span>
-<span class="line"><span style="color:#24292E">    Client --> M3["Master 3&#x3C;br/>Slot: 10923-16383"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Client["客户端 (智能路由)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Client --> M1["Master 1&#x3C;br/>Slot: 0-5460"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Client --> M2["Master 2&#x3C;br/>Slot: 5461-10922"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Client --> M3["Master 3&#x3C;br/>Slot: 10923-16383"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    M1 --> S1["Slave 1"]</span></span>
-<span class="line"><span style="color:#24292E">    M2 --> S2["Slave 2"]</span></span>
-<span class="line"><span style="color:#24292E">    M3 --> S3["Slave 3"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M1 --> S1["Slave 1"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M2 --> S2["Slave 2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M3 --> S3["Slave 3"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Note["特点:&#x3C;br/>• 16384个槽位(Hash Slot)&#x3C;br/>• 数据自动分片&#x3C;br/>• 主从复制(高可用)&#x3C;br/>• 无中心节点"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note["特点:&#x3C;br/>• 16384个槽位(Hash Slot)&#x3C;br/>• 数据自动分片&#x3C;br/>• 主从复制(高可用)&#x3C;br/>• 无中心节点"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Client fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style M1 fill:#fff3e0,stroke:#f57c00,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style M2 fill:#fff3e0,stroke:#f57c00,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style M3 fill:#fff3e0,stroke:#f57c00,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style S1 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style S2 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style S3 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Note fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Client fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style M1 fill:#fff3e0,stroke:#f57c00,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style M2 fill:#fff3e0,stroke:#f57c00,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style M3 fill:#fff3e0,stroke:#f57c00,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style S1 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style S2 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style S3 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Note fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <h4 id="一致性哈希槽">一致性哈希槽</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>槽位分配算法:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>槽位分配算法:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>slot = CRC16(key) mod 16384</span></span>
 <span class="line"><span></span></span>
@@ -1037,7 +1037,7 @@
 <span class="line"><span>→ 都路由到同一槽位（基于{123}）</span></span>
 <span class="line"><span>→ 支持多键操作（MGET）</span></span></code></pre>
 <h4 id="故障转移">故障转移</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: Master 1 故障</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>场景: Master 1 故障</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 检测:</span></span>
 <span class="line"><span>   • Slave 1 检测到 Master 1 无响应</span></span>
@@ -1058,7 +1058,7 @@
 <hr>
 <h3 id="43-缓存一致性">4.3 缓存一致性</h3>
 <h4 id="问题场景">问题场景</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>经典不一致场景:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>经典不一致场景:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>时间线:</span></span>
 <span class="line"><span>T1: 线程A 读数据库 (user.name = "Alice")</span></span>
@@ -1070,7 +1070,7 @@
 <span class="line"><span>根本原因: 读写并发</span></span></code></pre>
 <h4 id="解决方案">解决方案</h4>
 <p><strong>1. 延迟双删 (Delayed Double Delete)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>写流程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>写流程:</span></span>
 <span class="line"><span>1. 删除缓存</span></span>
 <span class="line"><span>2. 更新数据库</span></span>
 <span class="line"><span>3. 等待 100ms（数据库主从延迟 + 读取时间）</span></span>
@@ -1080,7 +1080,7 @@
 <span class="line"><span></span></span>
 <span class="line"><span>缺点: 仍有小概率不一致</span></span></code></pre>
 <p><strong>2. 基于订阅的缓存更新</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>架构:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>架构:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>数据库 → Binlog → Canal (订阅) → 消息队列 → 缓存更新服务 → 删除缓存</span></span>
 <span class="line"><span></span></span>
@@ -1092,7 +1092,7 @@
 <span class="line"><span>• MySQL: Canal, Maxwell</span></span>
 <span class="line"><span>• PostgreSQL: Debezium</span></span></code></pre>
 <p><strong>3. 分布式锁</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>读流程:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>读流程:</span></span>
 <span class="line"><span>1. 尝试获取锁 (SET key NX EX 10)</span></span>
 <span class="line"><span>2. 获取成功:</span></span>
 <span class="line"><span>   a. 查数据库</span></span>
@@ -1105,7 +1105,7 @@
 <hr>
 <h3 id="44-缓存常见问题">4.4 缓存常见问题</h3>
 <h4 id="1-缓存穿透-cache-penetration">1. 缓存穿透 (Cache Penetration)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 查询不存在的数据，绕过缓存，直击数据库</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 查询不存在的数据，绕过缓存，直击数据库</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>while True:</span></span>
@@ -1132,7 +1132,7 @@
 <span class="line"><span>   • 无误判不存在（假阴性）</span></span>
 <span class="line"><span>   • 可能误判存在（假阳性 &#x3C; 1%）</span></span></code></pre>
 <h4 id="2-缓存击穿-cache-breakdown">2. 缓存击穿 (Cache Breakdown)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 热点key过期，瞬间大量请求打到数据库</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 热点key过期，瞬间大量请求打到数据库</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>热门商品缓存过期</span></span>
@@ -1163,7 +1163,7 @@
 <span class="line"><span>   → 缓存永不过期</span></span>
 <span class="line"><span>   → 应用层判断过期后异步更新</span></span></code></pre>
 <h4 id="3-缓存雪崩-cache-avalanche">3. 缓存雪崩 (Cache Avalanche)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 大量key同时过期，数据库瞬间过载</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 大量key同时过期，数据库瞬间过载</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>凌晨2点批量导入数据，设置1小时过期</span></span>
@@ -1190,15 +1190,15 @@
 <h3 id="51-数据血缘-data-lineage">5.1 数据血缘 (Data Lineage)</h3>
 <h4 id="定义与价值">定义与价值</h4>
 <p><strong>数据血缘</strong>: 追踪数据从源头到终点的完整生命周期。</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
-<span class="line"><span style="color:#24292E">    Source["业务数据库&#x3C;br/>(PostgreSQL)&#x3C;br/>users表"] --> |ETL| DW["数据仓库&#x3C;br/>(Snowflake)&#x3C;br/>dim_users表"]</span></span>
-<span class="line"><span style="color:#24292E">    DW --> |聚合| OLAP["OLAP引擎&#x3C;br/>(ClickHouse)&#x3C;br/>user_stats表"]</span></span>
-<span class="line"><span style="color:#24292E">    OLAP --> |可视化| BI["BI报表&#x3C;br/>(Tableau)&#x3C;br/>用户活跃度"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    Source["业务数据库&#x3C;br/>(PostgreSQL)&#x3C;br/>users表"] --> |ETL| DW["数据仓库&#x3C;br/>(Snowflake)&#x3C;br/>dim_users表"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    DW --> |聚合| OLAP["OLAP引擎&#x3C;br/>(ClickHouse)&#x3C;br/>user_stats表"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    OLAP --> |可视化| BI["BI报表&#x3C;br/>(Tableau)&#x3C;br/>用户活跃度"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Source fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style DW fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style OLAP fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style BI fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Source fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style DW fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style OLAP fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style BI fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span></code></pre>
 <p><strong>问题场景</strong>:
 报表显示异常 → 需要追溯:</p>
 <ul>
@@ -1215,7 +1215,7 @@
 </ul>
 <h4 id="血缘采集方式">血缘采集方式</h4>
 <p><strong>1. 被动采集 (Passive)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 解析SQL日志</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: 解析SQL日志</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>INSERT INTO target_table</span></span>
@@ -1231,7 +1231,7 @@
 <span class="line"><span>• Marquez</span></span>
 <span class="line"><span>• Amundsen</span></span></code></pre>
 <p><strong>2. 主动注册 (Active)</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: ETL代码显式声明血缘</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原理: ETL代码显式声明血缘</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>示例:</span></span>
 <span class="line"><span>@lineage(</span></span>
@@ -1247,7 +1247,7 @@
 <hr>
 <h3 id="52-数据质量-data-quality">5.2 数据质量 (Data Quality)</h3>
 <h4 id="质量维度">质量维度</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>6个维度:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>6个维度:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 完整性 (Completeness):</span></span>
 <span class="line"><span>   • 数据是否缺失？</span></span>
@@ -1273,7 +1273,7 @@
 <span class="line"><span>   • 数据是否符合业务规则？</span></span>
 <span class="line"><span>   • 检查: status IN ('active', 'inactive')</span></span></code></pre>
 <h4 id="质量监控">质量监控</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Great Expectations 框架:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Great Expectations 框架:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>expect_column_values_to_not_be_null("user_id")</span></span>
 <span class="line"><span>expect_column_values_to_be_between("age", 0, 120)</span></span>
@@ -1292,7 +1292,7 @@
 <hr>
 <h3 id="53-数据目录-data-catalog">5.3 数据目录 (Data Catalog)</h3>
 <h4 id="元数据管理">元数据管理</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>元数据类型:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>元数据类型:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>技术元数据:</span></span>
 <span class="line"><span>• 表结构: 列名、数据类型、约束</span></span>
@@ -1309,32 +1309,32 @@
 <span class="line"><span>• 变更历史: Schema 演进</span></span>
 <span class="line"><span>• 使用频率: 热点表</span></span></code></pre>
 <p><strong>数据目录架构</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    Catalog["数据目录 (Data Catalog)"]</span></span>
-<span class="line"><span style="color:#24292E">    Search["搜索引擎 (Elasticsearch)"]</span></span>
-<span class="line"><span style="color:#24292E">    Meta["元数据存储 (PostgreSQL)"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Catalog["数据目录 (Data Catalog)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Search["搜索引擎 (Elasticsearch)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Meta["元数据存储 (PostgreSQL)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    DB1["数据库&#x3C;br/>MySQL"]</span></span>
-<span class="line"><span style="color:#24292E">    DW["数据仓库&#x3C;br/>Snowflake"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    DB1["数据库&#x3C;br/>MySQL"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    DW["数据仓库&#x3C;br/>Snowflake"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Catalog --> Search</span></span>
-<span class="line"><span style="color:#24292E">    Catalog --> Meta</span></span>
+<span class="line"><span style="color:#E1E4E8">    Catalog --> Search</span></span>
+<span class="line"><span style="color:#E1E4E8">    Catalog --> Meta</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    DB1 --> |采集| Meta</span></span>
-<span class="line"><span style="color:#24292E">    DW --> |采集| Meta</span></span>
+<span class="line"><span style="color:#E1E4E8">    DB1 --> |采集| Meta</span></span>
+<span class="line"><span style="color:#E1E4E8">    DW --> |采集| Meta</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Features["功能:&#x3C;br/>• 全文搜索&#x3C;br/>• 血缘可视化&#x3C;br/>• 权限管理&#x3C;br/>• 影响分析"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Features["功能:&#x3C;br/>• 全文搜索&#x3C;br/>• 血缘可视化&#x3C;br/>• 权限管理&#x3C;br/>• 影响分析"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Catalog fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style Search fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Meta fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style DB1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style DW fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Features fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Catalog fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Search fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Meta fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style DB1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style DW fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Features fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <hr>
 <h3 id="54-数据隐私与合规">5.4 数据隐私与合规</h3>
 <h4 id="gdpr-合规">GDPR 合规</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>核心要求:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>核心要求:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>1. 数据最小化 (Data Minimization):</span></span>
 <span class="line"><span>   • 仅收集必要数据</span></span>
@@ -1359,7 +1359,7 @@
 <span class="line"><span>   • 评估隐私风险</span></span>
 <span class="line"><span>   • 记录处理活动</span></span></code></pre>
 <h4 id="敏感数据处理">敏感数据处理</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>分级保护:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>分级保护:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>Public (公开):</span></span>
 <span class="line"><span>  • 数据: 产品信息</span></span>
@@ -1388,31 +1388,31 @@
 <hr>
 <h3 id="55-数据治理框架">5.5 数据治理框架</h3>
 <h4 id="apache-atlas-架构">Apache Atlas 架构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    Core["Apache Atlas Core"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Core["Apache Atlas Core"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Type["Type System 类型系统&#x3C;br/>• Entity 实体&#x3C;br/>• Relationship 关系&#x3C;br/>• Classification 分类"]</span></span>
-<span class="line"><span style="color:#24292E">    Graph["Graph Store&#x3C;br/>JanusGraph&#x3C;br/>• 存储血缘关系"]</span></span>
-<span class="line"><span style="color:#24292E">    Search["Search Index&#x3C;br/>Solr&#x3C;br/>• 全文搜索"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Type["Type System 类型系统&#x3C;br/>• Entity 实体&#x3C;br/>• Relationship 关系&#x3C;br/>• Classification 分类"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Graph["Graph Store&#x3C;br/>JanusGraph&#x3C;br/>• 存储血缘关系"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Search["Search Index&#x3C;br/>Solr&#x3C;br/>• 全文搜索"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Hive["Hive"]</span></span>
-<span class="line"><span style="color:#24292E">    Kafka["Kafka"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Hive["Hive"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Kafka["Kafka"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Core --> Type</span></span>
-<span class="line"><span style="color:#24292E">    Core --> Graph</span></span>
-<span class="line"><span style="color:#24292E">    Core --> Search</span></span>
+<span class="line"><span style="color:#E1E4E8">    Core --> Type</span></span>
+<span class="line"><span style="color:#E1E4E8">    Core --> Graph</span></span>
+<span class="line"><span style="color:#E1E4E8">    Core --> Search</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Hive --> |Hook采集| Core</span></span>
-<span class="line"><span style="color:#24292E">    Kafka --> |Hook采集| Core</span></span>
+<span class="line"><span style="color:#E1E4E8">    Hive --> |Hook采集| Core</span></span>
+<span class="line"><span style="color:#E1E4E8">    Kafka --> |Hook采集| Core</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Core fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style Type fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Graph fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Search fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Hive fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Kafka fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Core fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Type fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Graph fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Search fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Hive fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Kafka fill:#fce4ec,stroke:#c2185b,stroke-width:2px</span></span></code></pre>
 <p><strong>实体模型</strong>:</p>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Table 实体:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Table 实体:</span></span>
 <span class="line"><span>{</span></span>
 <span class="line"><span>  "typeName": "hive_table",</span></span>
 <span class="line"><span>  "attributes": {</span></span>
@@ -1433,52 +1433,52 @@
 <h2 id="存储架构综合设计">存储架构综合设计</h2>
 <h3 id="61-多模存储架构">6.1 多模存储架构</h3>
 <h4 id="lambda-架构">Lambda 架构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
-<span class="line"><span style="color:#24292E">    Source["数据源&#x3C;br/>(用户行为、交易日志、IoT数据)"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Source["数据源&#x3C;br/>(用户行为、交易日志、IoT数据)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Source --> Batch["批处理层 Batch"]</span></span>
-<span class="line"><span style="color:#24292E">    Source --> Speed["速度层 Speed"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Source --> Batch["批处理层 Batch"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Source --> Speed["速度层 Speed"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Batch --> BatchEngine["Spark Batch"]</span></span>
-<span class="line"><span style="color:#24292E">    BatchEngine --> BatchStore["HDFS/S3&#x3C;br/>每小时更新"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Batch --> BatchEngine["Spark Batch"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    BatchEngine --> BatchStore["HDFS/S3&#x3C;br/>每小时更新"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Speed --> SpeedEngine["Spark Stream"]</span></span>
-<span class="line"><span style="color:#24292E">    SpeedEngine --> SpeedStore["Redis&#x3C;br/>实时更新"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Speed --> SpeedEngine["Spark Stream"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    SpeedEngine --> SpeedStore["Redis&#x3C;br/>实时更新"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    BatchStore --> Serving["服务层 Serving&#x3C;br/>合并查询结果"]</span></span>
-<span class="line"><span style="color:#24292E">    SpeedStore --> Serving</span></span>
+<span class="line"><span style="color:#E1E4E8">    BatchStore --> Serving["服务层 Serving&#x3C;br/>合并查询结果"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    SpeedStore --> Serving</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Note["优点:&#x3C;br/>✓ 容错性强(批处理可重算)&#x3C;br/>✓ 实时性好(速度层补充)&#x3C;br/>&#x3C;br/>缺点:&#x3C;br/>❌ 复杂(两套代码)&#x3C;br/>❌ 一致性(合并结果)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note["优点:&#x3C;br/>✓ 容错性强(批处理可重算)&#x3C;br/>✓ 实时性好(速度层补充)&#x3C;br/>&#x3C;br/>缺点:&#x3C;br/>❌ 复杂(两套代码)&#x3C;br/>❌ 一致性(合并结果)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Source fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Batch fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Speed fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Serving fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Note fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Source fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Batch fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Speed fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Serving fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Note fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <h4 id="kappa-架构">Kappa 架构</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TB</span></span>
-<span class="line"><span style="color:#24292E">    Source["数据源"]</span></span>
-<span class="line"><span style="color:#24292E">    Source --> Kafka["Kafka&#x3C;br/>(消息队列)"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Source["数据源"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Source --> Kafka["Kafka&#x3C;br/>(消息队列)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Kafka --> Task1["流处理任务1&#x3C;br/>(实时聚合)"]</span></span>
-<span class="line"><span style="color:#24292E">    Kafka --> Task2["流处理任务2&#x3C;br/>(实时告警)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Kafka --> Task1["流处理任务1&#x3C;br/>(实时聚合)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Kafka --> Task2["流处理任务2&#x3C;br/>(实时告警)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Task1 --> Store1["存储层1&#x3C;br/>ClickHouse"]</span></span>
-<span class="line"><span style="color:#24292E">    Task2 --> Store2["存储层2&#x3C;br/>Redis"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Task1 --> Store1["存储层1&#x3C;br/>ClickHouse"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Task2 --> Store2["存储层2&#x3C;br/>Redis"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Note["优点:&#x3C;br/>✓ 架构简单&#x3C;br/>✓ 仅一套代码&#x3C;br/>&#x3C;br/>缺点:&#x3C;br/>❌ 历史数据重算成本高"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note["优点:&#x3C;br/>✓ 架构简单&#x3C;br/>✓ 仅一套代码&#x3C;br/>&#x3C;br/>缺点:&#x3C;br/>❌ 历史数据重算成本高"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Source fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Kafka fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style Task1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Task2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Store1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Store2 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Note fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Source fill:#e3f2fd,stroke:#1976d2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Kafka fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Task1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Task2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Store1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Store2 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Note fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <hr>
 <h3 id="62-存储成本优化">6.2 存储成本优化</h3>
 <h4 id="冷热分离">冷热分离</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>策略:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>策略:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>热数据 (频繁访问):</span></span>
 <span class="line"><span>• 存储: SSD / NVMe</span></span>
@@ -1506,7 +1506,7 @@
 <span class="line"><span>  100GB 热 ($10) + 900GB 冷 ($9) = $19/月</span></span>
 <span class="line"><span>节省: 81%</span></span></code></pre>
 <h4 id="数据压缩">数据压缩</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>压缩算法对比:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>压缩算法对比:</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>| 算法 | 压缩比 | 压缩速度 | 解压速度 | CPU | 适用场景 |</span></span>
 <span class="line"><span>|-----|-------|---------|---------|-----|---------|</span></span>
@@ -1527,31 +1527,31 @@
 <hr>
 <h3 id="63-灾备与高可用">6.3 灾备与高可用</h3>
 <h4 id="备份策略-3-2-1-规则">备份策略 (3-2-1 规则)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph TD</span></span>
-<span class="line"><span style="color:#24292E">    Main["生产数据库 (主)"]</span></span>
-<span class="line"><span style="color:#24292E">    Main --> |实时复制| Slave["从库 (本地)"]</span></span>
-<span class="line"><span style="color:#24292E">    Slave --> |每日备份| NAS["本地NAS (本地)"]</span></span>
-<span class="line"><span style="color:#24292E">    NAS --> |异步上传| S3["S3 美国 (异地)"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Main["生产数据库 (主)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Main --> |实时复制| Slave["从库 (本地)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Slave --> |每日备份| NAS["本地NAS (本地)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    NAS --> |异步上传| S3["S3 美国 (异地)"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Info["备份类型:&#x3C;br/>• 全量备份: 每周日&#x3C;br/>• 增量备份: 每天&#x3C;br/>• 日志备份: 实时 Binlog&#x3C;br/>&#x3C;br/>RTO: 1小时&#x3C;br/>RPO: 5分钟"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Info["备份类型:&#x3C;br/>• 全量备份: 每周日&#x3C;br/>• 增量备份: 每天&#x3C;br/>• 日志备份: 实时 Binlog&#x3C;br/>&#x3C;br/>RTO: 1小时&#x3C;br/>RPO: 5分钟"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style Main fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style Slave fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style NAS fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style S3 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
-<span class="line"><span style="color:#24292E">    style Info fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style Main fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Slave fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style NAS fill:#fff3e0,stroke:#f57c00,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style S3 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Info fill:#fce4ec,stroke:#c2185b,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <h4 id="多活架构-active-active">多活架构 (Active-Active)</h4>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#24292E">graph LR</span></span>
-<span class="line"><span style="color:#24292E">    US["美国数据中心&#x3C;br/>读写流量 50%"]</span></span>
-<span class="line"><span style="color:#24292E">    EU["欧洲数据中心&#x3C;br/>读写流量 50%"]</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    US["美国数据中心&#x3C;br/>读写流量 50%"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    EU["欧洲数据中心&#x3C;br/>读写流量 50%"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    US &#x3C;--> |双向复制| EU</span></span>
+<span class="line"><span style="color:#E1E4E8">    US &#x3C;--> |双向复制| EU</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    Info["冲突解决策略:&#x3C;br/>1. Last Write Wins (基于时间戳)&#x3C;br/>2. 应用层合并&#x3C;br/>3. CRDT (数学保证一致)&#x3C;br/>&#x3C;br/>挑战:&#x3C;br/>• 延迟: 跨洋复制 100-200ms&#x3C;br/>• 一致性: 最终一致&#x3C;br/>• 成本: 双倍资源"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Info["冲突解决策略:&#x3C;br/>1. Last Write Wins (基于时间戳)&#x3C;br/>2. 应用层合并&#x3C;br/>3. CRDT (数学保证一致)&#x3C;br/>&#x3C;br/>挑战:&#x3C;br/>• 延迟: 跨洋复制 100-200ms&#x3C;br/>• 一致性: 最终一致&#x3C;br/>• 成本: 双倍资源"]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">    style US fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style EU fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px</span></span>
-<span class="line"><span style="color:#24292E">    style Info fill:#fff3e0,stroke:#f57c00,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">    style US fill:#e3f2fd,stroke:#1976d2,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style EU fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Info fill:#fff3e0,stroke:#f57c00,stroke-width:2px,stroke-dasharray: 5 5</span></span></code></pre>
 <hr>
 <h3 id="64-存储选型决策矩阵">6.4 存储选型决策矩阵</h3>
 
@@ -1617,7 +1617,7 @@
 <table><thead><tr><th>场景</th><th>推荐方案</th><th>原因</th></tr></thead><tbody><tr><td><strong>OLTP (在线事务)</strong></td><td>PostgreSQL</td><td>ACID、关系型</td></tr><tr><td><strong>OLAP (分析)</strong></td><td>ClickHouse</td><td>列存储、聚合快</td></tr><tr><td><strong>缓存</strong></td><td>Redis Cluster</td><td>内存、高性能</td></tr><tr><td><strong>全文搜索</strong></td><td>Elasticsearch</td><td>倒排索引</td></tr><tr><td><strong>文档存储</strong></td><td>MongoDB</td><td>灵活Schema</td></tr><tr><td><strong>时序数据</strong></td><td>InfluxDB / TimescaleDB</td><td>时间优化</td></tr><tr><td><strong>图数据</strong></td><td>Neo4j</td><td>关系查询</td></tr><tr><td><strong>对象存储</strong></td><td>MinIO / S3</td><td>海量文件</td></tr><tr><td><strong>消息队列</strong></td><td>Kafka</td><td>高吞吐、持久化</td></tr><tr><td><strong>日志存储</strong></td><td>Loki / S3 + Parquet</td><td>成本低</td></tr></tbody></table>
 <hr>
 <h2 id="最佳实践清单">最佳实践清单</h2>
-<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✅ 数据库选型:</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✅ 数据库选型:</span></span>
 <span class="line"><span>  □ 根据访问模式选择（OLTP vs OLAP）</span></span>
 <span class="line"><span>  □ 考虑一致性需求（强一致 vs 最终一致）</span></span>
 <span class="line"><span>  □ 评估扩展性（垂直 vs 水平）</span></span>
