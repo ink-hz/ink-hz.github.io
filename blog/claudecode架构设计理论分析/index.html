@@ -807,7 +807,663 @@
 <span class="line"><span>    └─ 连续3次紧凑后仍超限 → 停止并显示可操作错误</span></span>
 <span class="line"><span>       （防止无限烧费API调用）</span></span></code></pre>
 <hr>
-<h2 id="九官方插件架构模式参考">九、官方插件架构模式参考</h2>
+<h2 id="九task系统后台agent的并行执行引擎">九、Task系统——后台Agent的并行执行引擎</h2>
+<p>这是Claude Code中一个完整的后台任务管理系统，本质是<strong>在后台启动独立的Agent循环</strong>，支持多Agent并行执行和协调。</p>
+<h3 id="91-task生命周期">9.1 Task生命周期</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>TaskCreate（创建任务）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  参数：subject, description, activeForm, metadata</span></span>
+<span class="line"><span>    │  返回：taskId</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>pending（等待中）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  TaskUpdate(taskId, status: "in_progress")</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>in_progress（执行中）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  后台Agent循环独立运行</span></span>
+<span class="line"><span>    │  TaskOutput(taskId) 读取实时输出</span></span>
+<span class="line"><span>    │  TaskStop(taskId) 可强制终止</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 成功 → TaskUpdate(taskId, status: "completed")</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    └─ 异常 → 保持 in_progress，创建新Task描述blocker</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>completed / deleted</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  TaskList() 查看全局状态</span></span>
+<span class="line"><span>    │  返回：token_count, tool_uses, duration_ms</span></span></code></pre>
+<h3 id="92-task工具族">9.2 Task工具族</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具</th><th>职责</th><th>关键参数</th></tr></thead><tbody><tr><td><strong>TaskCreate</strong></td><td>创建后台任务</td><td>subject, description, activeForm</td></tr><tr><td><strong>TaskUpdate</strong></td><td>更新状态/依赖</td><td>status, addBlocks, addBlockedBy, owner</td></tr><tr><td><strong>TaskGet</strong></td><td>读取任务详情</td><td>taskId</td></tr><tr><td><strong>TaskList</strong></td><td>列出所有任务</td><td>—</td></tr><tr><td><strong>TaskOutput</strong></td><td>读取后台输出</td><td>taskId, block(是否阻塞等待), timeout</td></tr><tr><td><strong>TaskStop</strong></td><td>终止运行中任务</td><td>taskId</td></tr></tbody></table>
+<h3 id="93-任务依赖与编排">9.3 任务依赖与编排</h3>
+<p>Task系统支持声明式的依赖关系：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>TaskCreate("设计API接口")         → taskId: 1</span></span>
+<span class="line"><span>TaskCreate("实现API接口")         → taskId: 2</span></span>
+<span class="line"><span>TaskCreate("编写API测试")         → taskId: 3</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>TaskUpdate(taskId: 2, addBlockedBy: ["1"])    ← 2依赖1</span></span>
+<span class="line"><span>TaskUpdate(taskId: 3, addBlockedBy: ["2"])    ← 3依赖2</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>结果：1 → 2 → 3 串行执行</span></span></code></pre>
+<p><strong>与Agent子循环的区别</strong>：SubAgent在主循环内执行，共享会话上下文；Task在后台独立运行，有自己的Agent循环、token统计和超时管理。Task更适合<strong>长时间运行、可并行、需要监控</strong>的任务。</p>
+<hr>
+<h2 id="十memory系统跨会话的持久化知识库">十、Memory系统——跨会话的持久化知识库</h2>
+<p>Memory不是上下文管理的一部分——它是<strong>跨会话的长期记忆</strong>，每次新会话自动加载，持续增量更新。</p>
+<h3 id="101-memory架构">10.1 Memory架构</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/projects/&#x3C;project-hash>/memory/</span></span>
+<span class="line"><span>├── MEMORY.md                    ← 索引文件（指针，非内容）</span></span>
+<span class="line"><span>├── user_role.md                 ← 用户信息记忆</span></span>
+<span class="line"><span>├── feedback_testing.md          ← 行为反馈记忆</span></span>
+<span class="line"><span>├── project_auth_rewrite.md      ← 项目记忆</span></span>
+<span class="line"><span>└── reference_linear.md          ← 外部引用记忆</span></span></code></pre>
+<h3 id="102-四种记忆类型">10.2 四种记忆类型</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>类型</th><th>存什么</th><th>何时存</th><th>怎么用</th></tr></thead><tbody><tr><td><strong>user</strong></td><td>用户角色、偏好、知识背景</td><td>学到用户信息时</td><td>定制回答方式和深度</td></tr><tr><td><strong>feedback</strong></td><td>用户对行为的纠正和确认</td><td>用户纠正或确认做法时</td><td>避免重复犯错，保持已验证的做法</td></tr><tr><td><strong>project</strong></td><td>在进的工作、截止日期、决策</td><td>学到项目状态时</td><td>理解任务背景和优先级</td></tr><tr><td><strong>reference</strong></td><td>外部系统的位置和用途</td><td>学到外部资源时</td><td>知道去哪里找信息</td></tr></tbody></table>
+<h3 id="103-记忆文件格式">10.3 记忆文件格式</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#005CC5;font-weight:bold">---</span></span>
+<span class="line"><span style="color:#24292E">name: 测试偏好</span></span>
+<span class="line"><span style="color:#24292E">description: 用户要求集成测试使用真实数据库而非mock</span></span>
+<span class="line"><span style="color:#24292E">type: feedback</span></span>
+<span class="line"><span style="color:#005CC5;font-weight:bold">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">集成测试必须连接真实数据库，不使用mock。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;font-weight:bold">**Why:**</span><span style="color:#24292E"> 上季度mock测试通过但生产迁移失败，mock与真实行为有偏差。</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;font-weight:bold">**How to apply:**</span><span style="color:#24292E"> 写测试时默认使用测试数据库连接，除非用户明确要求mock。</span></span></code></pre>
+<h3 id="104-加载与限制">10.4 加载与限制</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>SessionStart</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>自动加载 MEMORY.md 索引到上下文</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 大小限制：25KB 截断</span></span>
+<span class="line"><span>    ├─ 行数限制：200行截断</span></span>
+<span class="line"><span>    └─ MEMORY.md只存指针，不存内容</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>Agent按需读取具体记忆文件</span></span></code></pre>
+<p><strong>MEMORY.md是索引，不是记忆本身。</strong> 这个设计避免了所有记忆一次性挤占上下文窗口——Agent先看索引决定需要哪些记忆，再按需读取。</p>
+<p><strong>什么不该存进Memory</strong>：代码模式（读代码就行）、git历史（git log就行）、调试方案（修复在代码里）、CLAUDE.md已有的内容、临时性的任务状态。</p>
+<hr>
+<h2 id="十一多层缓存策略token经济学的工程实现">十一、多层缓存策略——Token经济学的工程实现</h2>
+<p>Claude Code的每个设计决策都有token成本评估。缓存是控制成本的核心基础设施，分五层递进：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  L5: 会话级缓存                                             │</span></span>
+<span class="line"><span>│  · Remote session 24h持久化                                 │</span></span>
+<span class="line"><span>│  · JSONL transcript 持久化到 ~/.claude/sessions/            │</span></span>
+<span class="line"><span>│  · --resume 恢复时直接加载，不重新推理                        │</span></span>
+<span class="line"><span>├────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  L4: MCP缓存                                               │</span></span>
+<span class="line"><span>│  · 工具列表缓存（服务器连接后一次性获取）                      │</span></span>
+<span class="line"><span>│  · 服务器连接复用（避免重复握手）                              │</span></span>
+<span class="line"><span>│  · ToolSearch延迟加载（不活跃的MCP工具不占token）              │</span></span>
+<span class="line"><span>├────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  L3: Skill缓存                                              │</span></span>
+<span class="line"><span>│  · L1元数据常驻内存（~100字/skill）                           │</span></span>
+<span class="line"><span>│  · L2 SKILL.md条件加载（触发时才进入上下文）                   │</span></span>
+<span class="line"><span>│  · L3 references按需读取（Agent显式请求时）                   │</span></span>
+<span class="line"><span>│  · description限制250字符                                    │</span></span>
+<span class="line"><span>├────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  L2: Prompt缓存                                             │</span></span>
+<span class="line"><span>│  · 系统提示缓存（不变部分跨turn复用）                         │</span></span>
+<span class="line"><span>│  · CLAUDE.md文件缓存（项目不变则缓存命中）                    │</span></span>
+<span class="line"><span>│  · @-mention文件不JSON转义（减少序列化开销）                   │</span></span>
+<span class="line"><span>├────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  L1: 工具Schema缓存                                         │</span></span>
+<span class="line"><span>│  · 工具定义JSON per-session缓存（避免每turn重新stringify）    │</span></span>
+<span class="line"><span>│  · MCP工具schema在连接时一次性缓存                            │</span></span>
+<span class="line"><span>│  · 动态工具变更时才invalidate                                │</span></span>
+<span class="line"><span>└────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<h3 id="token节省的关键技术点">Token节省的关键技术点</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>技术</th><th>节省方式</th><th>预估节省</th></tr></thead><tbody><tr><td>Skill三级加载</td><td>避免全部Skill内容挤占上下文</td><td>每Skill节省~5000 token</td></tr><tr><td>ToolSearch延迟加载</td><td>不活跃MCP工具不占token</td><td>大型MCP生态下节省数万token</td></tr><tr><td>@-mention不转义</td><td>原始字符串替代JSON转义</td><td>大文件减少10-30%</td></tr><tr><td>Read compact行号</td><td>紧凑的行号格式</td><td>长文件减少5-10%</td></tr><tr><td>工具schema缓存</td><td>避免每turn重新序列化</td><td>每turn节省~1000 token</td></tr><tr><td>自动紧凑</td><td>压缩非关键消息</td><td>长会话可释放50%+上下文</td></tr></tbody></table>
+<hr>
+<h2 id="十二容错与恢复graceful-degradation设计哲学">十二、容错与恢复——Graceful Degradation设计哲学</h2>
+<p>Claude Code的容错策略不是Fail-Fast（快速失败），而是<strong>Fail-Safe（安全降级）</strong>——优先保持会话连续性，能恢复的绝不中断。</p>
+<h3 id="121-容错机制全景">12.1 容错机制全景</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─── 场景 ──────────────────── 策略 ──────────────────── 目标 ───┐</span></span>
+<span class="line"><span>│                                                                 │</span></span>
+<span class="line"><span>│  Image处理失败            → 自动剥离image blocks      → 不中断对话 │</span></span>
+<span class="line"><span>│  Diff渲染超时             → 5秒后fallback到纯文本     → 不阻塞流程 │</span></span>
+<span class="line"><span>│  Autocompact连续3次失败   → 停止并报可操作错误        → 不烧费API  │</span></span>
+<span class="line"><span>│  MCP服务器断连            → 工具标记不可用+重试       → 不影响其他 │</span></span>
+<span class="line"><span>│  Streaming idle 90s       → 可配timeout+graceful close → 不挂起   │</span></span>
+<span class="line"><span>│  子进程环境泄露            → SCRUB=1清除云凭证        → 不泄密    │</span></span>
+<span class="line"><span>│  SSH连接断开              → 会话持久化+resume恢复     → 不丢进度  │</span></span>
+<span class="line"><span>│  大会话(>50MB)             → 消息自动删除+压缩       → 不OOM     │</span></span>
+<span class="line"><span>│                                                                 │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<h3 id="122-会话恢复机制">12.2 会话恢复机制</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>正常会话</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 中断（网络断开/终端关闭/SSH断连）</span></span>
+<span class="line"><span>    │   └─ 会话状态已持久化到 ~/.claude/sessions/*.jsonl</span></span>
+<span class="line"><span>    │       └─ claude --resume → 恢复完整上下文</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 权限阻塞（headless模式下需要确认）</span></span>
+<span class="line"><span>    │   └─ Deferred权限决策 → 工具调用处暂停</span></span>
+<span class="line"><span>    │       └─ claude -p --resume → 重新评估权限并继续</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    └─ Compact失败（上下文溢出）</span></span>
+<span class="line"><span>        └─ 检测抖动循环（3次紧凑后仍超限）</span></span>
+<span class="line"><span>            └─ 停止并显示可操作错误（而非无限重试）</span></span></code></pre>
+<p><strong>关键原则：<code>--resume</code>是一等特性，不是事后补丁。</strong> 所有设计都假设会话可能在任何时刻中断，因此每一步都保证可恢复。</p>
+<hr>
+<h2 id="十三完整hook事件清单不止九个">十三、完整Hook事件清单——不止九个</h2>
+<p>文章前面介绍了9个核心Hook，但实际系统支持更多事件。完整清单：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>事件</th><th>触发时机</th><th>支持的Hook类型</th><th>关键用途</th></tr></thead><tbody><tr><td><strong>SessionStart</strong></td><td>会话初始化</td><td>command</td><td>项目检测、上下文预加载</td></tr><tr><td><strong>SessionEnd</strong></td><td>会话结束</td><td>command</td><td>状态保存、清理（1.5s超时，可配）</td></tr><tr><td><strong>UserPromptSubmit</strong></td><td>用户输入后</td><td>prompt/command</td><td>输入验证、规则注入</td></tr><tr><td><strong>PreToolUse</strong></td><td>工具执行前</td><td>prompt/command</td><td>安全检查、权限验证、输入修改</td></tr><tr><td><strong>PostToolUse</strong></td><td>工具执行后</td><td>prompt/command</td><td>结果处理、日志记录</td></tr><tr><td><strong>PreCompact</strong></td><td>上下文压缩前</td><td>command</td><td>保留关键信息</td></tr><tr><td><strong>Stop</strong></td><td>主Agent尝试退出</td><td>prompt/command</td><td>完成检查、自迭代驱动</td></tr><tr><td><strong>SubagentStop</strong></td><td>子Agent完成</td><td>prompt/command</td><td>质量检查</td></tr><tr><td><strong>Notification</strong></td><td>系统通知</td><td>command</td><td>事件路由、外部告警</td></tr><tr><td><strong>PermissionDenied</strong></td><td>权限被自动拒绝</td><td>command</td><td>可返回<code>{retry: true}</code>让模型重试</td></tr><tr><td><strong>CwdChanged</strong></td><td>工作目录切换</td><td>command</td><td>direnv集成、环境自动加载</td></tr><tr><td><strong>FileChanged</strong></td><td>文件变动</td><td>command</td><td>响应式工作流</td></tr><tr><td><strong>TaskCreated</strong></td><td>任务创建时</td><td>command</td><td>任务拦截和增强</td></tr><tr><td><strong>TeammateIdle</strong></td><td>团队Agent空闲</td><td>command</td><td>多Agent协作调度</td></tr><tr><td><strong>TaskCompleted</strong></td><td>任务完成时</td><td>command</td><td>清理、通知、后续触发</td></tr></tbody></table>
+<h3 id="hook条件执行if字段">Hook条件执行（if字段）</h3>
+<p>Hook不一定每次都执行。<code>if</code>字段支持条件匹配，减少不必要的进程开销：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<span class="line"><span>  "PreToolUse": [</span></span>
+<span class="line"><span>    {</span></span>
+<span class="line"><span>      "matcher": "Bash",</span></span>
+<span class="line"><span>      "if": "Bash(git *)",              ← 仅git命令时才执行此Hook</span></span>
+<span class="line"><span>      "hooks": [</span></span>
+<span class="line"><span>        {"type": "command", "command": "bash validate-git.sh"}</span></span>
+<span class="line"><span>      ]</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  ]</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<h3 id="hook输出大小控制">Hook输出大小控制</h3>
+<p>当Hook输出超过50KB时，系统不会将全部内容注入上下文（避免token浪费），而是保存到文件并在上下文中插入文件路径+预览摘要。</p>
+<hr>
+<h2 id="十四工具系统深度设计每个工具的职责边界">十四、工具系统深度设计——每个工具的职责边界</h2>
+<h3 id="141-工具能力矩阵">14.1 工具能力矩阵</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具</th><th>副作用</th><th>默认权限</th><th>特殊能力</th></tr></thead><tbody><tr><td><strong>Read</strong></td><td>无</td><td>allow</td><td>PDF(限20页)、Jupyter、图片、行号范围</td></tr><tr><td><strong>Write</strong></td><td>创建/覆盖文件</td><td>ask</td><td>必须先Read才能Write已有文件</td></tr><tr><td><strong>Edit</strong></td><td>修改文件片段</td><td>ask</td><td>精确字符串替换、replace_all模式</td></tr><tr><td><strong>Bash</strong></td><td>执行任意命令</td><td>ask</td><td>沙箱隔离、超时控制、后台执行</td></tr><tr><td><strong>Grep</strong></td><td>无</td><td>allow</td><td>ripgrep引擎、多行匹配、行号、head_limit</td></tr><tr><td><strong>Glob</strong></td><td>无</td><td>allow</td><td>文件模式匹配、按修改时间排序</td></tr><tr><td><strong>WebFetch</strong></td><td>无</td><td>ask</td><td>15分钟缓存、HTML→Markdown、域名过滤</td></tr><tr><td><strong>WebSearch</strong></td><td>无</td><td>ask</td><td>域名白名单/黑名单</td></tr><tr><td><strong>Agent</strong></td><td>启动子Agent</td><td>allow</td><td>model覆盖、worktree隔离、后台执行</td></tr><tr><td><strong>Skill</strong></td><td>无</td><td>allow</td><td>加载Skill知识到上下文</td></tr></tbody></table>
+<h3 id="142-bash工具的沙箱细节">14.2 Bash工具的沙箱细节</h3>
+<p>Bash是唯一支持沙箱隔离的工具，隔离维度：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ 网络隔离 ────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  allowLocalBinding: false     ← 禁止监听本地端口   │</span></span>
+<span class="line"><span>│  allowAllUnixSockets: false   ← 禁止Unix Socket    │</span></span>
+<span class="line"><span>│  allowedDomains: [...]        ← 域名白名单          │</span></span>
+<span class="line"><span>│  httpProxyPort / socksProxyPort ← 代理限制          │</span></span>
+<span class="line"><span>├─ 进程隔离 ────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  excludedCommands: [...]      ← 排除特定危险命令    │</span></span>
+<span class="line"><span>│  allowUnsandboxedCommands: false ← 禁止逃逸沙箱    │</span></span>
+<span class="line"><span>│  CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1 ← 清除子进程凭证│</span></span>
+<span class="line"><span>├─ 行为限制 ────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  timeout: 120000ms（默认）     ← 2分钟超时          │</span></span>
+<span class="line"><span>│  run_in_background: true      ← 支持后台执行        │</span></span>
+<span class="line"><span>│  后台任务 ~45s无响应弹通知                           │</span></span>
+<span class="line"><span>└───────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>重要限制：沙箱仅适用于Bash。</strong> Read、Write、WebFetch、MCP工具不经过沙箱。这意味着安全防线的完整性依赖于五层模型的协同，而非单靠沙箱。</p>
+<hr>
+<h2 id="十五多模型策略effort参数与extended-thinking">十五、多模型策略——Effort参数与Extended Thinking</h2>
+<p>Claude Code不是只用一个模型，而是根据任务复杂度动态调整推理深度。</p>
+<h3 id="151-effort三档推理">15.1 Effort三档推理</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Effort</th><th>推理深度</th><th>适用场景</th><th>Token消耗</th></tr></thead><tbody><tr><td><strong>low</strong></td><td>快速回复，最少思考</td><td>简单问题、文件读取、格式化</td><td>最低</td></tr><tr><td><strong>medium</strong></td><td>平衡速度和质量</td><td>常规编码、代码审查</td><td>中等</td></tr><tr><td><strong>high</strong></td><td>深度思考，完整推理链</td><td>架构决策、复杂bug定位、安全分析</td><td>最高</td></tr></tbody></table>
+<h3 id="152-extended-thinking自适应思考">15.2 Extended Thinking（自适应思考）</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>模型能力检测</span></span>
+<span class="line"><span>    ├─ 模型支持Extended Thinking → 自适应启用</span></span>
+<span class="line"><span>    │   └─ 简单任务 → 自动跳过思考</span></span>
+<span class="line"><span>    │   └─ 复杂任务 → 显示思考过程（thinking block）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    └─ 模型不支持 → 标准推理</span></span></code></pre>
+<p><strong><code>ultrathink</code>关键字</strong>：在提示中包含此关键字，强制激活最深度的思考模式。适用于需要极致推理能力的场景（如复杂的并发bug、分布式一致性问题）。</p>
+<h3 id="153-多后端模型映射">15.3 多后端模型映射</h3>
+<p>Claude Code不绑定单一API，支持多个云后端：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>后端</th><th>认证方式</th><th>特殊适配</th></tr></thead><tbody><tr><td><strong>Anthropic API</strong></td><td>API Key</td><td>默认，全特性支持</td></tr><tr><td><strong>AWS Bedrock</strong></td><td>SDK Profile</td><td>冷启动优化、ARN映射</td></tr><tr><td><strong>Google Vertex</strong></td><td>Service Account</td><td>Fine-grained streaming</td></tr><tr><td><strong>Microsoft Foundry</strong></td><td>API Token</td><td>推理profile映射</td></tr></tbody></table>
+<p><code>modelOverrides</code>配置允许将picker中的模型名映射到具体的后端模型标识符。</p>
+<hr>
+<h2 id="十六cron定时系统会话级的后台调度">十六、Cron定时系统——会话级的后台调度</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>CronCreate</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  参数：cron表达式（5字段标准格式）、prompt、recurring标志</span></span>
+<span class="line"><span>    │  示例："7 * * * *" → 每小时第7分钟执行</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>后台调度器</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 仅在REPL空闲时触发（不中断正在进行的对话）</span></span>
+<span class="line"><span>    ├─ recurring=true → 持续执行直到删除或3天自动过期</span></span>
+<span class="line"><span>    ├─ recurring=false → 执行一次后自动删除（one-shot提醒）</span></span>
+<span class="line"><span>    ├─ 内置jitter抖动 → 避免所有用户请求同时到达API</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>CronList / CronDelete → 查看和管理定时任务</span></span></code></pre>
+<p><strong>设计约束</strong>：Cron任务仅存活于当前会话，不写入磁盘。会话结束即消失。这是有意的设计——避免用户忘记的定时任务在后台无限消耗资源。</p>
+<hr>
+<h2 id="十七worktree隔离git级别的工程隔离">十七、Worktree隔离——Git级别的工程隔离</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主项目工作目录</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  EnterWorktree(name: "feature-x")</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>.claude/worktrees/feature-x/          ← 独立的git worktree</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 独立的分支（基于HEAD创建）</span></span>
+<span class="line"><span>    ├─ 独立的工作目录</span></span>
+<span class="line"><span>    ├─ Agent在此目录中工作，不影响主项目</span></span>
+<span class="line"><span>    ├─ 支持 sparse-checkout（大monorepo只检出必要目录）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    │  ExitWorktree(action: "keep" | "remove")</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>keep → 保留worktree和分支，后续可恢复</span></span>
+<span class="line"><span>remove → 清理worktree和分支（有未提交变更时需确认）</span></span></code></pre>
+<p><strong>Worktree + Agent的组合模式</strong>：Agent工具支持<code>isolation: "worktree"</code>参数，让子Agent在独立的worktree中工作。这样主Agent的工作目录不受子Agent影响，多个子Agent可以并行修改不同分支。</p>
+<hr>
+<h2 id="十八remote-session与ide集成">十八、Remote Session与IDE集成</h2>
+<h3 id="181-remote-control">18.1 Remote Control</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>本地终端                           远程服务</span></span>
+<span class="line"><span>    │                                │</span></span>
+<span class="line"><span>    │  claude --remote               │</span></span>
+<span class="line"><span>    │  ─────────────────────────────→│</span></span>
+<span class="line"><span>    │                                │  Web UI渲染</span></span>
+<span class="line"><span>    │  ←─────────────────────────────│  会话状态云端镜像</span></span>
+<span class="line"><span>    │                                │  跨设备同步</span></span>
+<span class="line"><span>    │  会话持久化到云端                │</span></span>
+<span class="line"><span>    │  --resume 从任意设备恢复        │</span></span>
+<span class="line"><span>    │                                │</span></span></code></pre>
+<h3 id="182-vscode集成">18.2 VSCode集成</h3>
+<p>Claude Code在VSCode中不是”插件”，而是<strong>一级集成</strong>：</p>
+<ul>
+<li><strong>Session历史</strong>：左侧栏加载历史会话，一键恢复</li>
+<li><strong>Diff视图</strong>：Agent修改的文件直接在编辑器中显示diff</li>
+<li><strong>Effort指示器</strong>：输入框边框颜色反映当前推理深度</li>
+<li><strong>Rate limit可视化</strong>：进度条+重置时间</li>
+<li><strong>Rewind Picker</strong>：Esc-twice打开对话回退选择器</li>
+<li><strong>Fork from here</strong>：从历史某个点分叉出新会话</li>
+</ul>
+<h3 id="183-voice-mode">18.3 Voice Mode</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>按住说话（push-to-talk）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>SoX音频捕获 → WebSocket streaming → 语音识别</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>文本进入Agent循环（等同于手动输入）</span></span></code></pre>
+<hr>
+<h2 id="十九opentelemetry可观测性">十九、OpenTelemetry可观测性</h2>
+<p>Claude Code内置完整的OpenTelemetry集成，覆盖traces、metrics、logs三大支柱：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>采集内容</th><th>配置</th></tr></thead><tbody><tr><td><strong>Events</strong></td><td>tool_decision, tool_result, speed属性</td><td>自动采集</td></tr><tr><td><strong>Resources</strong></td><td>os.type, os.version, host.arch, wsl.version</td><td>自动采集</td></tr><tr><td><strong>Metrics</strong></td><td>Active Time, token消耗估算, 思考块时长</td><td>自动采集</td></tr><tr><td><strong>传输</strong></td><td>OTLP over HTTP/gRPC, mTLS支持</td><td>OTEL_*_EXPORTER环境变量</td></tr><tr><td><strong>安全</strong></td><td>工具参数默认不记录</td><td><code>OTEL_LOG_TOOL_DETAILS=1</code>显式开启</td></tr></tbody></table>
 <p>Claude Code的11+个官方插件展示了不同的架构模式，对插件开发有直接参考价值：</p>
 
 
@@ -895,7 +1551,7 @@
 <li>适合安全防护和合规检查</li>
 </ul>
 <hr>
-<h2 id="十与传统ai编程工具的架构对比">十、与传统AI编程工具的架构对比</h2>
+<h2 id="二十与传统ai编程工具的架构对比">二十、与传统AI编程工具的架构对比</h2>
 
 
 
@@ -960,7 +1616,7 @@
 <p><strong>核心差异：传统工具是”增强人的操作”，Claude Code是”替代人的操作”。</strong> 前者天花板是人的操作效率，后者天花板是Agent的自主决策能力。</p>
 <p>从扩展方式看，传统插件是”程序化扩展”——编写确定性代码响应确定性事件；Claude Code插件是”知识化扩展”——编写Markdown描述指导LLM的决策。<strong>从”编程”到”描述”，这是AI时代软件扩展范式的根本变革。</strong></p>
 <hr>
-<h2 id="十一架构的局限性与演进方向">十一、架构的局限性与演进方向</h2>
+<h2 id="二十一架构的局限性与演进方向">二十一、架构的局限性与演进方向</h2>
 <p>不回避问题。Claude Code当前架构有三个结构性限制：</p>
 <p><strong>限制一：延迟链路。</strong> 每次工具调用经过”LLM推理→权限检查→工具执行→结果回传→LLM再推理”的完整链路。读一个文件在终端是毫秒级，在Agent循环中是秒级。简单任务的效率不如直接操作。</p>
 <p><strong>限制二：上下文窗口。</strong> 大型项目的代码量远超任何上下文窗口。CLAUDE.md层级、Skill条件加载、PreCompact钩子都是在缓解而非根本解决。这是所有LLM-based Agent的共同瓶颈。</p>
