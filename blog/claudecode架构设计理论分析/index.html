@@ -5,6 +5,58 @@
 <p>大多数AI编程工具的架构是”IDE + 聊天窗口”。Claude Code的架构是”Agent操作系统 + 工具生态”。这不是程度差异，是范式差异。</p>
 </blockquote>
 <hr>
+<h2 id="系统架构总览">系统架构总览</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔══════════════════════════════════════════════════════════════════════════╗</span></span>
+<span class="line"><span>║                    Claude Code 系统架构总览                               ║</span></span>
+<span class="line"><span>╠══════════════════════════════════════════════════════════════════════════╣</span></span>
+<span class="line"><span>║                                                                        ║</span></span>
+<span class="line"><span>║  ┌─ 用户交互层 ──────────────────────────────────────────────────────┐ ║</span></span>
+<span class="line"><span>║  │  终端CLI · VSCode集成 · Remote Control · Voice Mode · SDK/API    │ ║</span></span>
+<span class="line"><span>║  └────────────────────────────┬──────────────────────────────────────┘ ║</span></span>
+<span class="line"><span>║                               │                                        ║</span></span>
+<span class="line"><span>║                               ▼                                        ║</span></span>
+<span class="line"><span>║  ┌─ 事件钩子层（19个标准事件）──────────────────────────────────────┐  ║</span></span>
+<span class="line"><span>║  │  SessionStart → UserPromptSubmit → PreToolUse → PostToolUse     │  ║</span></span>
+<span class="line"><span>║  │  → PreCompact → PostCompact → Stop → SubagentStop → SessionEnd  │  ║</span></span>
+<span class="line"><span>║  │  → PermissionDenied → CwdChanged → FileChanged → Notification   │  ║</span></span>
+<span class="line"><span>║  │  → TaskCreated → TeammateIdle → TaskCompleted → StopFailure     │  ║</span></span>
+<span class="line"><span>║  │  → Elicitation → ElicitationResult                              │  ║</span></span>
+<span class="line"><span>║  └────────────────────────────┬──────────────────────────────────────┘ ║</span></span>
+<span class="line"><span>║                               │                                        ║</span></span>
+<span class="line"><span>║                               ▼                                        ║</span></span>
+<span class="line"><span>║  ┌─ Agent 循环引擎 ─────────────────────────────────────────────────┐ ║</span></span>
+<span class="line"><span>║  │                                                                   │ ║</span></span>
+<span class="line"><span>║  │   LLM推理层 ──→ 权限检查 ──→ 工具执行 ──→ 结果回传 ──→ 循环    │ ║</span></span>
+<span class="line"><span>║  │       │                                                           │ ║</span></span>
+<span class="line"><span>║  │       │         ┌─────────────────────────────┐                  │ ║</span></span>
+<span class="line"><span>║  │       └────────→│  多Agent调度                 │                  │ ║</span></span>
+<span class="line"><span>║  │                 │  SubAgent · Teammate · Task  │                  │ ║</span></span>
+<span class="line"><span>║  │                 └─────────────────────────────┘                  │ ║</span></span>
+<span class="line"><span>║  └────────────────────────────┬──────────────────────────────────────┘ ║</span></span>
+<span class="line"><span>║                               │                                        ║</span></span>
+<span class="line"><span>║          ┌────────────────────┼──────────────────────┐                ║</span></span>
+<span class="line"><span>║          ▼                    ▼                      ▼                ║</span></span>
+<span class="line"><span>║  ┌─ 工具层 ────┐   ┌─ 安全层 ─────────┐   ┌─ 上下文层 ─────────┐  ║</span></span>
+<span class="line"><span>║  │              │   │                   │   │                     │  ║</span></span>
+<span class="line"><span>║  │  内置工具     │   │  L5 企业策略      │   │  CLAUDE.md 层级    │  ║</span></span>
+<span class="line"><span>║  │  Read/Write  │   │  L4 沙箱隔离      │   │  Skill 三级加载    │  ║</span></span>
+<span class="line"><span>║  │  Edit/Bash   │   │  L3 工具权限      │   │  Memory 跨会话     │  ║</span></span>
+<span class="line"><span>║  │  Grep/Glob   │   │  L2 Hook拦截     │   │  ToolSearch 脱延   │  ║</span></span>
+<span class="line"><span>║  │  Web/Agent   │   │  L1 用户确认      │   │  Compaction 压缩   │  ║</span></span>
+<span class="line"><span>║  │              │   │                   │   │  Prompt Cache      │  ║</span></span>
+<span class="line"><span>║  │  MCP工具     │   └───────────────────┘   └─────────────────────┘  ║</span></span>
+<span class="line"><span>║  │  stdio/SSE   │                                                     ║</span></span>
+<span class="line"><span>║  │  HTTP/WS     │   ┌─ 持久化层 ────────────────────────────────┐    ║</span></span>
+<span class="line"><span>║  │              │   │  Transcript(JSONL) · Session Resume        │    ║</span></span>
+<span class="line"><span>║  │  Cron定时    │   │  Memory Files · Task State · Plugin Data   │    ║</span></span>
+<span class="line"><span>║  │  Worktree    │   │  Cron Jobs · Worktree · settings.json      │    ║</span></span>
+<span class="line"><span>║  └──────────────┘   └───────────────────────────────────────────┘    ║</span></span>
+<span class="line"><span>║                                                                        ║</span></span>
+<span class="line"><span>║  ┌─ 插件生态层 ─────────────────────────────────────────────────────┐ ║</span></span>
+<span class="line"><span>║  │  Commands(斜杠命令) · Agents(子代理) · Skills(知识注入)          │ ║</span></span>
+<span class="line"><span>║  │  Hooks(事件拦截) · MCP Servers(外部工具) · Plugin Marketplace    │ ║</span></span>
+<span class="line"><span>║  └──────────────────────────────────────────────────────────────────┘ ║</span></span>
+<span class="line"><span>╚══════════════════════════════════════════════════════════════════════════╝</span></span></code></pre>
 <h2 id="一ai编程助手的本质从补全到自主">一、AI编程助手的本质：从补全到自主</h2>
 <p>打开任何一个AI编程工具——Copilot、Cursor、Codeium——你看到的都是同一个范式：</p>
 <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>人写代码 → AI 补全/建议 → 人确认 → 人继续写</span></span></code></pre>
@@ -285,7 +337,56 @@
 <span class="line"><span>│  │  三种认证：OAuth自动处理 / Bearer Token / 环境变量注入    │  │</span></span>
 <span class="line"><span>│  └────────────────────────────────────────────────────────┘  │</span></span>
 <span class="line"><span>└──────────────────────────────────────────────────────────────┘</span></span></code></pre>
-<h3 id="42-插件的完整生命周期">4.2 插件的完整生命周期</h3>
+<h3 id="42-五种组件的交互关系">4.2 五种组件的交互关系</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                           用户</span></span>
+<span class="line"><span>                            │</span></span>
+<span class="line"><span>                     /command 或 自然语言</span></span>
+<span class="line"><span>                            │</span></span>
+<span class="line"><span>                            ▼</span></span>
+<span class="line"><span>                    ┌───────────────┐</span></span>
+<span class="line"><span>                    │   Command     │──── 定义 allowed-tools ────┐</span></span>
+<span class="line"><span>                    │  (工作流入口)  │                             │</span></span>
+<span class="line"><span>                    └───────┬───────┘                             │</span></span>
+<span class="line"><span>                            │ 触发                                │</span></span>
+<span class="line"><span>                            ▼                                     ▼</span></span>
+<span class="line"><span>                    ┌───────────────┐                    ┌──────────────┐</span></span>
+<span class="line"><span>        ┌──────────│    Agent      │──── 调用 ──────────→│   工具执行    │</span></span>
+<span class="line"><span>        │          │ (自主子代理)   │                    │  Read/Write  │</span></span>
+<span class="line"><span>        │          └───────┬───────┘                    │  Bash/Grep   │</span></span>
+<span class="line"><span>        │                  │                             │  MCP Tools   │</span></span>
+<span class="line"><span>        │           需要知识时                            └──────┬───────┘</span></span>
+<span class="line"><span>        │                  │                                     │</span></span>
+<span class="line"><span>        │                  ▼                                     │</span></span>
+<span class="line"><span>        │          ┌───────────────┐                             │</span></span>
+<span class="line"><span>        │          │    Skill      │                             │</span></span>
+<span class="line"><span>        │          │ (知识注入)     │                             │</span></span>
+<span class="line"><span>        │          │               │                             │</span></span>
+<span class="line"><span>        │          │ L1 元数据(常驻)│                             │</span></span>
+<span class="line"><span>        │          │ L2 SKILL.md   │                             │</span></span>
+<span class="line"><span>        │          │ L3 references │                             │</span></span>
+<span class="line"><span>        │          └───────────────┘                             │</span></span>
+<span class="line"><span>        │                                                        │</span></span>
+<span class="line"><span>        │  ┌─────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>        │  │           事件触发                                   │</span></span>
+<span class="line"><span>        │  │                                                     │</span></span>
+<span class="line"><span>        │  ▼                                                     ▼</span></span>
+<span class="line"><span>   ┌────────────┐                                       ┌──────────────┐</span></span>
+<span class="line"><span>   │   Hook     │──── PreToolUse拦截 ────────────────→ │  权限决策     │</span></span>
+<span class="line"><span>   │ (事件切面)  │                                       │ allow/deny   │</span></span>
+<span class="line"><span>   │            │◄─── PostToolUse通知 ───────────────── │ ask/defer    │</span></span>
+<span class="line"><span>   └────────────┘                                       └──────────────┘</span></span>
+<span class="line"><span>        │</span></span>
+<span class="line"><span>        │ Stop Hook</span></span>
+<span class="line"><span>        ▼</span></span>
+<span class="line"><span>   ┌────────────┐</span></span>
+<span class="line"><span>   │ 自迭代循环  │──→ 重新注入prompt → Agent继续</span></span>
+<span class="line"><span>   └────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>                    ┌───────────────┐</span></span>
+<span class="line"><span>                    │  MCP Server   │──── 提供外部工具能力</span></span>
+<span class="line"><span>                    │ (外部工具桥)   │     stdio/SSE/HTTP/WS</span></span>
+<span class="line"><span>                    └───────────────┘</span></span></code></pre>
+<h3 id="43-插件的完整生命周期">4.3 插件的完整生命周期</h3>
 <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>发现 (Discovery)</span></span>
 <span class="line"><span>    │  扫描位置：</span></span>
 <span class="line"><span>    │  · ~/.claude/plugins/（全局）</span></span>
@@ -566,6 +667,48 @@
 <hr>
 <h2 id="六五层纵深安全模型自主不等于失控">六、五层纵深安全模型——自主不等于失控</h2>
 <p>AI Agent执行代码操作的核心矛盾：<strong>自主性越高，风险越大。</strong> Claude Code的解法不是在”全开”和”全关”之间选一个，而是设计了五层递进的信任光谱。</p>
+<h3 id="安全决策数据流">安全决策数据流</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent发起工具调用</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>┌─────────┐    命中deny     ┌─────────┐</span></span>
+<span class="line"><span>│ L5 企业  │───────────────→│  拒绝    │</span></span>
+<span class="line"><span>│ 策略检查  │                └─────────┘</span></span>
+<span class="line"><span>└────┬────┘</span></span>
+<span class="line"><span>     │ 未命中</span></span>
+<span class="line"><span>     ▼</span></span>
+<span class="line"><span>┌─────────┐    sandbox阻止   ┌─────────┐</span></span>
+<span class="line"><span>│ L4 沙箱  │───────────────→│  拒绝    │</span></span>
+<span class="line"><span>│ 隔离检查  │                └─────────┘</span></span>
+<span class="line"><span>└────┬────┘</span></span>
+<span class="line"><span>     │ 通过</span></span>
+<span class="line"><span>     ▼</span></span>
+<span class="line"><span>┌─────────┐    deny         ┌─────────┐     ┌──────────┐</span></span>
+<span class="line"><span>│ L3 工具  │───────────────→│  拒绝    │     │ Permission│</span></span>
+<span class="line"><span>│ 权限匹配  │                └─────────┘     │ Denied   │</span></span>
+<span class="line"><span>└────┬────┘                                  │ Hook     │</span></span>
+<span class="line"><span>     │ 未匹配或allow                          │ {retry}  │</span></span>
+<span class="line"><span>     ▼                                       └──────────┘</span></span>
+<span class="line"><span>┌─────────┐    deny         ┌─────────┐</span></span>
+<span class="line"><span>│ L2 Hook │───────────────→│  拒绝    │</span></span>
+<span class="line"><span>│ 拦截检查  │                └─────────┘</span></span>
+<span class="line"><span>│         │    ask          ┌─────────┐</span></span>
+<span class="line"><span>│         │───────────────→│ 弹出确认 │──→ 用户决策</span></span>
+<span class="line"><span>│         │    defer        ┌─────────┐</span></span>
+<span class="line"><span>│         │───────────────→│ 暂停等待 │──→ --resume恢复</span></span>
+<span class="line"><span>│         │    allow        │         │</span></span>
+<span class="line"><span>└────┬────┘                └─────────┘</span></span>
+<span class="line"><span>     │ allow或无Hook</span></span>
+<span class="line"><span>     ▼</span></span>
+<span class="line"><span>┌─────────┐    用户拒绝      ┌─────────┐</span></span>
+<span class="line"><span>│ L1 用户  │───────────────→│  拒绝    │</span></span>
+<span class="line"><span>│ 确认     │                └─────────┘</span></span>
+<span class="line"><span>└────┬────┘    用户允许</span></span>
+<span class="line"><span>     │</span></span>
+<span class="line"><span>     ▼</span></span>
+<span class="line"><span>┌─────────┐</span></span>
+<span class="line"><span>│  执行    │──→ PostToolUse Hook ──→ 结果回传</span></span>
+<span class="line"><span>└─────────┘</span></span></code></pre>
 <h3 id="61-五层防御全景">6.1 五层防御全景</h3>
 <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌────────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│  Level 5: 企业策略层（最高优先级，不可被下层覆盖）                  │</span></span>
@@ -1027,6 +1170,39 @@
 <hr>
 <h2 id="十memory系统跨会话的持久化知识库">十、Memory系统——跨会话的持久化知识库</h2>
 <p>Memory不是上下文管理的一部分——它是<strong>跨会话的长期记忆</strong>，每次新会话自动加载，持续增量更新。</p>
+<h3 id="memory读写全流程">Memory读写全流程</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔═══ 写入流程 ═══════════════════════════════════════════════════════╗</span></span>
+<span class="line"><span>║                                                                    ║</span></span>
+<span class="line"><span>║  对话中学到新信息（用户角色/偏好/项目状态/外部引用）                   ║</span></span>
+<span class="line"><span>║      │                                                             ║</span></span>
+<span class="line"><span>║      ▼                                                             ║</span></span>
+<span class="line"><span>║  判断是否值得记忆（非临时性、非代码可推导、非git可查）                 ║</span></span>
+<span class="line"><span>║      │                                                             ║</span></span>
+<span class="line"><span>║      ▼                                                             ║</span></span>
+<span class="line"><span>║  Step 1: Write记忆文件                                              ║</span></span>
+<span class="line"><span>║      ~/.claude/projects/&#x3C;hash>/memory/feedback_testing.md           ║</span></span>
+<span class="line"><span>║      含 YAML frontmatter（name, description, type）                 ║</span></span>
+<span class="line"><span>║      │                                                             ║</span></span>
+<span class="line"><span>║      ▼                                                             ║</span></span>
+<span class="line"><span>║  Step 2: 更新 MEMORY.md 索引                                       ║</span></span>
+<span class="line"><span>║      添加指向记忆文件的链接（仅指针，不含内容）                       ║</span></span>
+<span class="line"><span>║      │                                                             ║</span></span>
+<span class="line"><span>║      ▼                                                             ║</span></span>
+<span class="line"><span>║  持久化到磁盘（跨会话保留）                                         ║</span></span>
+<span class="line"><span>║                                                                    ║</span></span>
+<span class="line"><span>╠═══ 读取流程 ═══════════════════════════════════════════════════════╣</span></span>
+<span class="line"><span>║                                                                    ║</span></span>
+<span class="line"><span>║  新会话启动（SessionStart）                                         ║</span></span>
+<span class="line"><span>║      │                                                             ║</span></span>
+<span class="line"><span>║      ▼                                                             ║</span></span>
+<span class="line"><span>║  自动加载 MEMORY.md 索引到上下文                                     ║</span></span>
+<span class="line"><span>║      限制：25KB / 200行（截断保护）                                  ║</span></span>
+<span class="line"><span>║      │                                                             ║</span></span>
+<span class="line"><span>║      ▼                                                             ║</span></span>
+<span class="line"><span>║  Agent根据当前任务，按需 Read 具体记忆文件                           ║</span></span>
+<span class="line"><span>║      仅读取相关记忆，避免全量加载浪费token                           ║</span></span>
+<span class="line"><span>║                                                                    ║</span></span>
+<span class="line"><span>╚════════════════════════════════════════════════════════════════════╝</span></span></code></pre>
 <h3 id="101-memory架构">10.1 Memory架构</h3>
 <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.claude/projects/&#x3C;project-hash>/memory/</span></span>
 <span class="line"><span>├── MEMORY.md                    ← 索引文件（指针，非内容）</span></span>
@@ -1127,6 +1303,34 @@
 <span class="line"><span>│  · MCP工具schema在连接时一次性缓存                            │</span></span>
 <span class="line"><span>│  · 动态工具变更时才invalidate                                │</span></span>
 <span class="line"><span>└────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<h3 id="token生命周期一次工具调用的成本构成">Token生命周期——一次工具调用的成本构成</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入 "读取src/app.ts并修复bug"</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>┌─ 系统提示 ─────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  · 核心指令（固定，~2000 token）     ← L2 Prompt Cache命中 = 0额外成本</span></span>
+<span class="line"><span>│  · CLAUDE.md（项目规范，~500 token）  ← L2 文件缓存命中 = 0额外成本</span></span>
+<span class="line"><span>│  · 已激活Skill（~1500 token）        ← L3 条件加载，未激活 = 0成本</span></span>
+<span class="line"><span>│  · 工具Schema（~3000 token）          ← L1 Schema缓存命中 = 0额外成本</span></span>
+<span class="line"><span>│  · MCP工具（可能脱延 = 0成本）        ← L4 ToolSearch管理</span></span>
+<span class="line"><span>└────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼ 实际新增token</span></span>
+<span class="line"><span>┌─ 会话上下文 ────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  · 用户消息（~20 token）                             │</span></span>
+<span class="line"><span>│  · 历史对话（~5000 token，已压缩）   ← Compaction控制 │</span></span>
+<span class="line"><span>│  · 工具结果（~2000 token）            ← >50KB存磁盘   │</span></span>
+<span class="line"><span>└────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>LLM推理 → 输出（~500 token）</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>单次调用总成本 ≈ 输入 ~10000 token + 输出 ~500 token</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ├─ 无缓存时：系统提示全量发送 → 输入 ~17000 token（+70%）</span></span>
+<span class="line"><span>    ├─ 无ToolSearch时：全部MCP Schema → 可能 +10000 token</span></span>
+<span class="line"><span>    └─ 无Compaction时：历史不压缩 → 随对话增长线性膨胀</span></span></code></pre>
 <h3 id="token节省的关键技术点">Token节省的关键技术点</h3>
 
 
@@ -2065,6 +2269,43 @@
 <hr>
 <h2 id="二十三agent-teams多agent协作的高级模式">二十三、Agent Teams——多Agent协作的高级模式</h2>
 <p>Agent Teams是Claude Code的实验性功能，代表了多Agent协作的下一步演化。</p>
+<h3 id="多agent通信拓扑">多Agent通信拓扑</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│                      主 Agent                                 │</span></span>
+<span class="line"><span>│                  （用户直接交互）                               │</span></span>
+<span class="line"><span>│                                                              │</span></span>
+<span class="line"><span>│    ┌──────────────────────────────────────────────────┐     │</span></span>
+<span class="line"><span>│    │              Agent循环引擎                        │     │</span></span>
+<span class="line"><span>│    │  意图理解 → 任务规划 → 工具调用 → 结果组装        │     │</span></span>
+<span class="line"><span>│    └───────┬──────────┬──────────┬────────────────────┘     │</span></span>
+<span class="line"><span>│            │          │          │                           │</span></span>
+<span class="line"><span>│     ┌──────┘    ┌─────┘    ┌─────┘                          │</span></span>
+<span class="line"><span>│     ▼           ▼          ▼                                │</span></span>
+<span class="line"><span>│  ┌────────┐ ┌────────┐ ┌────────┐                          │</span></span>
+<span class="line"><span>│  │SubAgent│ │SubAgent│ │SubAgent│  ← 主循环内，共享上下文     │</span></span>
+<span class="line"><span>│  │(探索)  │ │(审查)  │ │(测试)  │  ← 短生命周期，完成即释放   │</span></span>
+<span class="line"><span>│  └────────┘ └────────┘ └────────┘                          │</span></span>
+<span class="line"><span>│                                                              │</span></span>
+<span class="line"><span>└──────────────────────────┬───────────────────────────────────┘</span></span>
+<span class="line"><span>                           │</span></span>
+<span class="line"><span>              TeammateIdle / TaskCompleted 事件</span></span>
+<span class="line"><span>                           │</span></span>
+<span class="line"><span>         ┌─────────────────┼─────────────────┐</span></span>
+<span class="line"><span>         ▼                 ▼                 ▼</span></span>
+<span class="line"><span>   ┌───────────┐    ┌───────────┐    ┌───────────┐</span></span>
+<span class="line"><span>   │ Teammate  │    │ Teammate  │    │   Task    │</span></span>
+<span class="line"><span>   │ (tmux)    │    │ (in-proc) │    │  (后台)    │</span></span>
+<span class="line"><span>   │           │    │           │    │           │</span></span>
+<span class="line"><span>   │ 独立进程   │    │ 主进程内   │    │ 独立循环   │</span></span>
+<span class="line"><span>   │ 完全隔离   │    │ 共享内存   │    │ 可监控     │</span></span>
+<span class="line"><span>   │ 长期运行   │    │ 低延迟     │    │ 有统计     │</span></span>
+<span class="line"><span>   │           │    │           │    │           │</span></span>
+<span class="line"><span>   │ Shift+Down│    │           │    │ TaskOutput │</span></span>
+<span class="line"><span>   │ 切换导航   │    │           │    │ 读取结果   │</span></span>
+<span class="line"><span>   └───────────┘    └───────────┘    └───────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   防护：Teammate不能创建新Teammate（防止无限递归）</span></span>
+<span class="line"><span>   终止：Ctrl+F 杀死所有后台Agent</span></span></code></pre>
 <h3 id="231-两种teammate类型">23.1 两种Teammate类型</h3>
 <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ In-Process Teammate ──────────────────────────┐</span></span>
 <span class="line"><span>│                                                 │</span></span>
