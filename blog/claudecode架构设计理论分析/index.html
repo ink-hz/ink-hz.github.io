@@ -6,57 +6,200 @@
 </blockquote>
 <hr>
 <h2 id="系统架构总览">系统架构总览</h2>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔══════════════════════════════════════════════════════════════════════════╗</span></span>
-<span class="line"><span>║                    Claude Code 系统架构总览                               ║</span></span>
-<span class="line"><span>╠══════════════════════════════════════════════════════════════════════════╣</span></span>
-<span class="line"><span>║                                                                        ║</span></span>
-<span class="line"><span>║  ┌─ 用户交互层 ──────────────────────────────────────────────────────┐ ║</span></span>
-<span class="line"><span>║  │  终端CLI · VSCode集成 · Remote Control · Voice Mode · SDK/API    │ ║</span></span>
-<span class="line"><span>║  └────────────────────────────┬──────────────────────────────────────┘ ║</span></span>
-<span class="line"><span>║                               │                                        ║</span></span>
-<span class="line"><span>║                               ▼                                        ║</span></span>
-<span class="line"><span>║  ┌─ 事件钩子层（19个标准事件）──────────────────────────────────────┐  ║</span></span>
-<span class="line"><span>║  │  SessionStart → UserPromptSubmit → PreToolUse → PostToolUse     │  ║</span></span>
-<span class="line"><span>║  │  → PreCompact → PostCompact → Stop → SubagentStop → SessionEnd  │  ║</span></span>
-<span class="line"><span>║  │  → PermissionDenied → CwdChanged → FileChanged → Notification   │  ║</span></span>
-<span class="line"><span>║  │  → TaskCreated → TeammateIdle → TaskCompleted → StopFailure     │  ║</span></span>
-<span class="line"><span>║  │  → Elicitation → ElicitationResult                              │  ║</span></span>
-<span class="line"><span>║  └────────────────────────────┬──────────────────────────────────────┘ ║</span></span>
-<span class="line"><span>║                               │                                        ║</span></span>
-<span class="line"><span>║                               ▼                                        ║</span></span>
-<span class="line"><span>║  ┌─ Agent 循环引擎 ─────────────────────────────────────────────────┐ ║</span></span>
-<span class="line"><span>║  │                                                                   │ ║</span></span>
-<span class="line"><span>║  │   LLM推理层 ──→ 权限检查 ──→ 工具执行 ──→ 结果回传 ──→ 循环    │ ║</span></span>
-<span class="line"><span>║  │       │                                                           │ ║</span></span>
-<span class="line"><span>║  │       │         ┌─────────────────────────────┐                  │ ║</span></span>
-<span class="line"><span>║  │       └────────→│  多Agent调度                 │                  │ ║</span></span>
-<span class="line"><span>║  │                 │  SubAgent · Teammate · Task  │                  │ ║</span></span>
-<span class="line"><span>║  │                 └─────────────────────────────┘                  │ ║</span></span>
-<span class="line"><span>║  └────────────────────────────┬──────────────────────────────────────┘ ║</span></span>
-<span class="line"><span>║                               │                                        ║</span></span>
-<span class="line"><span>║          ┌────────────────────┼──────────────────────┐                ║</span></span>
-<span class="line"><span>║          ▼                    ▼                      ▼                ║</span></span>
-<span class="line"><span>║  ┌─ 工具层 ────┐   ┌─ 安全层 ─────────┐   ┌─ 上下文层 ─────────┐  ║</span></span>
-<span class="line"><span>║  │              │   │                   │   │                     │  ║</span></span>
-<span class="line"><span>║  │  内置工具     │   │  L5 企业策略      │   │  CLAUDE.md 层级    │  ║</span></span>
-<span class="line"><span>║  │  Read/Write  │   │  L4 沙箱隔离      │   │  Skill 三级加载    │  ║</span></span>
-<span class="line"><span>║  │  Edit/Bash   │   │  L3 工具权限      │   │  Memory 跨会话     │  ║</span></span>
-<span class="line"><span>║  │  Grep/Glob   │   │  L2 Hook拦截     │   │  ToolSearch 脱延   │  ║</span></span>
-<span class="line"><span>║  │  Web/Agent   │   │  L1 用户确认      │   │  Compaction 压缩   │  ║</span></span>
-<span class="line"><span>║  │              │   │                   │   │  Prompt Cache      │  ║</span></span>
-<span class="line"><span>║  │  MCP工具     │   └───────────────────┘   └─────────────────────┘  ║</span></span>
-<span class="line"><span>║  │  stdio/SSE   │                                                     ║</span></span>
-<span class="line"><span>║  │  HTTP/WS     │   ┌─ 持久化层 ────────────────────────────────┐    ║</span></span>
-<span class="line"><span>║  │              │   │  Transcript(JSONL) · Session Resume        │    ║</span></span>
-<span class="line"><span>║  │  Cron定时    │   │  Memory Files · Task State · Plugin Data   │    ║</span></span>
-<span class="line"><span>║  │  Worktree    │   │  Cron Jobs · Worktree · settings.json      │    ║</span></span>
-<span class="line"><span>║  └──────────────┘   └───────────────────────────────────────────┘    ║</span></span>
-<span class="line"><span>║                                                                        ║</span></span>
-<span class="line"><span>║  ┌─ 插件生态层 ─────────────────────────────────────────────────────┐ ║</span></span>
-<span class="line"><span>║  │  Commands(斜杠命令) · Agents(子代理) · Skills(知识注入)          │ ║</span></span>
-<span class="line"><span>║  │  Hooks(事件拦截) · MCP Servers(外部工具) · Plugin Marketplace    │ ║</span></span>
-<span class="line"><span>║  └──────────────────────────────────────────────────────────────────┘ ║</span></span>
-<span class="line"><span>╚══════════════════════════════════════════════════════════════════════════╝</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>╔══════════════════════════════════════════════════════════════════════════════╗</span></span>
+<span class="line"><span>║                      Claude Code 系统架构总览                                ║</span></span>
+<span class="line"><span>╠══════════════════════════════════════════════════════════════════════════════╣</span></span>
+<span class="line"><span>║                                                                            ║</span></span>
+<span class="line"><span>║  ┌─ 配置系统 ────────────────────────────────────────────────────────────┐║</span></span>
+<span class="line"><span>║  │  managed-settings.json(企业) → settings.json(用户) →                 │║</span></span>
+<span class="line"><span>║  │  settings.local.json(项目本地) · managed-settings.d/(策略分片)        │║</span></span>
+<span class="line"><span>║  └───────────────────────────────────────────────────────────────────────┘║</span></span>
+<span class="line"><span>║                                                                            ║</span></span>
+<span class="line"><span>║  ┌─ 用户交互层 ────────────────────────────────────────────────────────┐ ║</span></span>
+<span class="line"><span>║  │  终端CLI · VSCode集成 · Remote Control · Voice Mode · SDK/API      │ ║</span></span>
+<span class="line"><span>║  │  交互模式：Auto / Plan / Fast / Headless / Bare                     │ ║</span></span>
+<span class="line"><span>║  └────────────────────────────────┬─────────────────────────────────────┘ ║</span></span>
+<span class="line"><span>║                                   │                                        ║</span></span>
+<span class="line"><span>║ ◆═══════════════════════════════════════════════════════════════════════◆  ║</span></span>
+<span class="line"><span>║ ║           事件钩子层（19个标准事件，环绕整个Agent生命周期）              ║  ║</span></span>
+<span class="line"><span>║ ║                                                                       ║  ║</span></span>
+<span class="line"><span>║ ║  会话级：SessionStart · SessionEnd · UserPromptSubmit                 ║  ║</span></span>
+<span class="line"><span>║ ║  工具级：PreToolUse · PostToolUse · PermissionDenied                  ║  ║</span></span>
+<span class="line"><span>║ ║  压缩级：PreCompact · PostCompact                                     ║  ║</span></span>
+<span class="line"><span>║ ║  退出级：Stop · SubagentStop · StopFailure                           ║  ║</span></span>
+<span class="line"><span>║ ║  环境级：CwdChanged · FileChanged · Notification                     ║  ║</span></span>
+<span class="line"><span>║ ║  任务级：TaskCreated · TeammateIdle · TaskCompleted                   ║  ║</span></span>
+<span class="line"><span>║ ║  MCP级：Elicitation · ElicitationResult                              ║  ║</span></span>
+<span class="line"><span>║ ◆═══════════════════════════════════════════════════════════════════════◆  ║</span></span>
+<span class="line"><span>║                                   │                                        ║</span></span>
+<span class="line"><span>║  ┌────────────────────────────────▼────────────────────────────────────┐  ║</span></span>
+<span class="line"><span>║  │                      Agent 循环引擎                                  │  ║</span></span>
+<span class="line"><span>║  │                                                                      │  ║</span></span>
+<span class="line"><span>║  │   LLM推理 ──→ 权限决策树 ──→ 工具执行 ──→ 结果回传 ──→ 循环       │  ║</span></span>
+<span class="line"><span>║  │       │                                                              │  ║</span></span>
+<span class="line"><span>║  │       └──→ 多Agent编排 ─┬─ SubAgent（主循环内，共享上下文）          │  ║</span></span>
+<span class="line"><span>║  │                         ├─ Teammate（独立进程，完全隔离）             │  ║</span></span>
+<span class="line"><span>║  │                         └─ Task（后台循环，可监控统计）               │  ║</span></span>
+<span class="line"><span>║  └──────────┬──────────────────────┬──────────────────┬────────────────┘  ║</span></span>
+<span class="line"><span>║             │                      │                  │                    ║</span></span>
+<span class="line"><span>║             ▼                      ▼                  ▼                    ║</span></span>
+<span class="line"><span>║  ┌─ 工具层 ──────────┐  ┌─ 权限决策树 ─────┐  ┌─ 上下文层 ──────────┐  ║</span></span>
+<span class="line"><span>║  │                    │  │                   │  │                      │  ║</span></span>
+<span class="line"><span>║  │  核心工具（预加载）  │  │  企业策略(最高)   │  │  CLAUDE.md 多层级    │  ║</span></span>
+<span class="line"><span>║  │  Read · Write      │  │      ↓            │  │  Skill 三级加载      │  ║</span></span>
+<span class="line"><span>║  │  Edit · MultiEdit  │  │  权限规则匹配     │  │  Memory 跨会话记忆   │  ║</span></span>
+<span class="line"><span>║  │  Bash · PowerShell │  │      ↓            │  │  Extended Thinking   │  ║</span></span>
+<span class="line"><span>║  │  Grep · Glob       │  │  Auto Mode分类器  │  │  ToolSearch 脱延管理 │  ║</span></span>
+<span class="line"><span>║  │  WebFetch/Search   │  │      ↓            │  │  Compaction 自动压缩 │  ║</span></span>
+<span class="line"><span>║  │  Agent · Skill     │  │  PreToolUse Hook  │  │  Prompt Cache 系统   │  ║</span></span>
+<span class="line"><span>║  │  Task* 工具族      │  │  (defer/allow/    │  │  大输出外溢(>50KB    │  ║</span></span>
+<span class="line"><span>║  │                    │  │   ask/deny)        │  │   存磁盘+预览)       │  ║</span></span>
+<span class="line"><span>║  │  MCP工具（动态）    │  │      ↓            │  │                      │  ║</span></span>
+<span class="line"><span>║  │  stdio · SSE       │  │  沙箱隔离(仅Bash) │  └──────────────────────┘  ║</span></span>
+<span class="line"><span>║  │  HTTP · WebSocket  │  │      ↓            │                            ║</span></span>
+<span class="line"><span>║  │  OAuth自动认证      │  │  用户确认(最终)   │                            ║</span></span>
+<span class="line"><span>║  │                    │  │                   │                            ║</span></span>
+<span class="line"><span>║  │  ToolSearch（按需） │  └───────────────────┘                            ║</span></span>
+<span class="line"><span>║  │  脱延加载/释放      │                                                   ║</span></span>
+<span class="line"><span>║  │                    │                                                   ║</span></span>
+<span class="line"><span>║  │  其他              │                                                   ║</span></span>
+<span class="line"><span>║  │  Cron · Worktree   │                                                   ║</span></span>
+<span class="line"><span>║  └────────────────────┘                                                   ║</span></span>
+<span class="line"><span>║                                                                            ║</span></span>
+<span class="line"><span>║  ┌─ 持久化层 ─────────────────────────────────────────────────────────┐  ║</span></span>
+<span class="line"><span>║  │  会话级：Transcript(JSONL) · Session Resume · Task State           │  ║</span></span>
+<span class="line"><span>║  │  全局级：Memory Files · History · Cron Jobs · Worktree             │  ║</span></span>
+<span class="line"><span>║  │  配置级：settings.json层级 · Plugin Data · Hook输出大文件           │  ║</span></span>
+<span class="line"><span>║  └────────────────────────────────────────────────────────────────────┘  ║</span></span>
+<span class="line"><span>║                                                                            ║</span></span>
+<span class="line"><span>║  ┌─ 观测系统（OpenTelemetry）────────────────────────────────────────┐  ║</span></span>
+<span class="line"><span>║  │  事件追踪(tool_decision) · 性能指标(Active Time) · 会话关联追踪    │  ║</span></span>
+<span class="line"><span>║  └────────────────────────────────────────────────────────────────────┘  ║</span></span>
+<span class="line"><span>║                                                                            ║</span></span>
+<span class="line"><span>║  ┌─ 插件生态层（贯穿多层）───────────────────────────────────────────┐  ║</span></span>
+<span class="line"><span>║  │  Commands → 用户交互层    Agents → Agent引擎    Skills → 上下文层  │  ║</span></span>
+<span class="line"><span>║  │  Hooks → 事件钩子层       MCP Servers → 工具层                     │  ║</span></span>
+<span class="line"><span>║  │  Plugin Marketplace · 版本管理 · 企业策略管控                       │  ║</span></span>
+<span class="line"><span>║  └────────────────────────────────────────────────────────────────────┘  ║</span></span>
+<span class="line"><span>╚══════════════════════════════════════════════════════════════════════════════╝</span></span></code></pre>
+<h3 id="系统架构交互图mermaid版">系统架构交互图（Mermaid版）</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph CONFIG [配置系统]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">        C1["managed-settings.json&#x3C;br/>(企业策略·最高优先级)"] --> C2["settings.json&#x3C;br/>(用户全局)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        C2 --> C3["settings.local.json&#x3C;br/>(项目本地·不入库)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph UI [用户交互层]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">        U1["终端CLI"] --> U2["VSCode集成"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U2 --> U3["Remote Control"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U3 --> U4["Voice Mode"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U4 --> U5["SDK/API"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U6["交互模式：Auto / Plan / Fast / Headless / Bare"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph HOOKS [事件钩子层 · 19个标准事件 · 环绕整个Agent生命周期]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction TB</span></span>
+<span class="line"><span style="color:#E1E4E8">        H1["会话级&#x3C;br/>SessionStart · SessionEnd&#x3C;br/>UserPromptSubmit"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H2["工具级&#x3C;br/>PreToolUse · PostToolUse&#x3C;br/>PermissionDenied"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H3["压缩级&#x3C;br/>PreCompact · PostCompact"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H4["退出级&#x3C;br/>Stop · SubagentStop · StopFailure"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H5["环境级&#x3C;br/>CwdChanged · FileChanged&#x3C;br/>Notification"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H6["任务级&#x3C;br/>TaskCreated · TeammateIdle&#x3C;br/>TaskCompleted"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H7["MCP级&#x3C;br/>Elicitation · ElicitationResult"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph ENGINE [Agent循环引擎]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction TB</span></span>
+<span class="line"><span style="color:#E1E4E8">        E1["LLM推理层&#x3C;br/>意图理解·任务规划·工具选择"] --> E2["权限决策树&#x3C;br/>企业策略→规则匹配→Auto分类器&#x3C;br/>→Hook拦截→沙箱(仅Bash)→用户确认"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E2 --> E3["工具执行层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E3 --> E4["结果回传→重新进入推理层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E4 --> E1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph AGENTS [多Agent编排]</span></span>
+<span class="line"><span style="color:#E1E4E8">            direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">            A1["SubAgent&#x3C;br/>主循环内·共享上下文"] --> A2["Teammate&#x3C;br/>独立进程·完全隔离"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            A2 --> A3["Task&#x3C;br/>后台循环·可监控"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        E1 --> AGENTS</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph TOOLS [工具层]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction TB</span></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph BUILTIN [核心工具·预加载]</span></span>
+<span class="line"><span style="color:#E1E4E8">            direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">            T1["Read · Write · Edit&#x3C;br/>MultiEdit · Bash&#x3C;br/>PowerShell"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            T2["Grep · Glob&#x3C;br/>WebFetch · WebSearch"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            T3["Agent · Skill&#x3C;br/>Task*工具族&#x3C;br/>Cron · Worktree"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph MCP_T [MCP工具·动态加载]</span></span>
+<span class="line"><span style="color:#E1E4E8">            direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">            M1["stdio服务器"] --> M2["SSE服务器&#x3C;br/>(OAuth自动)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            M2 --> M3["HTTP/WS服务器"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph DEFERRED [ToolSearch·按需加载]</span></span>
+<span class="line"><span style="color:#E1E4E8">            TS1["MCP工具描述>10%上下文&#x3C;br/>→自动脱延&#x3C;br/>DORMANT→LOADED→RESOLVED"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph CONTEXT [上下文管理层]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction TB</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT1["CLAUDE.md 多层级加载&#x3C;br/>全局→项目→子目录→本地"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT2["Skill 三级渐进加载&#x3C;br/>元数据→SKILL.md→references"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT3["Memory 跨会话记忆&#x3C;br/>MEMORY.md索引·四种类型"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT4["Extended Thinking&#x3C;br/>Effort: low/medium/high"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT5["Compaction 自动压缩&#x3C;br/>断路器·状态保留·PreCompact Hook"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT6["Prompt Cache 系统&#x3C;br/>系统提示·CLAUDE.md·工具Schema"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        CT7["大输出管理&#x3C;br/>>50KB存磁盘+预览注入"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph PERSIST [持久化层]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">        P1["会话级&#x3C;br/>Transcript JSONL&#x3C;br/>Session Resume&#x3C;br/>Task State"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        P2["全局级&#x3C;br/>Memory Files&#x3C;br/>History · Cron Jobs&#x3C;br/>Worktree"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        P3["配置级&#x3C;br/>settings.json层级&#x3C;br/>Plugin Data&#x3C;br/>Hook输出大文件"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph OTEL [观测系统 · OpenTelemetry]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">        O1["事件追踪&#x3C;br/>tool_decision · tool_result"] --> O2["性能指标&#x3C;br/>Active Time · Speed"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        O2 --> O3["会话关联&#x3C;br/>X-Claude-Code-Session-Id"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph PLUGINS [插件生态层 · 贯穿多层]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction LR</span></span>
+<span class="line"><span style="color:#E1E4E8">        PL1["Commands&#x3C;br/>→用户交互层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PL2["Agents&#x3C;br/>→Agent引擎"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PL3["Skills&#x3C;br/>→上下文层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PL4["Hooks&#x3C;br/>→事件钩子层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PL5["MCP Servers&#x3C;br/>→工具层"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        PL6["Marketplace&#x3C;br/>版本管理·企业管控"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    CONFIG --> UI</span></span>
+<span class="line"><span style="color:#E1E4E8">    UI --> HOOKS</span></span>
+<span class="line"><span style="color:#E1E4E8">    HOOKS --> ENGINE</span></span>
+<span class="line"><span style="color:#E1E4E8">    ENGINE --> TOOLS</span></span>
+<span class="line"><span style="color:#E1E4E8">    ENGINE --> CONTEXT</span></span>
+<span class="line"><span style="color:#E1E4E8">    TOOLS --> PERSIST</span></span>
+<span class="line"><span style="color:#E1E4E8">    CONTEXT --> PERSIST</span></span>
+<span class="line"><span style="color:#E1E4E8">    OTEL -.->|"采集全链路指标"| ENGINE</span></span>
+<span class="line"><span style="color:#E1E4E8">    PLUGINS -.->|"扩展各层能力"| ENGINE</span></span>
+<span class="line"><span style="color:#E1E4E8">    PLUGINS -.->|"扩展各层能力"| TOOLS</span></span>
+<span class="line"><span style="color:#E1E4E8">    PLUGINS -.->|"扩展各层能力"| CONTEXT</span></span>
+<span class="line"><span style="color:#E1E4E8">    PLUGINS -.->|"扩展各层能力"| HOOKS</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    style CONFIG fill:#1a1a2e,stroke:#e94560,color:#eee</span></span>
+<span class="line"><span style="color:#E1E4E8">    style UI fill:#0f3460,stroke:#e94560,color:#eee</span></span>
+<span class="line"><span style="color:#E1E4E8">    style HOOKS fill:#16213e,stroke:#0f3460,color:#e94560</span></span>
+<span class="line"><span style="color:#E1E4E8">    style ENGINE fill:#1a1a2e,stroke:#533483,color:#eee</span></span>
+<span class="line"><span style="color:#E1E4E8">    style TOOLS fill:#0c2340,stroke:#3b82f6,color:#93c5fd</span></span>
+<span class="line"><span style="color:#E1E4E8">    style CONTEXT fill:#1a0f2e,stroke:#8b5cf6,color:#c4b5fd</span></span>
+<span class="line"><span style="color:#E1E4E8">    style PERSIST fill:#0d2818,stroke:#10b981,color:#6ee7b7</span></span>
+<span class="line"><span style="color:#E1E4E8">    style OTEL fill:#2d1f0e,stroke:#f59e0b,color:#fde68a</span></span>
+<span class="line"><span style="color:#E1E4E8">    style PLUGINS fill:#2a0f1a,stroke:#ec4899,color:#f9a8d4</span></span></code></pre>
 <h2 id="一ai编程助手的本质从补全到自主">一、AI编程助手的本质：从补全到自主</h2>
 <p>打开任何一个AI编程工具——Copilot、Cursor、Codeium——你看到的都是同一个范式：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>人写代码 → AI 补全/建议 → 人确认 → 人继续写</span></span></code></pre>
