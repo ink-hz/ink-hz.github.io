@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="深度解析LLM Agent架构设计（ReAct、Plan-and-Execute、Multi-Agent）、推理优化（vLLM、TensorRT-LLM）、RAG检索增强生成及生产级部署实践，含完整代码示例。"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>AI/LLM 系统架构深度指南</title><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
-.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border)}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="深度解析LLM Agent架构设计（ReAct、Plan-and-Execute、Multi-Agent）、推理优化（vLLM、TensorRT-LLM）、RAG检索增强生成及生产级部署实践，含完整代码示例。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>AI/LLM 系统架构深度指南</title><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>AI/LLM 系统架构深度指南</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/3/23</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="aillm-系统架构深度指南">AI/LLM 系统架构深度指南</h1>
 <p><strong>学习深度</strong>: ⭐⭐⭐⭐⭐</p>
 <hr>
@@ -2410,46 +2410,67 @@
             const mermaidDiv = document.createElement('div');
             mermaidDiv.className = 'mermaid';
             mermaidDiv.textContent = code;
+            // 创建外层滚动容器
+            const wrapper = document.createElement('div');
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.margin = '20px 0';
+            wrapper.style.borderRadius = '8px';
+            wrapper.style.cursor = 'grab';
+            wrapper.style.maxWidth = '100%';
+            wrapper.style.WebkitOverflowScrolling = 'touch';
+
             mermaidDiv.style.backgroundColor = '#1a2332';
             mermaidDiv.style.padding = '20px';
             mermaidDiv.style.borderRadius = '8px';
-            mermaidDiv.style.margin = '20px 0';
-            mermaidDiv.style.overflowX = 'auto';
-            mermaidDiv.style.cursor = 'grab';
-            mermaidDiv.style.width = '100%';
             mermaidDiv.style.minWidth = '1200px';
+            mermaidDiv.style.width = 'max-content';
 
-            // 添加鼠标拖拽功能
+            wrapper.appendChild(mermaidDiv);
+
+            // 添加鼠标拖拽功能（绑定到wrapper）
             let isDragging = false;
             let startX, scrollLeft;
 
-            mermaidDiv.addEventListener('mousedown', (e) => {
+            wrapper.addEventListener('mousedown', (e) => {
               isDragging = true;
-              mermaidDiv.style.cursor = 'grabbing';
-              startX = e.pageX - mermaidDiv.offsetLeft;
-              scrollLeft = mermaidDiv.scrollLeft;
+              wrapper.style.cursor = 'grabbing';
+              startX = e.pageX - wrapper.offsetLeft;
+              scrollLeft = wrapper.scrollLeft;
             });
 
-            mermaidDiv.addEventListener('mouseleave', () => {
+            wrapper.addEventListener('mouseleave', () => {
               isDragging = false;
-              mermaidDiv.style.cursor = 'grab';
+              wrapper.style.cursor = 'grab';
             });
 
-            mermaidDiv.addEventListener('mouseup', () => {
+            wrapper.addEventListener('mouseup', () => {
               isDragging = false;
-              mermaidDiv.style.cursor = 'grab';
+              wrapper.style.cursor = 'grab';
             });
 
-            mermaidDiv.addEventListener('mousemove', (e) => {
+            wrapper.addEventListener('mousemove', (e) => {
               if (!isDragging) return;
               e.preventDefault();
-              const x = e.pageX - mermaidDiv.offsetLeft;
+              const x = e.pageX - wrapper.offsetLeft;
               const walk = (x - startX) * 2;
-              mermaidDiv.scrollLeft = scrollLeft - walk;
+              wrapper.scrollLeft = scrollLeft - walk;
             });
 
+            // 触摸拖拽支持（移动端）
+            let touchStartX;
+            wrapper.addEventListener('touchstart', (e) => {
+              touchStartX = e.touches[0].pageX;
+              scrollLeft = wrapper.scrollLeft;
+            }, {passive: true});
+
+            wrapper.addEventListener('touchmove', (e) => {
+              const x = e.touches[0].pageX;
+              const walk = (touchStartX - x);
+              wrapper.scrollLeft = scrollLeft + walk;
+            }, {passive: true});
+
             // 替换原来的 pre 标签
-            block.parentElement.replaceWith(mermaidDiv);
+            block.parentElement.replaceWith(wrapper);
           }
         });
 
