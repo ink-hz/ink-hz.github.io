@@ -1,0 +1,2753 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="基于真实项目实践，完整呈现企业级 Agent 系统的架构设计——Agent 循环引擎状态机、信任层级四级模型、事件钩子体系、1+N 子 Agent 协作、System Prompt 五层架构、上下文管理、制品体系与 Schema Registry、框架选型方法论，以及 Agent 测试体系设计。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>企业级 Agent 系统架构设计：从循环引擎到信任层级的完整技术方案</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>企业级 Agent 系统架构设计：从循环引擎到信任层级的完整技术方案</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/4/8</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#架构设计</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="企业级-agent-系统架构设计从循环引擎到信任层级的完整技术方案">企业级 Agent 系统架构设计：从循环引擎到信任层级的完整技术方案</h1>
+<blockquote>
+<p>基于真实项目实践——将一个拥有数百个 API 的企业级平台，从”人在 UI 上操作”演进为”意图驱动的 Agent 智能体系统”。约 2800 行设计文档，19 轮迭代，~3 天完成。</p>
+<p><strong>本文的目标读者</strong>：正在设计或即将设计企业级 Agent 系统的架构师。如果你面对的是”已有一套复杂的企业平台，要在上面加一层 Agent 大脑”的问题，这篇文章提供了完整的架构参考。</p>
+</blockquote>
+<hr>
+<h2 id="一agent-系统是什么从人操作-ui到意图即操作">一、Agent 系统是什么——从”人操作 UI”到”意图即操作”</h2>
+<h3 id="11-范式跳跃">1.1 范式跳跃</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统平台：人 → 固定 UI → 各模块独立操作 → 人脑串联结果</span></span>
+<span class="line"><span>Agent 平台：人 → 对话 → Agent 大脑 → MCP 工具（= 各模块的原子化接口）→ Agent 自动串联</span></span></code></pre>
+<p><strong>Agent 不是平台上面的一层壳——Agent 就是平台本身。</strong></p>
+<p>已有平台的每个模块都是 Agent 的”器官”。Agent 系统做的是给这些器官加上”大脑”（Agent Brain）、“自生长能力”（工厂 Agent）和”肌肉记忆”（经验固化），并把”固定 UI + 用户旅程”替换为”意图即操作的对话界面”。</p>
+<p>四层能力递进：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>层次</th><th>能力</th><th>一句话</th></tr></thead><tbody><tr><td><strong>层次一</strong></td><td>对话即平台</td><td>自然语言对话取代传统 UI，所有能力原子化为 MCP 工具，Agent 大脑是平台的操作系统</td></tr><tr><td><strong>层次二</strong></td><td>按需呈现</td><td>Agent 大脑从 Schema 约束的信息呈现原语中按需选取图表、表格、时间线等嵌入对话</td></tr><tr><td><strong>层次三</strong></td><td>经验自固化</td><td>通过行为分析，将 Agent 反复执行的行动模式自动沉淀为确定性工作流</td></tr><tr><td><strong>层次四</strong></td><td>能力自生产</td><td>AI 自主识别能力缺口，自主生成规则、子 Agent、测试用例等结构化制品</td></tr></tbody></table>
+<h3 id="12-两个关键设计选择">1.2 两个关键设计选择</h3>
+<ol>
+<li><strong>Schema 约束的有限解空间</strong>：Agent 的”生成”不是写任意代码，而是在 Schema 约束下组装结构化制品——有限解空间 + 自动化验证 + 热加载生效</li>
+<li><strong>不设计用户旅程</strong>：客户有意图，Agent 理解并执行，中间不需要”旅程”。客户可能说出产品经理从未想过的需求，对话式交互天然支持这种不可预测性</li>
+</ol>
+<hr>
+<h2 id="二架构全景">二、架构全景</h2>
+<h3 id="21-分层架构">2.1 分层架构</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│                    👤 用户（自然语言对话）                          │</span></span>
+<span class="line"><span>└───────────────────────────┬─────────────────────────────────────┘</span></span>
+<span class="line"><span>                            ↕</span></span>
+<span class="line"><span>┌───────────────────────────┴─────────────────────────────────────┐</span></span>
+<span class="line"><span>│                   对话引擎 + AG-UI 渲染器                         │</span></span>
+<span class="line"><span>│              （唯一交互入口，信息呈现原语按需嵌入）                  │</span></span>
+<span class="line"><span>└───────────────────────────┬─────────────────────────────────────┘</span></span>
+<span class="line"><span>                            ↕</span></span>
+<span class="line"><span>┌───────────────────────────┴─────────────────────────────────────┐</span></span>
+<span class="line"><span>│                    🧠 Agent 大脑（平台操作系统）                    │</span></span>
+<span class="line"><span>│          意图理解 · 任务规划 · 全局态势感知 · 子 Agent 调度          │</span></span>
+<span class="line"><span>│                       长期记忆                                    │</span></span>
+<span class="line"><span>├─────────────┬──────────────┬────────────────────────────────────┤</span></span>
+<span class="line"><span>│  子 Agent    │  工厂 Agent   │  信任层级执行框架                    │</span></span>
+<span class="line"><span>│  1+N 专项    │  规则/Agent   │  L0自主→L1事后→L2审批→L3多人审批    │</span></span>
+<span class="line"><span>│  角色集群     │  工作流/模板   │                                    │</span></span>
+<span class="line"><span>└──────┬──────┴──────┬───────┴────────────────────────────────────┘</span></span>
+<span class="line"><span>       ↕             ↕</span></span>
+<span class="line"><span>┌──────┴─────────────┴────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│              🔧 MCP Tool 层（原子工具 · 五类分级）                  │</span></span>
+<span class="line"><span>│    👁感知  🧠决策  ⚡执行  💾记忆  📊呈现                          │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│              📦 制品体系（Schema Registry + Artifact Store）       │</span></span>
+<span class="line"><span>└───────────────────────────┬─────────────────────────────────────┘</span></span>
+<span class="line"><span>                            ↕</span></span>
+<span class="line"><span>┌───────────────────────────┴─────────────────────────────────────┐</span></span>
+<span class="line"><span>│              ⚙️ 已有平台能力底座（现有各模块 · 不变）                │</span></span>
+<span class="line"><span>│              模块A · 模块B · 模块C · 模块D · IAM · ...             │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│              数据层（消息队列 · 时序数据库 · 关系型数据库）           │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>分层说明</strong>：</p>
+<ul>
+<li><strong>对话层</strong>（新增）：用户唯一入口，替代传统 UI</li>
+<li><strong>智能层</strong>（新增）：Agent 大脑 + 子 Agent + 工厂 Agent + 信任层级</li>
+<li><strong>工具层</strong>（新增）：MCP Tool 原子接口 + 制品体系</li>
+<li><strong>能力层</strong>（继承）：已有平台所有现有模块，通过 MCP Tool 层被 Agent 调用</li>
+<li><strong>数据层</strong>（继承）：数据库、消息队列、通信链路</li>
+</ul>
+<h3 id="22-agent-引擎内部架构">2.2 Agent 引擎内部架构</h3>
+<p>以下将全景图中”新增层”展开，展示一次用户请求从进入到响应的完整数据流：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                          👤 用户输入（自然语言）</span></span>
+<span class="line"><span>                                  │</span></span>
+<span class="line"><span>                ┌─────────────────▼──────────────────────────────────┐</span></span>
+<span class="line"><span>                │              Agent 循环引擎（核心）                  │</span></span>
+<span class="line"><span>                │                                                    │</span></span>
+<span class="line"><span>  ┌──────────┐  │  ① 意图识别 ──→ ② 任务规划 ──→ ③ 工具选择         │  ┌──────────┐</span></span>
+<span class="line"><span>  │ 上下文管理 │──▶      │              │                │            │  │ 模型路由器 │</span></span>
+<span class="line"><span>  │          │  │      │         复杂任务分派         │            │◀─│          │</span></span>
+<span class="line"><span>  │ ·规范文件 │  │      │              │                ▼            │  │ ·企业白名单│</span></span>
+<span class="line"><span>  │ ·ToolSearch│ │      │              ▼        ④ 权限决策（五层）    │  │ ·内网优先 │</span></span>
+<span class="line"><span>  │ ·PromptCache││      │        ┌──────────┐    L5企业策略          │  │ ·按需fallback│</span></span>
+<span class="line"><span>  │ ·Compaction│ │      │        │ 子Agent  │    L4信任层级          │  └──────────┘</span></span>
+<span class="line"><span>  └──────────┘  │      │        │ 调度(1+N)│    L3 Hook拦截         │</span></span>
+<span class="line"><span>                │      │        └────┬─────┘    L2 审计记录          │  ┌──────────┐</span></span>
+<span class="line"><span>  ┌──────────┐  │      │             │          L1 人工确认          │  │ 配置系统  │</span></span>
+<span class="line"><span>  │ 持久化层  │◀─│──────│─────────────│──────────────│               │──▶│          │</span></span>
+<span class="line"><span>  │          │  │      │             │              ▼               │  │ ·企业策略 │</span></span>
+<span class="line"><span>  │ ·会话转录 │  │      │             │        ⑤ MCP Tool 执行      │  │ ·用户偏好 │</span></span>
+<span class="line"><span>  │ ·行动轨迹 │  │      │             │              │               │  └──────────┘</span></span>
+<span class="line"><span>  │ ·长期记忆 │  │      │             │              ▼               │</span></span>
+<span class="line"><span>  │ ·审计日志 │  │      │             └──────→ ⑥ 结果回传            │  ┌──────────┐</span></span>
+<span class="line"><span>  └──────────┘  │      │                          │                 │  │ 观测系统  │</span></span>
+<span class="line"><span>                │      │    ┌──────────┐    未完成 │  尝试退出        │──▶│          │</span></span>
+<span class="line"><span>  ┌──────────┐  │      │    │ 工厂Agent │          │      │         │  │ ·Traces  │</span></span>
+<span class="line"><span>  │ 工厂Agent │◀─│──能力缺口 │(延后启动) │    ┌─────▼──────▼───────┐  │  │ ·Metrics │</span></span>
+<span class="line"><span>  │ (延后启动) │  │      │    └──────────┘    │ ⑦ Stop Hook 完成度  │  │  │ ·Logs    │</span></span>
+<span class="line"><span>  └──────────┘  │      │                    │ approve→退出循环     │  │  └──────────┘</span></span>
+<span class="line"><span>                │      └────────────────────│ block →继续循环      │  │</span></span>
+<span class="line"><span>                │                           └──────────┬──────────┘  │</span></span>
+<span class="line"><span>                └──────────────────────────────────────┼─────────────┘</span></span>
+<span class="line"><span>                                                       ▼</span></span>
+<span class="line"><span>                                👤 用户响应（文字 + 可视化组件 + 审批卡片）</span></span></code></pre>
+<p><strong>架构说明</strong>：</p>
+<ul>
+<li><strong>核心循环</strong>：① 意图识别 → ② 任务规划 → ③ 工具选择 → ④ 权限决策（五层）→ ⑤ 工具执行 → ⑥ 结果回传 → 循环或退出。⑦ Stop Hook 检查完成度，未完成则自迭代</li>
+<li><strong>模型路由器</strong>：每次 LLM 推理前，根据企业配置 + 网络环境 + 数据敏感度选择最优模型，内网优先，按策略 fallback</li>
+<li><strong>上下文管理</strong>：规范文件 + ToolSearch 按需加载 + Prompt Cache + Compaction，控制每次推理的输入质量和 token 成本</li>
+<li><strong>配置系统</strong>：企业→用户两级配置，注入到模型路由器和权限决策引擎</li>
+<li><strong>子 Agent 调度</strong>：从任务规划步骤分叉，独立执行后将结论+证据+轨迹回传</li>
+<li><strong>持久化层</strong>：循环中四个写入点——执行写轨迹、权限写审计、结果写转录、意图读写记忆</li>
+<li><strong>观测系统</strong>：采集循环每一步的 Traces / Metrics / Logs</li>
+</ul>
+<hr>
+<h2 id="三agent-框架选型从-9-个框架中提炼设计精华">三、Agent 框架选型——从 9 个框架中提炼设计精华</h2>
+<blockquote>
+<p>本节不是”从 N 个框架中选一个”，而是<strong>从主流框架中提炼设计精华，结合企业场景的独特需求，设计最合适的 Agent 引擎</strong>。</p>
+</blockquote>
+<h3 id="31-主流-agent-框架能力全景">3.1 主流 Agent 框架能力全景</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>框架</th><th>核心模式</th><th>工具调用</th><th>多 Agent</th><th>上下文管理</th><th>扩展方式</th><th>运行形态</th></tr></thead><tbody><tr><td><strong>Claude Code</strong></td><td>Agent 循环 + 事件钩子 + 分层插件</td><td>MCP 原生</td><td>SubAgent/Teammate/Task 三级</td><td>CLAUDE.md + Skill 三级 + Compaction + ToolSearch</td><td>Hook/Skill/MCP/Command</td><td>本地 CLI（TypeScript/Bun）</td></tr><tr><td><strong>OpenAI Codex CLI</strong></td><td>统一 App Server + CodeAct</td><td>JSON Schema + MCP</td><td>有限</td><td>线程级</td><td>IDE 插件</td><td>本地 CLI + IDE</td></tr><tr><td><strong>Cursor</strong></td><td>VS Code Fork + Composer</td><td>多模型切换</td><td>8 Agent 并行</td><td>Git 历史 + 编辑器</td><td>插件市场</td><td>IDE 内嵌</td></tr><tr><td><strong>LangGraph</strong></td><td>状态图 DAG + 检查点</td><td>统一接口</td><td>状态机 + 人工审批</td><td>检查点持久化</td><td>自定义节点</td><td>Python 库</td></tr><tr><td><strong>CrewAI</strong></td><td>角色化团队 + Manager</td><td>工具注册</td><td>层级式分派</td><td>最小化</td><td>自定义 Agent</td><td>Python 库</td></tr><tr><td><strong>AutoGen</strong></td><td>事件驱动消息传递</td><td>函数工具</td><td>异步拓扑</td><td>可定制</td><td>组件化</td><td>Python 库</td></tr><tr><td><strong>Dify</strong></td><td>可视化工作流 DAG</td><td>多类型 + MCP</td><td>工作流内链式</td><td>RAG 集成</td><td>插件系统</td><td>Web 平台</td></tr><tr><td><strong>Coze/扣子</strong></td><td>全生命周期管理</td><td>Skill 体系</td><td>有限</td><td>全链路 Tracing</td><td>Skill 生态</td><td>Web 平台</td></tr></tbody></table>
+<h3 id="32-选型评估">3.2 选型评估</h3>
+<p>企业级 Agent 需要的是一个<strong>可嵌入私有化部署环境的 Agent 引擎</strong>——以独立服务端进程运行，支持多用户并发会话，权限控制内建到引擎核心。</p>
+<p><strong>一、按产品形态分类</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>分类</th><th>框架</th><th>运行形态</th><th>与企业场景的适配度</th></tr></thead><tbody><tr><td><strong>本地工具型</strong></td><td>Claude Code、Codex CLI、Cursor</td><td>本地 CLI / IDE 内嵌</td><td>产品形态不匹配——企业 Agent 是服务端多用户系统。但<strong>设计理念高度可参考</strong></td></tr><tr><td><strong>通用编排库</strong></td><td>LangGraph、CrewAI、AutoGen</td><td>Python 库，可包装为微服务</td><td>运行形态可适配——但需评估领域需求支持能力</td></tr><tr><td><strong>平台型</strong></td><td>Dify、Coze</td><td>Web 托管平台</td><td>不可私有化嵌入</td></tr></tbody></table>
+<blockquote>
+<p><strong>关键区分</strong>：产品形态不匹配 ≠ 没有参考价值。“不能直接用”和”不值得学”是两件事。</p>
+</blockquote>
+<p><strong>二、通用编排库详细评估</strong></p>
+<p><strong>LangGraph</strong>（最接近可用）</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>评估</th></tr></thead><tbody><tr><td><strong>架构优势</strong></td><td>状态图 DAG + 检查点恢复机制成熟；Human-in-the-loop 作为一等公民</td></tr><tr><td><strong>可借鉴</strong></td><td>状态机管理（任务的进行中/等待审批/已完成状态）；审批作为正常流程</td></tr><tr><td><strong>不能直接用</strong></td><td>① 状态图 DAG 适合<strong>固定工作流</strong>，Agent 循环是<strong>开放式推理</strong>（每轮工具选择不可预测），用 DAG 建模会过度约束；② Human-in-the-loop 有但不是”引擎原生信任层级”——审批是流程节点，企业需要的是每次工具调用前的信任层级评估，粒度不同；③ 无多用户会话隔离、无审计、无领域感知</td></tr></tbody></table>
+<p><strong>CrewAI</strong>（角色模型好，框架太轻）</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>评估</th></tr></thead><tbody><tr><td><strong>架构优势</strong></td><td>角色化 Agent + Manager 分派模型直觉好</td></tr><tr><td><strong>可借鉴</strong></td><td>Manager 模式的 1+N 子 Agent 分工</td></tr><tr><td><strong>不能直接用</strong></td><td>① 无权限控制、无审计、无 Hook 体系；② 上下文管理最小化，无法承载大型上下文（数百工具清单 + 规范文件 + 用户配置）；③ 框架面向轻量原型，不适合生产级系统的长期演进</td></tr></tbody></table>
+<p><strong>AutoGen</strong>（通信模型好，稳定性存疑）</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>评估</th></tr></thead><tbody><tr><td><strong>架构优势</strong></td><td>事件驱动消息传递架构设计好，支持异步拓扑</td></tr><tr><td><strong>可借鉴</strong></td><td>子 Agent 间通过结构化消息（task→conclusion+evidence）通信</td></tr><tr><td><strong>不能直接用</strong></td><td>① 核心 API 正在重写，选择正在重构的框架做生产系统基础风险太高；② 事件驱动适合<strong>跨进程分布式场景</strong>，同一引擎内的 Agent 不需要这层复杂度</td></tr></tbody></table>
+<p><strong>三、企业领域需求 vs 框架能力差距</strong></p>
+<p>上述框架各有设计亮点。但它们共同缺失以下<strong>企业领域需求</strong>——不是”配置一下就能满足”的功能缺失，而是框架从设计之初就没有考虑的场景：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>企业领域需求</th><th>说明</th><th>通用框架的现状</th></tr></thead><tbody><tr><td><strong>信任层级原生化</strong></td><td>L0-L3 是 Agent 循环引擎的核心数据结构——每次工具调用前评估，不是可选插件</td><td>无此概念，需侵入框架内核实现</td></tr><tr><td><strong>多用户会话隔离</strong></td><td>同一引擎实例内，不同用户的上下文/记忆/配置/工具权限完全隔离</td><td>面向单用户设计</td></tr><tr><td><strong>合规级审计不可关闭</strong></td><td>每次工具调用自动产出不可篡改的审计记录</td><td>审计是可选功能</td></tr><tr><td><strong>制品 Schema 体系</strong></td><td>引擎原生集成 Schema Registry，工厂 Agent 生成制品时自动校验</td><td>无此概念</td></tr><tr><td><strong>经验固化闭环</strong></td><td>行动轨迹 → 行为分析 → 工作流提炼 → Skill 替代 LLM 推理</td><td>无此概念</td></tr></tbody></table>
+<p>在现有框架上定制实现这些能力，等于在框架内核中插入大量侵入式代码。长期维护成本不低于自研。</p>
+<h3 id="33-从各框架提炼的-12-条设计精华">3.3 从各框架提炼的 12 条设计精华</h3>
+<p>自研不等于从零发明。以下设计理念从各框架中提炼，直接复用：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>#</th><th>设计理念</th><th>提炼来源</th><th>在企业 Agent 中的应用</th></tr></thead><tbody><tr><td>1</td><td><strong>Agent 循环引擎</strong>（LLM→权限→执行→回传→循环）</td><td>Claude Code</td><td>Agent Loop 核心骨架，每步内建信任层级检查</td></tr><tr><td>2</td><td><strong>状态图 + 检查点恢复</strong></td><td>LangGraph</td><td>任务状态机管理、会话中断恢复</td></tr><tr><td>3</td><td><strong>角色化 Agent + Manager 分派</strong></td><td>CrewAI</td><td>顶层 Agent 作为 Manager，子 Agent 按角色分化</td></tr><tr><td>4</td><td><strong>事件驱动消息传递</strong></td><td>AutoGen</td><td>子 Agent 间通过结构化消息通信</td></tr><tr><td>5</td><td><strong>递归任务分解 + 深度自主规划</strong></td><td>企业级 Agent 平台实践</td><td>多步任务规划，每步检查依赖和信任层级</td></tr><tr><td>6</td><td><strong>Skill 市场架构理念</strong></td><td>企业级 Agent 平台实践</td><td>Schema 约束的结构化制品生态</td></tr><tr><td>7</td><td><strong>事件钩子体系</strong>（生命周期拦截）</td><td>Claude Code</td><td>15 个事件，审计和权限控制通过 Hook 实现</td></tr><tr><td>8</td><td><strong>Human-in-the-loop 一等公民</strong></td><td>LangGraph</td><td>L2 审批是”正常流程”而非”异常路径”</td></tr><tr><td>9</td><td><strong>上下文分层管理</strong>（Compaction / ToolSearch）</td><td>Claude Code</td><td>大规模工具三档加载、自动压缩断路器、大输出外溢</td></tr><tr><td>10</td><td><strong>五层纵深权限模型</strong></td><td>Claude Code</td><td>企业策略→信任层级→Hook 拦截→审计→人工确认</td></tr><tr><td>11</td><td><strong>MCP 工具协议</strong></td><td>Claude Code / Dify</td><td>标准化工具接口，与外部系统互操作的基础</td></tr><tr><td>12</td><td><strong>全链路 Tracing</strong></td><td>Coze Loop</td><td>每次推理和工具调用的完整追踪链</td></tr></tbody></table>
+<blockquote>
+<p><strong>来源分布</strong>：Claude Code 5 条（循环引擎/钩子/上下文/权限/MCP），是贡献最多的——因为它是唯一经过大规模生产验证的 Agent 系统。</p>
+</blockquote>
+<h3 id="34-技术选型总结">3.4 技术选型总结</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>决策项</th><th>选型</th><th>核心理由</th></tr></thead><tbody><tr><td><strong>Agent 引擎</strong></td><td>Python 自研，独立微服务部署</td><td>9 框架评估均不满足企业领域需求；自研引擎，设计模式从框架精华提炼</td></tr><tr><td><strong>开发语言</strong></td><td>Python（asyncio 并发模型）</td><td>Agent 引擎 95% I/O 密集（等 LLM 响应、等 HTTP 返回），asyncio 完美匹配；Python AI 生态远超其他语言</td></tr><tr><td><strong>工具协议</strong></td><td>MCP（Model Context Protocol）</td><td>行业标准，与外部系统互操作的基础</td></tr><tr><td><strong>LLM 接口</strong></td><td>统一适配层，多厂商</td><td>模型无关架构——多厂商通过统一接口适配，模型切换不影响业务逻辑</td></tr><tr><td><strong>前端协议</strong></td><td>AG-UI（Agent-User Interface）</td><td>流式通信 + 呈现原语嵌入，Human-in-the-loop 审批作为一等公民</td></tr><tr><td><strong>与已有平台的关系</strong></td><td>独立微服务，REST API/MCP 通信</td><td>Agent 引擎与已有后端语言解耦、进程隔离——Agent 崩溃不影响已有平台核心功能</td></tr></tbody></table>
+<p><strong>自研范围界定</strong>——不是所有东西都自研：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>范围</th><th>自研/复用/标准</th><th>说明</th></tr></thead><tbody><tr><td>Agent 循环引擎（核心循环 + 权限决策 + 状态管理）</td><td><strong>自研</strong></td><td>信任层级、审计、会话隔离深度内建</td></tr><tr><td>事件钩子体系</td><td><strong>自研</strong>（设计参考 Claude Code）</td><td>通用事件 + 领域特有事件</td></tr><tr><td>子 Agent 调度协议</td><td><strong>自研</strong>（设计参考 CrewAI + AutoGen）</td><td>角色化分派 + 结构化消息传递</td></tr><tr><td>MCP Tool 层</td><td><strong>采用标准协议</strong></td><td>MCP 标准，使用官方 SDK</td></tr><tr><td>LLM 调用层</td><td><strong>复用开源 SDK</strong> + 自研路由逻辑</td><td>各厂商 SDK 处理通信，自研路由器</td></tr><tr><td>上下文管理（Compaction / ToolSearch / Prompt Cache）</td><td><strong>自研</strong>（设计参考 Claude Code）</td><td>上下文压缩和工具按需加载与约束保护深度耦合</td></tr><tr><td>持久化层</td><td><strong>复用已有基础设施</strong></td><td>PostgreSQL / ClickHouse / Redis</td></tr><tr><td>观测系统</td><td><strong>采用标准协议</strong></td><td>OpenTelemetry</td></tr><tr><td>Schema Registry</td><td><strong>自研</strong>（轻量级）</td><td>JSON Schema 校验，需与引擎深度集成</td></tr></tbody></table>
+<hr>
+<h2 id="四agent-核心引擎">四、Agent 核心引擎</h2>
+<blockquote>
+<p>本章描述 Agent 引擎的核心运转机制——Agent 循环如何工作、子 Agent 如何协作。</p>
+</blockquote>
+<h3 id="41-agent-大脑顶层-agent">4.1 Agent 大脑（顶层 Agent）</h3>
+<h4 id="411-定位与职责">4.1.1 定位与职责</h4>
+<p>Agent 大脑是整个系统的<strong>操作系统内核</strong>——用户对话的直接对象，所有任务的调度中枢。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>职责</th><th>说明</th></tr></thead><tbody><tr><td><strong>意图理解</strong></td><td>解析自然语言，映射到具体操作</td></tr><tr><td><strong>任务规划</strong></td><td>将复杂意图分解为多步执行计划，决定调用哪些工具或子 Agent</td></tr><tr><td><strong>全局态势感知</strong></td><td>持续监控业务事件流、状态变化，主动发现并推送风险</td></tr><tr><td><strong>子 Agent 调度</strong></td><td>将专项任务分派给对应子 Agent，汇总结果后组装响应</td></tr><tr><td><strong>结果呈现</strong></td><td>决定用文字、图表还是表格呈现结果——呈现方式选择是推理的一部分</td></tr><tr><td><strong>长期记忆</strong></td><td>记录用户偏好、历史结论、经验模式，跨会话保持上下文连续性</td></tr></tbody></table>
+<h4 id="412-运行模式">4.1.2 运行模式</h4>
+<p><strong>被动模式（用户驱动）</strong>——用户发起对话，Agent 响应：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户："最近有没有异常？"</span></span>
+<span class="line"><span>  → Agent 大脑调用 event.query() + status.check() + health.overview()</span></span>
+<span class="line"><span>  → 推理、关联</span></span>
+<span class="line"><span>  → 组装响应（文字结论 + 指标卡片 + 事件表格）</span></span></code></pre>
+<p><strong>主动模式（自主巡检）</strong>——Agent 后台持续监控，主动推送：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent 大脑后台持续监控：</span></span>
+<span class="line"><span>  → 发现业务指标异常飙升</span></span>
+<span class="line"><span>  → 自动调用 event.query() 关联分析</span></span>
+<span class="line"><span>  → 判断需要人关注</span></span>
+<span class="line"><span>  → 主动推送："检测到用户 X 的操作模式异常，建议排查"</span></span>
+<span class="line"><span>  → 用户确认后，调度分析员深入调查</span></span></code></pre>
+<p><strong>Headless 模式（API/SDK 驱动）</strong>——无人交互，供外部系统调用：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>外部系统通过 SDK/API 发送指令：</span></span>
+<span class="line"><span>  → Agent 大脑接收结构化任务</span></span>
+<span class="line"><span>  → 执行预定义工作流（如：定时全量检查、定时态势报告）</span></span>
+<span class="line"><span>  → 结果写入持久化层，通知外部系统</span></span>
+<span class="line"><span>  → L2 操作降级为排队等待人工审批</span></span></code></pre>
+<h4 id="413-agent-循环引擎状态机">4.1.3 Agent 循环引擎状态机</h4>
+<blockquote>
+<p>这是最核心的组件——所有 Agent 行为都在这个循环中发生。</p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                    ┌──────────────────────────┐</span></span>
+<span class="line"><span>                    │      IDLE（空闲）          │</span></span>
+<span class="line"><span>                    │   等待用户输入 or 主动触发   │</span></span>
+<span class="line"><span>                    └────────────┬─────────────┘</span></span>
+<span class="line"><span>                                 │ 收到输入</span></span>
+<span class="line"><span>                                 ▼</span></span>
+<span class="line"><span>                    ┌──────────────────────────┐</span></span>
+<span class="line"><span>              ┌────→│    REASONING（推理中）      │</span></span>
+<span class="line"><span>              │     │  LLM 推理：意图→工具选择    │</span></span>
+<span class="line"><span>              │     └────────────┬─────────────┘</span></span>
+<span class="line"><span>              │                  │ 产出工具调用请求</span></span>
+<span class="line"><span>              │                  ▼</span></span>
+<span class="line"><span>              │     ┌──────────────────────────┐</span></span>
+<span class="line"><span>              │     │  PERMISSION（权限评估中）    │</span></span>
+<span class="line"><span>              │     │  五层决策引擎评估            │</span></span>
+<span class="line"><span>              │     └──┬──────┬──────┬─────────┘</span></span>
+<span class="line"><span>              │        │      │      │</span></span>
+<span class="line"><span>              │     denied  approved  need_approval</span></span>
+<span class="line"><span>              │        │      │      │</span></span>
+<span class="line"><span>              │        ▼      ▼      ▼</span></span>
+<span class="line"><span>              │     跳过   ┌──────┐  推送审批卡片</span></span>
+<span class="line"><span>              │     执行   │EXEC  │  等待用户响应</span></span>
+<span class="line"><span>              │      │    │执行中 │     │</span></span>
+<span class="line"><span>              │      │    └──┬───┘     │</span></span>
+<span class="line"><span>              │      │       │         │</span></span>
+<span class="line"><span>              │      ▼       ▼         ▼</span></span>
+<span class="line"><span>              │     ┌──────────────────────────┐</span></span>
+<span class="line"><span>              │     │   RESULT（结果处理）        │</span></span>
+<span class="line"><span>              │     │  PostToolUse Hook → 审计   │</span></span>
+<span class="line"><span>              │     │  结果注入上下文              │</span></span>
+<span class="line"><span>              │     └────────────┬─────────────┘</span></span>
+<span class="line"><span>              │                  │</span></span>
+<span class="line"><span>              │           ┌──────┴──────┐</span></span>
+<span class="line"><span>              │           │             │</span></span>
+<span class="line"><span>              │        未完成        尝试退出</span></span>
+<span class="line"><span>              │           │             │</span></span>
+<span class="line"><span>              └───────────┘             ▼</span></span>
+<span class="line"><span>                               ┌──────────────────┐</span></span>
+<span class="line"><span>                               │  STOP_CHECK       │</span></span>
+<span class="line"><span>                               │  Stop Hook 检查    │</span></span>
+<span class="line"><span>                               └──┬──────┬────────┘</span></span>
+<span class="line"><span>                                  │      │</span></span>
+<span class="line"><span>                               approve  block</span></span>
+<span class="line"><span>                                  │      │</span></span>
+<span class="line"><span>                                  ▼      └──→ 重新注入提示 → REASONING</span></span>
+<span class="line"><span>                            ┌──────────────┐</span></span>
+<span class="line"><span>                            │  COMPLETE     │</span></span>
+<span class="line"><span>                            │  组装响应      │</span></span>
+<span class="line"><span>                            │  写入转录      │</span></span>
+<span class="line"><span>                            └──────────────┘</span></span></code></pre>
+<p><strong>循环控制参数</strong>（全部可通过配置系统调整）：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>参数</th><th>说明</th></tr></thead><tbody><tr><td><code>max_reasoning_rounds</code></td><td>单次会话最大推理轮次，防止 Agent 无限循环</td></tr><tr><td><code>tool_call_timeout</code></td><td>单次工具调用超时时间</td></tr><tr><td><code>approval_wait_timeout</code></td><td>L2 审批等待超时时间</td></tr><tr><td><code>same_tool_repeat_limit</code></td><td>连续调用同一工具的最大次数（断路器）</td></tr><tr><td><code>total_session_timeout</code></td><td>单次会话总超时时间</td></tr></tbody></table>
+<p><strong>异常处理与恢复</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>异常场景</th><th>处理策略</th></tr></thead><tbody><tr><td><strong>LLM 调用失败</strong></td><td>重试 1 次 → 仍失败则返回错误提示，不中断会话</td></tr><tr><td><strong>工具调用超时</strong></td><td>PostToolUse Hook 记录超时 → 结果标记为 timeout → Agent 可选择换一个工具重试</td></tr><tr><td><strong>权限被拒绝</strong></td><td>记录到审计 → 跳过该工具 → Agent 继续推理选择替代方案</td></tr><tr><td><strong>循环次数达上限</strong></td><td>强制退出 → 返回当前已有结论 + 提示”任务未完成”</td></tr><tr><td><strong>同一工具连续调用 N 次</strong></td><td>断路器触发 → 强制退出该工具 → Agent 推理选择其他路径</td></tr><tr><td><strong>LLM 幻觉不存在的工具</strong></td><td>工具注册表校验失败 → 拒绝执行 → 将”工具不存在”作为结果回传 LLM</td></tr><tr><td><strong>子 Agent 超时</strong></td><td>子 Agent 返回 timeout 状态 → 顶层 Agent 决定是否重派或放弃</td></tr><tr><td><strong>上下文溢出</strong></td><td>触发 Compaction → 断路器（3 次仍溢出则终止）</td></tr></tbody></table>
+<p><strong>循环中的核心数据结构</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>数据结构</th><th>职责</th><th>生命周期</th></tr></thead><tbody><tr><td><strong>LoopState</strong></td><td>循环当前状态（IDLE/REASONING/PERMISSION/EXEC/RESULT/STOP_CHECK/COMPLETE）</td><td>单次会话</td></tr><tr><td><strong>ConversationCtx</strong></td><td>对话上下文（含压缩管理），供每轮 LLM 推理使用</td><td>单次会话，Compaction 管理</td></tr><tr><td><strong>ToolRegistry</strong></td><td>MCP Tool 注册表（只读引用），循环中查询工具 Schema 和信任层级</td><td>全局共享</td></tr><tr><td><strong>TrustConfig</strong></td><td>当前会话的信任层级配置（从配置系统按用户加载）</td><td>单次会话</td></tr><tr><td><strong>ActionTrace</strong></td><td>本次会话的行动轨迹列表（每次工具调用记录：工具名、输入、输出、权限决策、耗时、钩子结果、时间戳）</td><td>单次会话，完成后写入持久化层</td></tr></tbody></table>
+<h4 id="414-上下文管理">4.1.4 上下文管理</h4>
+<p>Agent 面临的上下文压力远大于编程场景——数百个工具 Schema + 业务规则库 + 历史事件 + 资产台账，不做分层管理必然爆窗口。</p>
+<p><strong>四类上下文</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>上下文类型</th><th>存储位置</th><th>生命周期</th><th>内容</th></tr></thead><tbody><tr><td><strong>会话上下文</strong></td><td>内存</td><td>单次对话</td><td>当前多轮对话历史、中间工具调用结果</td></tr><tr><td><strong>工作记忆</strong></td><td>短期存储（Redis）</td><td>当前任务链</td><td>任务进度、待确认审批、子 Agent 已返回的结论</td></tr><tr><td><strong>长期记忆</strong></td><td>持久化存储（PostgreSQL）</td><td>永久，跨会话</td><td>用户偏好、历史结论、经验模式</td></tr><tr><td><strong>态势上下文</strong></td><td>实时计算</td><td>持续更新</td><td>业务事件统计、异常趋势、系统健康度</td></tr></tbody></table>
+<p><strong>五大上下文管理机制</strong>：</p>
+<p><strong>机制一：规范文件（≈ Claude Code 的 CLAUDE.md）</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>~/.agent/global.md                → 全局运营偏好（管理员级）</span></span>
+<span class="line"><span>    ↓ 覆盖</span></span>
+<span class="line"><span>/user/{userId}/agent.md           → 用户个人偏好</span></span></code></pre>
+<p>每次会话启动时自动加载，多级文件按优先级合并后注入系统提示。</p>
+<p><strong>机制二：工具 Schema 按需加载（≈ Claude Code 的 ToolSearch）</strong></p>
+<p>当平台有数百个 API 可包装为 MCP Tool 时，全量 Schema 注入上下文会占用大量 token。采用三档管理：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>档位</th><th>工具范围</th><th>加载时机</th></tr></thead><tbody><tr><td><strong>常驻</strong></td><td>高频核心工具</td><td>会话启动时预加载</td></tr><tr><td><strong>按需</strong></td><td>中频操作工具</td><td>Agent 推理时识别到需要后加载 Schema</td></tr><tr><td><strong>休眠</strong></td><td>低频/批量/内部工具</td><td>仅元数据常驻，完整 Schema 按需唤醒</td></tr></tbody></table>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>DORMANT（休眠）→ Agent 需要时 → LOADED（加载 Schema）→ 调用完成 → 释放 Schema → DORMANT</span></span></code></pre>
+<p><strong>机制三：自动压缩（≈ Claude Code 的 Compaction）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>阶段</th><th>行为</th></tr></thead><tbody><tr><td>正常</td><td>不触发</td></tr><tr><td>预警</td><td>开始压缩中间工具结果（保留结论，丢弃原始数据）</td></tr><tr><td>紧急</td><td>强制压缩——仅保留：规范文件 + 最近 3 轮对话 + 活跃子 Agent 结论 + 当前任务上下文</td></tr><tr><td>抖动</td><td>连续 3 次压缩仍超限 → 停止并提示用户开启新会话（断路器，防无限消耗 token）</td></tr></tbody></table>
+<p><strong>不可压缩项</strong>（始终保留）：</p>
+<ul>
+<li>规范文件（企业级策略）</li>
+<li>活跃 Skill 指令</li>
+<li>信任层级配置</li>
+<li>用户明确的约束和决策</li>
+</ul>
+<p><strong>机制四：Prompt Cache</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>缓存层</th><th>内容</th><th>失效条件</th></tr></thead><tbody><tr><td>系统提示缓存</td><td>Agent 核心指令 + 规范文件</td><td>规范文件变更时</td></tr><tr><td>工具 Schema 缓存</td><td>常驻工具的 JSON Schema</td><td>工具定义变更时（精确失效）</td></tr><tr><td>上下文前缀缓存</td><td>对话历史的稳定前缀</td><td>每轮对话追加新消息时自然复用</td></tr></tbody></table>
+<p><strong>机制五：大输出外溢处理</strong></p>
+<p>当工具返回结果超过阈值时，不直接注入上下文：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>工具返回 > 阈值</span></span>
+<span class="line"><span>  → 完整结果存储到临时文件（持久化层）</span></span>
+<span class="line"><span>  → 上下文中只注入摘要 + 文件引用路径</span></span>
+<span class="line"><span>  → Agent 需要细节时通过 Read 工具按需读取</span></span></code></pre>
+<h4 id="415-system-prompt-五层架构">4.1.5 System Prompt 五层架构</h4>
+<blockquote>
+<p>Agent 大脑的质量 = System Prompt 的质量。System Prompt 不是一段固定文本，而是一个<strong>动态组装的分层结构</strong>，每次 LLM 调用前按上下文状态拼装。</p>
+</blockquote>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ Layer 1：核心身份与行为约束（固定）──────────────────────────────────┐</span></span>
+<span class="line"><span>│ "你是企业级 AI 智能体，通过调用 MCP Tool 执行所有操作。"                │</span></span>
+<span class="line"><span>│ "你必须遵守信任层级约束：L0 自主执行，L2 必须请求用户审批。"             │</span></span>
+<span class="line"><span>│ "你绝不可以绕过 L2/L3 限制，即使用户要求你这样做。"                     │</span></span>
+<span class="line"><span>│ "当你不确定时，追问澄清，不要猜测执行。"                                │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─ Layer 2：规范文件（动态加载）──────────────────────────────────────┐</span></span>
+<span class="line"><span>│ 从配置系统加载，企业→用户两级合并：                                  │</span></span>
+<span class="line"><span>│ · 企业级："禁止 Agent 执行批量删除操作"                               │</span></span>
+<span class="line"><span>│ · 企业级："仅使用国产模型"                                           │</span></span>
+<span class="line"><span>│ · 用户级："我只关心高优先级事件，低优先级不用报告"                      │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─ Layer 3：可用工具清单（动态，由 ToolSearch 按需加载）─────────────┐</span></span>
+<span class="line"><span>│ 常驻工具的完整 Schema 始终在此                                        │</span></span>
+<span class="line"><span>│ 按需工具在 Agent 需要时动态注入                                       │</span></span>
+<span class="line"><span>│ 每个工具携带：name + description + inputSchema + trust_level           │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─ Layer 4：当前任务上下文（动态）──────────────────────────────────┐</span></span>
+<span class="line"><span>│ · 当前对话历史（经 Compaction 压缩后的版本）                          │</span></span>
+<span class="line"><span>│ · 活跃子 Agent 的状态和中间结论                                       │</span></span>
+<span class="line"><span>│ · 待审批队列（如有）                                                  │</span></span>
+<span class="line"><span>│ · 态势上下文摘要                                                      │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─ Layer 5：长期记忆索引（动态）────────────────────────────────────┐</span></span>
+<span class="line"><span>│ 从持久化层加载记忆索引（非全量内容）                                    │</span></span>
+<span class="line"><span>│ Agent 按需读取具体记忆条目                                            │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>子 Agent 的 Prompt 差异</strong>：</p>
+<p>子 Agent 不继承顶层 Agent 的完整 Prompt，而是接收精简版本：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Prompt 层级</th><th>顶层 Agent</th><th>子 Agent</th></tr></thead><tbody><tr><td>Layer 1 核心身份</td><td>完整版（全能力）</td><td><strong>角色化精简版</strong></td></tr><tr><td>Layer 2 规范文件</td><td>完整企业规范</td><td>仅与本角色相关的规范子集</td></tr><tr><td>Layer 3 工具清单</td><td>全量常驻工具</td><td><strong>仅本角色被授权的工具子集</strong></td></tr><tr><td>Layer 4 任务上下文</td><td>全局态势</td><td><strong>仅本次任务的精简上下文</strong></td></tr><tr><td>Layer 5 记忆索引</td><td>全量索引</td><td>不加载（子 Agent 不需要跨会话记忆）</td></tr></tbody></table>
+<h4 id="416-并发性能架构">4.1.6 并发性能架构</h4>
+<p>企业级 Agent 必须支持多用户并发对话。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ Agent 引擎进程（Python asyncio）──────────────────────────────────┐</span></span>
+<span class="line"><span>│                                                         │</span></span>
+<span class="line"><span>│  ┌─ 用户 A ────────────────────┐                        │</span></span>
+<span class="line"><span>│  │  Session 1 → asyncio task   │                        │</span></span>
+<span class="line"><span>│  │  Session 2 → asyncio task   │   共享 LLM 连接池      │</span></span>
+<span class="line"><span>│  │  (上下文完全隔离)            │   共享 MCP Tool 注册表  │</span></span>
+<span class="line"><span>│  └─────────────────────────────┘   共享 Schema Registry  │</span></span>
+<span class="line"><span>│                                                         │</span></span>
+<span class="line"><span>│  ┌─ 用户 B ────────────────────┐                        │</span></span>
+<span class="line"><span>│  │  Session 3 → asyncio task   │                        │</span></span>
+<span class="line"><span>│  │  (上下文完全隔离)            │                        │</span></span>
+<span class="line"><span>│  └─────────────────────────────┘                        │</span></span>
+<span class="line"><span>│                                                         │</span></span>
+<span class="line"><span>│  ┌─ 共享资源 ──────────────────┐                        │</span></span>
+<span class="line"><span>│  │  LLM 连接池（按模型分组）    │                        │</span></span>
+<span class="line"><span>│  │  MCP Tool 注册表（只读）     │                        │</span></span>
+<span class="line"><span>│  │  Schema Registry（只读）     │                        │</span></span>
+<span class="line"><span>│  │  配置缓存（按用户分片）      │                        │</span></span>
+<span class="line"><span>│  └─────────────────────────────┘                        │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>隔离与共享的边界</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>资源</th><th>隔离/共享</th><th>机制</th></tr></thead><tbody><tr><td>对话上下文</td><td><strong>完全隔离</strong></td><td>每个 Session 独立 asyncio task</td></tr><tr><td>长期记忆</td><td><strong>用户隔离</strong></td><td>按 user_id 过滤</td></tr><tr><td>行动轨迹</td><td><strong>用户隔离</strong></td><td>按 user_id 分区</td></tr><tr><td>LLM 连接池</td><td><strong>共享</strong></td><td>按模型分组，协程安全</td></tr><tr><td>MCP Tool 注册表</td><td><strong>共享（只读）</strong></td><td>启动时加载，热加载通过替换实现</td></tr><tr><td>Prompt Cache</td><td><strong>部分共享</strong></td><td>Layer 1 全局共享；Layer 2~5 按用户/会话隔离</td></tr></tbody></table>
+<h4 id="417-意图识别与模型选择">4.1.7 意图识别与模型选择</h4>
+<p><strong>意图识别架构</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入（自然语言）</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─────────────────────────────────────────┐</span></span>
+<span class="line"><span>│ 意图分类器（第一层，快速路由）              │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│ · 直接操作意图 → 调用 MCP Tool            │</span></span>
+<span class="line"><span>│   "帮我查一下今天的事件"                    │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│ · 复杂分析意图 → 分派子 Agent             │</span></span>
+<span class="line"><span>│   "调查这个异常行为的根因"                  │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│ · 闲聊/知识咨询 → 直接回复                │</span></span>
+<span class="line"><span>│   "XXX 模块是什么？"                       │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│ · 模糊意图 → 追问澄清                    │</span></span>
+<span class="line"><span>│   "帮我看看整体态势" → "你想看哪个维度？"    │</span></span>
+<span class="line"><span>└─────────────────────────────────────────┘</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─────────────────────────────────────────┐</span></span>
+<span class="line"><span>│ 任务规划器（第二层，多步编排）              │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│ 复杂任务拆解为多步执行计划：                │</span></span>
+<span class="line"><span>│ "把这个新实体注册完再做检查再接入"            │</span></span>
+<span class="line"><span>│   → Step 1: entity.create()             │</span></span>
+<span class="line"><span>│   → Step 2: check.create()             │</span></span>
+<span class="line"><span>│   → Step 3: 等待检查完成                  │</span></span>
+<span class="line"><span>│   → Step 4: 通过 → policy.create()      │</span></span>
+<span class="line"><span>│   → 每步检查信任层级（L2 操作需审批）       │</span></span>
+<span class="line"><span>└─────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>模型选择策略</strong>：</p>
+<p>Agent 引擎不绑定单一模型厂商，通过统一 LLM 接口适配多厂商，按场景差异化配置：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>场景</th><th>模型要求</th><th>推理深度</th></tr></thead><tbody><tr><td><strong>顶层 Agent（意图理解 + 任务规划）</strong></td><td>最强推理 + 长上下文</td><td>高</td></tr><tr><td><strong>分析类子 Agent（证据推理）</strong></td><td>强推理 + 结构化输出</td><td>高</td></tr><tr><td><strong>操作类子 Agent（规则生成）</strong></td><td>结构化生成 + Schema 遵循</td><td>中</td></tr><tr><td><strong>工厂 Agent（制品生成）</strong></td><td>强结构化生成</td><td>中</td></tr><tr><td><strong>固化工作流执行</strong></td><td><strong>无需模型</strong>（零 token）</td><td>—</td></tr></tbody></table>
+<hr>
+<h3 id="42-子-agent-协作架构">4.2 子 Agent 协作架构</h3>
+<blockquote>
+<p>角色设计依据：子 Agent 的角色划分基于已有平台实际能力模块（数百个 API）和业务场景反推，不是凭空设计——每个 Agent 背后有明确的 API 领域支撑。</p>
+</blockquote>
+<h4 id="421-1n-分层协作体系">4.2.1 1+N 分层协作体系</h4>
+<p>采用 <strong>1 + N 架构</strong>——1 个顶层 Agent 统筹调度 N 个专项子 Agent：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│              🏠 顶层 Agent（Agent 大脑）                         │</span></span>
+<span class="line"><span>│        意图理解 · 全局态势 · 任务分派 · 结果组装                 │</span></span>
+<span class="line"><span>│                 使用最强推理模型                                │</span></span>
+<span class="line"><span>│                 有长期记忆和全局上下文                           │</span></span>
+<span class="line"><span>└───┬────────┬────────┬──────────┬────────────┬────────────────┘</span></span>
+<span class="line"><span>    ↓        ↓        ↓          ↓            ↓</span></span>
+<span class="line"><span>┌───┴──┐ ┌───┴──┐ ┌───┴────┐ ┌───┴──────┐ ┌───┴──────┐</span></span>
+<span class="line"><span>│🔬检查 │ │🛡️配置 │ │📞协作  │ │📦资产    │ │📊分析    │</span></span>
+<span class="line"><span>│专员   │ │专员   │ │专员    │ │管理员    │ │专员      │</span></span>
+<span class="line"><span>│      │ │      │ │       │ │         │ │         │</span></span>
+<span class="line"><span>│质量检查│ │规则调优│ │IM通讯  │ │实体注册  │ │事件分析  │</span></span>
+<span class="line"><span>│测试执行│ │策略生成│ │多渠道  │ │资源管理  │ │日志检索  │</span></span>
+<span class="line"><span>│报告生成│ │效果验证│ │通知    │ │生命周期  │ │趋势分析  │</span></span>
+<span class="line"><span>└──────┘ └──────┘ └───────┘ └─────────┘ └─────────┘</span></span></code></pre>
+<h4 id="422-角色设计的三个依据">4.2.2 角色设计的三个依据</h4>
+<p><strong>依据一：能力模块对齐</strong>——每个子 Agent 背后有明确的 API 领域</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>检查专员    ← 检查/评估模块（N 个 API）</span></span>
+<span class="line"><span>配置专员    ← 策略/规则管理模块（N 个 API）</span></span>
+<span class="line"><span>协作专员    ← 通讯/通知模块（N 个 API）</span></span>
+<span class="line"><span>资产管理员  ← 资产管理模块（N 个 API）</span></span>
+<span class="line"><span>分析专员    ← 事件/日志模块（N 个 API）</span></span></code></pre>
+<p><strong>依据二：多步推理需求</strong>——每个角色都有需要 5+ 步工具调用的核心场景</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Agent</th><th>典型多步场景</th><th>步骤数</th></tr></thead><tbody><tr><td>检查专员</td><td>创建任务→等待完成→查结果→查问题→生成建议→重测</td><td>7+</td></tr><tr><td>配置专员</td><td>查当前配置→分析效果→调整规则→推送生效→验证→回滚</td><td>6+</td></tr><tr><td>协作专员</td><td>识别对象→发起通讯→等待回复→追问→汇总→推送给顶层 Agent</td><td>5+</td></tr><tr><td>资产管理员</td><td>创建实体→配置关联→配置规则→生成访问入口→验证</td><td>6+</td></tr><tr><td>分析专员</td><td>查事件列表→查详情→搜日志→关联证据→AI 解读→标记处置</td><td>7+</td></tr></tbody></table>
+<p><strong>依据三：上下文隔离必要性</strong>——每个角色处理的数据量大，塞进主对话会溢出</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Agent</th><th>典型数据量</th><th>为什么要隔离</th></tr></thead><tbody><tr><td>检查专员</td><td>检查报告可能很长</td><td>检查细节不应占据用户对话上下文</td></tr><tr><td>配置专员</td><td>规则库可能有数百条</td><td>规则遍历不应暴露在主对话中</td></tr><tr><td>协作专员</td><td>多轮通讯可能 10+ 轮</td><td>与第三方的沟通不应和用户对话混在一起</td></tr><tr><td>资产管理员</td><td>资产台账列表很长</td><td>资产清单遍历不应占据主上下文</td></tr><tr><td>分析专员</td><td>日志检索可能返回大量原始数据</td><td>数据细节应在子 Agent 内消化，只返回结论</td></tr></tbody></table>
+<h4 id="423-协作模式">4.2.3 协作模式</h4>
+<p><strong>模式一：串行分派</strong>（常见场景）</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户："把这个新实体做完检查再接入"</span></span>
+<span class="line"><span>  → 顶层 Agent 拆解任务</span></span>
+<span class="line"><span>  → Step 1: 分派资产管理员 → 注册实体</span></span>
+<span class="line"><span>  → Step 2: 分派检查专员 → 执行检查</span></span>
+<span class="line"><span>  → Step 3: 检查通过 → 分派配置专员 → 创建策略（L2 审批）</span></span>
+<span class="line"><span>  → Step 4: 审批通过 → 配置专员推送生效</span></span>
+<span class="line"><span>  → 顶层 Agent 汇总结果 → 回复用户</span></span></code></pre>
+<p><strong>模式二：并行分派</strong>（调查场景）</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户："调查这个异常事件的根因"</span></span>
+<span class="line"><span>  → 顶层 Agent 分派两个任务并行：</span></span>
+<span class="line"><span>    ├─ 分析专员 → 查事件详情 + 搜日志 + 关联证据</span></span>
+<span class="line"><span>    └─ 协作专员 → 通讯问询当事人</span></span>
+<span class="line"><span>  → 两者结论汇总到顶层 Agent</span></span>
+<span class="line"><span>  → 综合研判 → 回复用户</span></span></code></pre>
+<p><strong>模式三：级联触发</strong>（自动化场景）</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>系统检测到新事件</span></span>
+<span class="line"><span>  → 顶层 Agent 判断需要处理</span></span>
+<span class="line"><span>  → 分派分析专员 → 分析结论：需要调整配置</span></span>
+<span class="line"><span>  → 顶层 Agent 转派配置专员 → 生成配置调整方案（L2）</span></span>
+<span class="line"><span>  → 推送审批卡片给用户</span></span></code></pre>
+<h4 id="424-调度协议">4.2.4 调度协议</h4>
+<p>顶层 Agent 与子 Agent 之间的交互遵循统一协议：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>顶层 Agent → 子 Agent：</span></span>
+<span class="line"><span>  {</span></span>
+<span class="line"><span>    task_id: "uuid",</span></span>
+<span class="line"><span>    task_type: "check | config | liaison | asset | analyst",</span></span>
+<span class="line"><span>    context: { ... },       // 精简后的任务上下文（非全局上下文）</span></span>
+<span class="line"><span>    constraints: {</span></span>
+<span class="line"><span>      max_tool_calls: 20,   // 工具调用次数上限</span></span>
+<span class="line"><span>      timeout_seconds: 300, // 超时时间</span></span>
+<span class="line"><span>      trust_level: "L1"     // 该子 Agent 的最高信任层级</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>子 Agent → 顶层 Agent：</span></span>
+<span class="line"><span>  {</span></span>
+<span class="line"><span>    task_id: "uuid",</span></span>
+<span class="line"><span>    status: "completed | escalated | timeout | waiting_approval",</span></span>
+<span class="line"><span>    conclusion: "...",      // 结论摘要</span></span>
+<span class="line"><span>    evidence: [ ... ],      // 证据链</span></span>
+<span class="line"><span>    actions_taken: [ ... ], // 行动轨迹（供经验固化分析）</span></span>
+<span class="line"><span>    suggested_next: "..."   // 建议的后续操作（可选）</span></span>
+<span class="line"><span>  }</span></span></code></pre>
+<h4 id="425-子-agent-prompt-设计指引">4.2.5 子 Agent Prompt 设计指引</h4>
+<p><strong>通用约束（所有子 Agent 共享）</strong>：</p>
+<ul>
+<li>只能使用被授权的工具子集，尝试调用未授权工具时引擎层会拒绝</li>
+<li>不能修改自己的信任层级上限</li>
+<li>必须在 constraints.max_tool_calls 次数内完成任务</li>
+<li>结论必须结构化返回（conclusion + evidence + actions_taken），不能只返回自由文本</li>
+</ul>
+<p><strong>Prompt 与引擎的关系</strong>：Prompt 引导 LLM “应该做什么”（软约束），引擎层强制 LLM “不能做什么”（硬约束，代码层面不可绕过）。两层互补——Prompt 做意图引导，引擎做兜底。</p>
+<blockquote>
+<p><strong>Prompt 调优方法</strong>：先写初版 Prompt → 用意图测试集验证 → 分析失败用例 → 调优 Prompt → 再验证。这是迭代过程，不是一次性交付。</p>
+</blockquote>
+<hr>
+<h2 id="五安全控制体系">五、安全控制体系</h2>
+<h3 id="51-信任层级执行框架">5.1 信任层级执行框架</h3>
+<h4 id="511-四级信任模型">5.1.1 四级信任模型</h4>
+<p>企业级 Agent 自主执行必须设计严格的信任边界。将所有操作按风险等级分为四个信任层级：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>信任层级</th><th>操作范围</th><th>Agent 行为</th><th>人的角色</th><th>典型操作</th></tr></thead><tbody><tr><td><strong>L0：完全自主</strong></td><td>感知类操作</td><td>自主执行，无需报告</td><td>无需参与</td><td>查询列表、日志检索、状态查看</td></tr><tr><td><strong>L1：自主 + 事后报告</strong></td><td>低风险执行</td><td>自主执行，执行后通知人</td><td>事后审阅</td><td>标记已读、发送通知、记忆存储</td></tr><tr><td><strong>L2：人工确认后执行</strong></td><td>高风险执行</td><td>Agent 提出方案，人确认后才执行</td><td>事前审批</td><td>创建/修改策略、注册新资产</td></tr><tr><td><strong>L3：最严格审批</strong></td><td>极高风险操作</td><td>提交多人审批 + 冷静期二次确认</td><td>双人审批</td><td>批量删除、身份注销</td></tr></tbody></table>
+<h4 id="512-信任层级与-mcp-tool-的绑定">5.1.2 信任层级与 MCP Tool 的绑定</h4>
+<p>每个 MCP Tool 在注册时必须声明其信任层级：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">resource.create</span></span>
+<span class="line"><span style="color:#85E89D">trust_level</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">L2</span><span style="color:#6A737D">          # 需要人工审批</span></span>
+<span class="line"><span style="color:#85E89D">description</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"创建一条新的业务资源"</span></span>
+<span class="line"><span style="color:#85E89D">side_effect</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#85E89D">risk_description</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"新资源将影响系统行为"</span></span>
+<span class="line"><span style="color:#85E89D">input_schema</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">...</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#85E89D">output_schema</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">...</span><span style="color:#E1E4E8"> }</span></span></code></pre>
+<p><strong>信任层级 × 工具分级映射示例</strong>：</p>
+<ul>
+<li><strong>L0（完全自主）</strong>：所有感知类、决策类工具（查询列表、详情、分析、状态检查）</li>
+<li><strong>L1（自主 + 事后报告）</strong>：低风险写入（标记已读、触发检查、更新非关键信息）</li>
+<li><strong>L2（人工确认后执行）</strong>：高风险写入（创建/修改/删除策略、注册/禁用资产）</li>
+<li><strong>L3（最严格审批）</strong>：极高风险操作（批量删除）</li>
+</ul>
+<h4 id="513-审批流程">5.1.3 审批流程</h4>
+<p><strong>L2 审批</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent 大脑判断需要执行 L2 操作</span></span>
+<span class="line"><span>  → 生成操作方案（做什么 + 为什么 + 影响范围）</span></span>
+<span class="line"><span>  → 通过 AG-UI 推送审批卡片到前端</span></span>
+<span class="line"><span>  → 用户审阅方案</span></span>
+<span class="line"><span>  → 同意 → Agent 执行 → 执行结果回报</span></span>
+<span class="line"><span>  → 拒绝 → Agent 记录拒绝原因 → 调整方案或结束</span></span></code></pre>
+<p><strong>L3 多人审批 + 冷静期</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent 大脑判断需要执行 L3 操作</span></span>
+<span class="line"><span>  → 生成操作方案（做什么 + 影响范围 + 不可逆警告）</span></span>
+<span class="line"><span>  → 推送 L3 审批卡片（标注"高危操作"）</span></span>
+<span class="line"><span>  → 发起人确认（第一次确认）</span></span>
+<span class="line"><span>  → 通知管理员确认（第二次确认）</span></span>
+<span class="line"><span>  → 双人确认通过后进入冷静期（可配置）</span></span>
+<span class="line"><span>  → 冷静期结束，推送最终确认</span></span>
+<span class="line"><span>  → 最终确认 → Agent 执行 → 审计记录</span></span>
+<span class="line"><span>  → 任一环节拒绝 → 操作取消，全程审计</span></span></code></pre>
+<blockquote>
+<p><strong>设计理念</strong>：L3 的保障不靠”禁止”，靠<strong>流程摩擦力</strong>——双人确认排除个人误操作，冷静期排除冲动决策。闭环在对话内完成。</p>
+</blockquote>
+<h4 id="514-权限决策完整链路">5.1.4 权限决策完整链路</h4>
+<p>当 Agent 发起一次工具调用时，请求经过以下五层逐级评估：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent 发起工具调用（tool_name + tool_input）</span></span>
+<span class="line"><span>  → Layer 5 企业策略：deny 列表命中 → 直接拒绝（不可覆盖）</span></span>
+<span class="line"><span>  → Layer 4 工具信任层级：L3→拒绝 / L2→进审批 / L1→执行+通知 / L0→执行</span></span>
+<span class="line"><span>  → Layer 3 PreToolUse Hook：任一 deny→拒绝 / ask→升级审批 / allow→继续</span></span>
+<span class="line"><span>  → Layer 2 审计记录：PostToolUse 自动写入观测系统，不可关闭</span></span>
+<span class="line"><span>  → Layer 1 人工确认：L2 操作推送审批卡片 → 同意/拒绝/"总是允许"</span></span></code></pre>
+<h4 id="515-权限决策引擎数据结构">5.1.5 权限决策引擎数据结构</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>组件</th><th>职责</th><th>数据来源</th></tr></thead><tbody><tr><td><strong>企业策略缓存</strong></td><td>全局禁用工具列表、强制 L2 工具列表、模型白名单</td><td>管理员配置</td></tr><tr><td><strong>用户信任配置缓存</strong></td><td>按 user_id 分片存储用户级信任层级和工具权限</td><td>配置系统</td></tr><tr><td><strong>工具信任层级映射</strong></td><td>工具名 → 信任层级，从 Tool Registry 同步</td><td>MCP Tool 注册时声明</td></tr><tr><td><strong>用户自定义规则</strong></td><td>用户”总是允许”的操作规则</td><td>用户通过审批卡片生成</td></tr></tbody></table>
+<h4 id="516-信任层级的动态调整">5.1.6 信任层级的动态调整</h4>
+<p>信任层级不是静态不变的：</p>
+<ul>
+<li><strong>向上提权</strong>：经过充分验证的固化工作流，可由管理员审批将部分 L2 操作提升为 L1</li>
+<li><strong>向下降权</strong>：Agent 出现异常行为（行为分析检测到偏离基线）时，自动将 L1 降级为 L2</li>
+<li><strong>紧急熔断</strong>：管理员可一键将所有 Agent 操作降级为 L3（仅建议模式）</li>
+</ul>
+<hr>
+<h3 id="52-事件钩子体系">5.2 事件钩子体系</h3>
+<blockquote>
+<p>“不改 Agent 内核，在外围拦截和扩展”的 AOP 模式。</p>
+</blockquote>
+<h4 id="521-事件清单">5.2.1 事件清单</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>事件</th><th>触发时机</th><th>支持的钩子类型</th><th>典型用途</th></tr></thead><tbody><tr><td><strong>SessionStart</strong></td><td>对话会话初始化</td><td>command</td><td>加载规范文件、用户配置、态势快照</td></tr><tr><td><strong>SessionEnd</strong></td><td>对话会话结束</td><td>command</td><td>持久化工作记忆、清理临时资源</td></tr><tr><td><strong>UserPromptSubmit</strong></td><td>用户输入后、Agent 推理前</td><td>prompt / command</td><td>输入合规检查、上下文增强</td></tr><tr><td><strong>PreToolUse</strong></td><td>Agent 决定调用工具、执行前</td><td>prompt / command</td><td><strong>权限决策（核心）</strong>、参数校验、输入脱敏</td></tr><tr><td><strong>PostToolUse</strong></td><td>工具执行完成后</td><td>prompt / command</td><td><strong>审计记录</strong>、结果脱敏、质量验证</td></tr><tr><td><strong>PreCompact</strong></td><td>上下文压缩前</td><td>command</td><td>保留关键上下文</td></tr><tr><td><strong>Stop</strong></td><td>Agent 大脑尝试退出</td><td>prompt / command</td><td><strong>完成度检查</strong>——任务是否充分完成？</td></tr><tr><td><strong>SubAgentStop</strong></td><td>子 Agent 完成</td><td>prompt / command</td><td>子 Agent 结论质量检查</td></tr><tr><td><strong>TaskCreated</strong></td><td>后台任务创建</td><td>command</td><td>任务拦截和增强</td></tr><tr><td><strong>TaskCompleted</strong></td><td>后台任务完成</td><td>command</td><td>清理、通知、后续触发</td></tr></tbody></table>
+<blockquote>
+<p>根据业务领域，可在此基础上新增领域特有事件（如 PolicyChanged / AlertEscalated 等），覆盖关键业务时刻。</p>
+</blockquote>
+<h4 id="522-钩子执行引擎">5.2.2 钩子执行引擎</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>事件触发（如 PreToolUse）</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>从注册表中取出该事件的所有 Handler</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>按注册顺序依次执行（非并行）</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>每个 Handler：</span></span>
+<span class="line"><span>    ├─ command 类型 → 直接执行，同步返回</span></span>
+<span class="line"><span>    ├─ prompt 类型 → 发送给 LLM 判断，解析返回决策</span></span>
+<span class="line"><span>    └─ 超时 → 视为 allow（fail-open）</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>汇总结果：</span></span>
+<span class="line"><span>    ├─ 任一 deny → 最终 deny（短路）</span></span>
+<span class="line"><span>    ├─ 任一 ask → 升级为人工确认</span></span>
+<span class="line"><span>    ├─ 全部 allow → 最终 allow</span></span>
+<span class="line"><span>    └─ Hook 返回 modified_input → 传递给下一个 Hook 和实际工具执行</span></span></code></pre>
+<p><strong>关键设计约束</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>约束</th><th>说明</th><th>理由</th></tr></thead><tbody><tr><td><strong>顺序执行不并行</strong></td><td>前一个的 modified_input 传给后一个</td><td>需要确定性</td></tr><tr><td><strong>超时 fail-open</strong></td><td>钩子超时视为 allow</td><td>业务连续性优先</td></tr><tr><td><strong>deny 短路</strong></td><td>任一钩子 deny 立即停止后续执行</td><td>性能优化</td></tr><tr><td><strong>PostToolUse 不可 deny</strong></td><td>工具已执行完毕，只能记录和告警</td><td>工具执行不可逆</td></tr></tbody></table>
+<p><strong>钩子执行模式</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>执行方式</th><th>速度</th><th>适用场景</th></tr></thead><tbody><tr><td><strong>command</strong></td><td>执行确定性函数</td><td>毫秒级</td><td>明确规则（权限匹配、审计记录）</td></tr><tr><td><strong>prompt</strong></td><td>发送给 LLM 判断</td><td>秒级</td><td>模糊判断（“这个操作是否合理？”、“调查结论是否充分？“）</td></tr></tbody></table>
+<hr>
+<h3 id="53-agent-自身安全威胁模型">5.3 Agent 自身安全威胁模型</h3>
+<blockquote>
+<p>Agent 大脑本身是 LLM 驱动的，面临各种威胁。<strong>Agent 系统自身的安全是必答题。</strong></p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>威胁</th><th>攻击方式</th><th>防御机制</th></tr></thead><tbody><tr><td><strong>Prompt Injection</strong></td><td>用户注入指令试图绕过信任层级</td><td>① System Prompt Layer 1 硬编码不可覆盖；② 信任层级在引擎层强制执行，不依赖 LLM 遵守指令</td></tr><tr><td><strong>工具幻觉</strong></td><td>Agent 幻觉不存在的工具名或构造错误参数</td><td>① 工具注册表严格校验；② inputSchema 强类型校验；③ PostToolUse Hook 检查返回值</td></tr><tr><td><strong>无限循环</strong></td><td>Agent 反复调用同一工具或陷入推理死循环</td><td>① 最大循环次数限制；② 断路器；③ Stop Hook 检测循环模式；④ 工具调用超时</td></tr><tr><td><strong>Agent 提权</strong></td><td>多轮对话逐步提升操作权限</td><td>① 信任层级在引擎层硬编码，LLM 无法”说服自己”提权；② 提权只能通过管理员显式操作；③ 每次变更触发审计</td></tr><tr><td><strong>敏感数据泄露</strong></td><td>Agent 在响应中泄露其他用户数据</td><td>① 用户级会话隔离；② System Prompt 禁止输出原始记录；③ PostToolUse Hook 做响应脱敏</td></tr><tr><td><strong>资源滥用</strong></td><td>恶意用户发送极长对话消耗 token</td><td>① Compaction 断路器；② 并发会话限制；③ LLM 全局限速</td></tr><tr><td><strong>子 Agent 逃逸</strong></td><td>子 Agent 尝试调用超出权限的工具</td><td>① 工具清单在分派时已限定；② 权限决策引擎按子 Agent ID 校验</td></tr></tbody></table>
+<p><strong>安全设计原则</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>原则</th><th>说明</th></tr></thead><tbody><tr><td><strong>信任层级引擎层强制</strong></td><td>安全约束不依赖 LLM 遵守指令——即使 LLM 被诱导，引擎层仍会拦截</td></tr><tr><td><strong>最小权限</strong></td><td>每个子 Agent 只能访问其角色所需的最小工具集</td></tr><tr><td><strong>全量审计不可关闭</strong></td><td>每次工具调用都写入不可篡改的审计日志</td></tr><tr><td><strong>异常自动降权</strong></td><td>行为分析检测到异常时自动降级信任层级</td></tr><tr><td><strong>人是最终防线</strong></td><td>L2/L3 操作的审批不可被 Agent 绕过——代码层面的强制</td></tr></tbody></table>
+<hr>
+<h2 id="六能力接入层">六、能力接入层</h2>
+<h3 id="61-mcp-tool-层原子工具体系">6.1 MCP Tool 层（原子工具体系）</h3>
+<h4 id="611-定位与职责">6.1.1 定位与职责</h4>
+<p>MCP Tool 层是 Agent 大脑调用一切能力的统一接口。已有平台各模块的 API 通过原子化包装，暴露为 Agent 可理解、可调用的标准化工具。</p>
+<p><strong>核心原则</strong>：底层一套 API 实现，上面开两个口——CLI 和 MCP 平行暴露同一个底层实现。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>                     ┌─ Skill（编排层）─────────────────┐</span></span>
+<span class="line"><span>                     │  固化的多步工作流（零 token 执行）   │</span></span>
+<span class="line"><span>                     └──────────────┬──────────────────┘</span></span>
+<span class="line"><span>                                    ↑ 组合</span></span>
+<span class="line"><span>┌───────────────────────────────────┼─────────────────────────┐</span></span>
+<span class="line"><span>│                   同一个底层 API 实现                          │</span></span>
+<span class="line"><span>│                                   │                          │</span></span>
+<span class="line"><span>│  ┌─ CLI（命令行接口）──────────┐  │  ┌─ MCP Tool（协议接口）─┐│</span></span>
+<span class="line"><span>│  │  agent resource query      │  │  │  resource.query(args)  ││</span></span>
+<span class="line"><span>│  │  消费者：                   │  │  │  消费者：              ││</span></span>
+<span class="line"><span>│  │  · Agent 通过 bash 执行     │  │  │  · Agent 原生调用      ││</span></span>
+<span class="line"><span>│  │  · 人直接终端使用           │  │  │  · 外部系统互操作      ││</span></span>
+<span class="line"><span>│  └─────────────────────────────┘  │  └────────────────────────┘│</span></span>
+<span class="line"><span>└───────────────────────────────────┴─────────────────────────────┘</span></span></code></pre>
+<h4 id="612-工具设计三原则">6.1.2 工具设计三原则</h4>
+<ol>
+<li><strong>Tool 描述即契约</strong>：每个 MCP Tool 的 description 足够精确，让 Agent 仅凭描述即可判断何时调用——这是给 LLM 看的工具说明书</li>
+<li><strong>按副作用分级</strong>：感知类无副作用可自主调用；执行类有副作用必须标注风险等级，与信任层级联动</li>
+<li><strong>粒度适中</strong>：每个工具完成一个语义完整的原子动作——不拆太细（浪费 token），不合太粗（Agent 失去控制力）</li>
+</ol>
+<h4 id="613-五类工具分级">6.1.3 五类工具分级</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具类别</th><th>副作用</th><th>职责</th><th>典型工具</th></tr></thead><tbody><tr><td><strong>感知类</strong></td><td>无</td><td>获取系统状态与数据</td><td><code>event.list</code> · <code>log.search</code> · <code>entity.list</code> · <code>config.list</code></td></tr><tr><td><strong>决策类</strong></td><td>无</td><td>产出分析结论</td><td><code>event.detail</code> · <code>check.result</code> · <code>entity.detail</code></td></tr><tr><td><strong>执行类</strong></td><td><strong>有</strong></td><td>改变系统状态</td><td><code>config.create</code>(L2) · <code>entity.create</code>(L2) · <code>event.mark</code>(L1)</td></tr><tr><td><strong>记忆类</strong></td><td>有（仅写记忆库）</td><td>经验存储与检索</td><td><code>memory.store</code> · <code>memory.recall</code> · <code>workflow.save</code></td></tr><tr><td><strong>呈现类</strong></td><td>无</td><td>组装可视化结果</td><td><code>chart.render</code> · <code>table.render</code> · <code>report.generate</code></td></tr></tbody></table>
+<h4 id="614-skill-层从-agent-行为中涌现">6.1.4 Skill 层——从 Agent 行为中涌现</h4>
+<p>Skill 不需要预先设计，它是 Agent 行为固化的自然产物：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>第 1~100 次：Agent 自主编排工具调用（灵活，消耗 token）</span></span>
+<span class="line"><span>第 101 次：  系统发现历史轨迹高度相似 → 自动提炼为 Skill</span></span>
+<span class="line"><span>第 102 次起：Agent 识别到匹配场景 → 直接调用 Skill（零 token，确定性执行）</span></span></code></pre>
+<h3 id="62-已有平台改造原则">6.2 已有平台改造原则</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>原则</th><th>说明</th></tr></thead><tbody><tr><td><strong>不重写内核，只加接口层</strong></td><td>已有模块的业务逻辑已经过验证，不动内核。只在现有 API 外包 MCP Tool 壳（加 description + inputSchema + trust_level）</td></tr><tr><td><strong>核心工具优先，不全量包装</strong></td><td>数百个 API 不全部包装，按 Agent 使用频率筛选核心工具集</td></tr><tr><td><strong>Schema 从现有结构导出</strong></td><td>已有数据表结构直接导出为 JSON Schema，不重新设计</td></tr><tr><td><strong>已有接口零改造</strong></td><td>现有 API 完全保留，传统 UI 继续调用，零影响</td></tr></tbody></table>
+<h3 id="63-agent-专属-api-设计">6.3 Agent 专属 API 设计</h3>
+<p><strong>Agent API 不是已有接口的封装，而是面向 Agent 推理需求重新设计的接口层。</strong></p>
+<p>已有 API 围绕”人在 UI 上的操作”设计——一个按钮对应一个 API。Agent 的消费模式完全不同：它需要在<strong>一个推理步骤</strong>内获得完整的决策上下文，而不是像人一样在多个页面间切换拼凑信息。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Agent 引擎（Python）</span></span>
+<span class="line"><span>    ↓ 调用</span></span>
+<span class="line"><span>MCP Tool 层</span></span>
+<span class="line"><span>    ↓ 调用</span></span>
+<span class="line"><span>┌─────────────────────────────────────────┐</span></span>
+<span class="line"><span>│ Agent API 层（/agent/ 命名空间）          │ ← 新增</span></span>
+<span class="line"><span>│ 调用已有 Service 层（不是调已有 API 层）   │</span></span>
+<span class="line"><span>├─────────────────────────────────────────┤</span></span>
+<span class="line"><span>│ 已有 REST API 层（数百个）               │ ← 不动</span></span>
+<span class="line"><span>│ 调用已有 Service 层                      │</span></span>
+<span class="line"><span>├─────────────────────────────────────────┤</span></span>
+<span class="line"><span>│ 已有 Service 层（业务逻辑，共享）         │ ← 不动</span></span>
+<span class="line"><span>├─────────────────────────────────────────┤</span></span>
+<span class="line"><span>│ 数据库                                   │ ← 不动</span></span>
+<span class="line"><span>└─────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>三种 API 性质</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>性质</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td><strong>聚合型</strong></td><td>多个原子 API 的结果组合为一个完整上下文</td><td><code>entity.full-profile</code>（聚合基础信息+关联关系+状态历史）</td></tr><tr><td><strong>增强型</strong></td><td>在原子 API 基础上增加 Agent 消费所需的额外信息</td><td><code>config.effect</code>（在配置详情基础上增加影响范围分析）</td></tr><tr><td><strong>同步化型</strong></td><td>将异步任务封装为同步接口</td><td><code>log.search-sync</code>（将”创建→轮询→取结果”封装为一次调用）</td></tr></tbody></table>
+<p><strong>设计原则</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>原则</th><th>说明</th></tr></thead><tbody><tr><td><strong>面向推理步骤设计</strong></td><td>一个 Agent API 调用 = Agent 一个推理步骤所需的完整信息</td></tr><tr><td><strong>调 Service 层不调 API 层</strong></td><td>Agent API 直接调用 Service 层方法，不走已有 API 的 Controller</td></tr><tr><td><strong>精简字段</strong></td><td>去掉 UI 友好字段（iconKey/colorCode），保留语义字段</td></tr><tr><td><strong>含基线对比</strong></td><td>返回值自带基线对比数据（同比/环比），减少 Agent 的额外查询</td></tr></tbody></table>
+<hr>
+<h2 id="七支撑系统">七、支撑系统</h2>
+<h3 id="71-对话引擎--ag-ui-渲染器">7.1 对话引擎 + AG-UI 渲染器</h3>
+<h4 id="711-ag-ui-协议">7.1.1 AG-UI 协议</h4>
+<p>AG-UI 是 Agent 大脑与前端渲染器之间的流式通信协议：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>事件类型</th><th>方向</th><th>说明</th></tr></thead><tbody><tr><td><code>text.delta</code></td><td>Agent → 前端</td><td>流式文本输出（逐 token）</td></tr><tr><td><code>tool.call.start</code></td><td>Agent → 前端</td><td>Agent 开始调用工具，前端展示加载状态</td></tr><tr><td><code>tool.call.result</code></td><td>Agent → 前端</td><td>工具调用结果</td></tr><tr><td><code>render.component</code></td><td>Agent → 前端</td><td>嵌入信息呈现原语（图表/表格/时间线）</td></tr><tr><td><code>approval.request</code></td><td>Agent → 前端</td><td>请求人工审批（L2 操作）</td></tr><tr><td><code>user.message</code></td><td>前端 → Agent</td><td>用户输入文本</td></tr><tr><td><code>user.approval</code></td><td>前端 → Agent</td><td>用户审批结果</td></tr></tbody></table>
+<h4 id="712-信息呈现原语">7.1.2 信息呈现原语</h4>
+<p>当对话需要可视化时，Agent 大脑从 Schema 约束的原语中按需选取组件嵌入对话：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>原语类型</th><th>典型场景</th><th>Schema 约束</th></tr></thead><tbody><tr><td><strong>折线图/柱状图</strong></td><td>趋势变化</td><td>数据源绑定 + 时间范围 + 聚合粒度</td></tr><tr><td><strong>表格</strong></td><td>列表展示</td><td>列定义 + 排序 + 筛选条件 + 分页</td></tr><tr><td><strong>时间线</strong></td><td>事件链</td><td>事件序列 + 时间戳 + 关联证据</td></tr><tr><td><strong>拓扑图</strong></td><td>关系图</td><td>节点 + 边 + 分组</td></tr><tr><td><strong>指标卡片</strong></td><td>关键数字</td><td>指标名 + 值 + 趋势 + 对比基线</td></tr><tr><td><strong>审批卡片</strong></td><td>操作确认</td><td>操作摘要 + 影响范围 + 同意/拒绝按钮</td></tr></tbody></table>
+<p><strong>设计原则</strong>：</p>
+<ul>
+<li>大部分交互通过纯文字完成——文字是最可靠的</li>
+<li>呈现原语是 Schema 约束的，Agent 的”呈现”是在有限选项中组装，不是生成前端代码</li>
+<li>组件渲染失败时优雅降级为文字</li>
+</ul>
+<h3 id="72-制品体系--schema-registry">7.2 制品体系 + Schema Registry</h3>
+<h4 id="721-定位">7.2.1 定位</h4>
+<p>制品体系是”能力自生产”的基础设施——定义 AI 可以生产什么、生产物长什么样、如何验证、如何上线。</p>
+<p><strong>核心概念</strong>：Schema 就是告诉 AI”你要生成的东西长什么样”的标准格式定义。有了它，AI 的生产行为从”写任意代码”变成”填一份有约束的结构化表单”。</p>
+<h4 id="722-四大-schema-方向">7.2.2 四大 Schema 方向</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>方向一（MCP Tool 契约）→ Agent 大脑用来"做事"——调什么工具、传什么参数</span></span>
+<span class="line"><span>方向二（业务制品）     → 工厂 Agent 用来"造东西"——生产什么规则、什么策略</span></span>
+<span class="line"><span>方向三（Agent 编排）   → Agent 工厂用来"造 Agent"——定义什么角色、什么工作流</span></span>
+<span class="line"><span>方向四（信息呈现）     → Agent 大脑用来"展示结果"——用什么图表、什么格式</span></span></code></pre>
+<p><strong>MCP Tool 契约 Schema 示例</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"event.list"</span></span>
+<span class="line"><span style="color:#85E89D">description</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"分页查询业务事件列表..."</span></span>
+<span class="line"><span style="color:#85E89D">trust_level</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"L0"</span></span>
+<span class="line"><span style="color:#85E89D">side_effect</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span></span>
+<span class="line"><span style="color:#85E89D">category</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"感知"</span></span>
+<span class="line"><span style="color:#85E89D">input_schema</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">object</span></span>
+<span class="line"><span style="color:#85E89D">  properties</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    pageNum</span><span style="color:#E1E4E8">: { </span><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">integer</span><span style="color:#E1E4E8">, </span><span style="color:#85E89D">minimum</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#85E89D">    pageSize</span><span style="color:#E1E4E8">: { </span><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">integer</span><span style="color:#E1E4E8">, </span><span style="color:#85E89D">minimum</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">, </span><span style="color:#85E89D">maximum</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">100</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#85E89D">    filters</span><span style="color:#E1E4E8">: { </span><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">object</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#85E89D">    time_type</span><span style="color:#E1E4E8">: { </span><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">string</span><span style="color:#E1E4E8">, </span><span style="color:#85E89D">enum</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"today"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"week"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"month"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"custom"</span><span style="color:#E1E4E8">] }</span></span>
+<span class="line"><span style="color:#85E89D">  required</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"pageNum"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"pageSize"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#85E89D">output_schema</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">object</span></span>
+<span class="line"><span style="color:#85E89D">  properties</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    total</span><span style="color:#E1E4E8">: { </span><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">integer</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#85E89D">    items</span><span style="color:#E1E4E8">: { </span><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">array</span><span style="color:#E1E4E8"> }</span></span></code></pre>
+<p><strong>Agent 编排 Schema 示例</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">kind</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">AgentDefinition</span></span>
+<span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"data-analyst"</span></span>
+<span class="line"><span style="color:#85E89D">role</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"analyst"</span></span>
+<span class="line"><span style="color:#85E89D">model_requirement</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"strong_reasoning"</span></span>
+<span class="line"><span style="color:#85E89D">tools_allowed</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"event.*"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"log.*"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#85E89D">tools_denied</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"config.*"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#85E89D">max_trust_level</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"L1"</span></span>
+<span class="line"><span style="color:#85E89D">trigger_conditions</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#85E89D">event_type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"anomaly"</span></span></code></pre>
+<p><strong>工作流 DAG Schema 示例</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">kind</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">WorkflowDAG</span></span>
+<span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"event-investigate-standard"</span></span>
+<span class="line"><span style="color:#85E89D">trigger</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"event.new"</span></span>
+<span class="line"><span style="color:#85E89D">nodes</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#85E89D">id</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"query_event"</span></span>
+<span class="line"><span style="color:#85E89D">    tool</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"event.detail"</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#85E89D">id</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"search_logs"</span></span>
+<span class="line"><span style="color:#85E89D">    tool</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"log.search"</span></span>
+<span class="line"><span style="color:#85E89D">    depends_on</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"query_event"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#85E89D">id</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"conclude"</span></span>
+<span class="line"><span style="color:#85E89D">    type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"decision"</span></span>
+<span class="line"><span style="color:#85E89D">    branches</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"escalate"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"close"</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#85E89D">fallback</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"agent_mode"</span><span style="color:#6A737D">    # 失败时回退到 Agent 自主模式</span></span></code></pre>
+<h4 id="723-制品生命周期">7.2.3 制品生命周期</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>draft → validated → approved → canary → active → deprecated</span></span>
+<span class="line"><span>  ↑        ↑          ↑          ↑        ↑</span></span>
+<span class="line"><span> 生成    Schema    人工审批    灰度验证   全量上线</span></span>
+<span class="line"><span>       自动校验</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>状态</th><th>触发条件</th><th>说明</th></tr></thead><tbody><tr><td><strong>draft</strong></td><td>工厂 Agent 生成 或 人工创建</td><td>初始状态</td></tr><tr><td><strong>validated</strong></td><td>Schema 校验通过</td><td>结构合法</td></tr><tr><td><strong>approved</strong></td><td>人工审批通过</td><td><strong>不可跳过</strong></td></tr><tr><td><strong>canary</strong></td><td>灰度引擎启动新旧对比</td><td>新旧制品并行运行</td></tr><tr><td><strong>active</strong></td><td>灰度达标 或 管理员手动上线</td><td>正式生效</td></tr><tr><td><strong>deprecated</strong></td><td>新版本替代 或 管理员下线</td><td>保留记录</td></tr></tbody></table>
+<h4 id="724-基础设施组件">7.2.4 基础设施组件</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>组件</th><th>职责</th></tr></thead><tbody><tr><td><strong>Schema Registry</strong></td><td>存储四大方向所有 Schema 定义，按方向分 namespace 管理</td></tr><tr><td><strong>Artifact Store</strong></td><td>制品仓库，带版本管理、来源追溯、状态流转</td></tr><tr><td><strong>Validation Pipeline</strong></td><td>Schema 校验 → 效果验证 → 历史数据回放 → 生成验证报告</td></tr><tr><td><strong>Canary Engine</strong></td><td>新旧制品并行运行，效果对比，自动决策上线或回滚</td></tr></tbody></table>
+<h3 id="73-工厂-agent-集群">7.3 工厂 Agent 集群</h3>
+<p>工厂 Agent 让系统从”人工开发能力，等版本发布”变为”AI 自主识别能力缺口，自主生产新能力”。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>传统模式：人设计 → 人编码 → 人测试 → 人部署</span></span>
+<span class="line"><span>Agent 模式：AI 感知缺口 → AI 生成制品 → Schema校验 → 人审批 → 热加载生效</span></span>
+<span class="line"><span>                                                      ↑</span></span>
+<span class="line"><span>                                                唯一的人工环节</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工厂</th><th>生产物</th><th>启动前提</th></tr></thead><tbody><tr><td><strong>规则工厂</strong></td><td>业务规则 / 检测策略</td><td>热加载能力就绪 + 样本积累</td></tr><tr><td><strong>Agent 工厂</strong></td><td>子 Agent 定义（角色/工具集/权限/Prompt）</td><td>现有角色运营中出现覆盖盲区</td></tr><tr><td><strong>工作流工厂</strong></td><td>确定性工作流 DAG（经验固化）</td><td>Agent 运行积累足够行动轨迹数据</td></tr></tbody></table>
+<blockquote>
+<p><strong>为什么适合 AI 自主工程</strong>：制品的解空间是有限的（Schema 约束），生成失败的代价可控（灰度可回滚），验证方式天然闭环——相比 AI 写通用代码，结构化制品的 AI 自主生产更可控。</p>
+</blockquote>
+<h3 id="74-持久化层">7.4 持久化层</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ 会话级持久化 ──────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  对话转录（Transcript）                                       │</span></span>
+<span class="line"><span>│  · 格式：JSONL（每条消息一行，追加写入）                        │</span></span>
+<span class="line"><span>│  · 内容：用户消息 + Agent 推理 + 工具调用 + 工具结果            │</span></span>
+<span class="line"><span>│  · 用途：会话恢复、行动轨迹分析                                │</span></span>
+<span class="line"><span>│                                                              │</span></span>
+<span class="line"><span>│  会话状态（Session State）                                     │</span></span>
+<span class="line"><span>│  · 工作记忆快照、活跃子 Agent 状态、待审批队列                  │</span></span>
+<span class="line"><span>│  · 存储：Redis（TTL = 会话超时时间）                           │</span></span>
+<span class="line"><span>│                                                              │</span></span>
+<span class="line"><span>│  子 Agent 任务状态（Task State）                               │</span></span>
+<span class="line"><span>│  · 任务进度、中间结论、行动轨迹                                │</span></span>
+<span class="line"><span>│  · 存储：Redis + 完成后归档到持久存储                          │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>┌─ 全局级持久化 ──────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  长期记忆（Memory）                                           │</span></span>
+<span class="line"><span>│  · 用户偏好、历史结论、经验模式                                │</span></span>
+<span class="line"><span>│  · 加载：会话启动时加载索引，按需读取详情                      │</span></span>
+<span class="line"><span>│                                                              │</span></span>
+<span class="line"><span>│  行动轨迹（Action Trace）                                     │</span></span>
+<span class="line"><span>│  · Agent 每次行动的完整记录                                   │</span></span>
+<span class="line"><span>│  · 存储：时序数据库（供工作流工厂分析）                        │</span></span>
+<span class="line"><span>│                                                              │</span></span>
+<span class="line"><span>│  审计日志（Audit Log）                                        │</span></span>
+<span class="line"><span>│  · 所有 L1/L2/L3 操作的不可篡改记录                           │</span></span>
+<span class="line"><span>│  · 存储：追加写入，不可删除                                    │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>会话恢复机制</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>正常对话中</span></span>
+<span class="line"><span>    ├─ 网络中断 → 会话状态已持久化 → 用户重新打开 → 自动恢复到中断点</span></span>
+<span class="line"><span>    ├─ LLM 不可用 → 回退到传统 UI 模式 → 恢复后自动续接</span></span>
+<span class="line"><span>    └─ 上下文溢出 → 保存状态 → 新会话自动加载长期记忆</span></span></code></pre>
+<h3 id="75-观测系统">7.5 观测系统</h3>
+<p><strong>观测三支柱</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>支柱</th><th>内容</th></tr></thead><tbody><tr><td><strong>Traces</strong></td><td>Agent 每次推理→工具调用→子 Agent 调度的完整调用链</td></tr><tr><td><strong>Metrics</strong></td><td>Token 消耗、工具调用次数/延迟、Skill 命中率</td></tr><tr><td><strong>Logs</strong></td><td>权限决策记录、审批记录、异常事件、钩子执行结果</td></tr></tbody></table>
+<p><strong>Agent 追踪数据模型</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "trace_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"uuid"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "session_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"uuid"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "agent_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"brain"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "span_type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"tool_call | sub_agent_dispatch | llm_inference | approval_wait"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "tool_name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"event.list"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "trust_level"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"L0"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "permission_decision"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"allow"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "hook_results"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span><span style="color:#79B8FF">"hook"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"PreToolUse"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"result"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"allow"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"latency_ms"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#79B8FF">  "input_tokens"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1200</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "output_tokens"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">350</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "latency_ms"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">2100</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2026-04-03T10:30:00Z"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="76-配置系统">7.6 配置系统</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ 企业级（最高优先级，不可被用户覆盖）───────────────────────┐</span></span>
+<span class="line"><span>│  · 全局禁用的工具列表                                      │</span></span>
+<span class="line"><span>│  · 强制审批的操作列表                                      │</span></span>
+<span class="line"><span>│  · 允许的 LLM 模型白名单                                   │</span></span>
+<span class="line"><span>│  · Agent 最大自主操作次数限制                               │</span></span>
+<span class="line"><span>│  · 默认信任层级                                            │</span></span>
+<span class="line"><span>│  · 规范文件                                                │</span></span>
+<span class="line"><span>│  · 是否启用主动巡检模式                                    │</span></span>
+<span class="line"><span>├──────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  ↓ 用户可在企业策略允许范围内覆盖                           │</span></span>
+<span class="line"><span>├─ 用户级 ──────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  · 用户个人偏好（交互模式、通知频率、关注范围）              │</span></span>
+<span class="line"><span>│  · 用户交互风格（简洁/详细）                                │</span></span>
+<span class="line"><span>│  · 用户"总是允许"的操作规则                                 │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>配置合并规则</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>读取配置值（key）：</span></span>
+<span class="line"><span>  1. 检查企业级配置 → 如果是 deny/强制项 → 直接返回（不可覆盖）</span></span>
+<span class="line"><span>  2. 检查用户级配置 → 如果有值 → 返回</span></span>
+<span class="line"><span>  3. 返回系统默认值</span></span></code></pre>
+<hr>
+<h2 id="八新旧架构共存设计">八、新旧架构共存设计</h2>
+<p>Agent 系统上线后，传统 UI 不会立即下线。需要一个过渡期，<strong>新旧两套交互方式并存，用户可自由切换</strong>。</p>
+<h3 id="81-共存架构">8.1 共存架构</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─ 前端 ───────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  ┌─ 传统 UI ───────────┐  ┌─ 对话界面 ─────────┐ │</span></span>
+<span class="line"><span>│  │  菜单 + 表单 + 分页   │  │  对话引擎 + AG-UI   │ │</span></span>
+<span class="line"><span>│  └────────┬──────────────┘  └────────┬──────────┘ │</span></span>
+<span class="line"><span>│           │     模式开关               │            │</span></span>
+<span class="line"><span>└───────────┼──────────────────────────┼─────────────┘</span></span>
+<span class="line"><span>            │                          │</span></span>
+<span class="line"><span>            ▼                          ▼</span></span>
+<span class="line"><span>┌─ API 层 ──────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  ┌─ 已有 REST API ────┐  ┌─ Agent API 层 ───────┐ │</span></span>
+<span class="line"><span>│  │  数百个原子接口      │  │  /agent/ 聚合接口     │ │</span></span>
+<span class="line"><span>│  │  面向 UI 消费       │  │  + 已有接口直调       │ │</span></span>
+<span class="line"><span>│  └────────┬────────────┘  └────────┬─────────────┘ │</span></span>
+<span class="line"><span>│           └───────────┬───────────┘                 │</span></span>
+<span class="line"><span>│                       ▼                             │</span></span>
+<span class="line"><span>│           同一个 Service 层（业务逻辑共享）            │</span></span>
+<span class="line"><span>└───────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>关键架构约束</strong>：两种模式共享同一个 <strong>Service 层和数据库</strong>。传统 UI 调已有 API，Agent 调 <code>/agent/</code> 聚合 API + 已有原子 API。数据完全一致。</p>
+<h3 id="82-模式切换机制">8.2 模式切换机制</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>说明</th></tr></thead><tbody><tr><td><strong>切换粒度</strong></td><td>按用户级别</td></tr><tr><td><strong>默认模式</strong></td><td>过渡期默认传统 UI</td></tr><tr><td><strong>数据一致性</strong></td><td>共享 Service 层，零延迟一致</td></tr><tr><td><strong>回退保障</strong></td><td>对话模式异常时，用户可随时切回传统 UI——Agent 引擎是独立微服务，崩溃不影响已有平台</td></tr></tbody></table>
+<h3 id="83-过渡期计划">8.3 过渡期计划</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>阶段</th><th>传统 UI</th><th>Agent 对话</th></tr></thead><tbody><tr><td><strong>并存期</strong></td><td>默认开启</td><td>可选开启（Beta）</td></tr><tr><td><strong>切换期</strong></td><td>可选保留</td><td>默认开启</td></tr><tr><td><strong>迁移完成</strong></td><td>仅保留核心管理页面</td><td>唯一入口</td></tr></tbody></table>
+<blockquote>
+<p><strong>性能不退化原则</strong>：Agent 模式与传统 UI 模式完成同一操作的端到端时长对比，是决定切换节奏的关键指标。</p>
+</blockquote>
+<blockquote>
+<p><strong>降级策略</strong>：Agent 引擎是独立微服务。Agent 引擎崩溃 = 对话模式不可用，但传统 UI + 全部已有 API 继续正常工作。</p>
+</blockquote>
+<hr>
+<h2 id="九agent-测试体系设计">九、Agent 测试体系设计</h2>
+<blockquote>
+<p>传统平台测试是确定性的——调 API、传固定参数、断言返回值。Agent 系统将确定性操作变成了”自然语言 → Agent 理解 → 工具选择 → 参数构造”，每一步都引入了概率性。<strong>没有系统化的测试体系，Agent 的质量无法量化。</strong></p>
+</blockquote>
+<h3 id="91-agent-测试与传统测试的本质差异">9.1 Agent 测试与传统测试的本质差异</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>传统 API 测试</th><th>Agent 测试</th></tr></thead><tbody><tr><td><strong>输入</strong></td><td>固定 API Path + 固定参数</td><td>自然语言（同一意图有 N 种表达）</td></tr><tr><td><strong>确定性</strong></td><td>100%——同输入同输出</td><td>概率性——LLM 推理可能选不同工具</td></tr><tr><td><strong>正确性定义</strong></td><td>返回值 = 期望值</td><td>意图识别正确 + 工具选择正确 + 参数构造合理 + 信任层级正确</td></tr><tr><td><strong>回归风险</strong></td><td>代码变更导致</td><td>System Prompt 变更、模型升级、上下文变化都可能导致</td></tr><tr><td><strong>覆盖率衡量</strong></td><td>API 覆盖率 / 分支覆盖率</td><td><strong>意图覆盖率</strong>——多少种用户意图被正确理解和执行</td></tr></tbody></table>
+<h3 id="92-三层测试模型">9.2 三层测试模型</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│ 第三层：端到端场景测试                                  │</span></span>
+<span class="line"><span>│ "把这个新实体做完检查再接入"                             │</span></span>
+<span class="line"><span>│ → 验证多步任务拆解、步骤顺序、审批流、最终结果             │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│ 第二层：工具选择 + 参数构造测试                          │</span></span>
+<span class="line"><span>│ "查一下昨天的高优先级事件"                               │</span></span>
+<span class="line"><span>│ → 验证选对工具 + 时间参数正确 + 筛选条件正确              │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│ 第一层：意图识别测试                                    │</span></span>
+<span class="line"><span>│ "帮我看看最近的事件"                                    │</span></span>
+<span class="line"><span>│ → 验证识别为正确的事件类型查询                            │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────────────┘</span></span></code></pre>
+<p><strong>第一层：意图识别准确率</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>测试维度</th><th>说明</th></tr></thead><tbody><tr><td><strong>正向识别</strong></td><td>标准表达 → 正确意图</td></tr><tr><td><strong>同义变体</strong></td><td>同一意图的不同表达方式均能识别</td></tr><tr><td><strong>模糊消歧</strong></td><td>模糊表达能正确追问或合理默认</td></tr><tr><td><strong>误识别防御</strong></td><td>不应被错误识别的表达</td></tr><tr><td><strong>复合意图拆解</strong></td><td>多意图表达能正确拆解</td></tr></tbody></table>
+<p><strong>第二层：工具选择 + 参数构造正确性</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>测试维度</th><th>说明</th></tr></thead><tbody><tr><td><strong>工具选择</strong></td><td>意图 → 正确的 MCP Tool</td></tr><tr><td><strong>参数提取</strong></td><td>自然语言中的条件正确提取为参数</td></tr><tr><td><strong>参数默认</strong></td><td>未指定的参数使用合理默认值</td></tr><tr><td><strong>信任层级</strong></td><td>操作的信任层级判定正确</td></tr><tr><td><strong>子 Agent 分派</strong></td><td>复杂意图正确分派给对应子 Agent</td></tr></tbody></table>
+<p><strong>第三层：端到端场景测试</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>测试维度</th><th>说明</th></tr></thead><tbody><tr><td><strong>任务拆解</strong></td><td>复杂意图正确拆解为多步计划</td></tr><tr><td><strong>步骤顺序</strong></td><td>有依赖关系的步骤按正确顺序执行</td></tr><tr><td><strong>审批流</strong></td><td>L2 操作正确触发审批</td></tr><tr><td><strong>异常恢复</strong></td><td>某步骤失败时的处理</td></tr><tr><td><strong>上下文保持</strong></td><td>多轮对话中上下文不丢失</td></tr></tbody></table>
+<h3 id="93-评估指标">9.3 评估指标</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>指标</th><th>定义</th><th>目标值</th></tr></thead><tbody><tr><td><strong>意图识别准确率</strong></td><td>正确识别的意图数 / 总意图数</td><td>待建立基线</td></tr><tr><td><strong>工具选择准确率</strong></td><td>选对工具的次数 / 总调用次数</td><td>待建立基线</td></tr><tr><td><strong>信任层级判定准确率</strong></td><td>信任层级判定正确的次数 / 总调用次数</td><td><strong>100%</strong>（底线——不允许将 L2 操作误判为 L0）</td></tr><tr><td><strong>变体一致性</strong></td><td>同一意图 N 种表达的识别一致率</td><td>待建立基线</td></tr><tr><td><strong>回归通过率</strong></td><td>基线集通过用例数 / 总数</td><td>≥ 95%</td></tr></tbody></table>
+<h3 id="94-测试与开发的闭环">9.4 测试与开发的闭环</h3>
+<p>每次 System Prompt / 模型变更 → 运行回归基线集 → 通过率达标则允许发布；不达标则定位失败用例（意图退化→调 Prompt / 工具偏移→调 description / 参数错误→调 Schema / 信任层级误判→紧急修复）→ 修复后重跑回归集。</p>
+<h3 id="95-模型评测框架">9.5 模型评测框架</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>评测维度</th><th>评测方法</th><th>用途</th></tr></thead><tbody><tr><td><strong>意图识别准确率</strong></td><td>基础意图集 → 各模型识别正确率对比</td><td>选择 Agent 大脑模型</td></tr><tr><td><strong>工具选择准确率</strong></td><td>给定意图 → 各模型选择正确工具的比率</td><td>选择 Agent 大脑模型</td></tr><tr><td><strong>结构化输出遵循率</strong></td><td>要求输出 JSON → 各模型格式合规率</td><td>选择工厂 Agent 模型</td></tr><tr><td><strong>推理延迟</strong></td><td>相同 Prompt → 各模型首 token 延迟和完整响应延迟</td><td>权衡速度与质量</td></tr><tr><td><strong>长上下文保持能力</strong></td><td>上下文逐步增大 → 各模型准确率退化曲线</td><td>评估上下文管理策略</td></tr><tr><td><strong>约束遵循率</strong></td><td>Prompt Injection 测试集 → 各模型拒绝违规指令的比率</td><td>选择可信赖的模型</td></tr></tbody></table>
+<hr>
+<h2 id="十实施路线">十、实施路线</h2>
+<h3 id="101-agent-引擎分阶段实施">10.1 Agent 引擎分阶段实施</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>阶段</th><th>交付物</th><th>完成标志</th></tr></thead><tbody><tr><td><strong>阶段零：Mock API Server</strong></td><td>核心接口 Mock 就绪</td><td>Agent 引擎所有 MCP Tool 调用均可获得合法响应</td></tr><tr><td><strong>阶段一：Agent 循环引擎骨架</strong></td><td>状态机完整闭环</td><td>真实 Mock API 调用，完整循环可运转</td></tr><tr><td><strong>阶段二：信任层级权限引擎</strong></td><td>L0/L2 硬约束生效</td><td>L2 工具被引擎层拦截推审批，L0 无感通过</td></tr><tr><td><strong>阶段三：事件钩子体系</strong></td><td>核心三钩子接入</td><td>PreToolUse/PostToolUse/Stop 触发，审计记录落库</td></tr><tr><td><strong>阶段四：1+N 子 Agent 调度</strong></td><td>任务分派协议跑通</td><td>顶层 Agent 可分派任务，结论回传组装响应</td></tr><tr><td><strong>阶段五：System Prompt 五层组装</strong></td><td>动态 Prompt 替换</td><td>按用户动态注入 Layer 2，工具按需分档加载</td></tr><tr><td><strong>阶段六：意图测试与调优</strong></td><td>核心场景可演示</td><td>信任层级判定 100% 准确，端到端场景可完整演示</td></tr></tbody></table>
+<h3 id="102-交付依赖关系">10.2 交付依赖关系</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>阶段一                阶段二                阶段三                阶段四</span></span>
+<span class="line"><span>──────────────────────────────────────────────────────────────────────</span></span>
+<span class="line"><span>MCP Tool 层 ──────→ Agent 引擎 ──────→ 子 Agent ──────→ 端到端验证</span></span>
+<span class="line"><span>Schema Registry ──→ 信任层级框架 ──→ 审批流联调</span></span>
+<span class="line"><span>                    对话引擎 ──────→ 前端联调 ──────→ 新旧共存</span></span>
+<span class="line"><span>已有模块改造 + Agent 专属 API ──────────────────→ 集成测试</span></span>
+<span class="line"><span>持久化 + 观测 + 配置 ──────────────────────────→ 运维验证</span></span>
+<span class="line"><span>意图测试集 ──────────────────────────────────→ 回归门控</span></span></code></pre>
+<h3 id="103-后续演进方向">10.3 后续演进方向</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>方向</th><th>内容</th><th>启动前提</th></tr></thead><tbody><tr><td><strong>工作流工厂启动</strong></td><td>历史轨迹 → 高频场景提炼为 DAG → Skill 执行，零 token</td><td>Agent 运行积累足够行动轨迹数据</td></tr><tr><td><strong>规则工厂启动</strong></td><td>AI 自动生成业务规则，响应周期从人工数天缩短到分钟级</td><td>热加载能力就绪 + 样本积累</td></tr><tr><td><strong>Agent 工厂启动</strong></td><td>现有角色覆盖盲区时自动生成新角色定义</td><td>运营期发现真实新角色需求</td></tr><tr><td><strong>子 Agent 能力深化</strong></td><td>自动效果分析、趋势预测、多渠道协作</td><td>基础版运营稳定后</td></tr><tr><td><strong>信任层级动态化</strong></td><td>基于行为分析自动提权/降权 + 紧急熔断</td><td>行为分析双用途完成</td></tr><tr><td><strong>主动巡检模式</strong></td><td>Agent 后台持续监控，主动推送风险</td><td>Agent 大脑能力成熟后</td></tr></tbody></table>
+<hr>
+<h2 id="总结">总结</h2>
+<h3 id="这篇文章的十个核心架构模式">这篇文章的十个核心架构模式</h3>
+<ol>
+<li><strong>Agent 循环引擎状态机</strong>：IDLE→REASONING→PERMISSION→EXEC→RESULT→STOP_CHECK 六态循环，信任层级内建到每一步</li>
+<li><strong>信任层级四级模型 L0-L3</strong>：从完全自主到多人审批，引擎层强制执行，不依赖 LLM 遵守指令</li>
+<li><strong>事件钩子体系</strong>：AOP 模式拦截 Agent 生命周期，10+ 个事件点，支持 command 和 prompt 两种模式</li>
+<li><strong>1+N 子 Agent 协作</strong>：Manager + 专项角色的分派/调度协议，基于能力模块反推角色，上下文隔离</li>
+<li><strong>System Prompt 五层架构</strong>：核心身份→规范→工具→上下文→记忆的动态组装</li>
+<li><strong>上下文管理五机制</strong>：规范文件 / ToolSearch / Compaction / Prompt Cache / 大输出外溢</li>
+<li><strong>制品体系 + Schema Registry</strong>：Schema 约束的有限解空间，四大方向覆盖工具/业务/编排/呈现</li>
+<li><strong>框架选型方法论</strong>：不选框架本身，而是从各框架提炼设计精华，自研引擎整合</li>
+<li><strong>新旧架构共存</strong>：传统 UI 与 Agent 模式共享 Service 层，Agent 崩溃不影响已有平台</li>
+<li><strong>Agent 测试体系</strong>：三层测试模型（意图→工具→端到端），信任层级判定 100% 是底线</li>
+</ol>
+<h3 id="关键设计原则">关键设计原则</h3>
+<ul>
+<li><strong>Agent 不是平台上面的壳，Agent 就是平台本身</strong>——已有模块是”器官”，Agent 是”大脑”</li>
+<li><strong>信任层级是引擎原生的，不是插件</strong>——这决定了为什么通用框架不能直接用</li>
+<li><strong>Prompt 引导”应该做什么”，引擎强制”不能做什么”</strong>——两层互补</li>
+<li><strong>人负责决策，AI 负责分析和执行</strong>——L2/L3 审批是代码层面的强制，不是请求</li>
+<li><strong>不设计用户旅程</strong>——用户有意图，Agent 理解并执行，中间不需要”旅程”</li>
+<li><strong>Schema 约束的有限解空间</strong>——AI 的”生成”不是写任意代码，而是在约束下组装结构化制品</li>
+</ul>
+<hr>
+<p><em>本文基于真实项目实践整理，已脱敏处理。架构设计由架构师与 AI 协作完成——架构师主导方向判断和技术决策，AI 负责设计推演、文档生成和一致性检查。</em></p>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
+&nbsp;·&nbsp;
+<a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+      // 初始化 Mermaid - 使用 default 主题以支持内联 style
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        securityLevel: 'loose'
+      });
+
+      // 等待 DOM 加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('开始查找 Mermaid 代码块...');
+
+        // 查找所有可能包含 mermaid 的代码块
+        const codeBlocks = document.querySelectorAll('pre code');
+        console.log('找到代码块数量:', codeBlocks.length);
+
+        let mermaidCount = 0;
+        codeBlocks.forEach((block, index) => {
+          // 检查是否是 mermaid 代码块（通过 class 或内容）
+          const isMermaid = block.className.includes('mermaid') ||
+                           block.className.includes('language-mermaid') ||
+                           block.textContent.trim().startsWith('graph') ||
+                           block.textContent.trim().startsWith('sequenceDiagram') ||
+                           block.textContent.trim().startsWith('classDiagram') ||
+                           block.textContent.trim().startsWith('flowchart');
+
+          if (isMermaid) {
+            mermaidCount++;
+            console.log(`找到 Mermaid 代码块 #${mermaidCount}:`, block.className);
+
+            // 获取 Mermaid 代码
+            const code = block.textContent;
+
+            // 创建一个新的 div 元素来渲染图表
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = code;
+            // 创建外层滚动容器
+            const wrapper = document.createElement('div');
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.margin = '20px 0';
+            wrapper.style.borderRadius = '8px';
+            wrapper.style.cursor = 'grab';
+            wrapper.style.maxWidth = '100%';
+            wrapper.style.WebkitOverflowScrolling = 'touch';
+
+            mermaidDiv.style.backgroundColor = '#1a2332';
+            mermaidDiv.style.padding = '20px';
+            mermaidDiv.style.borderRadius = '8px';
+            mermaidDiv.style.minWidth = '1200px';
+            mermaidDiv.style.width = 'max-content';
+
+            wrapper.appendChild(mermaidDiv);
+
+            // 添加鼠标拖拽功能（绑定到wrapper）
+            let isDragging = false;
+            let startX, scrollLeft;
+
+            wrapper.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              wrapper.style.cursor = 'grabbing';
+              startX = e.pageX - wrapper.offsetLeft;
+              scrollLeft = wrapper.scrollLeft;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mouseup', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              e.preventDefault();
+              const x = e.pageX - wrapper.offsetLeft;
+              const walk = (x - startX) * 2;
+              wrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸拖拽支持（移动端）
+            let touchStartX;
+            wrapper.addEventListener('touchstart', (e) => {
+              touchStartX = e.touches[0].pageX;
+              scrollLeft = wrapper.scrollLeft;
+            }, {passive: true});
+
+            wrapper.addEventListener('touchmove', (e) => {
+              const x = e.touches[0].pageX;
+              const walk = (touchStartX - x);
+              wrapper.scrollLeft = scrollLeft + walk;
+            }, {passive: true});
+
+            // 替换原来的 pre 标签
+            block.parentElement.replaceWith(wrapper);
+          }
+        });
+
+        console.log(`总共找到 ${mermaidCount} 个 Mermaid 代码块`);
+
+        // 运行 Mermaid 渲染
+        if (mermaidCount > 0) {
+          console.log('开始渲染 Mermaid 图表...');
+          mermaid.run().then(() => {
+            console.log('Mermaid 渲染完成!');
+          }).catch(err => {
+            console.error('Mermaid 渲染出错:', err);
+          });
+        }
+      });
+    </script> </body> </html> 

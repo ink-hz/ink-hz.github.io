@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="专注于大规模 AI 应用的架构设计、工程实践和性能优化"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>AI 架构实践 - 大规模 AI 应用的架构设计</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero[data-astro-cid-j7pv25f6]{margin:2rem 0 4rem;padding:4rem 0;border-bottom:1px solid var(--border)}.hero[data-astro-cid-j7pv25f6] h1[data-astro-cid-j7pv25f6]{font-size:2.5rem;margin-bottom:1.5rem;line-height:1.2;font-weight:700;background:linear-gradient(135deg,#06b6d4,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleGlow 4s ease-in-out infinite}@keyframes titleGlow{0%,to{filter:drop-shadow(0 0 10px rgba(6,182,212,.3))}50%{filter:drop-shadow(0 0 20px rgba(59,130,246,.5))}}.lead[data-astro-cid-j7pv25f6]{font-size:1.1rem;color:var(--gray);margin-bottom:2rem;line-height:1.7}.cta[data-astro-cid-j7pv25f6]{display:flex;gap:1rem}.btn-primary[data-astro-cid-j7pv25f6],.btn-secondary[data-astro-cid-j7pv25f6]{padding:.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:600;transition:all .3s}.btn-primary[data-astro-cid-j7pv25f6]{background:transparent;color:var(--accent);border:2px solid var(--accent)}.btn-primary[data-astro-cid-j7pv25f6]:hover{background:#00f0ff1a;transform:translateY(-2px);box-shadow:var(--glow),0 0 20px #00f0ff33}.btn-secondary[data-astro-cid-j7pv25f6]{background:transparent;color:var(--text);border:2px solid var(--border)}.btn-secondary[data-astro-cid-j7pv25f6]:hover{background:var(--surface);border-color:var(--accent);box-shadow:var(--glow)}.recent-posts[data-astro-cid-j7pv25f6]{margin-top:4rem}.recent-posts[data-astro-cid-j7pv25f6] h2[data-astro-cid-j7pv25f6]{margin-bottom:2rem}.post-list[data-astro-cid-j7pv25f6]{list-style:none}.post-item[data-astro-cid-j7pv25f6]{margin-bottom:2rem;padding:1.5rem;border:1px solid var(--border);border-radius:8px;background:var(--surface);transition:all .3s}.post-item[data-astro-cid-j7pv25f6]:last-child{border-bottom:1px solid var(--border)}.post-item[data-astro-cid-j7pv25f6]:hover{border-color:var(--accent);box-shadow:var(--glow)}.post-item[data-astro-cid-j7pv25f6] a[data-astro-cid-j7pv25f6]{text-decoration:none;color:inherit;display:block}.post-item[data-astro-cid-j7pv25f6] h3[data-astro-cid-j7pv25f6]{font-size:1.25rem;margin-bottom:.5rem;color:var(--text);transition:color .3s;font-weight:600}.post-item[data-astro-cid-j7pv25f6] a[data-astro-cid-j7pv25f6]:hover h3[data-astro-cid-j7pv25f6]{color:var(--accent)}.description[data-astro-cid-j7pv25f6]{color:var(--gray);margin-bottom:.5rem}.post-item[data-astro-cid-j7pv25f6] time[data-astro-cid-j7pv25f6]{font-size:.9rem;color:var(--gray)}.view-all[data-astro-cid-j7pv25f6]{display:inline-block;margin-top:1rem;color:var(--accent);text-decoration:none;font-weight:600;transition:all .3s}.view-all[data-astro-cid-j7pv25f6]:hover{color:var(--accent-hover);text-shadow:var(--glow)}
+</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <section class="hero" data-astro-cid-j7pv25f6> <h1 data-astro-cid-j7pv25f6>大规模 AI 应用的架构设计与工程实践</h1> <p class="lead" data-astro-cid-j7pv25f6>
+从 LLM 应用开发、分布式训练、推理优化，到云原生部署与成本优化，
+      分享真实的生产环境经验和架构最佳实践。
+</p> </section> <section class="recent-posts" data-astro-cid-j7pv25f6> <h2 data-astro-cid-j7pv25f6>📝 最新文章</h2> <ul class="post-list" data-astro-cid-j7pv25f6> <li class="post-item" data-astro-cid-j7pv25f6> <a href="/blog/ai-native辅助大型架构总体设计-最佳实践/" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>AI Native 辅助大型架构总体设计：从执行者到设计审视者的协作进化</h3> <p class="description" data-astro-cid-j7pv25f6>基于两个真实大型项目的实践总结，提炼 AI 辅助架构设计的四阶段协作模型、三种角色进化路径，以及选型评估、不确定性处理、文档质量保障等关键实践。核心发现：AI 的最大价值不是帮你写得快，而是帮你发现设计中的盲区。</p> <time data-astro-cid-j7pv25f6>2026/4/8</time> </a> </li><li class="post-item" data-astro-cid-j7pv25f6> <a href="/blog/企业级agent系统架构设计-从循环引擎到信任层级/" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>企业级 Agent 系统架构设计：从循环引擎到信任层级的完整技术方案</h3> <p class="description" data-astro-cid-j7pv25f6>基于真实项目实践，完整呈现企业级 Agent 系统的架构设计——Agent 循环引擎状态机、信任层级四级模型、事件钩子体系、1+N 子 Agent 协作、System Prompt 五层架构、上下文管理、制品体系与 Schema Registry、框架选型方法论，以及 Agent 测试体系设计。</p> <time data-astro-cid-j7pv25f6>2026/4/8</time> </a> </li><li class="post-item" data-astro-cid-j7pv25f6> <a href="/blog/claudecode架构设计理论分析/" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>Claude Code 架构设计深度拆解：AI编程Agent的操作系统级设计</h3> <p class="description" data-astro-cid-j7pv25f6>基于源码的深度拆解：Agent循环引擎、四层插件化能力模型、五层纵深安全防御、九大事件钩子、MCP开放生态、上下文分层管理。不是给IDE加个聊天窗口，是重新定义人和代码的交互方式。</p> <time data-astro-cid-j7pv25f6>2026/4/2</time> </a> </li><li class="post-item" data-astro-cid-j7pv25f6> <a href="/blog/当下的力量-知识体系全解析/" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>【人生好书】《当下的力量》你不是你的思维，你是观察思维的临在</h3> <p class="description" data-astro-cid-j7pv25f6>埃克哈特·托利的《当下的力量》核心知识体系：从&quot;你不是你的思维&quot;到&quot;完全接纳当下&quot;，15个核心观点+4大实践方法+完整应用路线图。</p> <time data-astro-cid-j7pv25f6>2026/3/31</time> </a> </li><li class="post-item" data-astro-cid-j7pv25f6> <a href="/blog/穷查理宝典-多元思维模型与逆向思考/" data-astro-cid-j7pv25f6> <h3 data-astro-cid-j7pv25f6>【人生好书】《穷查理宝典》多元思维模型与逆向思考：避免愚蠢的理性防御系统</h3> <p class="description" data-astro-cid-j7pv25f6>查理·芒格的智慧体系：从多元思维模型到逆向思考，TOP 10核心观点+4大方法论+完整实践路线图，构建理性决策的防御系统。</p> <time data-astro-cid-j7pv25f6>2026/3/31</time> </a> </li> </ul> <a href="/blog" class="view-all" data-astro-cid-j7pv25f6>查看所有文章 →</a> </section>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
+&nbsp;·&nbsp;
+<a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+      // 初始化 Mermaid - 使用 default 主题以支持内联 style
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        securityLevel: 'loose'
+      });
+
+      // 等待 DOM 加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('开始查找 Mermaid 代码块...');
+
+        // 查找所有可能包含 mermaid 的代码块
+        const codeBlocks = document.querySelectorAll('pre code');
+        console.log('找到代码块数量:', codeBlocks.length);
+
+        let mermaidCount = 0;
+        codeBlocks.forEach((block, index) => {
+          // 检查是否是 mermaid 代码块（通过 class 或内容）
+          const isMermaid = block.className.includes('mermaid') ||
+                           block.className.includes('language-mermaid') ||
+                           block.textContent.trim().startsWith('graph') ||
+                           block.textContent.trim().startsWith('sequenceDiagram') ||
+                           block.textContent.trim().startsWith('classDiagram') ||
+                           block.textContent.trim().startsWith('flowchart');
+
+          if (isMermaid) {
+            mermaidCount++;
+            console.log(`找到 Mermaid 代码块 #${mermaidCount}:`, block.className);
+
+            // 获取 Mermaid 代码
+            const code = block.textContent;
+
+            // 创建一个新的 div 元素来渲染图表
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = code;
+            // 创建外层滚动容器
+            const wrapper = document.createElement('div');
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.margin = '20px 0';
+            wrapper.style.borderRadius = '8px';
+            wrapper.style.cursor = 'grab';
+            wrapper.style.maxWidth = '100%';
+            wrapper.style.WebkitOverflowScrolling = 'touch';
+
+            mermaidDiv.style.backgroundColor = '#1a2332';
+            mermaidDiv.style.padding = '20px';
+            mermaidDiv.style.borderRadius = '8px';
+            mermaidDiv.style.minWidth = '1200px';
+            mermaidDiv.style.width = 'max-content';
+
+            wrapper.appendChild(mermaidDiv);
+
+            // 添加鼠标拖拽功能（绑定到wrapper）
+            let isDragging = false;
+            let startX, scrollLeft;
+
+            wrapper.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              wrapper.style.cursor = 'grabbing';
+              startX = e.pageX - wrapper.offsetLeft;
+              scrollLeft = wrapper.scrollLeft;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mouseup', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              e.preventDefault();
+              const x = e.pageX - wrapper.offsetLeft;
+              const walk = (x - startX) * 2;
+              wrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸拖拽支持（移动端）
+            let touchStartX;
+            wrapper.addEventListener('touchstart', (e) => {
+              touchStartX = e.touches[0].pageX;
+              scrollLeft = wrapper.scrollLeft;
+            }, {passive: true});
+
+            wrapper.addEventListener('touchmove', (e) => {
+              const x = e.touches[0].pageX;
+              const walk = (touchStartX - x);
+              wrapper.scrollLeft = scrollLeft + walk;
+            }, {passive: true});
+
+            // 替换原来的 pre 标签
+            block.parentElement.replaceWith(wrapper);
+          }
+        });
+
+        console.log(`总共找到 ${mermaidCount} 个 Mermaid 代码块`);
+
+        // 运行 Mermaid 渲染
+        if (mermaidCount > 0) {
+          console.log('开始渲染 Mermaid 图表...');
+          mermaid.run().then(() => {
+            console.log('Mermaid 渲染完成!');
+          }).catch(err => {
+            console.error('Mermaid 渲染出错:', err);
+          });
+        }
+      });
+    </script> </body> </html> 

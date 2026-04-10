@@ -1,0 +1,647 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="基于两个真实大型项目的实践总结，提炼 AI 辅助架构设计的四阶段协作模型、三种角色进化路径，以及选型评估、不确定性处理、文档质量保障等关键实践。核心发现：AI 的最大价值不是帮你写得快，而是帮你发现设计中的盲区。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>AI Native 辅助大型架构总体设计：从执行者到设计审视者的协作进化</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>AI Native 辅助大型架构总体设计：从执行者到设计审视者的协作进化</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/4/8</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#架构设计</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="ai-native-辅助大型架构总体设计最佳实践分享">AI Native 辅助大型架构总体设计：最佳实践分享</h1>
+<blockquote>
+<p>基于两个真实项目的实践总结——一个传统企业平台的总体设计（约 2800 行，18 轮迭代，~3 天）和一个 Agent 智能体平台的总体设计（约 2800 行，19 轮迭代，~3 天）。</p>
+<p>核心观点：<strong>AI 在架构设计中的角色会进化——从”帮你写”到”挑战你”再到”帮你审视自己的设计”。</strong> 架构师的价值不是被削弱了，而是从写作中解放出来，回到了思考和决策本身。</p>
+</blockquote>
+<hr>
+<h2 id="一背景两个真实项目">一、背景：两个真实项目</h2>
+<h3 id="11-项目挑战">1.1 项目挑战</h3>
+<p><strong>项目一</strong>：一个高复杂度的企业级平台总体设计。</p>
+<ul>
+<li><strong>跨域融合</strong>：涉及多个技术域的深度融合</li>
+<li><strong>多团队协作</strong>：多个团队分工协作，需要精确的职责边界定义</li>
+<li><strong>输入材料分散</strong>：20+ 份技术预研、需求分析、架构调研分布在不同子目录，质量参差不齐</li>
+<li><strong>交付时间紧</strong>：从材料整合到设计定稿，窗口期约 3 天</li>
+</ul>
+<p><strong>项目二</strong>：将已有平台架构演进为意图驱动的 Agent 智能体系统。</p>
+<ul>
+<li><strong>继承与创新并存</strong>：V1 基础设施原封不动保留，新增层清晰叠加在上面，边界必须精确</li>
+<li><strong>能力基础是代码不是文档</strong>：新平台的”工具集”来自已有系统的数百个 API，需要从代码仓库里梳理出实际能力</li>
+<li><strong>设计对象是 Agent 系统</strong>：Agent 的设计语言（信任层级、Prompt 分层、子 Agent 角色划分）和传统系统设计完全不同，没有可参考的模板</li>
+<li><strong>认知在设计过程中持续升级</strong>：选型方法论重写 3 次、子 Agent 架构推翻重构、开发语言变更、API 设计定位从”封装”改为”重新设计”——每次认知升级都导致前面写好的内容大面积返工</li>
+</ul>
+<h3 id="12-两个项目概况">1.2 两个项目概况</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>项目一：企业平台总体设计</th><th>项目二：Agent 智能体总体设计</th></tr></thead><tbody><tr><td><strong>设计对象</strong></td><td>传统 UI 驱动的企业级平台（跨多个技术域）</td><td>将已有平台演进为意图驱动的 Agent 系统</td></tr><tr><td><strong>输入材料</strong></td><td>20+ 份技术预研 / 需求分析 / 架构调研</td><td>数百个 API 文件 + 代码仓库 + 技术探讨文档</td></tr><tr><td><strong>文档产出</strong></td><td>约 2800 行，9 章 + 附录，含多种部署模式设计</td><td>约 2800 行，10 章，含全景和引擎内部架构图</td></tr><tr><td><strong>配套产出</strong></td><td>架构决策总览、竞品对标</td><td>决策复盘 + 竞争力分析 + 能力清单</td></tr><tr><td><strong>迭代轮次</strong></td><td>18 轮</td><td>19 轮（含 3 次选型重写、1 次语言变更）</td></tr><tr><td><strong>总耗时</strong></td><td>~3 天</td><td>~3 天</td></tr></tbody></table>
+<p><strong>两个项目之间的关键变化</strong>：AI 的角色从”执行专家”进化为”挑战者”再进化为”设计审视者”——这条进化路径是本文的主线。</p>
+<h3 id="13-传统做法-vs-ai-辅助">1.3 传统做法 vs AI 辅助</h3>
+<p>传统做法：架构师独自阅读材料、独自画图、独自写文档、独自改稿。瓶颈不在”想”，而在”写”和”画”——大量时间消耗在将思考转化为文档的过程中。</p>
+<p>AI 辅助：架构师专注于高阶思维（边界在哪？关键决策点是什么？做什么不做什么？），AI 负责材料消化、内容生成、图表绘制、全文一致性维护。效率提升约 4~5 倍——但更重要的变化不是速度，而是<strong>协作深度</strong>。</p>
+<hr>
+<h2 id="二核心方法论四阶段协作模型">二、核心方法论：四阶段协作模型</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│                                                                    │</span></span>
+<span class="line"><span>│   阶段一          阶段二          阶段三          阶段四            │</span></span>
+<span class="line"><span>│   能力梳理        骨架搭建        架构推演        验证收敛           │</span></span>
+<span class="line"><span>│   ────────       ────────       ────────       ────────           │</span></span>
+<span class="line"><span>│   人：定输入      人：定结构      人：做决策      人：排优先级       │</span></span>
+<span class="line"><span>│   AI：读+分类     AI：生成骨架    AI：质疑+推演   AI：批量修复       │</span></span>
+<span class="line"><span>│                                  + 设计审视      + 一致性检查       │</span></span>
+<span class="line"><span>│                                                                    │</span></span>
+<span class="line"><span>└──────────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<h3 id="阶段一能力梳理架构师的第一个判断是喂什么">阶段一：能力梳理——架构师的第一个判断是”喂什么”</h3>
+<p>这个阶段最容易被低估。很多人觉得”把材料丢给 AI 读就行了”——但<strong>选什么材料、不选什么材料、每份材料的权威等级是什么</strong>，这些判断直接决定了后续设计的质量上限。</p>
+<p><strong>人的职责</strong>：从散乱的输入材料中<strong>提纯</strong>——决定哪些是设计的权威输入，哪些是参考，哪些必须隔离不能污染主体设计。</p>
+<p><strong>AI 的职责</strong>：批量阅读被选中的材料，提取关键信息，生成结构化摘要。如果输入是代码/API 文件，AI 反推系统能力——按功能模块分类、统计分布、识别边界。</p>
+<p><strong>项目一</strong>——从 20+ 份散乱文档中提纯为 6 份知识萃取：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>原始输入（20+ 份，多个子目录）              提纯后（6 份知识萃取 + 格式参考）</span></span>
+<span class="line"><span>────────────────────────              ─────────────────────────</span></span>
+<span class="line"><span>模块A/（预研洞察/需求分析/改造分析...）     01-威胁模型与产品定位      ← 权威</span></span>
+<span class="line"><span>模块B/（技术预研/架构分析/技术调研...）     02-技术选型与架构决策      ← 权威</span></span>
+<span class="line"><span>模块C/（架构分析/行为基线预研）             03-核心模块能力萃取       ← 权威</span></span>
+<span class="line"><span>                                          04-数据面与控制面萃取     ← 权威</span></span>
+<span class="line"><span>                                          05-分析引擎知识萃取       ← 权威</span></span>
+<span class="line"><span>                                          06-部署架构与竞争力萃取   ← 权威</span></span>
+<span class="line"><span>                                          优秀总设文档（3 份）      ← 格式参考</span></span></code></pre>
+<p><strong>项目二</strong>——从代码仓库和探讨文档中提纯为 4 类输入：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>分类</th><th>内容</th><th>权威等级</th></tr></thead><tbody><tr><td><strong>能力底座</strong></td><td>数百个 API 文档 → AI 分类为 11 个功能模块</td><td>权威（最高优先级）</td></tr><tr><td><strong>设计方向</strong></td><td>V1 总设 + 技术方向探讨文档</td><td>参考（需架构师判断过滤）</td></tr><tr><td><strong>数据结构</strong></td><td>策略/规则的 DB 表结构</td><td>权威（Schema 设计输入）</td></tr><tr><td><strong>隔离材料</strong></td><td>测试团队工具集 + 测试用例 → 单独产出隔离的参考文档</td><td>禁止参与主体设计</td></tr></tbody></table>
+<p>架构师的核心判断：API 文档是最权威的能力输入——代码说”能调什么接口”比需求文档说”有什么功能”更可信。测试团队的工具集<strong>必须隔离</strong>——它的命名和设计思路是测试用途，不能污染正式设计。</p>
+<p><strong>关键经验</strong>：提纯是架构判断，不是文件搬运。哪些材料进入设计输入、以什么优先级、哪些必须隔离——这些决定了设计的质量上限。提纯的对象不只是设计输入——已有系统的测试用例标题本质上是”人对操作意图的自然语言描述”，让 AI 提取意图核心并扩展为多种变体，几百条传统用例可以变成几百 × N 条意图测试集种子。</p>
+<h3 id="阶段二骨架搭建架构师定结构ai-填内容">阶段二：骨架搭建——架构师定结构，AI 填内容</h3>
+<p><strong>人的职责</strong>：定义文档的章节结构、每章的定位、章节之间的逻辑链。</p>
+<p><strong>AI 的职责</strong>：基于材料生成各章节的初稿内容。</p>
+<p><strong>项目一</strong>：初版让 AI 按原始文档结构堆砌内容——结果写出来像”预研文档合集”。架构师重新定义章节逻辑链（背景→场景→选型→架构→DFX），告诉 AI”去除实现细节，保留高层次设计”。具体砍了什么：模块的接口字段定义砍掉、引擎的内部算法流程砍掉，只保留架构约束。同一批材料，换一个结构，文档从”拼接感”变成了”设计感”。</p>
+<p><strong>项目二</strong>：先确定骨架，AI 一轮生成核心章节初稿。架构师在开头写了阅读路线图（5 条路径，按角色分流），告诉不同读者”你只需要读哪几章”。骨架先出来，后面十几轮迭代都是在这个骨架上做加减法。</p>
+<p><strong>关键经验</strong>：先定骨架再填肉。AI 天然倾向于生成详细内容，架构师必须主动砍掉不属于总设层面的实现细节。一份近 3000 行的文档没有路线图，读者不知道从哪看起。</p>
+<blockquote>
+<p><strong>总体设计最大的陷阱是”写成概要设计”——陷入实现细节。</strong> 这个判断必须由人来做，AI 不会主动帮你砍。</p>
+</blockquote>
+<h3 id="阶段三架构推演工作量最大ai-参与最深">阶段三：架构推演——工作量最大，AI 参与最深</h3>
+<p>这是核心阶段——AI 不只是补细节，还会质疑你的判断、帮你发现设计中的不严谨之处。两个项目在这个阶段各迭代了十几轮，占总工时 60% 以上。</p>
+<p><strong>人的职责</strong>：提出架构问题、做出架构决策、审查一致性。</p>
+<p><strong>AI 的职责</strong>：根据决策补充细节、生成图表、维护全文一致性、<strong>主动质疑不严谨的判断</strong>。</p>
+<p><strong>迭代的五种典型模式</strong>：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>项目一案例</th><th>项目二案例</th></tr></thead><tbody><tr><td><strong>补缺</strong></td><td>新增分析引擎完整章节——从已有引擎移植适配</td><td>基于全量 API 梳理发现遗漏模块，同时修正了模块职责的认知错误</td></tr><tr><td><strong>新增</strong></td><td>产品方向变化，新增部署模式整章</td><td>新增事件钩子体系、Prompt 五层架构</td></tr><tr><td><strong>修正</strong></td><td>发现审计日志存储在不同章节描述矛盾</td><td>发现”共享 API”与”专属 API 独立设计”矛盾</td></tr><tr><td><strong>重构</strong></td><td>发现两个组件计算模型完全不同，拆成独立部署单元</td><td>子 Agent 角色推翻重构——对照 API 模块分布重新推演</td></tr><tr><td><strong>砍冗</strong></td><td>对标详细表移到附录，实现级参数全部砍掉</td><td>开发语言变更后全文替换；去掉伪代码和默认值</td></tr></tbody></table>
+<p><strong>关键经验</strong>：每轮只解决一类问题，不要混着做。每次修改核心概念，必须让 AI 全文搜索+批量更新。“重构”是最有价值也最痛苦的迭代——组件拆分和角色重构都导致大面积返工，但设计质量跳了一个台阶。</p>
+<h3 id="阶段四验证收敛人排优先级ai-批量修复">阶段四：验证收敛——人排优先级，AI 批量修复</h3>
+<p><strong>人的职责</strong>：收集反馈、分级处理、做最终架构决策。</p>
+<p><strong>AI 的职责</strong>：落地修改意见、批量更新、全文自洽性检查。</p>
+<p><strong>项目一</strong>：一个核心性能指标经历了三次修正（固定阈值→比例制→比例制+绝对上限），每次改定义，散布在多个章节的引用全部需要同步更新。人做决策，AI 全文搜索+批量替换。另一个案例：发现两种存储的描述矛盾，架构师定决策后 AI 全文排查发现多处与决策矛盾——人发现一个问题，AI 排查出一组问题。</p>
+<p><strong>项目二</strong>：反馈中最高优先级是”最严格的权限控制怎么闭环”——初版设计是”禁止”，但被追问”禁止了永远不做吗？“。这不是改文字能解决的，是设计变更：从”禁止”重新设计为”多人审批+冷静期”。另一个案例：架构师意识到 Agent API 的定位不对——不是”V1 接口的封装”，而是”面向推理需求重新设计的接口层”，AI 据此重写了设计理念和原则。</p>
+<p><strong>关键经验</strong>：高优先级的反馈往往导致<strong>设计变更</strong>而非文字修改。架构师做决策，AI 负责将变更落地到所有受影响的章节。人改概念，AI 改全文。</p>
+<hr>
+<h2 id="三ai-的三种角色从执行到挑战到审视">三、AI 的三种角色：从执行到挑战到审视</h2>
+<p>这是两个项目中最重要的发现——AI 在架构设计中的角色不是固定的，它会随着协作深度进化。</p>
+<h3 id="31-执行专家帮我写">3.1 执行专家——“帮我写”</h3>
+<p>这是最基础的角色。核心分工：架构师做”Why”的决策，AI 做”What”和”How”的展开。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>决策类型</th><th>谁做</th><th>示例</th></tr></thead><tbody><tr><td><strong>Why</strong>（为什么这样做）</td><td>人</td><td>”这两个组件必须分离部署，因为计算模型不同”</td></tr><tr><td><strong>What</strong>（具体做什么）</td><td>AI 展开</td><td>生成组件职责表、通信链路表、部署拓扑图</td></tr><tr><td><strong>How</strong>（怎么表达）</td><td>AI 执行</td><td>生成架构图、格式化表格、交叉引用检查</td></tr><tr><td><strong>Check</strong>（是否一致）</td><td>人审 + AI 查</td><td>人审架构逻辑，AI 查全文引用一致性</td></tr></tbody></table>
+<p><strong>一轮生成 6 张架构图（项目一）</strong>：架构师标注”这里需要图”的位置和图的类型，AI 一轮生成全部。人工画至少 2 天，AI 辅助 2 小时。</p>
+<p><strong>分析引擎整章生成（项目一）</strong>：架构师给了已有引擎的分析文档，告诉 AI”移植适配为新场景”。AI 一轮生成完整章节，架构师审查后补了能力分工。从零写至少 1 天，AI 辅助 2 小时。</p>
+<p><strong>数百个 API 批量分类（项目二）</strong>：架构师说”读完这些 API 文件，按功能模块分类”。AI 产出 11 个模块的分类表，直接成为工具设计和角色划分的数据基础。人工做至少 1 天，AI 1 小时。</p>
+<p>让 AI 更高效的关键：先给 AI 建立”架构师人格”（读者是谁、关注什么层面）；用”约束”代替”需求”——约束越精确，输出越好；给 AI 决策框架（维度+权重），不让它自由发挥。</p>
+<h3 id="32-挑战者你这样写不对">3.2 挑战者——“你这样写不对”</h3>
+<p>项目二开始出现的新现象：<strong>AI 主动质疑架构师的判断</strong>。</p>
+<p><strong>智能体分类不严谨（项目一）</strong>：初版将差异很大的平台归为同一类。AI 指出：编排平台和全自主执行平台的自主性完全不同，不应归为一类。重写后新增独立分类。</p>
+<p><strong>技术选型太武断（项目二）</strong>：架构师初版写”选型参考某知名框架”。AI 质疑：“该框架是本地 CLI 工具，我们是企业服务端——运行形态完全不同。“重写为逐一评估后说明为什么必须自研。</p>
+<p><strong>子 Agent 角色”凑出来的”（项目二）</strong>：架构师初版定了几个角色。AI 分析：“其中一个没有独立的推理场景。“对照实际 API 模块分布重新推演，产出了有数据支撑的新架构。</p>
+<p><strong>语言选型深度讨论（项目二）</strong>：架构师说”用 Python，管他呢”。AI 问：“对 CPU 密集型计算友好吗？“讨论后得出有依据的结论：引擎是 I/O 密集型，asyncio 完美匹配。</p>
+<blockquote>
+<p><strong>协作原则</strong>：不要压制 AI 的质疑。AI 质疑的地方，往往是设计中真正需要深入思考的地方——在设计阶段解决比在后续阶段返工好得多。</p>
+</blockquote>
+<h3 id="33-设计审视者这个判断站得住吗">3.3 设计审视者——“这个判断站得住吗”</h3>
+<p>这是最高阶的角色——AI 不再只是质疑单个判断，而是<strong>系统性地审视整个设计的严谨性</strong>。</p>
+<p><strong>伪精确数字是负债（项目一）</strong>：设计文档写了一个管理规模的具体数字，讨论中发现没有验证依据。改为弹性表述后设计更站得住（详见 §4.2）。</p>
+<p><strong>跨章节矛盾排查（项目一）</strong>：发现某条链路中存储描述矛盾。架构师定决策后，AI 全文排查发现多个章节都有相关描述，其中几处与决策矛盾——<strong>人发现了一个问题，AI 排查出了一组问题</strong>（详见 §4.3）。</p>
+<p><strong>选型论证不够严谨（项目二）</strong>：架构师写了多轮筛选流程，AI 指出论证不够充分——经过三次重写才达到设计应有的严谨度（详见 §4.1）。</p>
+<p><strong>章节命名不够客观（项目二）</strong>：原有一个章节叫”独有的设计创新”。架构师意识到总体设计说明书应该客观呈现技术方案，而不是自我标榜。砍掉这个章节，内容拆到选型评估中作为”领域需求 vs 框架能力差距”的论证——<strong>同样的内容，换个框架，从标榜变成论证</strong>。</p>
+<p><strong>接口清单缺乏依据（项目二）</strong>：设计文档列了一份 Agent 专属 API 完整清单。架构师提出：“这些接口是基于分析推导的，不是实际验证的。引擎还没写。“改为保留设计原则和聚合模式（架构判断），清单降级为初步规划 + 验证路径。</p>
+<blockquote>
+<p><strong>核心原则</strong>：设计文档的每一个断言，都要经得起”依据是什么”的追问。如果当前没有依据，要么补充依据，要么标注”待验证”。AI 可以帮你系统性地做这个检查——让设计本身更严谨。</p>
+</blockquote>
+<hr>
+<h2 id="四关键实践">四、关键实践</h2>
+<h3 id="41-怎么做选型评估展示过程的充分性">4.1 怎么做选型评估——展示过程的充分性</h3>
+<p>选型章节经历了三次重写：第一版太武断（“参考某框架”）；第二版走流程但不走心（批量淘汰每个只给一行理由）；第三版才对（分类→逐一评估→领域差距→参考价值→结论）。</p>
+<p><strong>关键转变</strong>：从”证明我的结论是对的”变为”展示我的思考过程是充分的”。</p>
+<p><strong>实际案例</strong>：做国际厂商对标时，架构师定义对比维度，AI 填充多厂商数据。但最终”哪些是优势、哪些是短板”的判断由架构师做——AI 会把所有维度平等对待，架构师知道哪些维度对客户更重要。Agent 框架选型三次重写，最终架构师定义了新的评估结构：先按产品形态分类，候选者逐一深度评估，再汇总领域需求差距，不选的也说清参考了什么。</p>
+<p><strong>重要发现</strong>：“不能直接用”和”没有参考价值”是两件事。第二版在第一轮就把一个架构最成熟的框架”淘汰”了，但实际上从中提炼了多条核心设计理念。区分这两者，逻辑才自洽。</p>
+<blockquote>
+<p><strong>可复用的选型结构</strong>：① 按形态分类 → ② 候选者逐一深度评估（优势/借鉴/为什么不选）→ ③ 领域需求 vs 候选能力差距 → ④ 不选的也说清参考了什么 → ⑤ 结论 + 自研范围 + 风险。</p>
+</blockquote>
+<h3 id="42-怎么处理不确定性锁定原则不锁定数字">4.2 怎么处理不确定性——锁定原则，不锁定数字</h3>
+<p><strong>反直觉的发现</strong>：没验证过的东西写具体了是负债，不是资产。</p>
+<p>设计文档里有两种内容：<strong>架构判断</strong>（有决策依据，锁定写具体）和<strong>实现假设</strong>（依赖运行期验证，不锁定，标注验证路径）。混在一起写就会出现伪精确——追问时要么暴露”没有依据”，要么被逼承诺一个不合理的数字。</p>
+<p>项目一踩过的坑：写了一个管理规模的具体数字，没有依据。项目二踩过的坑：列了一份完整的接口清单，后来发现引擎还没写。改为保留设计原则和聚合模式（锁定），具体清单降级为初步规划 + 验证路径（不锁定）。</p>
+<p>对于不确定的重要决策，专门设立”待验证决策”章节——写清楚不确定什么、怎么验证、备选方案是什么。这体现的是架构师的专业性：“知道自己不知道什么，并且有验证路径”。</p>
+<blockquote>
+<p><strong>一句话</strong>：区分”架构判断”和”实现假设”——这个区分本身就是架构能力。</p>
+</blockquote>
+<h3 id="43-怎么保证文档质量人发现问题ai-发现一组问题">4.3 怎么保证文档质量——人发现问题，AI 发现一组问题</h3>
+<p>一致性是最容易出问题的地方——问题往往跨章节，人靠肉眼很难发现。</p>
+<p>项目一的教训：一个核心指标经历三次修改，每次改定义，散布在多个章节的引用都要同步更新。同一个组件在文档中有两个名字，写的时候不觉得，别人一读就看出来。</p>
+<p>项目二的教训：旧系统的一个术语在新设计中含义漂移，整个文档几十处混用。大幅重组章节结构后，旧的交叉引用全部失效，AI 验证后发现几十处断裂。</p>
+<p><strong>实操原则</strong>：每次修改核心概念，让 AI 全文搜索+批量更新。旧术语含义漂移时必须显式重新定义。修订记录写清楚”改了什么 + 为什么改”——这是跨会话的上下文恢复手段。总设文档保持可管理的大小，留架构判断砍实现细节。</p>
+<p>AI 最强的不是”帮你写”，而是”帮你全文排查”。人发现问题，AI 发现一组问题。</p>
+<h3 id="44-怎么做决策复盘从真实问题中长出来">4.4 怎么做决策复盘——从真实问题中长出来</h3>
+<p>配套”关键决策复盘”文档，格式：背景→调研→判断→决策→影响与收益。</p>
+<p>项目一的实践：从完整复盘中提炼核心判断放在总设开篇，读者第一眼看到的就是”这些决策是怎么来的”。</p>
+<p>项目二的实践：决策复盘不是一次性写完的——每次被追问一个新问题（“最严格的权限怎么闭环”/“引擎崩溃怎么办”/“为什么不用某个开源框架”），解决后就加入复盘。到设计收敛时，复盘已经覆盖了所有被深入讨论过的问题——<strong>它是从真实问题中长出来的，不是预先设计的</strong>。</p>
+<blockquote>
+<p><strong>技巧</strong>：决策复盘包含”调研过程”而不只是”结论”——调研过程才体现思考深度。</p>
+</blockquote>
+<h3 id="45-维护两份独立的配套文档">4.5 维护两份独立的配套文档</h3>
+<p>总体设计说明书不应该孤立存在。两个项目的实践中，我们发现有两份配套文档值得独立维护，它们和主设计文档形成互补：</p>
+<p><strong>一、架构师技术决策复盘</strong></p>
+<p>记录每个核心架构决策的完整推导过程，格式：背景→调研→判断→决策→影响与收益。</p>
+<p>为什么要独立维护而不是写在主设计文档里：主设计文档呈现的是”设计结果”，决策复盘记录的是”思考过程”。读者不同——主设计文档给开发团队看”做什么”，决策复盘给架构师自己和技术决策者看”为什么这么做”。项目二最终积累了 19 个决策 + 6 个待验证，每个决策都能独立回答”为什么”。</p>
+<p>示例（脱敏）：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>决策：子 Agent 1+N 角色架构——从能力域反推</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>背景：需要子 Agent 分担专项任务。角色不能拍脑袋定。</span></span>
+<span class="line"><span>判断：对照数百个 API 的模块分布反推角色——</span></span>
+<span class="line"><span>  每个功能域 → 对应一个专项 Agent 角色</span></span>
+<span class="line"><span>  为什么没有"分析 Agent"：行为分析是后台自动流程，不需要独立角色。</span></span>
+<span class="line"><span>决策结果：1+N 架构，N 个角色覆盖 64% 的 API。</span></span>
+<span class="line"><span>一句话：不是"需要几个 Agent"，而是"系统有几个能力域需要深度推理"。</span></span></code></pre>
+<p><strong>二、架构技术竞争力分析</strong></p>
+<p>回答”我们的方案在行业中处于什么位置”——既服务于技术决策（验证方案的差异化），也服务于产品定位和对外沟通。</p>
+<p>为什么要独立维护：竞争力分析的读者和更新频率与主设计文档不同。主设计文档随版本迭代，竞争力分析随行业变化更新（新竞品出现、已有竞品能力升级）。独立维护可以各自按需演进。</p>
+<p>示例（脱敏）：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>V1</th><th>V2</th><th>竞品 A</th><th>竞品 B</th></tr></thead><tbody><tr><td>交互范式</td><td>固定 UI</td><td><strong>对话即平台</strong></td><td>固定 Dashboard</td><td>固定 Dashboard</td></tr><tr><td>运营自动化</td><td>L1 辅助</td><td><strong>L2~L3 自主</strong></td><td>L1 辅助</td><td>L0 展示</td></tr><tr><td>规则更新</td><td>人工（周级）</td><td><strong>AI 自主（分钟级）</strong></td><td>厂商人工</td><td>厂商人工</td></tr></tbody></table>
+<p><strong>两份文档的协作关系</strong>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>主设计文档（~2800 行）         决策复盘（19 个决策）        竞争力分析</span></span>
+<span class="line"><span>"做什么 + 怎么做"             "为什么这么做"              "我们的方案好在哪里"</span></span>
+<span class="line"><span>  │                            │                          │</span></span>
+<span class="line"><span>  │  设计中遇到新决策 ──────→  加入复盘                     │</span></span>
+<span class="line"><span>  │  竞品出现新能力 ──────────────────────────────────→  更新对标</span></span>
+<span class="line"><span>  │  决策变更 ──────→ 更新复盘 ──→ 同步更新主设计           │</span></span>
+<span class="line"><span>  └──────────── 三份文档独立维护，交叉引用保持同步 ─────────┘</span></span></code></pre>
+<blockquote>
+<p><strong>关键实践</strong>：这三份文档不是”写完就丢”的——它们是<strong>持续维护的活文档</strong>。主设计文档随版本迭代，决策复盘随新问题增长，竞争力分析随行业变化更新。AI 可以帮你维护三者之间的一致性。</p>
+</blockquote>
+<hr>
+<h2 id="五总结">五、总结</h2>
+<h3 id="回顾ai-角色的三次进化">回顾：AI 角色的三次进化</h3>
+<p>两个项目、37 轮迭代、近 6000 行设计文档——回头看，最大的收获不是”写得快了”，而是发现了 AI 在架构设计中角色进化的路径：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>阶段</th><th>AI 的角色</th><th>架构师的感受</th><th>设计质量的变化</th></tr></thead><tbody><tr><td><strong>初期</strong></td><td>执行专家——“帮我写"</td><td>"效率真高，一天顶三天”</td><td>产出量大，但深度靠架构师把控</td></tr><tr><td><strong>中期</strong></td><td>挑战者——“你这样写不对"</td><td>"被自己的工具怼了？…但它说得对”</td><td>不严谨的判断在设计阶段就被发现</td></tr><tr><td><strong>后期</strong></td><td>设计审视者——“这个判断站得住吗"</td><td>"像是多了一个严格的技术搭档”</td><td>伪精确被识别、论证被加强、矛盾被排查</td></tr></tbody></table>
+<p>这个进化不是 AI 变聪明了——<strong>是架构师学会了怎么用 AI</strong>。从”让它帮我写”到”让它挑战我”到”让它帮我审视设计的严谨性”，每一步都是架构师主动选择的协作深度。</p>
+<h3 id="三个最值得记住的经验">三个最值得记住的经验</h3>
+<p>如果这篇文章只能留下三句话：</p>
+<ol>
+<li>
+<p><strong>提纯是架构判断，不是文件搬运</strong>——你选什么材料喂给 AI、不选什么、什么必须隔离，这个判断决定了设计的质量上限。AI 读什么比 AI 怎么读更重要。</p>
+</li>
+<li>
+<p><strong>区分”架构判断”和”实现假设”</strong>——有依据的锁定写具体，没验证的标注验证路径。伪精确数字是负债不是资产。这个区分本身就是架构能力。</p>
+</li>
+<li>
+<p><strong>不要压制 AI 的质疑</strong>——AI 质疑的地方，就是设计中真正需要深入思考的地方。让 AI 帮你发现自己的盲区，比让 AI 帮你写得快更有价值。</p>
+</li>
+</ol>
+<h3 id="架构师--ai-的真实分工基于两个项目的实际协作">架构师 + AI 的真实分工——基于两个项目的实际协作</h3>
+<p>不是”人想 AI 写”这么简单。先看全局，再看细节：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>架构师                                AI</span></span>
+<span class="line"><span>──────                              ────</span></span>
+<span class="line"><span>· 定义设计边界和约束                  · 技术洞察：框架评估、竞品对标、API 能力反推</span></span>
+<span class="line"><span>· 做出架构取舍和最终决策              · 架构推演：移植适配、方案生成、结构化展开</span></span>
+<span class="line"><span>· 识别技术债务和不确定性              · 质疑与审视：发现论证漏洞、指出不严谨判断</span></span>
+<span class="line"><span>· 判断什么该做什么不该做              · 全文保障：一致性排查、批量更新、矛盾检测</span></span>
+<span class="line"><span>· 跨团队沟通和组织协调               · 高效执行：架构图生成、格式化、交叉引用检查</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>一句话：人负责决策，AI 负责分析和检查。</span></span></code></pre>
+<p>以下是两个项目中<strong>实际发生的</strong>分工细节：</p>
+<p><strong>技术洞察与分析（AI 主导，人审判）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>AI 做了什么</th><th>架构师做了什么</th></tr></thead><tbody><tr><td>评估多个 Agent 框架的架构优劣，逐一分析运行形态、核心范式、扩展方式</td><td>定义评估维度和场景约束，最终判断”自研，但从每个框架提炼精华”</td></tr><tr><td>从数百个 API 文件反推出功能模块的能力版图，发现遗漏模块</td><td>确认模块边界，修正模块职责的认知错误</td></tr><tr><td>多维度多厂商的国际竞品架构对标，填充技术数据</td><td>定义对比维度，判断”哪些是差异化优势、哪些是短板”</td></tr><tr><td>基于已有引擎文档，移植适配出分析模型的完整架构</td><td>审查适配逻辑，补充能力分工</td></tr><tr><td>分析 V1 API 的结构性缺陷（分页无意义/缺聚合/响应冗余/缺基线/操作碎片/调查碎片）</td><td>做出”新增 Agent 专属 API 命名空间”的架构决策</td></tr></tbody></table>
+<p><strong>架构质疑与推演（AI 主动发起，人最终决策）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>AI 质疑了什么</th><th>架构师怎么回应</th></tr></thead><tbody><tr><td>”选型写法太武断，运行形态完全不同”</td><td>接受，重写选型——从多框架分类评估</td></tr><tr><td>”某个角色没有独立的推理场景”</td><td>接受，推翻方案，对照 API 模块反推出新架构</td></tr><tr><td>”批量淘汰每个框架只给一行理由，论证不充分”</td><td>接受，第三次重写选型结构</td></tr><tr><td>”Python 对 CPU 密集型计算友好吗？“</td><td>讨论后确认：引擎是 I/O 密集型，asyncio 完美匹配</td></tr><tr><td>”这个章节命名是自我标榜”</td><td>接受，砍掉章节，内容拆到选型评估中作为论证</td></tr></tbody></table>
+<p><strong>全文质量保障（AI 执行，人触发）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>AI 做了什么</th><th>触发条件</th></tr></thead><tbody><tr><td>全文搜索+批量更新（核心概念修改后，多个章节同步）</td><td>架构师改了一个定义</td></tr><tr><td>跨章节矛盾排查（存储描述矛盾、术语漂移、引用断裂）</td><td>发现了一个问题，AI 排查出一组</td></tr><tr><td>章节重组后交叉引用全面验证</td><td>架构师决定重组结构</td></tr><tr><td>修订记录维护（每轮记录改了什么、为什么改）</td><td>每轮迭代结束</td></tr></tbody></table>
+<p><strong>核心发现</strong>：AI 不只是”帮写文档的工具”——它是<strong>架构推演的参与者</strong>。它做技术洞察和分析，架构师做取舍和决策。它质疑不严谨的判断，架构师决定接受还是反驳。它排查全文矛盾，架构师定义什么是”对”的。<strong>人和 AI 的分工不在”想 vs 写”，而在”决策 vs 分析”。</strong></p>
+<h3 id="可复用的清单">可复用的清单</h3>
+<p><strong>设计方法</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> 四阶段模型：能力梳理 → 骨架搭建 → 架构推演 → 验证收敛</li>
+<li class="task-list-item"><input type="checkbox" disabled> 给 AI 决策框架（维度+权重+约束），不让它自由发挥</li>
+<li class="task-list-item"><input type="checkbox" disabled> 关键决策有”背景→调研→判断→决策→影响”五段式记录</li>
+<li class="task-list-item"><input type="checkbox" disabled> 区分”架构判断”（锁定）和”实现假设”（标注验证路径）</li>
+<li class="task-list-item"><input type="checkbox" disabled> 主动标注”待验证决策”，诚实暴露不确定性</li>
+</ul>
+<p><strong>文档质量</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> 先给 AI 建立”架构师人格”（读者、定位、边界）</li>
+<li class="task-list-item"><input type="checkbox" disabled> 修订记录写清楚”改了什么 + 为什么改”</li>
+<li class="task-list-item"><input type="checkbox" disabled> 旧系统术语含义漂移时必须显式重新定义</li>
+<li class="task-list-item"><input type="checkbox" disabled> 总设文档留架构判断，砍实现细节</li>
+</ul>
+<p><strong>决策验证</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> 配套”关键决策复盘”文档，包含调研过程</li>
+<li class="task-list-item"><input type="checkbox" disabled> 选型评估展示”思考过程的充分性”，不只是”结论的正确性”</li>
+<li class="task-list-item"><input type="checkbox" disabled> 大型文档重组后做一轮交叉引用验证</li>
+</ul>
+<p><strong>协作原则</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> 不压制 AI 的质疑——AI 质疑的地方是设计需要深入思考的地方</li>
+<li class="task-list-item"><input type="checkbox" disabled> 让 AI 系统性审视设计——“这个判断的依据是什么”</li>
+<li class="task-list-item"><input type="checkbox" disabled> 每次修改核心概念，让 AI 全文搜索一致性</li>
+<li class="task-list-item"><input type="checkbox" disabled> 人负责”Why”和最终决策，AI 负责分析、推演和检查</li>
+</ul>
+<h3 id="一句话">一句话</h3>
+<blockquote>
+<p>这不是 AI 替代架构师的故事，而是架构师借助 AI 回到了他最该做的事——<strong>思考和决策</strong>。AI 的最大价值不是”帮你写得快”，而是”帮你发现设计中自己没注意到的盲区”。</p>
+</blockquote>
+<hr>
+<p><em>本文基于两个真实项目的实践整理，已脱敏处理。</em></p>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
+&nbsp;·&nbsp;
+<a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+      // 初始化 Mermaid - 使用 default 主题以支持内联 style
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        securityLevel: 'loose'
+      });
+
+      // 等待 DOM 加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('开始查找 Mermaid 代码块...');
+
+        // 查找所有可能包含 mermaid 的代码块
+        const codeBlocks = document.querySelectorAll('pre code');
+        console.log('找到代码块数量:', codeBlocks.length);
+
+        let mermaidCount = 0;
+        codeBlocks.forEach((block, index) => {
+          // 检查是否是 mermaid 代码块（通过 class 或内容）
+          const isMermaid = block.className.includes('mermaid') ||
+                           block.className.includes('language-mermaid') ||
+                           block.textContent.trim().startsWith('graph') ||
+                           block.textContent.trim().startsWith('sequenceDiagram') ||
+                           block.textContent.trim().startsWith('classDiagram') ||
+                           block.textContent.trim().startsWith('flowchart');
+
+          if (isMermaid) {
+            mermaidCount++;
+            console.log(`找到 Mermaid 代码块 #${mermaidCount}:`, block.className);
+
+            // 获取 Mermaid 代码
+            const code = block.textContent;
+
+            // 创建一个新的 div 元素来渲染图表
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = code;
+            // 创建外层滚动容器
+            const wrapper = document.createElement('div');
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.margin = '20px 0';
+            wrapper.style.borderRadius = '8px';
+            wrapper.style.cursor = 'grab';
+            wrapper.style.maxWidth = '100%';
+            wrapper.style.WebkitOverflowScrolling = 'touch';
+
+            mermaidDiv.style.backgroundColor = '#1a2332';
+            mermaidDiv.style.padding = '20px';
+            mermaidDiv.style.borderRadius = '8px';
+            mermaidDiv.style.minWidth = '1200px';
+            mermaidDiv.style.width = 'max-content';
+
+            wrapper.appendChild(mermaidDiv);
+
+            // 添加鼠标拖拽功能（绑定到wrapper）
+            let isDragging = false;
+            let startX, scrollLeft;
+
+            wrapper.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              wrapper.style.cursor = 'grabbing';
+              startX = e.pageX - wrapper.offsetLeft;
+              scrollLeft = wrapper.scrollLeft;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mouseup', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              e.preventDefault();
+              const x = e.pageX - wrapper.offsetLeft;
+              const walk = (x - startX) * 2;
+              wrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸拖拽支持（移动端）
+            let touchStartX;
+            wrapper.addEventListener('touchstart', (e) => {
+              touchStartX = e.touches[0].pageX;
+              scrollLeft = wrapper.scrollLeft;
+            }, {passive: true});
+
+            wrapper.addEventListener('touchmove', (e) => {
+              const x = e.touches[0].pageX;
+              const walk = (touchStartX - x);
+              wrapper.scrollLeft = scrollLeft + walk;
+            }, {passive: true});
+
+            // 替换原来的 pre 标签
+            block.parentElement.replaceWith(wrapper);
+          }
+        });
+
+        console.log(`总共找到 ${mermaidCount} 个 Mermaid 代码块`);
+
+        // 运行 Mermaid 渲染
+        if (mermaidCount > 0) {
+          console.log('开始渲染 Mermaid 图表...');
+          mermaid.run().then(() => {
+            console.log('Mermaid 渲染完成!');
+          }).catch(err => {
+            console.error('Mermaid 渲染出错:', err);
+          });
+        }
+      });
+    </script> </body> </html> 

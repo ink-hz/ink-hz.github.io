@@ -1,0 +1,1474 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="Agent架构模式ReAct/Plan-and-Execute/Multi-Agent、LLM推理优化vLLM/TensorRT、RAG检索增强、模型路由负载均衡及MCP协议完整解析。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>AI-LLM系统架构理论指南</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+.hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>AI-LLM系统架构理论指南</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="aillm-系统架构理论指南">AI/LLM 系统架构理论指南</h1>
+<p><strong>学习深度</strong>: ⭐⭐⭐⭐⭐</p>
+<hr>
+<h2 id="第一部分agent-架构理论">第一部分:Agent 架构理论</h2>
+<h3 id="11-agent-基础概念">1.1 Agent 基础概念</h3>
+<p><strong>什么是 LLM Agent?</strong></p>
+<p>Agent 是能够感知环境、做出决策并采取行动以实现目标的自主系统。在 LLM 领域,Agent 是基于大语言模型构建的智能体,能够使用工具、访问外部信息并完成复杂任务。</p>
+<p><strong>核心组件</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Agent["LLM Agent 架构"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph Perception["感知层 (Perception)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            P1[用户输入]</span></span>
+<span class="line"><span style="color:#E1E4E8">            P2[环境状态]</span></span>
+<span class="line"><span style="color:#E1E4E8">            P3[历史记忆]</span></span>
+<span class="line"><span style="color:#E1E4E8">            P4[上下文信息]</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph Planning["决策层 (Planning)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            subgraph LLMCore["大语言模型 (LLM Core)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">                L1[任务理解&#x3C;br/>- 意图识别&#x3C;br/>- 目标分解]</span></span>
+<span class="line"><span style="color:#E1E4E8">                L2[推理规划&#x3C;br/>- 思维链 CoT&#x3C;br/>- 步骤生成]</span></span>
+<span class="line"><span style="color:#E1E4E8">                L3[决策生成&#x3C;br/>- 工具选择&#x3C;br/>- 参数确定]</span></span>
+<span class="line"><span style="color:#E1E4E8">                L1 --> L2 --> L3</span></span>
+<span class="line"><span style="color:#E1E4E8">            end</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph Action["行动层 (Action)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            subgraph Tools["Tools"]</span></span>
+<span class="line"><span style="color:#E1E4E8">                T1[搜索引擎]</span></span>
+<span class="line"><span style="color:#E1E4E8">                T2[API调用]</span></span>
+<span class="line"><span style="color:#E1E4E8">                T3[代码执行]</span></span>
+<span class="line"><span style="color:#E1E4E8">                T4[文件操作]</span></span>
+<span class="line"><span style="color:#E1E4E8">            end</span></span>
+<span class="line"><span style="color:#E1E4E8">            subgraph Memory["Memory"]</span></span>
+<span class="line"><span style="color:#E1E4E8">                M1[短期记忆]</span></span>
+<span class="line"><span style="color:#E1E4E8">                M2[长期记忆]</span></span>
+<span class="line"><span style="color:#E1E4E8">                M3[向量DB]</span></span>
+<span class="line"><span style="color:#E1E4E8">                M4[知识图谱]</span></span>
+<span class="line"><span style="color:#E1E4E8">            end</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        subgraph Reflection["反馈层 (Reflection)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">            R1[结果验证&#x3C;br/>- 目标达成检查&#x3C;br/>- 质量评估]</span></span>
+<span class="line"><span style="color:#E1E4E8">            R2[自我修正&#x3C;br/>- 错误识别&#x3C;br/>- 策略调整]</span></span>
+<span class="line"><span style="color:#E1E4E8">            R3[经验学习&#x3C;br/>- 成功模式存储&#x3C;br/>- 失败案例记录]</span></span>
+<span class="line"><span style="color:#E1E4E8">        end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Perception --> Planning</span></span>
+<span class="line"><span style="color:#E1E4E8">        Planning --> Action</span></span>
+<span class="line"><span style="color:#E1E4E8">        Action --> Reflection</span></span>
+<span class="line"><span style="color:#E1E4E8">        Reflection -.反馈.-> Perception</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p><strong>Agent 能力维度</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>能力</th><th>说明</th><th>示例</th></tr></thead><tbody><tr><td>感知</td><td>理解输入和环境</td><td>解析用户意图、识别上下文</td></tr><tr><td>推理</td><td>逻辑推理和规划</td><td>任务分解、步骤规划</td></tr><tr><td>行动</td><td>使用工具执行任务</td><td>调用 API、搜索信息</td></tr><tr><td>学习</td><td>从经验中改进</td><td>记忆积累、策略优化</td></tr><tr><td>交互</td><td>与用户和环境沟通</td><td>澄清问题、报告进度</td></tr></tbody></table>
+<h3 id="12-react-reasoning--acting-架构">1.2 ReAct (Reasoning + Acting) 架构</h3>
+<p><strong>核心思想</strong>:
+通过交替进行推理 (Reasoning) 和行动 (Acting) 来解决问题,将思考过程显式化。</p>
+<p><strong>工作流程</strong>:</p>
+<p>用户问题: “今天北京的天气如何?明天需要带伞吗?”</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant U as 用户</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant A as Agent</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant T as 工具</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    U->>A: 今天北京的天气如何?明天需要带伞吗?</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over A: Thought 1 (推理)&#x3C;br/>需要查询北京今天和明天的天气预报&#x3C;br/>分析: 缺少天气信息,需要搜索</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    A->>T: Action 1: search("北京天气预报")</span></span>
+<span class="line"><span style="color:#E1E4E8">    T->>A: Observation 1&#x3C;br/>今天: 多云, 18-25°C&#x3C;br/>明天: 有雨, 15-20°C</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over A: Thought 2 (推理)&#x3C;br/>已获得天气信息&#x3C;br/>今天多云不会下雨&#x3C;br/>明天有雨,应该建议带伞&#x3C;br/>可以形成完整答案</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    A->>U: Action 2: finish&#x3C;br/>今天北京多云,温度18-25°C&#x3C;br/>明天有雨,建议带伞</span></span></code></pre>
+<p><strong>ReAct vs 标准提示</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>方法</th><th>特点</th><th>优势</th><th>劣势</th></tr></thead><tbody><tr><td>标准提示</td><td>一次性生成答案</td><td>简单快速</td><td>无法使用工具、可能幻觉</td></tr><tr><td>ReAct</td><td>思考-行动循环</td><td>可调用工具、过程可解释、错误可修正</td><td>多次 LLM 调用、成本高、可能循环</td></tr></tbody></table>
+<p><strong>ReAct 循环控制</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>最大迭代次数: 10</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>迭代 1: Thought → Action → Observation</span></span>
+<span class="line"><span>迭代 2: Thought → Action → Observation</span></span>
+<span class="line"><span>...</span></span>
+<span class="line"><span>迭代 N: Thought → Final Answer</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>退出条件:</span></span>
+<span class="line"><span>1. 生成 Final Answer</span></span>
+<span class="line"><span>2. 达到最大迭代次数</span></span>
+<span class="line"><span>3. 检测到无效循环 (重复相同的 Thought/Action)</span></span>
+<span class="line"><span>4. 工具执行失败且无法恢复</span></span></code></pre>
+<h3 id="13-plan-and-execute-架构">1.3 Plan-and-Execute 架构</h3>
+<p><strong>核心思想</strong>:
+先制定完整的执行计划,然后按步骤执行,适合结构化任务。</p>
+<p><strong>架构对比</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph ReAct["ReAct (反应式)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction TB</span></span>
+<span class="line"><span style="color:#E1E4E8">        R1[观察] --> R2[思考]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R2 --> R3[行动]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R3 --> R4[再观察]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R4 -.-> R2</span></span>
+<span class="line"><span style="color:#E1E4E8">        R5[优点: 灵活应对变化&#x3C;br/>缺点: 可能缺乏全局观]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph PE["Plan-and-Execute (规划式)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        direction TB</span></span>
+<span class="line"><span style="color:#E1E4E8">        P1[阶段1: 规划&#x3C;br/>分析目标&#x3C;br/>制定计划&#x3C;br/>Step 1, 2, ...]</span></span>
+<span class="line"><span style="color:#E1E4E8">        P2[阶段2: 执行&#x3C;br/>按顺序执行&#x3C;br/>监控进度&#x3C;br/>处理异常]</span></span>
+<span class="line"><span style="color:#E1E4E8">        P1 --> P2</span></span>
+<span class="line"><span style="color:#E1E4E8">        P3[优点: 有全局视图&#x3C;br/>缺点: 应变能力差]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p><strong>工作流程</strong>:</p>
+<p>用户目标: “分析比特币最近一周的价格走势并预测明天的价格”</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Phase1["Phase 1: Planning 规划阶段"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Plan[Planner 规划器分析目标]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1[Step 1: 获取比特币历史价格数据&#x3C;br/>工具: API 调用&#x3C;br/>输入: start_date, end_date]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S2[Step 2: 计算统计指标&#x3C;br/>工具: Calculator&#x3C;br/>输入: 价格数据]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S3[Step 3: 可视化价格趋势&#x3C;br/>工具: Plotting&#x3C;br/>输入: 价格数据 + 统计指标]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S4[Step 4: 使用时间序列模型预测&#x3C;br/>工具: ML Model&#x3C;br/>输入: 历史数据]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S5[Step 5: 总结分析结果&#x3C;br/>工具: Summarizer&#x3C;br/>输入: 所有中间结果]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Plan --> S1 --> S2 --> S3 --> S4 --> S5</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Phase2["Phase 2: Execution 执行阶段"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E1[Step 1: 执行中&#x3C;br/>✓ 完成: 获得 7 天价格数据&#x3C;br/>输出: 42000, 42500, 41800, ...]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E2[Step 2: 执行中&#x3C;br/>✓ 完成: 统计指标&#x3C;br/>输出: mean: 42350, volatility: 0.032]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E3[Step 3: 执行中&#x3C;br/>✓ 完成: 图表已保存为 btc_trend.png]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E4[Step 4: 执行中&#x3C;br/>✓ 完成: 预测明天价格 $43,100]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E5[Step 5: 执行中&#x3C;br/>✓ 完成: 整合所有结果生成分析报告]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E1 --> E2 --> E3</span></span>
+<span class="line"><span style="color:#E1E4E8">        E2 --> E4</span></span>
+<span class="line"><span style="color:#E1E4E8">        E3 --> E5</span></span>
+<span class="line"><span style="color:#E1E4E8">        E4 --> E5</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Phase1 --> Phase2</span></span></code></pre>
+<p><strong>依赖处理</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    S1[Step 1: 获取数据]</span></span>
+<span class="line"><span style="color:#E1E4E8">    S2[Step 2: 统计]</span></span>
+<span class="line"><span style="color:#E1E4E8">    S3[Step 3: 可视化]</span></span>
+<span class="line"><span style="color:#E1E4E8">    S4[Step 4: 预测]</span></span>
+<span class="line"><span style="color:#E1E4E8">    S5[Step 5: 总结]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S1 --> S2</span></span>
+<span class="line"><span style="color:#E1E4E8">    S1 --> S3</span></span>
+<span class="line"><span style="color:#E1E4E8">    S2 --> S3</span></span>
+<span class="line"><span style="color:#E1E4E8">    S2 --> S4</span></span>
+<span class="line"><span style="color:#E1E4E8">    S3 --> S5</span></span>
+<span class="line"><span style="color:#E1E4E8">    S4 --> S5</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note1["依赖 Step 1 输出"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note2["依赖 Step 1, 2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note3["依赖 Step 1, 2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note4["依赖所有前序步骤"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S2 -.- Note1</span></span>
+<span class="line"><span style="color:#E1E4E8">    S3 -.- Note2</span></span>
+<span class="line"><span style="color:#E1E4E8">    S4 -.- Note3</span></span>
+<span class="line"><span style="color:#E1E4E8">    S5 -.- Note4</span></span></code></pre>
+<p>执行顺序: <code>1 → 2 → (3 || 4) → 5</code> (3 和 4 可以并行执行)</p>
+<p><strong>异常处理</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Step N 执行失败</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>策略 1: 重试</span></span>
+<span class="line"><span>   - 最多重试 3 次</span></span>
+<span class="line"><span>   - 指数退避</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>策略 2: 跳过</span></span>
+<span class="line"><span>   - 标记为失败</span></span>
+<span class="line"><span>   - 继续执行不依赖此步骤的后续步骤</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>策略 3: 替代方案</span></span>
+<span class="line"><span>   - 使用备用工具或方法</span></span>
+<span class="line"><span>   - 例如: API 失败 → 使用缓存数据</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>策略 4: 终止</span></span>
+<span class="line"><span>   - 关键步骤失败</span></span>
+<span class="line"><span>   - 报告失败原因</span></span>
+<span class="line"><span>   - 返回部分结果</span></span></code></pre>
+<h3 id="14-multi-agent-协作架构">1.4 Multi-Agent 协作架构</h3>
+<p><strong>核心思想</strong>:
+多个专业化的 Agent 协作完成复杂任务,每个 Agent 负责特定领域。</p>
+<p><strong>协作模式</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph System["Multi-Agent 协作系统"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Coordinator["协调者 Agent (Coordinator)&#x3C;br/>职责:&#x3C;br/>- 任务分解&#x3C;br/>- Agent 调度&#x3C;br/>- 结果聚合&#x3C;br/>- 冲突解决"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Researcher["研究员 Agent (Researcher)&#x3C;br/>职责:&#x3C;br/>- 信息搜集&#x3C;br/>- 事实核查&#x3C;br/>- 资料整理"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Analyst["分析师 Agent (Analyst)&#x3C;br/>职责:&#x3C;br/>- 数据分析&#x3C;br/>- 趋势识别&#x3C;br/>- 模型构建"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Editor["编辑 Agent (Editor)&#x3C;br/>职责:&#x3C;br/>- 内容整合&#x3C;br/>- 质量把控&#x3C;br/>- 格式规范"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Coordinator --> Researcher</span></span>
+<span class="line"><span style="color:#E1E4E8">        Coordinator --> Analyst</span></span>
+<span class="line"><span style="color:#E1E4E8">        Researcher --> Editor</span></span>
+<span class="line"><span style="color:#E1E4E8">        Analyst --> Editor</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p><strong>通信模式</strong>:</p>
+<p><strong>1. 中心化通信 (Hub-and-Spoke)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    C[Coordinator&#x3C;br/>协调者]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A1[Agent1]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A2[Agent2]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A3[Agent3]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    C --> A1</span></span>
+<span class="line"><span style="color:#E1E4E8">    C --> A2</span></span>
+<span class="line"><span style="color:#E1E4E8">    C --> A3</span></span>
+<span class="line"><span style="color:#E1E4E8">    A1 --> C</span></span>
+<span class="line"><span style="color:#E1E4E8">    A2 --> C</span></span>
+<span class="line"><span style="color:#E1E4E8">    A3 --> C</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note[特点:&#x3C;br/>- 所有通信通过协调者&#x3C;br/>- 集中控制&#x3C;br/>- 易于管理&#x3C;br/>- 可能成为瓶颈]</span></span></code></pre>
+<p><strong>2. 去中心化通信 (Peer-to-Peer)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    A1[Agent1] &#x3C;--> A2[Agent2]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A1 &#x3C;--> A3[Agent3]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A2 &#x3C;--> A4[Agent4]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A3 &#x3C;--> A4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note[特点:&#x3C;br/>- Agent 直接通信&#x3C;br/>- 分布式决策&#x3C;br/>- 更灵活&#x3C;br/>- 协调复杂]</span></span></code></pre>
+<p><strong>3. 黑板模式 (Blackboard)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    BB["Shared Memory (Blackboard)&#x3C;br/>- 任务状态&#x3C;br/>- 中间结果&#x3C;br/>- Agent 消息"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    A1[Agent1]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A2[Agent2]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A3[Agent3]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A4[Agent4]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    BB --> A1</span></span>
+<span class="line"><span style="color:#E1E4E8">    BB --> A2</span></span>
+<span class="line"><span style="color:#E1E4E8">    BB --> A3</span></span>
+<span class="line"><span style="color:#E1E4E8">    BB --> A4</span></span>
+<span class="line"><span style="color:#E1E4E8">    A1 --> BB</span></span>
+<span class="line"><span style="color:#E1E4E8">    A2 --> BB</span></span>
+<span class="line"><span style="color:#E1E4E8">    A3 --> BB</span></span>
+<span class="line"><span style="color:#E1E4E8">    A4 --> BB</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note[特点:&#x3C;br/>- 共享知识库&#x3C;br/>- 异步协作&#x3C;br/>- 松耦合]</span></span></code></pre>
+<p><strong>协作流程示例</strong>:</p>
+<p>任务: “分析 AI 在医疗领域的应用现状和未来趋势”</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant C as 协调者</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant R as 研究员 Agent</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant A as 分析师 Agent</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant E as 编辑 Agent</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over C: Step 1: 协调者分解任务</span></span>
+<span class="line"><span style="color:#E1E4E8">    C->>R: 子任务 1: 搜集医疗 AI 应用案例</span></span>
+<span class="line"><span style="color:#E1E4E8">    C->>A: 子任务 2: 分析市场数据和趋势</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over R,A: Step 2: 并行执行</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    par 研究员工作</span></span>
+<span class="line"><span style="color:#E1E4E8">        R->>R: 搜索医疗 AI 应用&#x3C;br/>找到案例: 影像诊断、药物研发、病历分析&#x3C;br/>核查事实准确性</span></span>
+<span class="line"><span style="color:#E1E4E8">    and 分析师工作</span></span>
+<span class="line"><span style="color:#E1E4E8">        A->>A: 分析市场规模&#x3C;br/>识别增长趋势&#x3C;br/>预测未来发展&#x3C;br/>生成数据可视化</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over R,A: Step 3: 结果整合</span></span>
+<span class="line"><span style="color:#E1E4E8">    R->>E: 研究员的案例报告</span></span>
+<span class="line"><span style="color:#E1E4E8">    A->>E: 分析师的趋势分析</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    E->>E: 整合:&#x3C;br/>- 结构化组织内容&#x3C;br/>- 消除重复信息&#x3C;br/>- 确保逻辑连贯</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    E->>C: 完整的研究报告</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over C: Step 4: 质量审查&#x3C;br/>检查报告完整性&#x3C;br/>验证信息一致性</span></span></code></pre>
+<p><strong>冲突解决机制</strong>:</p>
+<p>场景: 两个 Agent 提供了矛盾的信息</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>研究员: "AI 医疗市场规模 100 亿美元"</span></span>
+<span class="line"><span>分析师: "AI 医疗市场规模 150 亿美元"</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>解决策略:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1. 投票机制</span></span>
+<span class="line"><span>   - 多个 Agent 投票</span></span>
+<span class="line"><span>   - 多数意见获胜</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>2. 权威性排序</span></span>
+<span class="line"><span>   - 根据 Agent 专业性</span></span>
+<span class="line"><span>   - 分析师在数据分析上权威性高</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>3. 证据检查</span></span>
+<span class="line"><span>   - 要求提供信息来源</span></span>
+<span class="line"><span>   - 评估来源可信度</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>4. 协调者裁决</span></span>
+<span class="line"><span>   - 协调者综合评估</span></span>
+<span class="line"><span>   - 做出最终决定</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>5. 保留多个版本</span></span>
+<span class="line"><span>   - 标注信息来源</span></span>
+<span class="line"><span>   - 让用户选择</span></span></code></pre>
+<hr>
+<h2 id="第二部分llm-推理优化理论">第二部分:LLM 推理优化理论</h2>
+<h3 id="21-推理性能基础">2.1 推理性能基础</h3>
+<p><strong>推理流程</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Input["输入文本: 'Hello, how are you?'"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph T["1. Tokenization 分词"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        T1["'Hello' → [15496]&#x3C;br/>'how' → [4226]&#x3C;br/>'are' → [389]&#x3C;br/>'you' → [345]"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph E["2. Embedding 词嵌入"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E1["[15496] → [0.1, -0.3, 0.5, ..., 0.2]&#x3C;br/>(每个 token → 4096 维向量)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph TL["3. Transformer Layers"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        TL1["80 层 Transformer (Llama-70B)&#x3C;br/>&#x3C;br/>每一层包含:&#x3C;br/>- Self-Attention 自注意力&#x3C;br/>  复杂度: O(n²d)&#x3C;br/>- Feed-Forward 前馈网络&#x3C;br/>  复杂度: O(nd²)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph LM["4. LM Head 语言模型头"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        LM1["输出层&#x3C;br/>4096 → 32000&#x3C;br/>(词表大小)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph S["5. Sampling 采样"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1["Logits → Token&#x3C;br/>[0.1, 0.05, 0.35, ...] → 'I'&#x3C;br/>&#x3C;br/>采样策略:&#x3C;br/>- Greedy&#x3C;br/>- Temperature&#x3C;br/>- Top-K&#x3C;br/>- Top-P"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Output["输出文本: 'I'"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Input --> T --> E --> TL --> LM --> S --> Output</span></span></code></pre>
+<p><strong>性能瓶颈分析</strong>:</p>
+<p><strong>1. 内存带宽 (Memory Bandwidth)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题:</span></span>
+<span class="line"><span>模型参数从 HBM (High Bandwidth Memory) 加载到计算单元</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Llama-70B 模型:</span></span>
+<span class="line"><span>- 参数量: 70B</span></span>
+<span class="line"><span>- FP16 精度: 140 GB</span></span>
+<span class="line"><span>- 每次前向传播都要加载权重</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>计算强度 (Compute Intensity):</span></span>
+<span class="line"><span>= FLOPS / 内存访问量</span></span>
+<span class="line"><span>= 低 (Memory-Bound)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>瓶颈在内存带宽,而非计算能力</span></span></code></pre>
+<p><strong>2. 注意力机制复杂度</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Self-Attention 计算:</span></span>
+<span class="line"><span>Query × Key^T → Attention Scores</span></span>
+<span class="line"><span>Scores × Value → Output</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>复杂度: O(n²d)</span></span>
+<span class="line"><span>n: 序列长度 (如 4096)</span></span>
+<span class="line"><span>d: 模型维度 (如 4096)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>序列长度增加时:</span></span>
+<span class="line"><span>n=1000  → 计算量: 1,000²d</span></span>
+<span class="line"><span>n=2000  → 计算量: 4,000²d (4倍)</span></span>
+<span class="line"><span>n=4000  → 计算量: 16,000²d (16倍)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>长序列成为性能瓶颈</span></span></code></pre>
+<p><strong>3. KV Cache</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>自回归生成特点:</span></span>
+<span class="line"><span>每次生成一个 token</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>不使用 KV Cache:</span></span>
+<span class="line"><span>Token 1: 计算 Q, K, V</span></span>
+<span class="line"><span>Token 2: 重新计算 Token 1, 2 的 Q, K, V</span></span>
+<span class="line"><span>Token 3: 重新计算 Token 1, 2, 3 的 Q, K, V</span></span>
+<span class="line"><span>...</span></span>
+<span class="line"><span>浪费计算</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>使用 KV Cache:</span></span>
+<span class="line"><span>Token 1: 计算并缓存 K, V</span></span>
+<span class="line"><span>Token 2: 只计算新的 K, V,重用之前的</span></span>
+<span class="line"><span>Token 3: 只计算新的 K, V,重用之前的</span></span>
+<span class="line"><span>...</span></span>
+<span class="line"><span>节省计算</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>KV Cache 大小:</span></span>
+<span class="line"><span>每个 token: 2 (K+V) × num_layers × d</span></span>
+<span class="line"><span>例如: 2 × 80 × 4096 = 655,360 字节 ≈ 640 KB</span></span>
+<span class="line"><span>1000 tokens: 640 MB</span></span></code></pre>
+<h3 id="22-vllm-架构原理">2.2 vLLM 架构原理</h3>
+<p><strong>核心创新: PagedAttention</strong></p>
+<p><strong>传统 KV Cache 管理</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题: 连续内存分配</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Sequence 1 (500 tokens, 预分配 2048 tokens):</span></span>
+<span class="line"><span>┌──────────────────────────────────────┐</span></span>
+<span class="line"><span>│ [Used: 500 tokens]                   │</span></span>
+<span class="line"><span>│ [Unused: 1548 tokens] ← 浪费         │</span></span>
+<span class="line"><span>└──────────────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Sequence 2 (300 tokens, 预分配 2048 tokens):</span></span>
+<span class="line"><span>┌──────────────────────────────────────┐</span></span>
+<span class="line"><span>│ [Used: 300 tokens]                   │</span></span>
+<span class="line"><span>│ [Unused: 1748 tokens] ← 浪费         │</span></span>
+<span class="line"><span>└──────────────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>内存利用率: ~20-40%</span></span>
+<span class="line"><span>内存碎片化严重</span></span></code></pre>
+<p><strong>PagedAttention 方案</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Physical["物理内存块 (每块 16 tokens)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B0[Block 0]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B1[Block 1]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B2[Block 2]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B3[Block 3]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B4[Block 4]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B5[Block 5]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B6[...更多块]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Seq1["Sequence 1 逻辑视图 → 物理块映射"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1T1["Token [0-15] → Block 0"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1T2["Token [16-31] → Block 2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1T3["Token [32-47] → Block 5"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1T4["Token [48-63] → Block 7"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Seq2["Sequence 2 逻辑视图 → 物理块映射"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S2T1["Token [0-15] → Block 1"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S2T2["Token [16-31] → Block 3"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S2T3["Token [32-47] → Block 4"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S1T1 -.-> B0</span></span>
+<span class="line"><span style="color:#E1E4E8">    S1T2 -.-> B2</span></span>
+<span class="line"><span style="color:#E1E4E8">    S2T1 -.-> B1</span></span>
+<span class="line"><span style="color:#E1E4E8">    S2T2 -.-> B3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Adv["优势:&#x3C;br/>1. 按需分配,无预分配浪费&#x3C;br/>2. 内存利用率 ~90-95%&#x3C;br/>3. 支持内存共享 (如 Prefix Caching)&#x3C;br/>4. 灵活的内存管理"]</span></span></code></pre>
+<p>思想: 借鉴操作系统的虚拟内存分页</p>
+<p><strong>内存管理器</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────┐</span></span>
+<span class="line"><span>│     Block Manager               │</span></span>
+<span class="line"><span>│                                 │</span></span>
+<span class="line"><span>│  Free Blocks Pool:              │</span></span>
+<span class="line"><span>│  [Block 8, 9, 10, 11, ...]     │</span></span>
+<span class="line"><span>│                                 │</span></span>
+<span class="line"><span>│  Allocated Blocks:              │</span></span>
+<span class="line"><span>│  Seq 1: [0, 2, 5, 7]           │</span></span>
+<span class="line"><span>│  Seq 2: [1, 3, 4]              │</span></span>
+<span class="line"><span>│                                 │</span></span>
+<span class="line"><span>│  Block Table:                   │</span></span>
+<span class="line"><span>│  ┌───────────────────────────┐ │</span></span>
+<span class="line"><span>│  │ Seq ID │ Logical │ Physical│ │</span></span>
+<span class="line"><span>│  ├───────────────────────────┤ │</span></span>
+<span class="line"><span>│  │   1    │  [0-15] │    0   │ │</span></span>
+<span class="line"><span>│  │   1    │ [16-31] │    2   │ │</span></span>
+<span class="line"><span>│  │   2    │  [0-15] │    1   │ │</span></span>
+<span class="line"><span>│  └───────────────────────────┘ │</span></span>
+<span class="line"><span>└─────────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>分配策略:</span></span>
+<span class="line"><span>1. 请求新块: 从 Free Pool 分配</span></span>
+<span class="line"><span>2. 块满: 分配新块</span></span>
+<span class="line"><span>3. 序列完成: 释放块回 Pool</span></span>
+<span class="line"><span>4. 内存不足: 驱逐最久未使用的序列</span></span></code></pre>
+<p><strong>Prefix Caching (前缀共享)</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph R1["Request 1"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R1S[System Prompt 相同&#x3C;br/>Block 0, 1, 2, 3]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R1U[User Query 1&#x3C;br/>Block 10]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R1S --> R1U</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph R2["Request 2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R2S[System Prompt 共享!&#x3C;br/>Block 0, 1, 2, 3]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R2U[User Query 2&#x3C;br/>Block 11]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R2S --> R2U</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Shared["Block 0-3 的 KV Cache 共享&#x3C;br/>只需计算一次&#x3C;br/>节省内存和计算"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    R1S -.共享.-> Shared</span></span>
+<span class="line"><span style="color:#E1E4E8">    R2S -.共享.-> Shared</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Impl["实现:&#x3C;br/>- Block 引用计数&#x3C;br/>- Copy-on-Write 机制&#x3C;br/>- Hash 匹配前缀"]</span></span></code></pre>
+<p>场景: 多个请求共享相同的 system prompt</p>
+<h3 id="23-tensorrt-llm-优化技术">2.3 TensorRT-LLM 优化技术</h3>
+<p><strong>优化层次</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    App["应用层&#x3C;br/>- API 设计&#x3C;br/>- 批处理策略"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Algo["算法层&#x3C;br/>- FlashAttention&#x3C;br/>- In-Flight Batching&#x3C;br/>- Speculative Decoding"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Op["算子层&#x3C;br/>- Operator Fusion&#x3C;br/>- Kernel Optimization"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Prec["精度层&#x3C;br/>- FP16 / BF16&#x3C;br/>- INT8 Quantization&#x3C;br/>- INT4 Quantization"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    HW["硬件层&#x3C;br/>- Tensor Core 利用&#x3C;br/>- Memory Layout 优化"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    App --> Algo --> Op --> Prec --> HW</span></span></code></pre>
+<p><strong>1. 算子融合 (Operator Fusion)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Unfused["未融合"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U1[LayerNorm] --> UM1[写内存] --> UR1[读内存]</span></span>
+<span class="line"><span style="color:#E1E4E8">        UR1 --> U2[Attention] --> UM2[写内存] --> UR2[读内存]</span></span>
+<span class="line"><span style="color:#E1E4E8">        UR2 --> U3[FFN] --> UM3[写内存]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Fused["融合后"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        F1["Fused LayerNorm-Attention-FFN&#x3C;br/>- 数据常驻寄存器&#x3C;br/>- 减少内存访问&#x3C;br/>- 一次 Kernel 完成"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Adv["优势:&#x3C;br/>- 减少内存带宽使用&#x3C;br/>- 减少 Kernel Launch 开销&#x3C;br/>- 提升计算效率"]</span></span></code></pre>
+<p><strong>2. 量化 (Quantization)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>FP16 (16-bit 浮点数):</span></span>
+<span class="line"><span>┌──────────────────────────────────┐</span></span>
+<span class="line"><span>│ 符号位(1) | 指数位(5) | 尾数位(10)│</span></span>
+<span class="line"><span>└──────────────────────────────────┘</span></span>
+<span class="line"><span>表示范围: ±65,504</span></span>
+<span class="line"><span>精度: 0.001</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>INT8 (8-bit 整数):</span></span>
+<span class="line"><span>┌────────────────┐</span></span>
+<span class="line"><span>│ 值: -128 ~ 127 │</span></span>
+<span class="line"><span>└────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>量化过程:</span></span>
+<span class="line"><span>FP16 值: [0.123, -0.456, 0.789, ...]</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>找到 scale 和 zero_point</span></span>
+<span class="line"><span>scale = (max - min) / 255</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>INT8 值: [31, -116, 201, ...]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>反量化:</span></span>
+<span class="line"><span>FP16 = INT8 × scale + zero_point</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>收益:</span></span>
+<span class="line"><span>- 内存减半 (FP16 → INT8)</span></span>
+<span class="line"><span>- 计算速度 2-4x</span></span>
+<span class="line"><span>- 精度损失 &#x3C; 1%</span></span></code></pre>
+<p><strong>INT8 vs INT4 量化</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>权重存储:</span></span>
+<span class="line"><span>FP16: 2 bytes/weight</span></span>
+<span class="line"><span>INT8: 1 byte/weight  (2x 压缩)</span></span>
+<span class="line"><span>INT4: 0.5 byte/weight (4x 压缩)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Llama-70B 模型:</span></span>
+<span class="line"><span>FP16:  140 GB</span></span>
+<span class="line"><span>INT8:   70 GB</span></span>
+<span class="line"><span>INT4:   35 GB</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>加载时间:</span></span>
+<span class="line"><span>FP16: 7 秒</span></span>
+<span class="line"><span>INT8: 3.5 秒</span></span>
+<span class="line"><span>INT4: 1.75 秒</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>精度对比:</span></span>
+<span class="line"><span>FP16: 基线</span></span>
+<span class="line"><span>INT8: -0.5% ~ -1% 准确率</span></span>
+<span class="line"><span>INT4: -1% ~ -3% 准确率</span></span></code></pre>
+<p><strong>3. FlashAttention</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>标准 Attention 内存访问:</span></span>
+<span class="line"><span>┌─────────────────────────────────┐</span></span>
+<span class="line"><span>│ 1. 从 HBM 加载 Q, K, V          │</span></span>
+<span class="line"><span>│ 2. 计算 QK^T → SRAM             │</span></span>
+<span class="line"><span>│ 3. 写回 HBM                     │</span></span>
+<span class="line"><span>│ 4. 从 HBM 读取                  │</span></span>
+<span class="line"><span>│ 5. 计算 Softmax → SRAM          │</span></span>
+<span class="line"><span>│ 6. 写回 HBM                     │</span></span>
+<span class="line"><span>│ 7. 从 HBM 读取                  │</span></span>
+<span class="line"><span>│ 8. 计算 Attention × V           │</span></span>
+<span class="line"><span>└─────────────────────────────────┘</span></span>
+<span class="line"><span>HBM 访问次数: 多次</span></span>
+<span class="line"><span>内存需求: O(n²) (存储 attention matrix)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>FlashAttention:</span></span>
+<span class="line"><span>┌─────────────────────────────────┐</span></span>
+<span class="line"><span>│ 分块计算 (Tiling)               │</span></span>
+<span class="line"><span>│                                 │</span></span>
+<span class="line"><span>│ 1. 分块加载 Q, K, V 到 SRAM    │</span></span>
+<span class="line"><span>│ 2. 在 SRAM 内完成所有计算       │</span></span>
+<span class="line"><span>│ 3. 增量更新结果                 │</span></span>
+<span class="line"><span>│ 4. 不需要存储完整 attention    │</span></span>
+<span class="line"><span>└─────────────────────────────────┘</span></span>
+<span class="line"><span>HBM 访问次数: 大幅减少</span></span>
+<span class="line"><span>内存需求: O(n) (只存储最终结果)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>加速比:</span></span>
+<span class="line"><span>序列长度 1k:  2x</span></span>
+<span class="line"><span>序列长度 4k:  4x</span></span>
+<span class="line"><span>序列长度 16k: 8x</span></span></code></pre>
+<p><strong>4. In-Flight Batching (动态批处理)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Static["传统静态批处理"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1["Batch 1 (4 个请求)&#x3C;br/>Req1: 100 tokens&#x3C;br/>Req2: 200 tokens&#x3C;br/>Req3: 150 tokens&#x3C;br/>Req4: 180 tokens&#x3C;br/>&#x3C;br/>所有请求生成完成后才开始下一批&#x3C;br/>等待时间 = 最长请求的时间&#x3C;br/>&#x3C;br/>GPU 利用率: 50-70%"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Dynamic["In-Flight Batching"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        D1["动态批次&#x3C;br/>T0: [Req1, Req2, Req3, Req4]&#x3C;br/>T1: [Req1, Req2, Req3, Req4]&#x3C;br/>T2: [Req2, Req3, Req4, Req5] ← Req1 完成,Req5 加入&#x3C;br/>T3: [Req2, Req4, Req5, Req6] ← Req3 完成,Req6 加入&#x3C;br/>...&#x3C;br/>实时添加/移除请求&#x3C;br/>&#x3C;br/>GPU 利用率: 85-95%"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Adv["优势:&#x3C;br/>- 更高的 GPU 利用率&#x3C;br/>- 更低的延迟&#x3C;br/>- 更高的吞吐量"]</span></span></code></pre>
+<h3 id="24-推理优化策略">2.4 推理优化策略</h3>
+<h4 id="投机解码-speculative-decoding">投机解码 (Speculative Decoding)</h4>
+<p><strong>原理</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant D as 小模型 (Draft)</span></span>
+<span class="line"><span style="color:#E1E4E8">    participant T as 大模型 (Target)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note over D,T: 核心思想:&#x3C;br/>使用小模型快速生成多个候选 token&#x3C;br/>使用大模型并行验证</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    rect rgb(240, 248, 255)</span></span>
+<span class="line"><span style="color:#E1E4E8">        Note over D,T: 标准自回归生成: 300ms</span></span>
+<span class="line"><span style="color:#E1E4E8">        Note over T: Step 1: 生成 token 1 (100ms)</span></span>
+<span class="line"><span style="color:#E1E4E8">        Note over T: Step 2: 生成 token 2 (100ms)</span></span>
+<span class="line"><span style="color:#E1E4E8">        Note over T: Step 3: 生成 token 3 (100ms)</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    rect rgb(255, 248, 240)</span></span>
+<span class="line"><span style="color:#E1E4E8">        Note over D,T: 投机解码: 130ms (加速 2.3x)</span></span>
+<span class="line"><span style="color:#E1E4E8">        D->>D: Step 1: 小模型生成&#x3C;br/>[token1, token2, token3] (30ms)</span></span>
+<span class="line"><span style="color:#E1E4E8">        D->>T: 候选 tokens</span></span>
+<span class="line"><span style="color:#E1E4E8">        T->>T: Step 2: 大模型并行验证 (100ms)&#x3C;br/>- token1 ✓ 接受&#x3C;br/>- token2 ✓ 接受&#x3C;br/>- token3 ✗ 拒绝,重新生成</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p><strong>验证机制</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>小模型生成: [A, B, C, D]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>大模型验证:</span></span>
+<span class="line"><span>┌─────────────────────────────────┐</span></span>
+<span class="line"><span>│  输入前缀 + A                   │</span></span>
+<span class="line"><span>│  大模型预测: A 的概率 0.8       │</span></span>
+<span class="line"><span>│  小模型预测: A 的概率 0.7       │</span></span>
+<span class="line"><span>│  随机数 r = 0.6                │</span></span>
+<span class="line"><span>│  r &#x3C; 0.8? ✓ 接受 A             │</span></span>
+<span class="line"><span>├─────────────────────────────────┤</span></span>
+<span class="line"><span>│  输入前缀 + A + B               │</span></span>
+<span class="line"><span>│  大模型预测: B 的概率 0.6       │</span></span>
+<span class="line"><span>│  小模型预测: B 的概率 0.5       │</span></span>
+<span class="line"><span>│  随机数 r = 0.5                │</span></span>
+<span class="line"><span>│  r &#x3C; 0.6? ✓ 接受 B             │</span></span>
+<span class="line"><span>├─────────────────────────────────┤</span></span>
+<span class="line"><span>│  输入前缀 + A + B + C           │</span></span>
+<span class="line"><span>│  大模型预测: C 的概率 0.3       │</span></span>
+<span class="line"><span>│  小模型预测: C 的概率 0.4       │</span></span>
+<span class="line"><span>│  随机数 r = 0.4                │</span></span>
+<span class="line"><span>│  r &#x3C; 0.3? ✗ 拒绝 C             │</span></span>
+<span class="line"><span>│  从大模型分布重新采样 → C'     │</span></span>
+<span class="line"><span>└─────────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>最终输出: [A, B, C']</span></span></code></pre>
+<p><strong>模型选择</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>小模型 (Draft Model):</span></span>
+<span class="line"><span>- 参数量: 1/10 ~ 1/5 大模型</span></span>
+<span class="line"><span>- 延迟: 10-20% 大模型</span></span>
+<span class="line"><span>- 准确率: 70-80%</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>示例:</span></span>
+<span class="line"><span>大模型: Llama-70B (70B 参数)</span></span>
+<span class="line"><span>小模型: Llama-7B (7B 参数)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>加速比:</span></span>
+<span class="line"><span>- 平均接受率 60%: 1.8x 加速</span></span>
+<span class="line"><span>- 平均接受率 70%: 2.3x 加速</span></span>
+<span class="line"><span>- 平均接受率 80%: 3.0x 加速</span></span></code></pre>
+<hr>
+<h2 id="第三部分rag-系统理论">第三部分:RAG 系统理论</h2>
+<h3 id="31-rag-核心概念">3.1 RAG 核心概念</h3>
+<p><strong>什么是 RAG?</strong></p>
+<p>RAG (Retrieval-Augmented Generation) 检索增强生成,通过检索外部知识库来增强 LLM 的生成能力。</p>
+<p><strong>为什么需要 RAG?</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LLM 固有局限:</span></span>
+<span class="line"><span>1. 知识截止日期</span></span>
+<span class="line"><span>   - 训练数据有时间限制</span></span>
+<span class="line"><span>   - 无法获取最新信息</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>2. 幻觉问题</span></span>
+<span class="line"><span>   - 生成不存在的事实</span></span>
+<span class="line"><span>   - 编造参考文献</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>3. 领域知识不足</span></span>
+<span class="line"><span>   - 通用训练,缺少专业深度</span></span>
+<span class="line"><span>   - 企业私有数据无法访问</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>4. 可解释性差</span></span>
+<span class="line"><span>   - 难以溯源信息来源</span></span>
+<span class="line"><span>   - 无法验证答案准确性</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>RAG 解决方案:</span></span>
+<span class="line"><span>1. 实时检索最新信息</span></span>
+<span class="line"><span>2. 基于事实回答,减少幻觉</span></span>
+<span class="line"><span>3. 注入专业领域知识</span></span>
+<span class="line"><span>4. 提供信息来源,可追溯</span></span></code></pre>
+<p><strong>RAG vs Fine-tuning</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>RAG</th><th>Fine-tuning</th></tr></thead><tbody><tr><td>知识更新</td><td>实时,更新文档即可</td><td>需要重新训练</td></tr><tr><td>成本</td><td>低,只需存储和检索</td><td>高,需要 GPU 训练</td></tr><tr><td>准确性</td><td>高,基于事实文档</td><td>中,依赖训练质量</td></tr><tr><td>可解释性</td><td>强,提供文档来源</td><td>弱,黑盒模型</td></tr><tr><td>适用场景</td><td>事实性问答、知识密集</td><td>风格适配、任务特化</td></tr></tbody></table>
+<h3 id="32-rag-架构">3.2 RAG 架构</h3>
+<p><strong>标准 RAG Pipeline</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Query["用户查询: 'What are the new features in Python 3.12?'"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Step1["Step 1: 查询理解与改写&#x3C;br/>&#x3C;br/>原始查询分析:&#x3C;br/>- 意图: 查询新功能&#x3C;br/>- 实体: Python 3.12&#x3C;br/>- 类型: 技术文档查询&#x3C;br/>&#x3C;br/>查询扩展:&#x3C;br/>'new features Python 3.12'&#x3C;br/>→ 'new features introduced Python 3.12&#x3C;br/>release notes changelog improvements'&#x3C;br/>&#x3C;br/>优势: 提高召回率"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Step2["Step 2: 向量化检索&#x3C;br/>&#x3C;br/>A. 查询向量化&#x3C;br/>Embedding Model 编码查询&#x3C;br/>'new features...' → [0.1, -0.3, ...]&#x3C;br/>(768 维或 1536 维向量)&#x3C;br/>&#x3C;br/>B. 向量数据库搜索&#x3C;br/>余弦相似度搜索: similarity = dot(q, d) / (|q||d|)&#x3C;br/>&#x3C;br/>Top-K 结果:&#x3C;br/>Doc 1: Python 3.12 Release (0.95)&#x3C;br/>Doc 2: PEP 695 (0.89)&#x3C;br/>Doc 3: F-String Syntax (0.85)&#x3C;br/>Doc 4: Performance (0.82)&#x3C;br/>Doc 5: Type Hints (0.80)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Step3["Step 3: 重排序 (Re-ranking)&#x3C;br/>&#x3C;br/>为什么需要重排序?&#x3C;br/>- 向量检索基于语义相似度&#x3C;br/>- 但不一定是最相关的答案&#x3C;br/>- 需要更精细的相关性判断&#x3C;br/>&#x3C;br/>Cross-Encoder 重排序:&#x3C;br/>- 输入: [查询, 文档] 对&#x3C;br/>- 输出: 相关性分数 (0-1)&#x3C;br/>&#x3C;br/>重排序结果:&#x3C;br/>Doc 2: 0.94 (提升,最相关)&#x3C;br/>Doc 1: 0.92 (降低)&#x3C;br/>Doc 3: 0.81 (降低)&#x3C;br/>&#x3C;br/>最终选择 Top-3: [Doc 2, Doc 1, Doc 3]"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Step4["Step 4: 上下文构建&#x3C;br/>&#x3C;br/>Context = 整合检索到的文档&#x3C;br/>&#x3C;br/>Document 2 (最相关):&#x3C;br/>'PEP 695 introduces type parameter syntax&#x3C;br/>for generic classes and functions...'&#x3C;br/>&#x3C;br/>Document 1:&#x3C;br/>'Python 3.12 release notes...'&#x3C;br/>&#x3C;br/>Document 3:&#x3C;br/>'Improved f-string syntax...'&#x3C;br/>&#x3C;br/>添加元数据:&#x3C;br/>- 文档来源&#x3C;br/>- 相关性分数&#x3C;br/>- 时间戳"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Step5["Step 5: 生成回答&#x3C;br/>&#x3C;br/>Prompt 构建:&#x3C;br/>System: 你是一个技术文档助手&#x3C;br/>Context: [检索到的文档内容]&#x3C;br/>Question: [用户问题]&#x3C;br/>Instructions:&#x3C;br/>- 只基于提供的文档回答&#x3C;br/>- 引用文档编号&#x3C;br/>- 如信息不足,明确说明&#x3C;br/>&#x3C;br/>LLM 生成:&#x3C;br/>'根据文档2,Python 3.12 引入了 PEP 695...&#x3C;br/>此外,文档1提到了性能改进...'"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Query --> Step1 --> Step2 --> Step3 --> Step4 --> Step5</span></span></code></pre>
+<h3 id="33-向量检索原理">3.3 向量检索原理</h3>
+<p><strong>Embedding (嵌入) 概念</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>文本 → 向量</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>"Python 3.12 new features"</span></span>
+<span class="line"><span>         ↓</span></span>
+<span class="line"><span>[0.12, -0.34, 0.56, 0.23, -0.11, ...]</span></span>
+<span class="line"><span>    (768 维度向量)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>语义相似的文本 → 向量空间中距离近</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>示例:</span></span>
+<span class="line"><span>"Python 3.12 features"  → [0.12, -0.34, 0.56, ...]</span></span>
+<span class="line"><span>"新功能 Python 3.12"    → [0.11, -0.32, 0.54, ...] (相近!)</span></span>
+<span class="line"><span>"Apple fruit nutrition" → [0.88, 0.12, -0.67, ...] (很远)</span></span></code></pre>
+<p><strong>相似度计算</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. 余弦相似度 (Cosine Similarity)</span></span>
+<span class="line"><span>   最常用</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   cos_sim = (A · B) / (||A|| × ||B||)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   示例:</span></span>
+<span class="line"><span>   A = [1, 2, 3]</span></span>
+<span class="line"><span>   B = [2, 4, 6]  (方向相同,大小不同)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   A · B = 1×2 + 2×4 + 3×6 = 28</span></span>
+<span class="line"><span>   ||A|| = √(1² + 2² + 3²) = √14</span></span>
+<span class="line"><span>   ||B|| = √(2² + 4² + 6²) = √56</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   cos_sim = 28 / (√14 × √56) = 1.0 (完全相似)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   范围: [-1, 1]</span></span>
+<span class="line"><span>   1: 完全相似</span></span>
+<span class="line"><span>   0: 正交 (无关)</span></span>
+<span class="line"><span>   -1: 完全相反</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>2. 欧几里得距离 (Euclidean Distance)</span></span>
+<span class="line"><span>   空间距离</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   dist = √(Σ(Ai - Bi)²)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   距离越小,越相似</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>3. 点积 (Dot Product)</span></span>
+<span class="line"><span>   简单但有效</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   dot = Σ(Ai × Bi)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>   值越大,越相似</span></span></code></pre>
+<p><strong>向量索引结构</strong>:</p>
+<p><strong>1. 暴力搜索 (Brute Force)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>算法:</span></span>
+<span class="line"><span>- 计算查询向量与所有文档向量的相似度</span></span>
+<span class="line"><span>- 排序,返回 Top-K</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>复杂度: O(N × D)</span></span>
+<span class="line"><span>N: 文档数量</span></span>
+<span class="line"><span>D: 向量维度</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>优点: 精确结果</span></span>
+<span class="line"><span>缺点: 慢,不适合大规模</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>适用场景:</span></span>
+<span class="line"><span>- 小规模数据 (&#x3C; 10,000 文档)</span></span>
+<span class="line"><span>- 需要100%召回率</span></span></code></pre>
+<p><strong>2. HNSW (Hierarchical Navigable Small World)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph L2["Layer 2 (最稀疏)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        L2N1((○)) --- L2N2((○))</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph L1["Layer 1"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        L1N1((○)) --- L1N2((○)) --- L1N3((○)) --- L1N4((○))</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph L0["Layer 0 (最密集)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        L0N1((○)) --- L0N2((○)) --- L0N3((○)) --- L0N4((○)) --- L0N5((○)) --- L0N6((○)) --- L0N7((○)) --- L0N8((○))</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    L2N1 -.-> L1N1</span></span>
+<span class="line"><span style="color:#E1E4E8">    L2N2 -.-> L1N3</span></span>
+<span class="line"><span style="color:#E1E4E8">    L1N1 -.-> L0N1</span></span>
+<span class="line"><span style="color:#E1E4E8">    L1N2 -.-> L0N3</span></span>
+<span class="line"><span style="color:#E1E4E8">    L1N3 -.-> L0N5</span></span>
+<span class="line"><span style="color:#E1E4E8">    L1N4 -.-> L0N7</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Process["搜索过程:&#x3C;br/>1. 从顶层开始&#x3C;br/>2. 找到最近邻居&#x3C;br/>3. 下降到下一层&#x3C;br/>4. 重复直到底层&#x3C;br/>5. 在底层精确搜索&#x3C;br/>&#x3C;br/>复杂度: O(log N)&#x3C;br/>&#x3C;br/>优点: 快速 (毫秒级), 高召回率 (95-99%)&#x3C;br/>缺点: 内存占用高, 构建索引耗时&#x3C;br/>&#x3C;br/>适用场景: 大规模数据, 实时查询"]</span></span></code></pre>
+<p><strong>3. IVF (Inverted File Index)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Build["构建过程:&#x3C;br/>1. K-Means 聚类&#x3C;br/>所有向量 → K 个簇&#x3C;br/>&#x3C;br/>2. 每个向量分配到最近的簇&#x3C;br/>&#x3C;br/>3. 构建倒排索引&#x3C;br/>簇 ID → 向量列表"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Search["搜索过程:&#x3C;br/>1. 查找最近的 n 个簇&#x3C;br/>(n &#x3C;&#x3C; K, 如 K=1000, n=10)&#x3C;br/>&#x3C;br/>2. 只在这 n 个簇内搜索&#x3C;br/>(大大减少搜索空间)&#x3C;br/>&#x3C;br/>3. 返回 Top-K 结果"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Perf["复杂度: O(K + n × M/K)&#x3C;br/>K: 簇数量&#x3C;br/>n: 搜索的簇数&#x3C;br/>M: 总向量数&#x3C;br/>&#x3C;br/>优点: 快速, 内存友好&#x3C;br/>缺点: 召回率略低 (90-95%), 需要调参&#x3C;br/>&#x3C;br/>适用场景: 超大规模数据, 可接受略低召回率"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Build --> Search --> Perf</span></span></code></pre>
+<h3 id="34-高级-rag-技术">3.4 高级 RAG 技术</h3>
+<h4 id="hybrid-search-混合搜索">Hybrid Search (混合搜索)</h4>
+<p><strong>原理</strong>: 结合向量搜索和关键词搜索</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Query["查询: 'Python type hints'"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    VecSearch["向量搜索 (语义)&#x3C;br/>优势: 理解语义相似性&#x3C;br/>劣势: 可能遗漏精确匹配的关键词&#x3C;br/>&#x3C;br/>结果:&#x3C;br/>Doc1: 0.9&#x3C;br/>Doc2: 0.85&#x3C;br/>Doc4: 0.80"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    BM25["BM25搜索 (关键词)&#x3C;br/>优势: 精确匹配关键词&#x3C;br/>劣势: 无法理解语义&#x3C;br/>&#x3C;br/>结果:&#x3C;br/>Doc3: 0.85&#x3C;br/>Doc1: 0.80&#x3C;br/>Doc5: 0.75"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Fusion["分数融合&#x3C;br/>RRF / 加权"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Final["最终排序:&#x3C;br/>Doc1: 0.95 (两个方法都高分)&#x3C;br/>Doc2: 0.78&#x3C;br/>Doc3: 0.75&#x3C;br/>Doc4: 0.65&#x3C;br/>Doc5: 0.60"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Query --> VecSearch</span></span>
+<span class="line"><span style="color:#E1E4E8">    Query --> BM25</span></span>
+<span class="line"><span style="color:#E1E4E8">    VecSearch --> Fusion</span></span>
+<span class="line"><span style="color:#E1E4E8">    BM25 --> Fusion</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fusion --> Final</span></span></code></pre>
+<p><strong>Reciprocal Rank Fusion (RRF)</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>公式:</span></span>
+<span class="line"><span>RRF_score = Σ 1 / (k + rank_i)</span></span>
+<span class="line"><span>k: 常数 (通常=60)</span></span>
+<span class="line"><span>rank_i: 文档在第 i 个排序中的排名</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>示例:</span></span>
+<span class="line"><span>Doc1:</span></span>
+<span class="line"><span>- 向量搜索排名: 1 → 1/(60+1) = 0.0164</span></span>
+<span class="line"><span>- BM25 搜索排名: 2 → 1/(60+2) = 0.0161</span></span>
+<span class="line"><span>- 总分: 0.0325</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Doc2:</span></span>
+<span class="line"><span>- 向量搜索排名: 2 → 0.0161</span></span>
+<span class="line"><span>- BM25 搜索未出现 (视为排名∞) → 0</span></span>
+<span class="line"><span>- 总分: 0.0161</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Doc1 排名更高</span></span></code></pre>
+<h4 id="parent-child-chunking">Parent-Child Chunking</h4>
+<p><strong>问题</strong>: 分块粒度的权衡</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>大块 (1000 tokens):</span></span>
+<span class="line"><span>优点: 上下文完整</span></span>
+<span class="line"><span>缺点: 检索精度低 (无关信息多)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>小块 (200 tokens):</span></span>
+<span class="line"><span>优点: 检索精度高</span></span>
+<span class="line"><span>缺点: 上下文不足 (割裂信息)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Parent-Child 方案:</span></span>
+<span class="line"><span>用小块检索,返回大块给 LLM</span></span></code></pre>
+<p><strong>架构</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Parent["Parent Chunk (1000 tokens)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Child1["Child Chunk 1 (200 tokens)&#x3C;br/>'Python 3.12 introduces...'&#x3C;br/>← 用于检索 (向量化索引)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Child2["Child Chunk 2&#x3C;br/>'The new type parameter...'&#x3C;br/>← 用于检索"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Child3["Child Chunk 3&#x3C;br/>'Performance improvements...'&#x3C;br/>← 用于检索"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Full["完整文档包含更多上下文...&#x3C;br/>← 用于生成 (返回给LLM)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Child1 -.-> Full</span></span>
+<span class="line"><span style="color:#E1E4E8">        Child2 -.-> Full</span></span>
+<span class="line"><span style="color:#E1E4E8">        Child3 -.-> Full</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Flow["检索流程:&#x3C;br/>1. 查询向量化&#x3C;br/>2. 搜索 Child Chunks&#x3C;br/>   匹配: Child Chunk 2 (相似度 0.92)&#x3C;br/>3. 获取对应的 Parent Chunk&#x3C;br/>4. 返回 Parent Chunk 给 LLM&#x3C;br/>&#x3C;br/>优势:&#x3C;br/>- 检索精度高 (小块)&#x3C;br/>- 上下文完整 (大块)&#x3C;br/>- 兼具两者优点"]</span></span></code></pre>
+<h4 id="self-rag-自我反思">Self-RAG (自我反思)</h4>
+<p><strong>概念</strong>: Agent 自主判断是否需要检索</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Trad["传统 RAG:&#x3C;br/>每个查询都检索 → 成本高、延迟大"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Self["Self-RAG:&#x3C;br/>先判断是否需要检索 → 按需检索"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Need["需要检索的情况:"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        N1["1. 需要最新信息&#x3C;br/>'今天股市行情'"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        N2["2. 需要专业知识&#x3C;br/>'量子纠缠的数学原理'"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        N3["3. 需要特定事实&#x3C;br/>'Python 3.12 发布日期'"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph NoNeed["不需要检索的情况:"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        NN1["1. 通用常识&#x3C;br/>'什么是计算机?'"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        NN2["2. 推理任务&#x3C;br/>'2+2=?'"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        NN3["3. 创意生成&#x3C;br/>'写一首关于秋天的诗'"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Trad -.改进.-> Self</span></span></code></pre>
+<p><strong>自我评估</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    S1["1. 生成初始答案"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S2["2. 自我评估&#x3C;br/>- 相关性分数: 0.8&#x3C;br/>- 事实性分数: 0.9&#x3C;br/>- 完整性分数: 0.6 ← 不足"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S3["3. 根据评估决定&#x3C;br/>✗ 完整性不足&#x3C;br/>→ 扩展查询,再次检索&#x3C;br/>→ 补充答案"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S4["4. 生成最终答案&#x3C;br/>- 所有分数 > 0.8&#x3C;br/>✓ 输出"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S1 --> S2 --> S3 --> S4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note["迭代上限: 3 次&#x3C;br/>避免无限循环&#x3C;br/>&#x3C;br/>评估维度:&#x3C;br/>1. 相关性 (Relevance)&#x3C;br/>   答案是否回答了问题?&#x3C;br/>2. 事实性 (Factuality)&#x3C;br/>   答案是否基于检索的文档?&#x3C;br/>3. 完整性 (Completeness)&#x3C;br/>   答案是否全面?"]</span></span></code></pre>
+<hr>
+<h2 id="第四部分模型路由与负载均衡理论">第四部分:模型路由与负载均衡理论</h2>
+<h3 id="41-模型路由策略">4.1 模型路由策略</h3>
+<p><strong>为什么需要路由?</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>问题:</span></span>
+<span class="line"><span>- 不同任务复杂度差异大</span></span>
+<span class="line"><span>- 模型能力和成本差异大</span></span>
+<span class="line"><span>- 如何选择最合适的模型?</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>简单任务:</span></span>
+<span class="line"><span>"2+2=?"</span></span>
+<span class="line"><span>→ 使用 GPT-3.5 ($0.001/1k tokens)</span></span>
+<span class="line"><span>→ 延迟 200ms</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>复杂任务:</span></span>
+<span class="line"><span>"分析康德的《纯粹理性批判》核心思想"</span></span>
+<span class="line"><span>→ 使用 GPT-4 ($0.03/1k tokens)</span></span>
+<span class="line"><span>→ 延迟 2000ms</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>效益:</span></span>
+<span class="line"><span>- 成本降低 70-90%</span></span>
+<span class="line"><span>- 平均延迟降低 50%</span></span>
+<span class="line"><span>- 质量保持不变</span></span></code></pre>
+<p><strong>路由决策架构</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    User[用户请求]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Router["路由决策层 (Router)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R1["1. 任务分类&#x3C;br/>- 简单问答&#x3C;br/>- 复杂推理&#x3C;br/>- 代码生成&#x3C;br/>- 创意写作"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        R2["2. 复杂度评估&#x3C;br/>- Token 数量&#x3C;br/>- 推理步骤&#x3C;br/>- 领域专业性"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        R3["3. 约束条件&#x3C;br/>- 预算限制&#x3C;br/>- 延迟要求&#x3C;br/>- 质量要求"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        R4["4. 模型选择&#x3C;br/>基于上述因素决定模型"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        R1 --> R2 --> R3 --> R4</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    M1["GPT-3.5&#x3C;br/>Fast&#x3C;br/>$"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M2["GPT-4&#x3C;br/>Power&#x3C;br/>$$$"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M3["Claude&#x3C;br/>Balance&#x3C;br/>$$"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    M4["Llama&#x3C;br/>Local&#x3C;br/>Free"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    User --> Router</span></span>
+<span class="line"><span style="color:#E1E4E8">    Router --> M1</span></span>
+<span class="line"><span style="color:#E1E4E8">    Router --> M2</span></span>
+<span class="line"><span style="color:#E1E4E8">    Router --> M3</span></span>
+<span class="line"><span style="color:#E1E4E8">    Router --> M4</span></span></code></pre>
+<p><strong>模型层级 (Tier) 定义</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph T1["Tier 1: FAST (快速层)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        T1D["模型: GPT-3.5, Claude Instant&#x3C;br/>成本: $0.001/1k tokens&#x3C;br/>延迟: 200-500ms&#x3C;br/>&#x3C;br/>场景:&#x3C;br/>- 简单问答&#x3C;br/>- 事实查询&#x3C;br/>- 格式化输出&#x3C;br/>- 摘要生成"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph T2["Tier 2: BALANCED (平衡层)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        T2D["模型: GPT-4-turbo, Claude-3&#x3C;br/>成本: $0.01/1k tokens&#x3C;br/>延迟: 1-2s&#x3C;br/>&#x3C;br/>场景:&#x3C;br/>- 中等推理&#x3C;br/>- 代码生成&#x3C;br/>- 数据分析&#x3C;br/>- 内容创作"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph T3["Tier 3: POWERFUL (强大层)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        T3D["模型: GPT-4, Claude-3-Opus&#x3C;br/>成本: $0.03/1k tokens&#x3C;br/>延迟: 2-5s&#x3C;br/>&#x3C;br/>场景:&#x3C;br/>- 复杂推理&#x3C;br/>- 深度分析&#x3C;br/>- 创意写作&#x3C;br/>- 专业翻译"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph T4["Tier 4: SPECIALIZED (专用层)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        T4D["模型: Code-Llama, Med-PaLM&#x3C;br/>成本: 变化&#x3C;br/>延迟: 变化&#x3C;br/>&#x3C;br/>场景:&#x3C;br/>- 代码专用&#x3C;br/>- 医疗专用&#x3C;br/>- 法律专用"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p><strong>任务复杂度分类器</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    Input["输入: 用户查询"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    F1["1. Token 数量&#x3C;br/>&#x3C; 50: SIMPLE&#x3C;br/>50-200: MEDIUM&#x3C;br/>> 200: COMPLEX"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    F2["2. 关键词&#x3C;br/>'what', 'who' → SIMPLE&#x3C;br/>'analyze', 'explain' → MEDIUM&#x3C;br/>'design', 'optimize' → COMPLEX"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    F3["3. 领域专业性&#x3C;br/>日常话题 → SIMPLE&#x3C;br/>技术话题 → MEDIUM&#x3C;br/>专业领域 → COMPLEX"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    F4["4. 推理深度&#x3C;br/>无需推理 → SIMPLE&#x3C;br/>单步推理 → MEDIUM&#x3C;br/>多步推理 → COMPLEX"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Result["分类结果:&#x3C;br/>SIMPLE → Tier 1 (FAST)&#x3C;br/>MEDIUM → Tier 2 (BALANCED)&#x3C;br/>COMPLEX → Tier 3 (POWERFUL)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Input --> F1 --> F2 --> F3 --> F4 --> Result</span></span></code></pre>
+<h3 id="42-负载均衡策略">4.2 负载均衡策略</h3>
+<p><strong>多实例管理</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Pool["Tier 1 (FAST) 实例池"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        I1["GPT-3.5 实例 1&#x3C;br/>60 RPM&#x3C;br/>当前: 45/60 (75%)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        I2["GPT-3.5 实例 2&#x3C;br/>60 RPM&#x3C;br/>当前: 30/60 (50%)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        I3["GPT-3.5 实例 3&#x3C;br/>60 RPM&#x3C;br/>当前: 50/60 (83%)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        Total["总容量: 180 RPM"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    NewReq["新请求到达&#x3C;br/>选择 Inst 2 (负载最低)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    NewReq -.-> I2</span></span></code></pre>
+<p><strong>负载均衡算法</strong>:</p>
+<p><strong>1. Round Robin (轮询)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    R1[请求1] --> I1[Inst 1]</span></span>
+<span class="line"><span style="color:#E1E4E8">    R2[请求2] --> I2[Inst 2]</span></span>
+<span class="line"><span style="color:#E1E4E8">    R3[请求3] --> I3[Inst 3]</span></span>
+<span class="line"><span style="color:#E1E4E8">    R4[请求4] --> I1</span></span>
+<span class="line"><span style="color:#E1E4E8">    R5[请求5] --> I2</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Note["最简单的策略&#x3C;br/>Inst 1 → Inst 2 → Inst 3 → Inst 1 → ...&#x3C;br/>&#x3C;br/>优点: 简单、公平&#x3C;br/>缺点: 不考虑实例负载、不考虑实例性能差异"]</span></span></code></pre>
+<p><strong>2. Least Connections (最少连接)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>选择当前连接数最少的实例</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>实例状态:</span></span>
+<span class="line"><span>Inst 1: 15 连接</span></span>
+<span class="line"><span>Inst 2: 8 连接  ← 选择</span></span>
+<span class="line"><span>Inst 3: 12 连接</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>优点:</span></span>
+<span class="line"><span>- 考虑实例负载</span></span>
+<span class="line"><span>- 动态适应</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>缺点:</span></span>
+<span class="line"><span>- 需要维护连接状态</span></span></code></pre>
+<p><strong>3. Weighted Round Robin (加权轮询)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Weights["实例权重"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        W1["Inst 1: weight=3 (强性能)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        W2["Inst 2: weight=2"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        W3["Inst 3: weight=1 (弱性能)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Ratio["分配比例:&#x3C;br/>Inst 1: 3/6 = 50%&#x3C;br/>Inst 2: 2/6 = 33%&#x3C;br/>Inst 3: 1/6 = 17%"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Use["适用场景:&#x3C;br/>- 实例性能不均&#x3C;br/>- 硬件配置不同"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Weights --> Ratio --> Use</span></span></code></pre>
+<p><strong>4. Least Response Time (最短响应时间)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>选择平均响应时间最短的实例</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>实例性能:</span></span>
+<span class="line"><span>Inst 1: 平均 200ms</span></span>
+<span class="line"><span>Inst 2: 平均 180ms ← 选择</span></span>
+<span class="line"><span>Inst 3: 平均 250ms</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>优点:</span></span>
+<span class="line"><span>- 优化用户体验</span></span>
+<span class="line"><span>- 自动避开慢实例</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>缺点:</span></span>
+<span class="line"><span>- 需要持续监控</span></span>
+<span class="line"><span>- 可能导致雪崩 (所有请求到最快实例)</span></span></code></pre>
+<p><strong>速率限制 (Rate Limiting)</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Window["滑动窗口 (1 分钟)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        W["[T-60s ←────────────→ T]"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Ts["请求时间戳:&#x3C;br/>[10:00:05, 10:00:12, ...]"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Count["当前请求数: 58/60&#x3C;br/>✓ 可以接受新请求"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Exceed["超限处理"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E1["1. 等待 (Backoff)&#x3C;br/>- 等待到下一个窗口&#x3C;br/>- 指数退避"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E2["2. 降级 (Fallback)&#x3C;br/>- 切换到其他实例&#x3C;br/>- 切换到其他模型"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        E3["3. 拒绝 (Reject)&#x3C;br/>- 返回 429 错误&#x3C;br/>- 让客户端重试"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Window --> Exceed</span></span></code></pre>
+<p>每个实例都有 RPM (Requests Per Minute) 限制</p>
+<p>实例: GPT-3.5-Instance-1
+限制: 60 RPM</p>
+<h3 id="43-anthropic-mcp-model-context-protocol">4.3 Anthropic MCP (Model Context Protocol)</h3>
+<p><strong>什么是 MCP?</strong></p>
+<p>Model Context Protocol 是一个标准化协议,用于应用程序和 AI 模型之间共享上下文信息。</p>
+<p><strong>为什么需要 MCP?</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Trad["传统问题: 每个应用都要实现自己的工具集成"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        A1[App A] --> F1[File Tool]</span></span>
+<span class="line"><span style="color:#E1E4E8">        A2[App B] --> F2[File Tool&#x3C;br/>重复实现]</span></span>
+<span class="line"><span style="color:#E1E4E8">        A3[App C] --> F3[File Tool&#x3C;br/>重复实现]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph MCP["MCP 方案: 标准化工具接口"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B1[App A]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B2[App B]</span></span>
+<span class="line"><span style="color:#E1E4E8">        B3[App C]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Server["MCP Server&#x3C;br/>(File Tool)&#x3C;br/>标准接口"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        B1 --> Server</span></span>
+<span class="line"><span style="color:#E1E4E8">        B2 --> Server</span></span>
+<span class="line"><span style="color:#E1E4E8">        B3 --> Server</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p><strong>MCP 架构</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Host["应用程序 (Host)"]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Client["MCP Client&#x3C;br/>- 发现 MCP Server&#x3C;br/>- 调用工具和资源&#x3C;br/>- 管理连接"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Protocol["MCP Protocol&#x3C;br/>(JSON-RPC over stdio/HTTP)"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    S1["MCP Server 1&#x3C;br/>文件系统"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    S2["MCP Server 2&#x3C;br/>数据库"]</span></span>
+<span class="line"><span style="color:#E1E4E8">    S3["MCP Server 3&#x3C;br/>API调用"]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Host --> Protocol</span></span>
+<span class="line"><span style="color:#E1E4E8">    Protocol --> S1</span></span>
+<span class="line"><span style="color:#E1E4E8">    Protocol --> S2</span></span>
+<span class="line"><span style="color:#E1E4E8">    Protocol --> S3</span></span></code></pre>
+<p><strong>MCP 提供的标准接口</strong>:</p>
+<p><strong>1. Tools (工具)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 可调用的函数</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>示例:</span></span>
+<span class="line"><span>┌───────────────────────────────┐</span></span>
+<span class="line"><span>│  Tool: read_file              │</span></span>
+<span class="line"><span>│  Description: 读取文件内容    │</span></span>
+<span class="line"><span>│  Parameters:                  │</span></span>
+<span class="line"><span>│  - path: string (文件路径)   │</span></span>
+<span class="line"><span>│  Returns:                     │</span></span>
+<span class="line"><span>│  - content: string (文件内容)│</span></span>
+<span class="line"><span>└───────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>调用流程:</span></span>
+<span class="line"><span>Host → MCP Client → MCP Server</span></span>
+<span class="line"><span>                       ↓</span></span>
+<span class="line"><span>                    执行 read_file</span></span>
+<span class="line"><span>                       ↓</span></span>
+<span class="line"><span>                    返回结果</span></span></code></pre>
+<p><strong>2. Resources (资源)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 可访问的数据源</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>示例:</span></span>
+<span class="line"><span>┌───────────────────────────────┐</span></span>
+<span class="line"><span>│  Resource: file:///workspace  │</span></span>
+<span class="line"><span>│  Name: Project Files          │</span></span>
+<span class="line"><span>│  Description: 项目文件访问    │</span></span>
+<span class="line"><span>│  MIME Type: application/dir   │</span></span>
+<span class="line"><span>└───────────────────────────────┘</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>访问流程:</span></span>
+<span class="line"><span>1. 列出资源 (list_resources)</span></span>
+<span class="line"><span>2. 读取资源 (read_resource)</span></span>
+<span class="line"><span>3. 订阅更新 (subscribe)</span></span></code></pre>
+<p><strong>3. Prompts (提示词模板)</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>定义: 预定义的提示词模板</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>示例:</span></span>
+<span class="line"><span>┌───────────────────────────────┐</span></span>
+<span class="line"><span>│  Prompt: code_review          │</span></span>
+<span class="line"><span>│  Arguments:                   │</span></span>
+<span class="line"><span>│  - file_path: string          │</span></span>
+<span class="line"><span>│  - language: string           │</span></span>
+<span class="line"><span>│  Template:                    │</span></span>
+<span class="line"><span>│  "Review the following        │</span></span>
+<span class="line"><span>│   {language} code:            │</span></span>
+<span class="line"><span>│   {file_content}              │</span></span>
+<span class="line"><span>│   Provide detailed feedback." │</span></span>
+<span class="line"><span>└───────────────────────────────┘</span></span></code></pre>
+<p><strong>MCP 通信协议</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>JSON-RPC 格式</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>请求:</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>  "jsonrpc": "2.0",</span></span>
+<span class="line"><span>  "id": 1,</span></span>
+<span class="line"><span>  "method": "tools/call",</span></span>
+<span class="line"><span>  "params": {</span></span>
+<span class="line"><span>    "name": "read_file",</span></span>
+<span class="line"><span>    "arguments": {</span></span>
+<span class="line"><span>      "path": "/path/to/file.txt"</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>响应:</span></span>
+<span class="line"><span>{</span></span>
+<span class="line"><span>  "jsonrpc": "2.0",</span></span>
+<span class="line"><span>  "id": 1,</span></span>
+<span class="line"><span>  "result": {</span></span>
+<span class="line"><span>    "content": [</span></span>
+<span class="line"><span>      {</span></span>
+<span class="line"><span>        "type": "text",</span></span>
+<span class="line"><span>        "text": "文件内容..."</span></span>
+<span class="line"><span>      }</span></span>
+<span class="line"><span>    ]</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<hr>
+<h2 id="总结">总结</h2>
+<h3 id="agent-架构选择">Agent 架构选择</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>架构</th><th>适用场景</th><th>优势</th><th>劣势</th></tr></thead><tbody><tr><td>ReAct</td><td>动态、不确定任务</td><td>灵活、可调整</td><td>可能循环、成本高</td></tr><tr><td>Plan-and-Execute</td><td>结构化、已知流程</td><td>可预测、全局优化</td><td>缺乏灵活性</td></tr><tr><td>Multi-Agent</td><td>多领域、复杂任务</td><td>专业化、可扩展</td><td>协调复杂</td></tr></tbody></table>
+<h3 id="llm-推理优化">LLM 推理优化</h3>
+<p><strong>内存优化</strong>:</p>
+<ul>
+<li>PagedAttention: 90%+ 内存利用率</li>
+<li>KV Cache 重用: 减少重复计算</li>
+<li>量化: INT8/INT4 节省 50-75% 内存</li>
+</ul>
+<p><strong>计算优化</strong>:</p>
+<ul>
+<li>算子融合: 减少内存访问</li>
+<li>FlashAttention: 2-8x 加速长序列</li>
+<li>投机解码: 1.5-3x 加速生成</li>
+</ul>
+<h3 id="rag-系统设计">RAG 系统设计</h3>
+<p><strong>检索优化</strong>:</p>
+<ul>
+<li>混合搜索: 向量 + 关键词</li>
+<li>重排序: 提升 15-30% 准确率</li>
+<li>Parent-Child: 平衡精度和上下文</li>
+</ul>
+<p><strong>生成优化</strong>:</p>
+<ul>
+<li>提示工程: 明确指令和约束</li>
+<li>Self-RAG: 按需检索,降低成本</li>
+<li>多次迭代: 质量优先时使用</li>
+</ul>
+<h3 id="模型路由策略">模型路由策略</h3>
+<p><strong>成本优化</strong>:</p>
+<ul>
+<li>任务分类: 简单任务用便宜模型</li>
+<li>降级策略: 高峰期使用快速模型</li>
+<li>缓存: 相似查询重用结果</li>
+</ul>
+<p><strong>性能优化</strong>:</p>
+<ul>
+<li>负载均衡: 分散请求到多实例</li>
+<li>速率限制: 避免超出 API 限制</li>
+<li>监控告警: 及时发现问题</li>
+</ul>
+<hr>
+<h2 id="参考资源">参考资源</h2>
+<ul>
+<li><strong>LangChain 架构</strong>: <a href="https://python.langchain.com/docs/concepts/architecture">https://python.langchain.com/docs/concepts/architecture</a></li>
+<li><strong>OpenAI Agent 最佳实践</strong>: <a href="https://platform.openai.com/docs/guides/agents">https://platform.openai.com/docs/guides/agents</a></li>
+<li><strong>vLLM 文档</strong>: <a href="https://docs.vllm.ai/">https://docs.vllm.ai/</a></li>
+<li><strong>TensorRT-LLM</strong>: <a href="https://github.com/NVIDIA/TensorRT-LLM">https://github.com/NVIDIA/TensorRT-LLM</a></li>
+<li><strong>Anthropic MCP</strong>: <a href="https://modelcontextprotocol.io/">https://modelcontextprotocol.io/</a></li>
+<li><strong>RAG 论文</strong>: <a href="https://arxiv.org/abs/2005.11401">https://arxiv.org/abs/2005.11401</a></li>
+<li><strong>ReAct 论文</strong>: <a href="https://arxiv.org/abs/2210.03629">https://arxiv.org/abs/2210.03629</a></li>
+<li><strong>FlashAttention</strong>: <a href="https://arxiv.org/abs/2205.14135">https://arxiv.org/abs/2205.14135</a></li>
+</ul>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
+&nbsp;·&nbsp;
+<a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+      // 初始化 Mermaid - 使用 default 主题以支持内联 style
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        securityLevel: 'loose'
+      });
+
+      // 等待 DOM 加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('开始查找 Mermaid 代码块...');
+
+        // 查找所有可能包含 mermaid 的代码块
+        const codeBlocks = document.querySelectorAll('pre code');
+        console.log('找到代码块数量:', codeBlocks.length);
+
+        let mermaidCount = 0;
+        codeBlocks.forEach((block, index) => {
+          // 检查是否是 mermaid 代码块（通过 class 或内容）
+          const isMermaid = block.className.includes('mermaid') ||
+                           block.className.includes('language-mermaid') ||
+                           block.textContent.trim().startsWith('graph') ||
+                           block.textContent.trim().startsWith('sequenceDiagram') ||
+                           block.textContent.trim().startsWith('classDiagram') ||
+                           block.textContent.trim().startsWith('flowchart');
+
+          if (isMermaid) {
+            mermaidCount++;
+            console.log(`找到 Mermaid 代码块 #${mermaidCount}:`, block.className);
+
+            // 获取 Mermaid 代码
+            const code = block.textContent;
+
+            // 创建一个新的 div 元素来渲染图表
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.className = 'mermaid';
+            mermaidDiv.textContent = code;
+            // 创建外层滚动容器
+            const wrapper = document.createElement('div');
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.margin = '20px 0';
+            wrapper.style.borderRadius = '8px';
+            wrapper.style.cursor = 'grab';
+            wrapper.style.maxWidth = '100%';
+            wrapper.style.WebkitOverflowScrolling = 'touch';
+
+            mermaidDiv.style.backgroundColor = '#1a2332';
+            mermaidDiv.style.padding = '20px';
+            mermaidDiv.style.borderRadius = '8px';
+            mermaidDiv.style.minWidth = '1200px';
+            mermaidDiv.style.width = 'max-content';
+
+            wrapper.appendChild(mermaidDiv);
+
+            // 添加鼠标拖拽功能（绑定到wrapper）
+            let isDragging = false;
+            let startX, scrollLeft;
+
+            wrapper.addEventListener('mousedown', (e) => {
+              isDragging = true;
+              wrapper.style.cursor = 'grabbing';
+              startX = e.pageX - wrapper.offsetLeft;
+              scrollLeft = wrapper.scrollLeft;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mouseup', () => {
+              isDragging = false;
+              wrapper.style.cursor = 'grab';
+            });
+
+            wrapper.addEventListener('mousemove', (e) => {
+              if (!isDragging) return;
+              e.preventDefault();
+              const x = e.pageX - wrapper.offsetLeft;
+              const walk = (x - startX) * 2;
+              wrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸拖拽支持（移动端）
+            let touchStartX;
+            wrapper.addEventListener('touchstart', (e) => {
+              touchStartX = e.touches[0].pageX;
+              scrollLeft = wrapper.scrollLeft;
+            }, {passive: true});
+
+            wrapper.addEventListener('touchmove', (e) => {
+              const x = e.touches[0].pageX;
+              const walk = (touchStartX - x);
+              wrapper.scrollLeft = scrollLeft + walk;
+            }, {passive: true});
+
+            // 替换原来的 pre 标签
+            block.parentElement.replaceWith(wrapper);
+          }
+        });
+
+        console.log(`总共找到 ${mermaidCount} 个 Mermaid 代码块`);
+
+        // 运行 Mermaid 渲染
+        if (mermaidCount > 0) {
+          console.log('开始渲染 Mermaid 图表...');
+          mermaid.run().then(() => {
+            console.log('Mermaid 渲染完成!');
+          }).catch(err => {
+            console.error('Mermaid 渲染出错:', err);
+          });
+        }
+      });
+    </script> </body> </html> 
