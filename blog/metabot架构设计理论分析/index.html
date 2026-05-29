@@ -2,16 +2,16 @@
 .hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>MetaBot 架构设计理论分析</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/5/28</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#架构设计</span><span class="tag" data-astro-cid-bvzihdzo>#Agent</span><span class="tag" data-astro-cid-bvzihdzo>#Bridge</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="metabot-架构设计理论分析">MetaBot 架构设计理论分析</h1>
 <blockquote>
-<p>作者视角：本文基于对 MetaBot 开源代码库的深度分析，面向对 AI Agent 桥接架构和多引擎协作感兴趣的技术读者。</p>
+<p>基于 v1.0.0 源码的完整技术剖析
+项目: <a href="https://github.com/xvirobotics/metabot">xvirobotics/metabot</a> | MIT License | TypeScript / Node.js</p>
 </blockquote>
 <hr>
-<h2 id="一metabot-是什么">一、MetaBot 是什么</h2>
+<h2 id="一项目定位im-到-ai-agent-的桥梁">一、项目定位：IM 到 AI Agent 的桥梁</h2>
 <p>MetaBot 不是又一个 AI Agent 框架。它的核心定位是 <strong>Bridge Service</strong>——把即时通讯平台（飞书/Lark、Telegram、微信）连接到 AI 编码引擎（Claude Code、Kimi Code、Codex CLI），让用户从手机上控制 AI Agent。</p>
 <p>简单说：<strong>MetaBot = IM 网关 + 多引擎适配器 + Agent Team 编排 + 持久化记忆</strong></p>
-<p>这与 Hermes Agent 完全不同的赛道——Hermes 是 Agent 本体，MetaBot 是 Agent 的"遥控器"和"通信总线"。</p>
-<p>当前版本为 v1.0.0，代码规模约 22,336 行，基于 TypeScript / Node.js 构建。</p>
+<p>这与 Hermes Agent 完全不同的赛道——Hermes 是 Agent 本体，MetaBot 是 Agent 的”遥控器”和”通信总线”。</p>
 <hr>
-<h2 id="二顶层架构全景">二、顶层架构全景</h2>
+<h2 id="二核心架构全景">二、核心架构全景</h2>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────────────────────────┐</span></span>
 <span class="line"><span>│                    Transport Layer                            │</span></span>
 <span class="line"><span>│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │</span></span>
@@ -23,10 +23,10 @@
 <span class="line"><span>│  │ Feishu   │  │ Telegram │  │ WeChat   │  │ Null     │    │</span></span>
 <span class="line"><span>│  │ Sender   │  │ Sender   │  │ Sender   │  │ Sender   │    │</span></span>
 <span class="line"><span>│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘    │</span></span>
-<span class="line"><span>├──────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>├───────┴──────────────┴──────────────┴──────────────┴──────────┤</span></span>
 <span class="line"><span>│                    Bridge Layer                                │</span></span>
 <span class="line"><span>│  ┌─────────────────────────────────────────────────────────┐  │</span></span>
-<span class="line"><span>│  │  MessageBridge (核心调度器)                            │  │</span></span>
+<span class="line"><span>│  │  MessageBridge (2,753 LOC — 核心调度器)                  │  │</span></span>
 <span class="line"><span>│  │  ┌────────────┐ ┌──────────┐ ┌───────────────────────┐ │  │</span></span>
 <span class="line"><span>│  │  │ Command    │ │ Output   │ │ Rate Limiter           │ │  │</span></span>
 <span class="line"><span>│  │  │ Handler    │ │ Handler  │ │ Queue (max 5/chat)     │ │  │</span></span>
@@ -36,11 +36,12 @@
 <span class="line"><span>│  │  │ Manager    │ │ Tracker  │ │ Coalescer (30s window) │ │  │</span></span>
 <span class="line"><span>│  │  └────────────┘ └──────────┘ └───────────────────────┘ │  │</span></span>
 <span class="line"><span>│  └─────────────────────────────────────────────────────────┘  │</span></span>
-<span class="line"><span>├──────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>├───────────────────────────────────────────────────────────────┤</span></span>
 <span class="line"><span>│                    Engine Layer                                │</span></span>
 <span class="line"><span>│  ┌─────────────┐  ┌─────────────┐  ┌──────────────────────┐  │</span></span>
 <span class="line"><span>│  │ Claude Code │  │  Kimi Code  │  │    Codex CLI         │  │</span></span>
 <span class="line"><span>│  │ SDK query() │  │ SDK query() │  │ codex exec --json    │  │</span></span>
+<span class="line"><span>│  │             │  │             │  │                      │  │</span></span>
 <span class="line"><span>│  │ - Executor  │  │ - Executor  │  │ - Executor           │  │</span></span>
 <span class="line"><span>│  │ - Persist   │  │             │  │ - JSONL Translator   │  │</span></span>
 <span class="line"><span>│  │   Executor  │  │             │  │                      │  │</span></span>
@@ -53,7 +54,7 @@
 <span class="line"><span>│         └────────────────┴─────────────────────┘              │</span></span>
 <span class="line"><span>│                    Engine Interface                            │</span></span>
 <span class="line"><span>│         createExecutor() · createStreamProcessor()            │</span></span>
-<span class="line"><span>├──────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>├───────────────────────────────────────────────────────────────┤</span></span>
 <span class="line"><span>│                    Service Layer                               │</span></span>
 <span class="line"><span>│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───────────────┐   │</span></span>
 <span class="line"><span>│  │ Meta     │ │ Session  │ │ Task     │ │ Peer Manager  │   │</span></span>
@@ -64,151 +65,183 @@
 <span class="line"><span>│  │ Bot      │ │ Doc Sync │ │ Voice    │ │ Skill Hub     │   │</span></span>
 <span class="line"><span>│  │ Registry │ │ (Wiki)   │ │ Handler  │ │ (Cross-bot)   │   │</span></span>
 <span class="line"><span>│  └──────────┘ └──────────┘ └──────────┘ └───────────────┘   │</span></span>
-<span class="line"><span>├──────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>├───────────────────────────────────────────────────────────────┤</span></span>
 <span class="line"><span>│                    Application Layer                           │</span></span>
 <span class="line"><span>│  ┌──────────────────┐  ┌──────────────────────────────────┐  │</span></span>
 <span class="line"><span>│  │ HTTP API Server   │  │  Web UI (React 19 + Vite)       │  │</span></span>
 <span class="line"><span>│  │ (port 9100)       │  │  WebSocket 实时更新              │  │</span></span>
 <span class="line"><span>│  └──────────────────┘  └──────────────────────────────────┘  │</span></span>
-<span class="line"><span>└──────────────────────────────────────────────────────────────┘</span></span></code></pre>
+<span class="line"><span>└───────────────────────────────────────────────────────────────┘</span></span></code></pre>
 <hr>
-<h2 id="三代码规模与模块化">三、代码规模与模块化</h2>
-<table>
-<thead>
-<tr>
-<th>模块</th>
-<th>文件数</th>
-<th>行数</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>总计</strong></td>
-<td><strong>90</strong></td>
-<td><strong>22,336</strong></td>
-<td>中等规模，模块化良好</td>
-</tr>
-<tr>
-<td><code>src/bridge/</code></td>
-<td>7</td>
-<td>~4,200</td>
-<td>消息桥接核心</td>
-</tr>
-<tr>
-<td><code>src/engines/</code></td>
-<td>12</td>
-<td>~2,200</td>
-<td>三引擎实现</td>
-</tr>
-<tr>
-<td><code>src/feishu/</code></td>
-<td>7</td>
-<td>~2,100</td>
-<td>飞书适配器</td>
-</tr>
-<tr>
-<td><code>src/telegram/</code></td>
-<td>2</td>
-<td>~600</td>
-<td>Telegram 适配器</td>
-</tr>
-<tr>
-<td><code>src/wechat/</code></td>
-<td>4</td>
-<td>~900</td>
-<td>微信适配器</td>
-</tr>
-<tr>
-<td><code>src/memory/</code></td>
-<td>5</td>
-<td>~1,400</td>
-<td>MetaMemory 服务</td>
-</tr>
-<tr>
-<td><code>src/sync/</code></td>
-<td>3</td>
-<td>~1,100</td>
-<td>文档同步</td>
-</tr>
-<tr>
-<td><code>src/api/</code></td>
-<td>8</td>
-<td>~1,800</td>
-<td>HTTP API + 语音</td>
-</tr>
-<tr>
-<td><code>tests/</code></td>
-<td>31</td>
-<td>—</td>
-<td>Vitest 测试</td>
-</tr>
-</tbody>
-</table>
+<h2 id="三代码规模">三、代码规模</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模块</th><th>文件数</th><th>行数</th><th>说明</th></tr></thead><tbody><tr><td><strong>总计</strong></td><td><strong>90</strong></td><td><strong>22,336</strong></td><td>中等规模，模块化良好</td></tr><tr><td><code>src/bridge/</code></td><td>7</td><td>~4,200</td><td>消息桥接核心</td></tr><tr><td><code>src/engines/</code></td><td>12</td><td>~2,200</td><td>三引擎实现</td></tr><tr><td><code>src/feishu/</code></td><td>7</td><td>~2,100</td><td>飞书适配器</td></tr><tr><td><code>src/telegram/</code></td><td>2</td><td>~600</td><td>Telegram 适配器</td></tr><tr><td><code>src/wechat/</code></td><td>4</td><td>~900</td><td>微信适配器</td></tr><tr><td><code>src/memory/</code></td><td>5</td><td>~1,400</td><td>MetaMemory 服务</td></tr><tr><td><code>src/sync/</code></td><td>3</td><td>~1,100</td><td>文档同步</td></tr><tr><td><code>src/api/</code></td><td>8</td><td>~1,800</td><td>HTTP API + 语音</td></tr><tr><td><code>src/scheduler/</code></td><td>1</td><td>582</td><td>任务调度器</td></tr><tr><td><code>src/web/</code></td><td>1</td><td>824</td><td>WebSocket 服务</td></tr><tr><td><code>src/skills/</code></td><td>5</td><td>~200</td><td>Skill 定义 (SKILL.md)</td></tr><tr><td><code>tests/</code></td><td>31</td><td>—</td><td>Vitest 测试</td></tr></tbody></table>
 <p>对比 Hermes Agent 的 93 万行，MetaBot 只有 2.2 万行，但这恰恰反映了不同定位——Hermes 是完整的 Agent 系统，MetaBot 是精巧的 Bridge。</p>
 <hr>
-<h2 id="四三引擎抽象engine-layer">四、三引擎抽象（Engine Layer）</h2>
+<h2 id="四核心子系统深度解析">四、核心子系统深度解析</h2>
+<h3 id="41-三引擎抽象engine-layer">4.1 三引擎抽象（Engine Layer）</h3>
+<p><strong>文件</strong>: <code>src/engines/</code> (~2,200 LOC)</p>
 <p>这是 MetaBot 架构上最有意思的部分——三大 AI 编码引擎被统一到同一个接口下。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>interface Engine {</span></span>
-<span class="line"><span>  readonly name: EngineName;  // 'claude' | 'kimi' | 'codex'</span></span>
-<span class="line"><span>  createExecutor(): Executor;</span></span>
-<span class="line"><span>  createStreamProcessor(userPrompt: string): StreamProcessorLike;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>interface Executor {</span></span>
-<span class="line"><span>  startExecution(options: ExecutorOptions): ExecutionHandle;  // 多轮</span></span>
-<span class="line"><span>  execute(options: ExecutorOptions): AsyncGenerator&lt;SDKMessage&gt;;  // 单轮</span></span>
-<span class="line"><span>}</span></span></code></pre>
-<h3 id="引擎实现差异">引擎实现差异</h3>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Claude Code</th>
-<th>Kimi Code</th>
-<th>Codex CLI</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>接入方式</strong></td>
-<td><code>@anthropic-ai/claude-agent-sdk</code> 的 <code>query()</code></td>
-<td><code>@moonshot-ai/kimi-agent-sdk</code> 的 <code>query()</code></td>
-<td>子进程 <code>codex exec --json</code></td>
-</tr>
-<tr>
-<td><strong>流式处理</strong></td>
-<td>原生 SDK stream</td>
-<td>原生 SDK stream</td>
-<td>JSONL 逐行解析 + 转译</td>
-</tr>
-<tr>
-<td><strong>认证</strong></td>
-<td>OAuth / API Key / 第三方端点</td>
-<td>Kimi login / API Key</td>
-<td><code>codex login</code> / API Key</td>
-</tr>
-<tr>
-<td><strong>多轮支持</strong></td>
-<td><code>startExecution</code> + <code>sendAnswer</code></td>
-<td>同 Claude 模式</td>
-<td><code>codex exec resume</code></td>
-</tr>
-<tr>
-<td><strong>自主模式</strong></td>
-<td><code>bypassPermissions</code></td>
-<td><code>yoloMode</code></td>
-<td><code>danger-full-access</code></td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p><strong>设计本质</strong>：每个 Bot 独立选引擎。这意味着你可以在同一个 MetaBot 实例中运行：前端 Bot 用 Claude Code，后端 Bot 用 Kimi Code，运维 Bot 用 Codex CLI。引擎之间通过 Agent 总线通信，调用方完全不感知对面的引擎类型。</p>
-</blockquote>
-<hr>
-<h2 id="五messagebridge核心调度器">五、MessageBridge（核心调度器）</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> Engine</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  readonly</span><span style="color:#FFAB70"> name</span><span style="color:#F97583">:</span><span style="color:#B392F0"> EngineName</span><span style="color:#E1E4E8">;  </span><span style="color:#6A737D">// 'claude' | 'kimi' | 'codex'</span></span>
+<span class="line"><span style="color:#B392F0">  createExecutor</span><span style="color:#E1E4E8">()</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Executor</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#B392F0">  createStreamProcessor</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">userPrompt</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">:</span><span style="color:#B392F0"> StreamProcessorLike</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> Executor</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#B392F0">  startExecution</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">options</span><span style="color:#F97583">:</span><span style="color:#B392F0"> ExecutorOptions</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">:</span><span style="color:#B392F0"> ExecutionHandle</span><span style="color:#E1E4E8">;  </span><span style="color:#6A737D">// 多轮</span></span>
+<span class="line"><span style="color:#B392F0">  execute</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">options</span><span style="color:#F97583">:</span><span style="color:#B392F0"> ExecutorOptions</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">:</span><span style="color:#B392F0"> AsyncGenerator</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">SDKMessage</span><span style="color:#E1E4E8">>;  </span><span style="color:#6A737D">// 单轮</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h4 id="引擎实现差异">引擎实现差异</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>Claude Code</th><th>Kimi Code</th><th>Codex CLI</th></tr></thead><tbody><tr><td><strong>接入方式</strong></td><td><code>@anthropic-ai/claude-agent-sdk</code> 的 <code>query()</code></td><td><code>@moonshot-ai/kimi-agent-sdk</code> 的 <code>query()</code></td><td>子进程 <code>codex exec --json</code></td></tr><tr><td><strong>流式处理</strong></td><td>原生 SDK stream</td><td>原生 SDK stream</td><td>JSONL 逐行解析 + 转译</td></tr><tr><td><strong>认证</strong></td><td>OAuth / API Key / 第三方端点</td><td>Kimi login / API Key</td><td><code>codex login</code> / API Key</td></tr><tr><td><strong>多轮支持</strong></td><td><code>startExecution</code> + <code>sendAnswer</code></td><td>同 Claude 模式</td><td><code>codex exec resume</code></td></tr><tr><td><strong>自主模式</strong></td><td><code>bypassPermissions</code></td><td><code>yoloMode</code></td><td><code>danger-full-access</code></td></tr><tr><td><strong>子 Agent</strong></td><td><code>.claude/agents/*.md</code> 自动加载</td><td>内置 <code>default</code>/<code>okabe</code></td><td>不支持，写进 <code>AGENTS.md</code></td></tr><tr><td><strong>技能发现</strong></td><td><code>.claude/skills/</code></td><td>同上 + 自动发现</td><td><code>.codex/skills/</code></td></tr></tbody></table>
+<p><strong>关键设计决策</strong>: 每个 Bot 独立选引擎。这意味着你可以在同一个 MetaBot 实例中运行：前端 Bot 用 Claude Code，后端 Bot 用 Kimi Code，运维 Bot 用 Codex CLI。引擎之间通过 Agent 总线通信，调用方完全不感知对面的引擎类型。</p>
+<h4 id="codex-的-jsonl-转译器">Codex 的 JSONL 转译器</h4>
+<p>Codex CLI 不提供 SDK，只有命令行输出。<code>jsonl-translator.ts</code> 把 Codex 的 JSONL 输出翻译成 Claude SDK 的 <code>SDKMessage</code> 格式，使得上层代码无需关心引擎差异。</p>
+<h3 id="42-messagebridge核心调度器">4.2 MessageBridge（核心调度器）</h3>
+<p><strong>文件</strong>: <code>src/bridge/message-bridge.ts</code> (2,753 LOC — 项目最大的单文件)</p>
 <p>MessageBridge 是整个系统的调度中心，处理从 IM 消息到引擎执行的全流程。</p>
-<h3 id="消息处理流程">消息处理流程</h3>
+<h4 id="消息处理流程">消息处理流程</h4>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>IM 消息到达</span></span>
 <span class="line"><span>    │</span></span>
 <span class="line"><span>    ▼</span></span>
@@ -228,51 +261,50 @@
 <span class="line"><span>        ├─ 流式处理 StreamProcessor → CardState</span></span>
 <span class="line"><span>        ├─ 通过 Sender 发送交互式卡片</span></span>
 <span class="line"><span>        └─ 完成后处理: 成本追踪、审计日志、记忆同步</span></span></code></pre>
-<h3 id="关键机制">关键机制</h3>
+<h4 id="关键机制">关键机制</h4>
 <ol>
-<li><strong>消息队列</strong>：每个 chatId 最多排队 5 条消息，防止洪水攻击</li>
-<li><strong>超时保护</strong>：任务 24 小时超时，1 小时空闲超时</li>
-<li><strong>Spontaneous Activity Coalescing</strong>：Agent Team 队友/后台任务在非用户轮次期间发送的消息，30 秒合并窗口聚合成单张卡片，防止刷屏</li>
-<li><strong>Cost Tracker</strong>：追踪每次查询的 API 成本</li>
-<li><strong>Audit Logger</strong>：审计日志记录所有操作</li>
+<li><strong>消息队列</strong>: 每个 chatId 最多排队 5 条消息，防止洪水攻击</li>
+<li><strong>超时保护</strong>: 任务 24 小时超时，1 小时空闲超时</li>
+<li><strong>Spontaneous Activity Coalescing</strong>: Agent Team 队友/后台任务在非用户轮次期间发送的消息，30 秒合并窗口聚合成单张卡片，防止刷屏</li>
+<li><strong>Cost Tracker</strong>: 追踪每次查询的 API 成本</li>
+<li><strong>Audit Logger</strong>: 审计日志记录所有操作</li>
 </ol>
-<h3 id="自发活动聚合spontaneous-activity-coalescing">自发活动聚合（Spontaneous Activity Coalescing）</h3>
-<p>这是 MetaBot 独有的概念——当 Agent Team 的队友在"背后"工作时产生消息，用户不在对话中但需要被通知。系统通过 <code>SPONTANEOUS_COALESCE_MS = 30s</code> 的合并窗口，将多条活动消息聚合为一张飞书卡片。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>// 核心参数</span></span>
-<span class="line"><span>const SPONTANEOUS_COALESCE_MS = 30 * 1000;     // 30s 合并窗口</span></span>
-<span class="line"><span>const SPONTANEOUS_SNIPPET_MAX_CHARS = 4000;      // 单条摘要上限</span></span>
-<span class="line"><span>const SPONTANEOUS_BODY_MAX_CHARS = 12000;        // 卡片总体上限</span></span></code></pre>
-<hr>
-<h2 id="六persistent-executor持久化执行器">六、Persistent Executor（持久化执行器）</h2>
+<h4 id="spontaneous-activity自发活动">Spontaneous Activity（自发活动）</h4>
+<p>这是 MetaBot 独有的概念——当 Agent Team 的队友在”背后”工作时产生消息，用户不在对话中但需要被通知。系统通过 <code>SPONTANEOUS_COALESCE_MS = 30s</code> 的合并窗口，将多条活动消息聚合为一张飞书卡片。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#6A737D">// 核心参数</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SPONTANEOUS_COALESCE_MS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 30</span><span style="color:#F97583"> *</span><span style="color:#79B8FF"> 1000</span><span style="color:#E1E4E8">;     </span><span style="color:#6A737D">// 30s 合并窗口</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SPONTANEOUS_SNIPPET_MAX_CHARS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 4000</span><span style="color:#E1E4E8">;      </span><span style="color:#6A737D">// 单条摘要上限</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SPONTANEOUS_BODY_MAX_CHARS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 12000</span><span style="color:#E1E4E8">;        </span><span style="color:#6A737D">// 卡片总体上限</span></span></code></pre>
+<h3 id="43-persistent-executor持久化执行器">4.3 Persistent Executor（持久化执行器）</h3>
+<p><strong>文件</strong>: <code>src/engines/claude/persistent-executor.ts</code> (935 LOC)</p>
 <p>这是 MetaBot 最核心的创新之一——让 Claude Code 的 <code>query()</code> 调用跨用户轮次存活。</p>
-<h3 id="为什么需要它">为什么需要它？</h3>
+<h4 id="为什么需要它">为什么需要它？</h4>
 <p>普通模式下，每条用户消息都会启动一个新的 <code>query()</code> 调用。但 Agent Team 的队友、<code>/goal</code> 多轮自动驱动、<code>/background</code> 后台任务都需要 Claude 进程持续运行。Persistent Executor 让一个 Claude 进程保持活跃，等待下一个用户消息。</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户消息 1 → PersistentExecutor.startExecution()</span></span>
 <span class="line"><span>         ← 流式响应...</span></span>
 <span class="line"><span>         ← Agent Team 队友创建中...</span></span>
 <span class="line"><span>         </span></span>
 <span class="line"><span>(用户暂时离开，但 Agent Team 继续工作)</span></span>
-<span class="line"><span>         </span></span>
+<span class="line"><span></span></span>
 <span class="line"><span>用户消息 2 → PersistentExecutor.sendAnswer()  // 复用同一个 query()</span></span>
 <span class="line"><span>         ← 流式响应...</span></span></code></pre>
-<h3 id="生命周期管理">生命周期管理</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>// 状态机</span></span>
-<span class="line"><span>'idle' → 'running' → 'idle' → 'running' → ...</span></span>
-<span class="line"><span>           ↓</span></span>
-<span class="line"><span>      'crashed' → (自动重启 with resume)</span></span>
-<span class="line"><span>           ↓</span></span>
-<span class="line"><span>      'closed'  (idle 超时或显式关闭)</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>// 关键参数</span></span>
-<span class="line"><span>- idleTimeoutMs: 默认 1 小时空闲 → 自动关闭</span></span>
-<span class="line"><span>- crashRecovery: 自动用 resume 重启，有重试上限</span></span>
-<span class="line"><span>- per-turn AbortController: 调用方可以 detach 而不杀死进程</span></span>
-<span class="line"><span>- Spontaneous-message ring buffer: 防止无限增长</span></span></code></pre>
-<blockquote>
-<p><strong>设计本质</strong>：Persistent Executor 是实现长时间运行 Agent（Team/Goal/Background）的关键。Idle eviction + crash recovery + per-turn AbortController 三重保障，既保证了系统的健壮性，又避免了资源泄漏。</p>
-</blockquote>
-<hr>
-<h2 id="七metamemory记忆系统">七、MetaMemory（记忆系统）</h2>
+<h4 id="生命周期管理">生命周期管理</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#6A737D">// 状态机</span></span>
+<span class="line"><span style="color:#9ECBFF">'idle'</span><span style="color:#E1E4E8"> → </span><span style="color:#9ECBFF">'running'</span><span style="color:#E1E4E8"> → </span><span style="color:#9ECBFF">'idle'</span><span style="color:#E1E4E8"> → </span><span style="color:#9ECBFF">'running'</span><span style="color:#E1E4E8"> → </span><span style="color:#F97583">...</span></span>
+<span class="line"><span style="color:#E1E4E8">              ↓</span></span>
+<span class="line"><span style="color:#9ECBFF">         'crashed'</span><span style="color:#E1E4E8"> → (自动重启 with resume)</span></span>
+<span class="line"><span style="color:#E1E4E8">              ↓</span></span>
+<span class="line"><span style="color:#9ECBFF">         'closed'</span><span style="color:#E1E4E8">  (idle 超时或显式关闭)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 关键参数</span></span>
+<span class="line"><span style="color:#F97583">-</span><span style="color:#B392F0"> idleTimeoutMs</span><span style="color:#E1E4E8">: 默认 </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8"> 小时空闲 → 自动关闭</span></span>
+<span class="line"><span style="color:#F97583">-</span><span style="color:#B392F0"> crashRecovery</span><span style="color:#E1E4E8">: 自动用 resume 重启，有重试上限</span></span>
+<span class="line"><span style="color:#F97583">-</span><span style="color:#E1E4E8"> per</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">turn </span><span style="color:#B392F0">AbortController</span><span style="color:#E1E4E8">: 调用方可以 detach 而不杀死进程</span></span>
+<span class="line"><span style="color:#F97583">-</span><span style="color:#E1E4E8"> Spontaneous</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">message ring </span><span style="color:#B392F0">buffer</span><span style="color:#E1E4E8">: 防止无限增长</span></span></code></pre>
+<h4 id="stage-标注">Stage 标注</h4>
+<p>代码明确标注了实验阶段的范围（Stage 1 → Stage 2），这体现了成熟的工程管理——不是所有功能一次性做完，而是分阶段交付。</p>
+<h3 id="44-metamemory记忆系统">4.4 MetaMemory（记忆系统）</h3>
+<p><strong>文件</strong>: <code>src/memory/</code> (~1,400 LOC)</p>
 <p>MetaMemory 是一个嵌入式的 HTTP 知识库服务，基于 SQLite + FTS5。</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>MetaMemory Server (HTTP, 默认 port 8100)</span></span>
 <span class="line"><span>├── MemoryStorage (SQLite + FTS5)</span></span>
@@ -290,14 +322,75 @@
 <span class="line"><span>    ├── 单向: MetaMemory → 飞书知识库</span></span>
 <span class="line"><span>    ├── 自动同步 (5s debounce)</span></span>
 <span class="line"><span>    └── 手动触发: /sync 命令</span></span></code></pre>
-<p><strong>访问控制</strong>：支持 <code>adminToken</code>（读写）和 <code>readerToken</code>（只读）两级权限。</p>
-<p><strong>与 Hermes Agent 的记忆对比</strong>：Hermes 的记忆是 Agent 内部的 MEMORY.md/USER.md 文件 + 可选的外部 provider。MetaMemory 是独立的 HTTP 服务，多个 Bot 共享同一个知识库。</p>
-<hr>
-<h2 id="八agent-bus与联邦通信">八、Agent Bus 与联邦通信</h2>
-<p>Agent 总线是 MetaBot 实现多 Agent 协作的核心机制。</p>
+<p><strong>访问控制</strong>: 支持 <code>adminToken</code>（读写）和 <code>readerToken</code>（只读）两级权限。</p>
+<p><strong>与 Hermes Agent 的记忆对比</strong>: Hermes 的记忆是 Agent 内部的 MEMORY.md/USER.md 文件 + 可选的外部 provider。MetaMemory 是独立的 HTTP 服务，多个 Bot 共享同一个知识库。</p>
+<h3 id="45-skill-系统">4.5 Skill 系统</h3>
+<p><strong>文件</strong>: <code>src/skills/</code> (5 个 SKILL.md)</p>
+<p>MetaBot 的 Skill 系统与 Hermes Agent 的有本质区别——MetaBot 的 Skill 是 Claude Code/Kimi/Codex 的 Skill（在 AI 引擎层面执行），MetaBot 自己只负责安装、发现和跨实例共享。</p>
+<h4 id="核心-skill">核心 Skill</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Skill</th><th>功能</th><th>说明</th></tr></thead><tbody><tr><td><strong>metabot</strong></td><td><code>mb talk</code> — 跨 Bot 通信</td><td>Agent 总线核心，支持跨实例路由</td></tr><tr><td><strong>metaskill</strong></td><td>Agent/Team/Skill 工厂</td><td>从一句话生成完整的 Agent Team</td></tr><tr><td><strong>metaschedule</strong></td><td>持久化任务调度</td><td>跨重启存活，其他 Bot 可见</td></tr><tr><td><strong>voice</strong></td><td>RTC 语音通话</td><td>Jarvis 模式，免手免屏</td></tr><tr><td><strong>skill-hub</strong></td><td>跨 Bot 技能共享</td><td>发布/安装/搜索</td></tr></tbody></table>
+<h4 id="metaskill-工厂模式">MetaSkill 工厂模式</h4>
+<p>MetaSkill 是一个”元技能”——它本身是一个 Skill，用来创建其他 Skill/Agent/Team。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户: "/metaskill ios app"</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>1. 意图检测: Team mode</span></span>
+<span class="line"><span>2. 加载 flows/team.md</span></span>
+<span class="line"><span>3. 分析工作目录，检测项目类型</span></span>
+<span class="line"><span>4. 生成:</span></span>
+<span class="line"><span>   - .claude/agents/ios-lead.md</span></span>
+<span class="line"><span>   - .claude/agents/ios-ui.md</span></span>
+<span class="line"><span>   - .claude/agents/ios-backend.md</span></span>
+<span class="line"><span>   - .claude/agents/ios-qa.md</span></span>
+<span class="line"><span>   - CLAUDE.md 更新 (team 编排指令)</span></span></code></pre>
+<h3 id="46-session-registry跨平台会话注册">4.6 Session Registry（跨平台会话注册）</h3>
+<p><strong>文件</strong>: <code>src/session/session-registry.ts</code> (324 LOC)</p>
+<p>SQLite 支持的跨平台会话持久化：</p>
+<ul>
+<li>同一个用户在飞书和 Telegram 上可以关联到同一个会话</li>
+<li>跨重启恢复会话状态</li>
+<li>支持消息历史查询（有限长度）</li>
+</ul>
+<h3 id="47-bot-registry--peer-federation">4.7 Bot Registry + Peer Federation</h3>
+<p><strong>文件</strong>: <code>src/api/bot-registry.ts</code> + <code>src/api/peer-manager.ts</code></p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>单实例模式:</span></span>
 <span class="line"><span>  BotRegistry: 管理 N 个 Bot (飞书/Telegram/微信/Web)</span></span>
-<span class="line"><span>  </span></span>
+<span class="line"><span></span></span>
 <span class="line"><span>联邦模式:</span></span>
 <span class="line"><span>  PeerManager: 跨 MetaBot 实例发现和通信</span></span>
 <span class="line"><span>  ┌──────────────┐     HTTP API     ┌──────────────┐</span></span>
@@ -307,149 +400,170 @@
 <span class="line"><span>  └──────────────┘                  └──────────────┘</span></span>
 <span class="line"><span>  </span></span>
 <span class="line"><span>  mb talk alice/backend-bot chat_BBB "deploy latest"</span></span></code></pre>
-<p>通过 <code>mb talk</code> 命令，不同 Bot（不同引擎、不同工作空间）可以互相委派任务，实现了"组织级 AI"的雏形。</p>
+<h3 id="48-voice-handler语音助手">4.8 Voice Handler（语音助手）</h3>
+<p><strong>文件</strong>: <code>src/api/voice-handler.ts</code> (562 LOC)</p>
+<p>完整的 STT → Agent → TTS 管道：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>音频输入 (m4a/wav/webm/mp3, max 100MB)</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>STT (语音转文字)</span></span>
+<span class="line"><span>├── 默认: 火山引擎 Doubao Flash</span></span>
+<span class="line"><span>└── 备选: Whisper</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>Agent 处理 (一次 query())</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>TTS (可选, 文字转语音)</span></span>
+<span class="line"><span>├── 火山引擎 Doubao</span></span>
+<span class="line"><span>├── OpenAI TTS</span></span>
+<span class="line"><span>└── ElevenLabs</span></span>
+<span class="line"><span>    │</span></span>
+<span class="line"><span>    ▼</span></span>
+<span class="line"><span>输出: 音频流 或 纯文本</span></span></code></pre>
+<p>支持语音对话历史（10 轮，30 分钟 TTL），用于 Seed-ASR 上下文增强。</p>
 <hr>
-<h2 id="九关键设计模式总结">九、关键设计模式总结</h2>
-<h3 id="架构模式">架构模式</h3>
-<table>
-<thead>
-<tr>
-<th>模式</th>
-<th>应用场景</th>
-<th>具体实现</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Bridge/Adapter Pattern</strong></td>
-<td>多 IM 平台 + 多引擎</td>
-<td>Sender Interface + Engine Interface</td>
-</tr>
-<tr>
-<td><strong>Strategy Pattern</strong></td>
-<td>三引擎切换</td>
-<td><code>createEngine(config)</code> 工厂</td>
-</tr>
-<tr>
-<td><strong>Observer/EventEmitter</strong></td>
-<td>Persistent Executor 生命周期</td>
-<td>state-changed, turn-started/completed/aborted</td>
-</tr>
-<tr>
-<td><strong>Ring Buffer</strong></td>
-<td>Spontaneous message 缓冲</td>
-<td>防止无限增长</td>
-</tr>
-<tr>
-<td><strong>Coalesce Window</strong></td>
-<td>消息聚合</td>
-<td>30s 窗口合并自发活动</td>
-</tr>
-<tr>
-<td><strong>Circuit Breaker</strong></td>
-<td>引擎错误恢复</td>
-<td>Crash recovery with resume</td>
-</tr>
-<tr>
-<td><strong>Factory Pattern</strong></td>
-<td>MetaSkill 生成</td>
-<td>从意图到 Agent/Team/Skill</td>
-</tr>
-<tr>
-<td><strong>Federation</strong></td>
-<td>跨实例通信</td>
-<td>PeerManager + mb talk</td>
-</tr>
-</tbody>
-</table>
-<h3 id="工程哲学">工程哲学</h3>
+<h2 id="五关键设计模式总结">五、关键设计模式总结</h2>
+<h3 id="51-架构模式">5.1 架构模式</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>应用场景</th><th>具体实现</th></tr></thead><tbody><tr><td><strong>Bridge/Adapter Pattern</strong></td><td>多 IM 平台 + 多引擎</td><td>Sender Interface + Engine Interface</td></tr><tr><td><strong>Strategy Pattern</strong></td><td>三引擎切换</td><td><code>createEngine(config)</code> 工厂</td></tr><tr><td><strong>Observer/EventEmitter</strong></td><td>Persistent Executor 生命周期</td><td>state-changed, turn-started/completed/aborted</td></tr><tr><td><strong>Ring Buffer</strong></td><td>Spontaneous message 缓冲</td><td>防止无限增长</td></tr><tr><td><strong>Coalesce Window</strong></td><td>消息聚合</td><td>30s 窗口合并自发活动</td></tr><tr><td><strong>Circuit Breaker</strong></td><td>引擎错误恢复</td><td>Crash recovery with resume</td></tr><tr><td><strong>Factory Pattern</strong></td><td>MetaSkill 生成</td><td>从意图到 Agent/Team/Skill</td></tr><tr><td><strong>Federation</strong></td><td>跨实例通信</td><td>PeerManager + mb talk</td></tr></tbody></table>
+<h3 id="52-工程哲学">5.2 工程哲学</h3>
 <ol>
-<li><strong>安全隔离启动</strong>：<code>startBotsSafely()</code> 用 <code>Promise.allSettled</code> 确保单个 Bot 启动失败不影响其他 Bot</li>
-<li><strong>环境变量防火墙</strong>：自动过滤 <code>CLAUDE*</code> 环境变量防止嵌套会话错误，但白名单放行安全的功能开关</li>
-<li><strong>认证灵活性</strong>：OAuth 订阅直连 / API Key / 第三方代理端点三种认证路径并存</li>
-<li><strong>PM2 友好</strong>：<code>ecosystem.config.cjs</code> 配置了自动重启、日志轮转、热重载</li>
-<li><strong>Graceful Shutdown</strong>：SIGINT/SIGTERM 统一处理，按顺序关闭各子系统</li>
-<li><strong>Stage 标注</strong>：PersistentExecutor 明确标注 Stage 1/2，实验性功能不隐藏</li>
+<li><strong>安全隔离启动</strong>: <code>startBotsSafely()</code> 用 <code>Promise.allSettled</code> 确保单个 Bot 启动失败不影响其他 Bot</li>
+<li><strong>环境变量防火墙</strong>: 自动过滤 <code>CLAUDE*</code> 环境变量防止嵌套会话错误，但白名单放行安全的功能开关</li>
+<li><strong>认证灵活性</strong>: OAuth 订阅直连 / API Key / 第三方代理端点三种认证路径并存</li>
+<li><strong>PM2 友好</strong>: <code>ecosystem.config.cjs</code> 配置了自动重启、日志轮转、热重载</li>
+<li><strong>Graceful Shutdown</strong>: SIGINT/SIGTERM 统一处理，按顺序关闭各子系统</li>
+<li><strong>Stage 标注</strong>: PersistentExecutor 明确标注 Stage 1/2，实验性功能不隐藏</li>
 </ol>
 <hr>
-<h2 id="十与-hermes-agent-的对比">十、与 Hermes Agent 的对比</h2>
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>MetaBot</th>
-<th>Hermes Agent</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>定位</strong></td>
-<td>Bridge / 网关 / 遥控器</td>
-<td>Agent 本体</td>
-</tr>
-<tr>
-<td><strong>语言</strong></td>
-<td>TypeScript / Node.js</td>
-<td>Python</td>
-</tr>
-<tr>
-<td><strong>代码量</strong></td>
-<td>22K 行</td>
-<td>932K 行</td>
-</tr>
-<tr>
-<td><strong>AI 引擎</strong></td>
-<td>3 个 (Claude/Kimi/Codex)</td>
-<td>任意 OpenAI 兼容</td>
-</tr>
-<tr>
-<td><strong>对话循环</strong></td>
-<td>委托给引擎 SDK</td>
-<td>自建 ReAct 循环</td>
-</tr>
-<tr>
-<td><strong>学习循环</strong></td>
-<td>无 (依赖引擎自身)</td>
-<td>内置 Background Review</td>
-</tr>
-<tr>
-<td><strong>记忆系统</strong></td>
-<td>MetaMemory (独立 HTTP 服务)</td>
-<td>内置 Memory Provider</td>
-</tr>
-<tr>
-<td><strong>多 Agent</strong></td>
-<td>Agent Team (via SDK)</td>
-<td>delegate_task 委派</td>
-</tr>
-<tr>
-<td><strong>多平台</strong></td>
-<td>飞书/Telegram/微信/Web</td>
-<td>CLI/Telegram/Discord/Slack/WhatsApp/Signal</td>
-</tr>
-<tr>
-<td><strong>安装复杂度</strong></td>
-<td>npm install + PM2</td>
-<td>curl install / Docker</td>
-</tr>
-<tr>
-<td><strong>核心创新</strong></td>
-<td>Persistent Executor + Agent 总线 + 三引擎统一</td>
-<td>自我改进学习循环</td>
-</tr>
-<tr>
-<td><strong>目标用户</strong></td>
-<td>开发者团队（手机控制 Agent）</td>
-<td>个人用户（长期 AI 伙伴）</td>
-</tr>
-</tbody>
-</table>
+<h2 id="六与-hermes-agent-的对比">六、与 Hermes Agent 的对比</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>MetaBot</th><th>Hermes Agent</th></tr></thead><tbody><tr><td><strong>定位</strong></td><td>Bridge / 网关 / 遥控器</td><td>Agent 本体</td></tr><tr><td><strong>语言</strong></td><td>TypeScript / Node.js</td><td>Python</td></tr><tr><td><strong>代码量</strong></td><td>22K 行</td><td>932K 行</td></tr><tr><td><strong>AI 引擎</strong></td><td>3 个 (Claude/Kimi/Codex)</td><td>任意 OpenAI 兼容</td></tr><tr><td><strong>对话循环</strong></td><td>委托给引擎 SDK</td><td>自建 ReAct 循环</td></tr><tr><td><strong>学习循环</strong></td><td>无 (依赖引擎自身)</td><td>内置 Background Review</td></tr><tr><td><strong>记忆系统</strong></td><td>MetaMemory (独立 HTTP 服务)</td><td>内置 Memory Provider</td></tr><tr><td><strong>多 Agent</strong></td><td>Agent Team (via SDK)</td><td>delegate_task 委派</td></tr><tr><td><strong>多平台</strong></td><td>飞书/Telegram/微信/Web</td><td>CLI/Telegram/Discord/Slack/WhatsApp/Signal</td></tr><tr><td><strong>安装复杂度</strong></td><td>npm install + PM2</td><td>curl install / Docker</td></tr><tr><td><strong>核心创新</strong></td><td>Persistent Executor + Agent 总线 + 三引擎统一</td><td>自我改进学习循环</td></tr><tr><td><strong>目标用户</strong></td><td>开发者团队（手机控制 Agent）</td><td>个人用户（长期 AI 伙伴）</td></tr></tbody></table>
 <hr>
-<h2 id="十一架构的亮点与不足">十一、架构的亮点与不足</h2>
+<h2 id="七架构的亮点与不足">七、架构的亮点与不足</h2>
 <h3 id="亮点">亮点</h3>
 <ol>
 <li>
-<p><strong>三引擎统一接口是真正的差异化</strong> — 不是简单的"支持三个后端"，而是每个 Bot 独立选引擎，引擎之间通过 Agent 总线无缝通信。这在市场上是独一无二的。</p>
+<p><strong>三引擎统一接口是真正的差异化</strong> — 不是简单的”支持三个后端”，而是每个 Bot 独立选引擎，引擎之间通过 Agent 总线无缝通信。这在市场上是独一无二的。</p>
 </li>
 <li>
 <p><strong>Persistent Executor 设计精巧</strong> — 让 Claude Code 的 <code>query()</code> 跨用户轮次存活，使得 Agent Team、后台任务、多轮目标驱动成为可能。Idle eviction + crash recovery + per-turn AbortController 三重保障。</p>
@@ -467,7 +581,7 @@
 <p><strong>CLAUDE.md 里的 Agent Team 编排</strong> — 直接在项目指导文件中定义了 4 人团队（lead-architect、backend-engineer、frontend-engineer、qa-reliability），这在 AI 辅助开发实践中是先进的。</p>
 </li>
 </ol>
-<h3 id="不足与值得商榷之处">不足与值得商榷之处</h3>
+<h3 id="不足">不足</h3>
 <ol>
 <li>
 <p><strong>message-bridge.ts 过重</strong> — 2,753 行的单文件，承担了消息路由、命令处理、输出处理、队列管理、自发活动聚合等太多职责。应该拆分为更小的模块。</p>
@@ -479,15 +593,15 @@
 <p><strong>MetaMemory 比较简单</strong> — SQLite + FTS5 的实现，没有向量搜索能力。对于语义级记忆检索，纯关键词搜索可能不够。</p>
 </li>
 <li>
-<p><strong>引擎实现不对等</strong> — Claude 引擎有 Executor + PersistentExecutor + StreamProcessor + SessionManager（670+935+477+...行），Kimi 和 Codex 的实现相对薄（Kimi 484 行，Codex 更少）。功能完整性上 Claude 是一等公民。</p>
+<p><strong>引擎实现不对等</strong> — Claude 引擎有 Executor + PersistentExecutor + StreamProcessor + SessionManager（670+935+477+…行），Kimi 和 Codex 的实现相对薄（Kimi 484 行，Codex 更少）。功能完整性上 Claude 是一等公民。</p>
 </li>
 <li>
 <p><strong>没有内置学习循环</strong> — 完全依赖引擎（Claude Code）自身的记忆和学习能力，MetaBot 层面不做知识积累。</p>
 </li>
 </ol>
 <hr>
-<h2 id="十二可借鉴的设计">十二、可借鉴的设计</h2>
-<h3 id="对-bridge网关类项目的启示">对 Bridge/网关类项目的启示</h3>
+<h2 id="八可借鉴的设计">八、可借鉴的设计</h2>
+<h3 id="81-对-bridge网关类项目的启示">8.1 对 Bridge/网关类项目的启示</h3>
 <ol>
 <li>
 <p><strong>Engine Interface 抽象</strong> — 定义 <code>createExecutor()</code> + <code>createStreamProcessor()</code> 两个核心方法，统一不同引擎的调用方式。对于需要接入多个 AI 后端的项目是标准范式。</p>
@@ -505,20 +619,20 @@
 <p><strong>Promise.allSettled 容错启动</strong> — 多个 Bot 独立启动，单个失败不影响全局。适用于任何多实例并行初始化的场景。</p>
 </li>
 </ol>
-<h3 id="产品设计启示">产品设计启示</h3>
+<h3 id="82-产品设计启示">8.2 产品设计启示</h3>
 <ol>
 <li>
-<p><strong>"手机控制 Agent"</strong> 是真实的场景 — 地铁上用飞书给 Agent 发消息改 bug、提 PR。这不是噱头，是开发者的真实需求。</p>
+<p><strong>“手机控制 Agent”</strong> 是真实的场景 — 地铁上用飞书给 Agent 发消息改 bug、提 PR。这不是噱头，是开发者的真实需求。</p>
 </li>
 <li>
 <p><strong>多引擎统一入口</strong> — 用户不需要关心底层用的是什么 AI，只管和 Bot 对话。MetaBot 做了引擎选择的路由和抽象。</p>
 </li>
 <li>
-<p><strong>Agent 总线</strong> — <code>mb talk</code> 让不同 Bot（不同引擎、不同工作空间）互相委派任务，实现了"组织级 AI"的雏形。</p>
+<p><strong>Agent 总线</strong> — <code>mb talk</code> 让不同 Bot（不同引擎、不同工作空间）互相委派任务，实现了”组织级 AI”的雏形。</p>
 </li>
 </ol>
 <hr>
-<h2 id="十三结论">十三、结论</h2>
+<h2 id="九结论">九、结论</h2>
 <p>MetaBot 是一个 <strong>精巧的 Bridge 架构</strong>，2.2 万行 TypeScript 代码实现了一个完整的 IM → 多引擎 AI Agent 的桥接系统。</p>
 <p><strong>核心创新点</strong>:</p>
 <ol>
@@ -527,12 +641,9 @@
 <li>Agent 总线实现跨 Bot/跨实例协作</li>
 <li>MetaSkill 工厂从一句话生成 Agent Team</li>
 </ol>
-<p><strong>与 Hermes Agent 的关系</strong>: 两者不是竞争关系，而是<strong>互补关系</strong>。Hermes 是 Agent 本体（解决"AI 怎么变聪明"），MetaBot 是 Agent 的遥控器和通信总线（解决"怎么从手机控制 AI"和"多个 AI 怎么协作"）。</p>
-<p>一个理想架构是 MetaBot 桥接 Hermes Agent 作为引擎——通过 MetaBot 的飞书/Telegram 接口控制 Hermes，同时享受 Hermes 的自我改进能力和 MetaBot 的多平台、多引擎、Agent Team 编排。</p>
-<hr>
-<p><em>分析时间：2026 年 5 月 | 代码版本：v1.0.0</em></p>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
+<p><strong>与 Hermes Agent 的关系</strong>: 两者不是竞争关系，而是<strong>互补关系</strong>。Hermes 是 Agent 本体（解决”AI 怎么变聪明”），MetaBot 是 Agent 的遥控器和通信总线（解决”怎么从手机控制 AI”和”多个 AI 怎么协作”）。一个理想架构是 MetaBot 桥接 Hermes Agent 作为引擎——通过 MetaBot 的飞书/Telegram 接口控制 Hermes，同时享受 Hermes 的自我改进能力和 MetaBot 的多平台、多引擎、Agent Team 编排。</p>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
 &nbsp;·&nbsp;
-<a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa">GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
+<a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
       // 初始化 Mermaid - 使用 default 主题以支持内联 style
@@ -652,4 +763,4 @@
           });
         }
       });
-    </script> </body> </html>
+    </script> </body> </html> 
