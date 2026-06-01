@@ -1,717 +1,214 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="开源本地优先AI助手完整架构解析：Gateway网关设计、Agent引擎、消息应用集成、会话管理机制、隐私安全设计及自托管部署方案。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>Clawdbot架构理论指南</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="基于 OpenClaw 官方仓库与文档，对 Clawdbot 相关架构说法做事实校准：哪些能力已有公开依据，哪些只能作为设计推断，以及开发者应如何评估这类自托管 Agent 项目。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>Clawdbot / OpenClaw 架构事实校准与设计参考</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
 .hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
-</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>Clawdbot架构理论指南</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#云原生架构</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="clawdbot-架构理论指南">Clawdbot 架构理论指南</h1>
-<h2 id="一概述">一、概述</h2>
-<p>Clawdbot 是一个开源的、本地优先的个人 AI 助手系统，由 Peter Steinberger（PSPDFKit 创始人）开发。它的核心理念是将 AI 能力集成到用户日常使用的消息应用中，同时保持完全的隐私控制和数据主权。</p>
-<h3 id="核心特点">核心特点</h3>
-<ul>
-<li><strong>本地优先架构</strong>：所有数据和会话历史存储在用户本地设备</li>
-<li><strong>消息应用集成</strong>：通过 WhatsApp、Telegram 等熟悉的界面交互</li>
-<li><strong>自托管模式</strong>：用户完全控制部署环境和数据流向</li>
-<li><strong>开源透明</strong>：代码开放，可审计和定制</li>
-<li><strong>跨平台支持</strong>：支持 Windows、macOS、Linux 多平台运行</li>
-</ul>
-<h2 id="二系统架构">二、系统架构</h2>
-<h3 id="21-整体架构设计">2.1 整体架构设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "用户层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A[WhatsApp客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B[Telegram客户端]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C[其他消息应用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "Clawdbot核心"</span></span>
-<span class="line"><span style="color:#E1E4E8">        D[Gateway网关]</span></span>
-<span class="line"><span style="color:#E1E4E8">        E[Agent引擎]</span></span>
-<span class="line"><span style="color:#E1E4E8">        F[Channel适配器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        G[配置管理器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "AI服务层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        H[Claude API]</span></span>
-<span class="line"><span style="color:#E1E4E8">        I[OpenAI API]</span></span>
-<span class="line"><span style="color:#E1E4E8">        J[本地模型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "存储层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        K[会话存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L[配置文件]</span></span>
-<span class="line"><span style="color:#E1E4E8">        M[工作空间]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    A --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> H</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> I</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> J</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> K</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
-<span class="line"><span style="color:#E1E4E8">    G --> L</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> M</span></span>
-<span class="line"></span></code></pre>
-<h3 id="22-核心组件说明">2.2 核心组件说明</h3>
-<h4 id="gateway网关">Gateway（网关）</h4>
-<p>Gateway 是 Clawdbot 的中枢神经系统，负责：</p>
-<ul>
-<li><strong>连接管理</strong>：维护与各个消息渠道的 WebSocket 连接</li>
-<li><strong>请求路由</strong>：将用户消息路由到对应的 Agent 实例</li>
-<li><strong>状态同步</strong>：管理系统运行状态和健康检查</li>
-<li><strong>设备配对</strong>：处理多设备间的身份验证和授权</li>
-</ul>
-<h4 id="agent-引擎">Agent 引擎</h4>
-<p>Agent 是实际执行 AI 任务的核心组件：</p>
-<ul>
-<li><strong>上下文管理</strong>：维护对话历史和会话状态</li>
-<li><strong>模型调度</strong>：根据任务类型选择合适的 AI 模型</li>
-<li><strong>工具调用</strong>：执行文件操作、系统命令等扩展功能</li>
-<li><strong>响应生成</strong>：处理 AI 模型输出并格式化返回</li>
-</ul>
-<h4 id="channel-适配器">Channel 适配器</h4>
-<p>Channel 层提供统一的消息接口抽象：</p>
-<ul>
-<li><strong>协议适配</strong>：将不同消息平台的协议转换为统一格式</li>
-<li><strong>认证处理</strong>：管理各平台的登录凭证和会话</li>
-<li><strong>消息转换</strong>：处理文本、图片、文件等多媒体内容</li>
-<li><strong>事件监听</strong>：实时接收和处理用户消息</li>
-</ul>
-<h2 id="三工作原理">三、工作原理</h2>
-<h3 id="31-消息处理流程">3.1 消息处理流程</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant U as 用户</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant C as Channel适配器</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant G as Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant A as Agent引擎</span></span>
-<span class="line"><span style="color:#E1E4E8">    participant M as AI模型</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    U->>C: 发送消息</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>G: 转发标准化消息</span></span>
-<span class="line"><span style="color:#E1E4E8">    G->>A: 路由到对应Agent</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>A: 加载会话上下文</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>M: 调用AI模型</span></span>
-<span class="line"><span style="color:#E1E4E8">    M->>A: 返回生成结果</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>A: 执行工具调用（如需要）</span></span>
-<span class="line"><span style="color:#E1E4E8">    A->>G: 返回处理结果</span></span>
-<span class="line"><span style="color:#E1E4E8">    G->>C: 转发响应</span></span>
-<span class="line"><span style="color:#E1E4E8">    C->>U: 显示回复</span></span></code></pre>
-<h3 id="32-会话管理机制">3.2 会话管理机制</h3>
-<p>Clawdbot 采用分层的会话管理策略：</p>
-<p><strong>会话隔离</strong></p>
-<ul>
-<li>每个对话渠道（用户/群组）维护独立的会话上下文</li>
-<li>会话数据存储在本地 JSON 文件中</li>
-<li>支持会话的持久化和恢复</li>
-</ul>
-<p><strong>上下文窗口管理</strong></p>
-<ul>
-<li>动态调整上下文长度以适应模型限制</li>
-<li>智能摘要历史对话以保留关键信息</li>
-<li>支持长期记忆和短期记忆的分层存储</li>
-</ul>
-<p><strong>多 Agent 协作</strong></p>
-<ul>
-<li>支持创建多个独立的 Agent 实例</li>
-<li>每个 Agent 可配置不同的模型和行为</li>
-<li>Agent 间可通过 ACP（Agent Control Protocol）通信</li>
-</ul>
-<h3 id="33-安全与隐私设计">3.3 安全与隐私设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户数据] --> B[本地加密存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[Gateway访问控制]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[设备配对验证]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[Token授权]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[API调用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[外部AI服务]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style B fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style D fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style E fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style G fill:#FFB6C1</span></span></code></pre>
-<p><strong>隐私保护措施</strong>：</p>
-<ul>
-<li><strong>本地优先</strong>：所有会话历史默认存储在本地</li>
-<li><strong>端到端控制</strong>：用户完全掌控数据流向</li>
-<li><strong>可选云端</strong>：仅在需要时才调用外部 AI 服务</li>
-<li><strong>凭证隔离</strong>：API 密钥和认证信息本地加密存储</li>
-<li><strong>审计日志</strong>：完整记录所有 API 调用和数据访问</li>
-</ul>
-<h2 id="四应用场景">四、应用场景</h2>
-<h3 id="41-个人知识助手">4.1 个人知识助手</h3>
-<p><strong>场景描述</strong>：通过消息应用随时访问个人 AI 助手</p>
-<p><strong>典型用例</strong>：</p>
-<ul>
-<li>快速查询和信息检索</li>
-<li>文档摘要和内容分析</li>
-<li>日程管理和提醒设置</li>
-<li>学习辅导和知识问答</li>
-</ul>
-<p><strong>优势</strong>：</p>
-<ul>
-<li>无需切换应用，在熟悉的界面中使用</li>
-<li>对话历史完整保存，便于回溯</li>
-<li>支持多模态输入（文本、图片、文件）</li>
-</ul>
-<h3 id="42-开发者工具集成">4.2 开发者工具集成</h3>
-<p><strong>场景描述</strong>：将 AI 能力集成到开发工作流</p>
-<p><strong>典型用例</strong>：</p>
-<ul>
-<li>代码审查和优化建议</li>
-<li>文档生成和注释补充</li>
-<li>Bug 分析和调试辅助</li>
-<li>技术方案讨论和架构设计</li>
-</ul>
-<p><strong>优势</strong>：</p>
-<ul>
-<li>本地运行，保护代码隐私</li>
-<li>可访问本地文件系统和工具</li>
-<li>支持自定义技能和插件扩展</li>
-</ul>
-<h3 id="43-团队协作增强">4.3 团队协作增强</h3>
-<p><strong>场景描述</strong>：在团队沟通中引入 AI 辅助</p>
-<p><strong>典型用例</strong>：</p>
-<ul>
-<li>会议纪要自动生成</li>
-<li>任务分配和进度跟踪</li>
-<li>知识库问答和文档检索</li>
-<li>多语言翻译和沟通桥梁</li>
-</ul>
-<p><strong>优势</strong>：</p>
-<ul>
-<li>群组对话中直接调用 AI</li>
-<li>团队成员共享 AI 能力</li>
-<li>保持沟通上下文的连贯性</li>
-</ul>
-<h3 id="44-自动化工作流">4.4 自动化工作流</h3>
-<p><strong>场景描述</strong>：构建智能自动化任务</p>
-<p><strong>典型用例</strong>：</p>
-<ul>
-<li>定时任务和提醒</li>
-<li>数据监控和异常告警</li>
-<li>文件处理和格式转换</li>
-<li>系统管理和运维辅助</li>
-</ul>
-<p><strong>优势</strong>：</p>
-<ul>
-<li>支持 Cron 定时调度</li>
-<li>可执行系统命令和脚本</li>
-<li>灵活的 Webhook 集成</li>
-</ul>
-<h2 id="五技术架构深度解析">五、技术架构深度解析</h2>
-<h3 id="51-gateway-架构设计">5.1 Gateway 架构设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "Gateway核心"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A[WebSocket服务器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B[HTTP服务器]</span></span>
-<span class="line"><span style="color:#E1E4E8">        C[路由引擎]</span></span>
-<span class="line"><span style="color:#E1E4E8">        D[状态管理器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "服务层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        E[设备管理]</span></span>
-<span class="line"><span style="color:#E1E4E8">        F[会话管理]</span></span>
-<span class="line"><span style="color:#E1E4E8">        G[健康检查]</span></span>
-<span class="line"><span style="color:#E1E4E8">        H[日志系统]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "扩展层"</span></span>
-<span class="line"><span style="color:#E1E4E8">        I[Canvas画布]</span></span>
-<span class="line"><span style="color:#E1E4E8">        J[Browser控制]</span></span>
-<span class="line"><span style="color:#E1E4E8">        K[Webhook服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        L[DNS服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> H</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> I</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> J</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> K</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> L</span></span></code></pre>
-<p><strong>Gateway 核心职责</strong>：</p>
+</style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>Clawdbot / OpenClaw 架构事实校准与设计参考</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#AI技术</span><span class="tag" data-astro-cid-bvzihdzo>#云原生架构</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="clawdbot--openclaw-架构事实校准与设计参考">Clawdbot / OpenClaw 架构事实校准与设计参考</h1>
+<p>Clawdbot 这个名字需要先校准：公开资料中的 <code>clawdbot/clawdbot</code> 仓库目前会跳转到 <a href="https://github.com/openclaw/openclaw">openclaw/openclaw</a>，官方文档也使用 OpenClaw 作为当前项目名。本文仍保留 Clawdbot 作为历史名称，但以下分析以 2026-05-29 能看到的 OpenClaw 官方仓库、README 与文档为事实边界。</p>
+<p>这篇文章不是替项目写一份”完整生产架构白皮书”。更准确地说，它做三件事：</p>
 <ol>
-<li>
-<p><strong>连接管理</strong></p>
-<ul>
-<li>维护 WebSocket 长连接池</li>
-<li>处理连接断开和重连逻辑</li>
-<li>支持多设备同时连接</li>
-</ul>
-</li>
-<li>
-<p><strong>请求路由</strong></p>
-<ul>
-<li>根据消息来源路由到对应 Agent</li>
-<li>支持负载均衡和故障转移</li>
-<li>实现请求优先级调度</li>
-</ul>
-</li>
-<li>
-<p><strong>状态同步</strong></p>
-<ul>
-<li>实时心跳检测</li>
-<li>系统健康状态监控</li>
-<li>跨设备状态同步</li>
-</ul>
-</li>
+<li>把官方资料明确写出的能力列出来。</li>
+<li>把可以合理推断的架构拆开说明，并标记为推断。</li>
+<li>把容易被夸大的地方降温，给普通开发者一套评估此类 Agent 项目的方法。</li>
 </ol>
-<h3 id="52-agent-执行模型">5.2 Agent 执行模型</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">stateDiagram-v2</span></span>
-<span class="line"><span style="color:#E1E4E8">    [*] --> 接收消息</span></span>
-<span class="line"><span style="color:#E1E4E8">    接收消息 --> 加载上下文</span></span>
-<span class="line"><span style="color:#E1E4E8">    加载上下文 --> 模型推理</span></span>
-<span class="line"><span style="color:#E1E4E8">    模型推理 --> 工具调用判断</span></span>
-<span class="line"><span style="color:#E1E4E8">    工具调用判断 --> 执行工具: 需要工具</span></span>
-<span class="line"><span style="color:#E1E4E8">    工具调用判断 --> 生成响应: 无需工具</span></span>
-<span class="line"><span style="color:#E1E4E8">    执行工具 --> 模型推理: 继续推理</span></span>
-<span class="line"><span style="color:#E1E4E8">    生成响应 --> 保存上下文</span></span>
-<span class="line"><span style="color:#E1E4E8">    保存上下文 --> 返回结果</span></span>
-<span class="line"><span style="color:#E1E4E8">    返回结果 --> [*]</span></span></code></pre>
-<p><strong>Agent 执行流程</strong>：</p>
-<ol>
-<li><strong>消息接收</strong>：从 Gateway 接收标准化消息</li>
-<li><strong>上下文加载</strong>：读取历史对话和会话状态</li>
-<li><strong>模型推理</strong>：调用 AI 模型生成响应</li>
-<li><strong>工具调用</strong>：根据需要执行系统工具</li>
-<li><strong>响应生成</strong>：格式化输出并返回</li>
-<li><strong>状态保存</strong>：更新会话上下文到存储</li>
-</ol>
-<h3 id="53-channel-适配层设计">5.3 Channel 适配层设计</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[WhatsApp Web] --> B[WhatsApp适配器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C[Telegram Bot API] --> D[Telegram适配器]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E[其他平台] --> F[通用适配器]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B --> G[统一消息接口]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    G --> H[消息标准化]</span></span>
-<span class="line"><span style="color:#E1E4E8">    H --> I[Gateway]</span></span></code></pre>
-<p><strong>适配器设计原则</strong>：</p>
-<ol>
-<li>
-<p><strong>协议抽象</strong></p>
+<h2 id="一事实校准先把边界立住">一、事实校准：先把边界立住</h2>
+<p>官方文档对 OpenClaw 的定位很清楚：它是一个自托管 Gateway，用来把用户常用的聊天应用、Web 控制台、CLI、macOS 应用、移动节点等入口连接到 AI coding agents。官方概览页写到，它运行一个 Gateway 进程，连接 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等渠道，并提供会话、路由、工具、记忆和多 Agent 路由能力。</p>
+<p>几个可以直接作为事实使用的点：</p>
 <ul>
-<li>定义统一的消息格式</li>
-<li>封装平台特定的 API 调用</li>
-<li>处理认证和会话管理</li>
+<li>当前项目名是 OpenClaw，旧的 Clawdbot 仓库地址会跳转到 OpenClaw 仓库。</li>
+<li>官方 README 将其描述为运行在用户自己设备上的个人 AI assistant，Gateway 是控制面。</li>
+<li>官方文档把 Gateway 定义为 sessions、routing、channel connections 的 single source of truth。</li>
+<li>Gateway 默认本地端口是 <code>127.0.0.1:18789</code>，控制面客户端通过 WebSocket 连接 Gateway。</li>
+<li>配置文件路径在官方文档中写为 <code>~/.openclaw/openclaw.json</code>，不是旧文里写的 <code>~/.clawdbot/clawdbot.json</code>。</li>
+<li>OpenClaw core 使用 TypeScript，推荐 Node 运行时；文档明确说 Bun 不推荐用于 Gateway。</li>
+<li>macOS companion app 和 iOS/Android mobile nodes 已被文档列为存在；Windows 和 Linux 原生 companion app 被描述为 planned，但 Gateway 当前可用，Windows 推荐 WSL2。</li>
 </ul>
-</li>
-<li>
-<p><strong>事件驱动</strong></p>
+<p>这意味着，讨论它时最好不要再笼统写成”本地优先 AI 助手完整架构”。更准确的表达是：一个自托管、聊天渠道驱动、以 Gateway 为控制面的个人 Agent 系统。</p>
+<h2 id="二已知能力官方资料能支撑什么">二、已知能力：官方资料能支撑什么</h2>
+<h3 id="1-gateway-是核心控制面">1. Gateway 是核心控制面</h3>
+<p>官方 Gateway 架构文档给出的职责包括：</p>
 <ul>
-<li>监听平台消息事件</li>
-<li>异步处理消息队列</li>
-<li>支持消息重试和错误恢复</li>
+<li>单个长期运行的 Gateway 拥有消息渠道连接。</li>
+<li>macOS app、CLI、Web UI、自动化客户端通过 WebSocket 连接 Gateway。</li>
+<li>macOS、iOS、Android、headless nodes 也通过 WebSocket 连接，但以 <code>role: node</code> 声明能力和命令。</li>
+<li>Gateway 维护 provider connections，暴露 typed WebSocket API，并用 JSON Schema 校验 inbound frames。</li>
+<li>Gateway 会发出 <code>agent</code>、<code>chat</code>、<code>presence</code>、<code>health</code>、<code>heartbeat</code>、<code>cron</code> 等事件。</li>
+<li>Gateway HTTP server 承载 Canvas 相关路径，并复用默认 Gateway 端口。</li>
 </ul>
-</li>
-<li>
-<p><strong>扩展性</strong></p>
+<p>这是可以确定的架构重心：OpenClaw 不是把每个聊天渠道各自做成一个孤立 bot，而是把渠道接入、客户端控制、节点能力和 Agent 执行入口收敛到一个 Gateway。</p>
+<h3 id="2-多渠道接入是产品主轴">2. 多渠道接入是产品主轴</h3>
+<p>官方 Channel 文档列出的渠道很多，包括 Discord、Feishu/Lark、Google Chat、iMessage、IRC、LINE、Matrix、Mattermost、Microsoft Teams、Nextcloud Talk、Nostr、QQ Bot、Signal、Slack、Synology Chat、Telegram、Tlon、Twitch、Voice Call、WebChat、WeChat、WhatsApp、Yuanbao、Zalo 等。</p>
+<p>但这里要注意两个边界：</p>
 <ul>
-<li>插件化架构，易于添加新平台</li>
-<li>配置驱动，无需修改核心代码</li>
-<li>支持自定义消息处理逻辑</li>
+<li>“列在文档里”不等于每个渠道都有同等成熟度。</li>
+<li>不同渠道的文本、媒体、反应、群组、配对、认证方式差异很大，不能简单概括为”统一支持所有消息能力”。</li>
 </ul>
-</li>
-</ol>
-<h2 id="六数据流与存储">六、数据流与存储</h2>
-<h3 id="61-数据流向图">6.1 数据流向图</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户输入] --> B{消息类型}</span></span>
-<span class="line"><span style="color:#E1E4E8">    B -->|文本| C[文本处理]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B -->|图片| D[图片处理]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B -->|文件| E[文件处理]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    C --> F[Gateway路由]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[Agent处理]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G --> H{需要AI?}</span></span>
-<span class="line"><span style="color:#E1E4E8">    H -->|是| I[调用AI API]</span></span>
-<span class="line"><span style="color:#E1E4E8">    H -->|否| J[本地处理]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    I --> K[响应生成]</span></span>
-<span class="line"><span style="color:#E1E4E8">    J --> K</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    K --> L[保存会话]</span></span>
-<span class="line"><span style="color:#E1E4E8">    L --> M[返回用户]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style L fill:#FFE4B5</span></span>
-<span class="line"><span style="color:#E1E4E8">    style I fill:#FFB6C1</span></span></code></pre>
-<h3 id="62-存储架构">6.2 存储架构</h3>
-<p><strong>配置存储</strong>：</p>
+<p>比较稳妥的说法是：OpenClaw 的方向是用一个 Gateway 同时服务多个内置渠道、捆绑插件渠道和外部插件渠道；具体可用性要按渠道文档和实际版本验证。</p>
+<h3 id="3-agent-能力建立在工具技能插件之上">3. Agent 能力建立在工具、技能、插件之上</h3>
+<p>Capabilities 文档把几个概念分得比较清楚：</p>
 <ul>
-<li>位置：<code>~/.clawdbot/clawdbot.json</code></li>
-<li>内容：系统配置、Agent 设置、API 凭证</li>
-<li>格式：JSON 格式，支持热重载</li>
+<li>Tool 是 Agent 可以调用的 typed function，例如 <code>exec</code>、<code>browser</code>、<code>web_search</code>、<code>message</code>、<code>image_generate</code>。</li>
+<li>Skill 是 <code>SKILL.md</code> 指令包，用来教 Agent 按某种工作流执行。</li>
+<li>Plugin 用来增加运行时能力，例如工具、模型 provider、渠道、hook、技能包、媒体生成、Web 搜索等。</li>
 </ul>
-<p><strong>会话存储</strong>：</p>
+<p>这比”插件系统很强大”这种说法更具体：OpenClaw 的扩展面至少分为模型可见的工具、提示词层面的技能、运行时代码层面的插件三类。开发者评估时也应该分开看：工具影响 Agent 能做什么，技能影响 Agent 怎么做，插件影响系统能接入什么运行时能力。</p>
+<h3 id="4-安全控制确实存在但不能等同于无风险">4. 安全控制确实存在，但不能等同于无风险</h3>
+<p>官方 Gateway 架构文档提到：</p>
 <ul>
-<li>位置：<code>~/.clawdbot/agents/{agent_name}/sessions/</code></li>
-<li>内容：对话历史、上下文状态、用户偏好</li>
-<li>格式：JSON 文件，按会话 ID 组织</li>
+<li>WebSocket 首帧必须是 <code>connect</code>。</li>
+<li>Gateway 支持 shared-secret auth。</li>
+<li>Tailscale Serve 或 trusted-proxy 模式可以从请求头获取身份。</li>
+<li><code>gateway.auth.mode: "none"</code> 会关闭 shared-secret auth，文档明确提示不要用于公网或不可信入口。</li>
+<li>所有 WebSocket clients 和 nodes 都包含 device identity。</li>
+<li>新 device ID 需要 pairing approval，Gateway 会签发 device token。</li>
+<li>非本地连接仍需要显式批准。</li>
 </ul>
-<p><strong>工作空间</strong>：</p>
+<p>Capabilities 文档还提到，工具策略会在模型调用前执行；模型只会看到 active profile、allow/deny policy、provider restrictions、sandbox state、channel permissions、plugin availability 等过滤后仍可用的工具。</p>
+<p>所以，OpenClaw 不是完全没有安全边界。但也不能把它写成”沙箱隔离保证安全”或”生产级安全系统”。它的核心价值是让用户自托管和控制入口；它的核心风险也来自这里：一旦你把消息渠道、浏览器、文件、命令执行、插件和长期会话接到一起，攻击面会显著扩大。</p>
+<h2 id="三可能架构可以推断但不要写成源码事实">三、可能架构：可以推断，但不要写成源码事实</h2>
+<p>基于官方文档，比较合理的运行链路可以写成这样：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>聊天渠道 / Web UI / CLI / 移动节点</span></span>
+<span class="line"><span>        |</span></span>
+<span class="line"><span>        v</span></span>
+<span class="line"><span>Gateway: 连接、认证、配对、路由、事件、会话入口</span></span>
+<span class="line"><span>        |</span></span>
+<span class="line"><span>        v</span></span>
+<span class="line"><span>Agent runtime: 上下文、工具可见性、模型调用、执行循环</span></span>
+<span class="line"><span>        |</span></span>
+<span class="line"><span>        v</span></span>
+<span class="line"><span>Tools / Skills / Plugins / Model providers / Nodes</span></span>
+<span class="line"><span>        |</span></span>
+<span class="line"><span>        v</span></span>
+<span class="line"><span>消息回复、文件或系统操作、浏览器操作、Canvas、自动化任务</span></span></code></pre>
+<p>这条链路里，“Gateway 是控制面”和”客户端通过 WebSocket 连接 Gateway”有官方文档支撑；“Agent runtime 如何在每一步内部调度工具、压缩上下文、恢复失败、选择模型”则需要进一步阅读源码和具体版本，不能仅靠概览文档下结论。</p>
+<p>如果把它抽象成工程模式，OpenClaw 更像是下面这种形态：</p>
 <ul>
-<li>位置：<code>~/clawd/</code></li>
-<li>内容：Agent 可访问的文件和资源</li>
-<li>权限：受沙箱限制，保护系统安全</li>
+<li><strong>入口层</strong>：聊天渠道、WebChat、CLI、桌面应用、移动节点。</li>
+<li><strong>控制面</strong>：Gateway 统一管理连接、认证、路由、会话入口、事件流。</li>
+<li><strong>Agent 层</strong>：把用户意图转成模型调用和工具调用。</li>
+<li><strong>能力层</strong>：工具、插件、技能、模型 provider、浏览器、媒体、自动化。</li>
+<li><strong>本地状态层</strong>：配置、配对、会话、记忆、渠道状态。</li>
 </ul>
-<p><strong>日志系统</strong>：</p>
+<p>这里的重点不是画更多图，而是理解边界：Gateway 不应该被想象成传统云原生 API 网关；Agent runtime 也不应该被想象成一个已证明支持大规模多租户生产流量的任务调度平台。它首先是个人自托管系统，然后才谈扩展。</p>
+<h2 id="四适合借鉴的设计">四、适合借鉴的设计</h2>
+<h3 id="1-用-gateway-收敛复杂入口">1. 用 Gateway 收敛复杂入口</h3>
+<p>聊天应用、Web 控制台、桌面客户端、移动节点的协议都不一样。OpenClaw 选择用一个 Gateway 做中间控制面，这个方向值得借鉴。</p>
+<p>好处是边界清楚：渠道适配负责接入，Gateway 负责连接和路由，Agent runtime 负责执行。坏处是 Gateway 变成强中心组件，一旦状态模型设计不好，后续会被会话、配对、重连、重试、权限、日志全部拖住。</p>
+<p>普通开发者做类似项目时，不必一开始支持二十个渠道。更现实的做法是先把一个渠道、一个 Gateway、一个 Agent loop 做稳定，再抽象 channel adapter。</p>
+<h3 id="2-把工具技能插件分层">2. 把工具、技能、插件分层</h3>
+<p>很多 Agent 项目把”能力扩展”混成一团：有些是工具调用，有些是系统提示词，有些是 Node 包，有些是外部服务凭证。OpenClaw 文档把 Tool、Skill、Plugin 分开，这是一个成熟的设计信号。</p>
+<p>这个分层能降低长期混乱：</p>
 <ul>
-<li>位置：<code>/tmp/clawdbot/</code></li>
-<li>内容：运行日志、错误追踪、审计记录</li>
-<li>轮转：按日期自动轮转，可配置保留期限</li>
+<li>工具需要 schema、权限、执行结果和审计。</li>
+<li>技能需要加载顺序、触发条件和上下文预算。</li>
+<li>插件需要生命周期、manifest、依赖、安装来源和权限请求。</li>
 </ul>
-<h2 id="七扩展与定制">七、扩展与定制</h2>
-<h3 id="71-插件系统">7.1 插件系统</h3>
-<p>Clawdbot 支持通过插件扩展功能：</p>
-<p><strong>插件类型</strong>：</p>
+<p>如果你在设计自己的 Agent 系统，这三类能力最好从第一天就拆开。否则项目到了第三个月，所有扩展都会变成”往 prompt 里塞一段话加一个脚本”。</p>
+<h3 id="3-工具策略在模型调用前生效">3. 工具策略在模型调用前生效</h3>
+<p>Capabilities 文档明确说，工具策略在模型调用前执行；被策略移除的工具不会进入当轮模型 schema。这是很重要的安全和成本设计。</p>
+<p>原因很简单：不要只在工具执行时拦截，也要在模型思考前减少它能看到的动作空间。工具越多，模型越容易误选；危险工具越早被过滤，后面的审批压力越小。</p>
+<p>这类设计比”执行前弹窗确认”更底层。弹窗是最后一道门，工具可见性控制才是第一道门。</p>
+<h3 id="4-自托管不等于孤岛">4. 自托管不等于孤岛</h3>
+<p>OpenClaw 的定位不是纯离线系统。它可以连接外部模型 provider，可以接聊天平台，可以通过插件增加能力，也支持 Tailscale、SSH tunnel、VPS hosting 等远程访问方式。</p>
+<p>这类系统更准确的描述是”用户控制的运行边界”，而不是”数据绝不出本机”。如果使用云端 LLM、第三方聊天平台、外部插件或远程浏览器，数据仍可能离开本机。文章和产品文案都应该把这点讲清楚。</p>
+<h2 id="五不应夸大的地方">五、不应夸大的地方</h2>
+<h3 id="1-不要说它天然生产级">1. 不要说它天然生产级</h3>
+<p>官方文档提到 systemd、launchd、Scheduled Task、health、Gateway status、Tailscale、TLS、pairing 等运维能力。这些说明项目认真考虑了长期运行，但不足以推出”生产级高可用”。</p>
+<p>除非源码和部署文档明确证明，否则不要写：</p>
 <ul>
-<li><strong>技能插件</strong>：扩展 Agent 的能力（如天气查询、日历管理）</li>
-<li><strong>Channel 插件</strong>：支持新的消息平台</li>
-<li><strong>工具插件</strong>：添加新的系统工具和命令</li>
-<li><strong>模型插件</strong>：集成新的 AI 模型提供商</li>
+<li>负载均衡。</li>
+<li>自动故障转移。</li>
+<li>多 Gateway 主从复制。</li>
+<li>多租户隔离。</li>
+<li>企业级审计闭环。</li>
+<li>SLA 或大规模并发验证。</li>
 </ul>
-<p><strong>插件机制</strong>：</p>
+<p>这些都不是个人自托管 Agent 的默认能力。</p>
+<h3 id="2-不要把插件写成安全沙箱">2. 不要把插件写成安全沙箱</h3>
+<p>官方文档说明插件可以增加工具、provider、渠道、hook 和技能包，也提到权限请求和工具策略。但”有权限控制”不等于”插件被强沙箱隔离”。</p>
+<p>对普通用户来说，插件最大的风险不是它能不能安装，而是安装后它能被 Agent 通过什么路径调用、能访问哪些文件和网络、凭证在哪里、审计是否看得懂。尤其是来自社区市场、npm、git、本地目录或压缩包的插件，安装前要按供应链软件来审查，而不是按聊天机器人配置项来对待。</p>
+<h3 id="3-不要把本地优先写成隐私绝对安全">3. 不要把”本地优先”写成”隐私绝对安全”</h3>
+<p>自托管让用户拥有更多控制权，但风险没有消失，只是转移到了用户自己的机器、网络、凭证、插件和配置上。</p>
+<p>典型风险包括：</p>
 <ul>
-<li>基于 Node.js 模块系统</li>
-<li>声明式配置和注册</li>
-<li>沙箱隔离，保证安全性</li>
-<li>热加载，无需重启服务</li>
+<li>WhatsApp、Telegram、Slack 等渠道本身仍是外部平台。</li>
+<li>云端 LLM provider 会接收发送给模型的上下文。</li>
+<li>浏览器和系统命令工具可能把 Agent 的错误判断放大为真实副作用。</li>
+<li>Gateway 如果暴露到公网且关闭认证，会变成高危入口。</li>
+<li>长期记忆和会话历史一旦落盘，就需要备份、清理和加密策略。</li>
 </ul>
-<h3 id="72-自定义-agent">7.2 自定义 Agent</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[创建Agent配置] --> B[选择AI模型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[配置工作空间]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[设置技能集]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[定义行为规则]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[配置路由规则]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[启动Agent实例]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style A fill:#E6E6FA</span></span>
-<span class="line"><span style="color:#E1E4E8">    style G fill:#90EE90</span></span></code></pre>
-<p><strong>Agent 定制选项</strong>：</p>
-<ol>
-<li>
-<p><strong>模型选择</strong></p>
+<p>所以更准确的结论是：OpenClaw 给用户更多控制面，但用户也承担更多运维和安全责任。</p>
+<h3 id="4-不要把所有渠道能力视为一致">4. 不要把所有渠道能力视为一致</h3>
+<p>文档列出的渠道非常多，但每个渠道的 API 能力、登录方式、群组机制、媒体支持、消息撤回、反应、bot 限制都不同。一个架构上支持多渠道的系统，实际产品体验仍然可能高度不一致。</p>
+<p>评估时不要只看”支持 WhatsApp / Telegram / Slack”，要看：</p>
 <ul>
-<li>支持 Claude、GPT、本地模型</li>
-<li>可配置模型参数（温度、最大长度等）</li>
-<li>支持模型切换和降级策略</li>
+<li>是否支持群组。</li>
+<li>是否支持媒体。</li>
+<li>是否需要 QR 配对。</li>
+<li>是否会保存会话状态到磁盘。</li>
+<li>是否有 allowlist 和 mention rules。</li>
+<li>是否能防止 bot loop。</li>
+<li>出错时有没有可理解的诊断日志。</li>
 </ul>
-</li>
-<li>
-<p><strong>行为定制</strong></p>
+<h2 id="六普通开发者如何评估这类-agent-项目">六、普通开发者如何评估这类 Agent 项目</h2>
+<h3 id="1-先跑最小闭环不要先看宣传图">1. 先跑最小闭环，不要先看宣传图</h3>
+<p>一个 Agent 项目是否可用，最小闭环是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="text"><code><span class="line"><span>一个入口 -> 一个会话 -> 一次模型调用 -> 一个工具调用 -> 一条可追踪回复</span></span></code></pre>
+<p>如果这个闭环稳定，再看多渠道、多 Agent、插件市场、自动化任务。反过来，如果最小闭环都需要大量手工修配置，后面的能力越多，维护成本越高。</p>
+<h3 id="2-看安全默认值而不是安全选项">2. 看安全默认值，而不是安全选项</h3>
+<p>文档里有安全选项不够，关键是默认值是否保守。建议重点检查：</p>
 <ul>
-<li>自定义系统提示词</li>
-<li>设置响应风格和语气</li>
-<li>配置工具使用权限</li>
+<li>Gateway 默认是否只绑定本地地址。</li>
+<li>远程访问是否推荐 VPN、Tailscale 或 SSH tunnel，而不是裸公网。</li>
+<li>新设备是否必须配对。</li>
+<li>危险工具是否默认不可见。</li>
+<li>命令执行是否有审批或沙箱。</li>
+<li>群组消息是否需要 mention 或 allowlist。</li>
+<li>插件安装是否显示权限请求。</li>
 </ul>
-</li>
-<li>
-<p><strong>路由规则</strong></p>
+<p>安全能力只有在默认路径里生效，才真正保护普通用户。</p>
+<h3 id="3-看状态落在哪里">3. 看状态落在哪里</h3>
+<p>Agent 项目的复杂度往往藏在状态里。要搞清楚：</p>
 <ul>
-<li>基于关键词的路由</li>
-<li>基于用户/群组的路由</li>
-<li>基于时间和条件的路由</li>
+<li>配置在哪里。</li>
+<li>渠道登录态在哪里。</li>
+<li>会话历史在哪里。</li>
+<li>记忆在哪里。</li>
+<li>插件和技能在哪里。</li>
+<li>凭证在哪里。</li>
+<li>日志在哪里。</li>
 </ul>
-</li>
-</ol>
-<h3 id="73-webhook-集成">7.3 Webhook 集成</h3>
-<p>Clawdbot 支持双向 Webhook 集成：</p>
-<p><strong>入站 Webhook</strong>：</p>
+<p>OpenClaw 官方文档明确提到配置路径 <code>~/.openclaw/openclaw.json</code>。至于每类状态的精确文件布局，应以当前版本文档和源码为准，不要沿用旧名称时代的路径。</p>
+<h3 id="4-看工具边界是否能解释清楚">4. 看工具边界是否能解释清楚</h3>
+<p>Agent 真正危险的地方不是回答问题，而是能行动。凡是支持 <code>exec</code>、浏览器控制、文件写入、消息发送、Webhook、日历、邮箱、支付或云账号操作的项目，都必须回答三个问题：</p>
 <ul>
-<li>接收外部系统的事件通知</li>
-<li>触发 Agent 执行特定任务</li>
-<li>支持认证和签名验证</li>
+<li>模型什么时候能看到这个工具？</li>
+<li>调用前是否需要人批准？</li>
+<li>调用后是否有日志和回滚方式？</li>
 </ul>
-<p><strong>出站 Webhook</strong>：</p>
+<p>如果项目只能回答”相信模型”或”用户自己小心”，就不适合放进重要账户和生产环境。</p>
+<h3 id="5-看项目是否承认限制">5. 看项目是否承认限制</h3>
+<p>成熟项目通常会明确写出实验功能、推荐运行时、已知问题、远程访问风险和平台差异。OpenClaw 文档中例如明确说 Node 是推荐运行时，Bun 不推荐用于 Gateway；也把 Windows / Linux companion app 标成 planned，而不是已经完成。</p>
+<p>这种限制说明反而是可信度信号。真正需要警惕的是那些每个能力都写”支持”，但没有版本、边界、失败模式和安全说明的项目。</p>
+<h2 id="七结论">七、结论</h2>
+<p>Clawdbot / OpenClaw 值得关注，不是因为它证明了”个人 AI 助手已经生产级自治”，而是因为它把几个重要方向放到同一个可运行项目里：</p>
 <ul>
-<li>将 Agent 响应推送到外部系统</li>
-<li>支持自定义 HTTP 请求格式</li>
-<li>实现与第三方服务的集成</li>
+<li>用 Gateway 统一多渠道入口。</li>
+<li>让 Agent 通过用户已有聊天工具触达。</li>
+<li>把工具、技能、插件作为不同层次的扩展面。</li>
+<li>用自托管方式把运行边界交还给用户。</li>
+<li>在 WebSocket、配对、工具策略、渠道 allowlist 等位置设置控制点。</li>
 </ul>
-<h2 id="八部署模式">八、部署模式</h2>
-<h3 id="81-本地模式">8.1 本地模式</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户设备] --> B[Clawdbot Gateway]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[本地Agent]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[本地存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> E[外部AI API]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style A fill:#E6E6FA</span></span>
-<span class="line"><span style="color:#E1E4E8">    style B fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C fill:#90EE90</span></span>
-<span class="line"><span style="color:#E1E4E8">    style D fill:#FFE4B5</span></span>
-<span class="line"><span style="color:#E1E4E8">    style E fill:#FFB6C1</span></span></code></pre>
-<p><strong>特点</strong>：</p>
+<p>但公开写作时必须保持边界感。能从官方文档确认的，就写成事实；只能从架构形态推出来的，就写成推断；需要生产验证的数据，就不要用营销口吻替它补齐。</p>
+<p>对普通开发者来说，最有价值的不是照搬 OpenClaw 的全部功能，而是借鉴它的架构取舍：先把入口、控制面、执行面、能力面和状态面拆清楚，再逐步增加渠道和工具。Agent 系统的工程难点从来不是”接一个模型 API”，而是让一个会行动的模型在长期运行、复杂权限和真实副作用里仍然可控。</p>
+<h2 id="参考资料">参考资料</h2>
 <ul>
-<li>完全在用户设备上运行</li>
-<li>数据不离开本地环境</li>
-<li>适合个人使用和隐私敏感场景</li>
-<li>需要设备保持在线</li>
-</ul>
-<h3 id="82-服务器模式">8.2 服务器模式</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[用户设备1] --> D[远程Gateway]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B[用户设备2] --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    C[用户设备3] --> D</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[Agent集群]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[共享存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> G[AI服务]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style D fill:#87CEEB</span></span>
-<span class="line"><span style="color:#E1E4E8">    style E fill:#87CEEB</span></span>
-<span class="line"><span style="color:#E1E4E8">    style F fill:#FFE4B5</span></span></code></pre>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>部署在云服务器或 VPS</li>
-<li>支持多设备访问</li>
-<li>更好的可用性和性能</li>
-<li>适合团队使用</li>
-</ul>
-<h3 id="83-混合模式">8.3 混合模式</h3>
-<p><strong>特点</strong>：</p>
-<ul>
-<li>Gateway 运行在服务器</li>
-<li>Agent 可在本地或远程运行</li>
-<li>灵活的数据存储策略</li>
-<li>平衡性能、隐私和可用性</li>
-</ul>
-<h2 id="九性能与优化">九、性能与优化</h2>
-<h3 id="91-性能优化策略">9.1 性能优化策略</h3>
-<p><strong>连接优化</strong>：</p>
-<ul>
-<li>WebSocket 长连接复用</li>
-<li>消息批处理和压缩</li>
-<li>连接池管理</li>
-</ul>
-<p><strong>缓存策略</strong>：</p>
-<ul>
-<li>会话上下文缓存</li>
-<li>模型响应缓存</li>
-<li>静态资源缓存</li>
-</ul>
-<p><strong>并发控制</strong>：</p>
-<ul>
-<li>请求队列管理</li>
-<li>并发限流</li>
-<li>优先级调度</li>
-</ul>
-<h3 id="92-资源管理">9.2 资源管理</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[资源监控] --> B[CPU使用率]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C[内存占用]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> D[网络流量]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> E[存储空间]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B --> F[告警系统]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> F</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    F --> G[自动调优]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F --> H[降级策略]</span></span></code></pre>
-<p><strong>资源限制</strong>：</p>
-<ul>
-<li>会话数量限制</li>
-<li>上下文长度限制</li>
-<li>并发请求限制</li>
-<li>存储空间配额</li>
-</ul>
-<h2 id="十安全考虑">十、安全考虑</h2>
-<h3 id="101-威胁模型">10.1 威胁模型</h3>
-<p><strong>潜在威胁</strong>：</p>
-<ul>
-<li>未授权访问</li>
-<li>数据泄露</li>
-<li>API 密钥泄露</li>
-<li>恶意命令注入</li>
-<li>资源耗尽攻击</li>
-</ul>
-<h3 id="102-安全措施">10.2 安全措施</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[安全层次] --> B[网络安全]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C[认证授权]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> D[数据安全]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> E[运行时安全]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B --> B1[TLS加密]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> B2[防火墙规则]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    C --> C1[设备配对]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> C2[Token验证]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    D --> D1[本地加密]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> D2[传输加密]</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    E --> E1[沙箱隔离]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> E2[权限控制]</span></span></code></pre>
-<p><strong>安全实践</strong>：</p>
-<ol>
-<li>
-<p><strong>认证与授权</strong></p>
-<ul>
-<li>设备配对机制</li>
-<li>Token 过期和轮转</li>
-<li>细粒度权限控制</li>
-</ul>
-</li>
-<li>
-<p><strong>数据保护</strong></p>
-<ul>
-<li>敏感数据加密存储</li>
-<li>传输层 TLS 加密</li>
-<li>定期安全审计</li>
-</ul>
-</li>
-<li>
-<p><strong>运行时安全</strong></p>
-<ul>
-<li>沙箱环境隔离</li>
-<li>命令白名单机制</li>
-<li>资源使用限制</li>
-</ul>
-</li>
-<li>
-<p><strong>审计与监控</strong></p>
-<ul>
-<li>完整的操作日志</li>
-<li>异常行为检测</li>
-<li>安全事件告警</li>
-</ul>
-</li>
-</ol>
-<h2 id="十一与传统-ai-助手的对比">十一、与传统 AI 助手的对比</h2>
-<h3 id="111-架构对比">11.1 架构对比</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "传统AI助手"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A1[Web界面] --> B1[云端服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B1 --> C1[集中式存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B1 --> D1[AI模型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    subgraph "Clawdbot"</span></span>
-<span class="line"><span style="color:#E1E4E8">        A2[消息应用] --> B2[本地Gateway]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B2 --> C2[本地存储]</span></span>
-<span class="line"><span style="color:#E1E4E8">        B2 --> D2[可选AI服务]</span></span>
-<span class="line"><span style="color:#E1E4E8">    end</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    style C1 fill:#FFB6C1</span></span>
-<span class="line"><span style="color:#E1E4E8">    style C2 fill:#90EE90</span></span></code></pre>
-<h3 id="112-特性对比">11.2 特性对比</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>维度</th><th>传统 AI 助手</th><th>Clawdbot</th></tr></thead><tbody><tr><td><strong>部署方式</strong></td><td>云端 SaaS</td><td>自托管</td></tr><tr><td><strong>数据存储</strong></td><td>云端集中存储</td><td>本地优先</td></tr><tr><td><strong>隐私控制</strong></td><td>有限</td><td>完全控制</td></tr><tr><td><strong>访问方式</strong></td><td>Web/App</td><td>消息应用</td></tr><tr><td><strong>定制能力</strong></td><td>受限</td><td>高度可定制</td></tr><tr><td><strong>离线能力</strong></td><td>不支持</td><td>部分支持</td></tr><tr><td><strong>成本模式</strong></td><td>订阅制</td><td>自主控制</td></tr></tbody></table>
-<h2 id="十二未来发展方向">十二、未来发展方向</h2>
-<h3 id="121-技术演进">12.1 技术演进</h3>
-<p><strong>本地模型支持</strong>：</p>
-<ul>
-<li>集成更多开源模型</li>
-<li>支持模型量化和优化</li>
-<li>降低对外部 API 的依赖</li>
-</ul>
-<p><strong>多模态能力</strong>：</p>
-<ul>
-<li>增强图像理解和生成</li>
-<li>支持语音输入输出</li>
-<li>视频内容分析</li>
-</ul>
-<p><strong>协作增强</strong>：</p>
-<ul>
-<li>多 Agent 协同工作</li>
-<li>分布式任务执行</li>
-<li>知识共享机制</li>
-</ul>
-<h3 id="122-生态建设">12.2 生态建设</h3>
-<p><strong>社区驱动</strong>：</p>
-<ul>
-<li>插件市场和分享平台</li>
-<li>最佳实践和案例库</li>
-<li>开发者工具和 SDK</li>
-</ul>
-<p><strong>企业应用</strong>：</p>
-<ul>
-<li>团队版功能增强</li>
-<li>企业级安全和合规</li>
-<li>私有化部署方案</li>
-</ul>
-<h2 id="十三总结">十三、总结</h2>
-<p>Clawdbot 代表了个人 AI 助手的新范式：</p>
-<p><strong>核心价值</strong>：</p>
-<ul>
-<li><strong>隐私优先</strong>：用户完全掌控数据和隐私</li>
-<li><strong>开放透明</strong>：开源架构，可审计和定制</li>
-<li><strong>无缝集成</strong>：融入日常使用的消息应用</li>
-<li><strong>灵活部署</strong>：支持本地、云端、混合模式</li>
-</ul>
-<p><strong>技术创新</strong>：</p>
-<ul>
-<li>本地优先的架构设计</li>
-<li>统一的消息接口抽象</li>
-<li>可扩展的插件系统</li>
-<li>灵活的 Agent 编排机制</li>
-</ul>
-<p><strong>应用前景</strong>：</p>
-<ul>
-<li>个人知识管理和生产力提升</li>
-<li>开发者工具链集成</li>
-<li>团队协作增强</li>
-<li>企业智能化转型</li>
-</ul>
-<p>Clawdbot 不仅是一个技术工具，更是对 AI 助手应该如何服务用户的一次深刻思考。它证明了在保护隐私和用户控制的前提下，AI 助手同样可以提供强大而便捷的服务。随着技术的不断演进和社区的持续贡献，Clawdbot 有望成为个人 AI 助手领域的重要参考实现。</p>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
+<li><a href="https://github.com/openclaw/openclaw">OpenClaw GitHub 仓库</a></li>
+<li><a href="https://docs.openclaw.ai/">OpenClaw 官方概览</a></li>
+<li><a href="https://docs.openclaw.ai/concepts/architecture">Gateway architecture</a></li>
+<li><a href="https://docs.openclaw.ai/channels">Chat channels</a></li>
+<li><a href="https://docs.openclaw.ai/tools">Capabilities overview</a></li>
+<li><a href="https://docs.openclaw.ai/platforms">Platforms</a></li>
+<li><a href="https://docs.openclaw.ai/gateway/security">Gateway security</a></li>
+<li><a href="https://docs.openclaw.ai/gateway/configuration">Gateway configuration</a></li>
+</ul>  </div> </article>  <footer data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa>© 2026 ink-hz · AI & 云原生技术</span> <span data-astro-cid-37fxchfa> <a href="mailto:ink_hz@163.com" data-astro-cid-37fxchfa>ink_hz@163.com</a>
 &nbsp;·&nbsp;
 <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </span> </footer> </main> <!-- Mermaid.js 客户端渲染 --> <script type="module">
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';

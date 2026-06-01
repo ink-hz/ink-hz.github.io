@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="IAM系统完整解析：JWT/Opaque Token机制、网关认证鉴权架构、RBAC/ABAC权限模型、AI Agent身份管理及主流IAM方案深度对比。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>身份认证与访问控制深度理论知识</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="IAM系统完整解析：JWT/Opaque Token机制、网关认证鉴权架构、RBAC/ABAC权限模型、AI Agent短期凭证与身份管理及主流IAM方案深度对比。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>身份认证与访问控制深度理论知识</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
 .hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>身份认证与访问控制深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#安全</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="身份认证与访问控制深度理论知识">身份认证与访问控制深度理论知识</h1>
 <blockquote>
@@ -326,12 +326,13 @@
 
 
 
-<table><thead><tr><th>场景</th><th>推荐</th><th>理由</th></tr></thead><tbody><tr><td>高并发API</td><td>JWT</td><td>无需每次查询IAM，减少延迟</td></tr><tr><td>金融/安全敏感</td><td>Opaque</td><td>可主动撤销，集中控制</td></tr><tr><td>微服务网关</td><td>JWT</td><td>网关本地验证，降低IAM压力</td></tr><tr><td>内部管理系统</td><td>Opaque</td><td>需要实时权限更新</td></tr><tr><td>AI Agent</td><td>JWT</td><td>长期有效，减少认证次数</td></tr></tbody></table>
+<table><thead><tr><th>场景</th><th>推荐</th><th>理由</th></tr></thead><tbody><tr><td>高并发API</td><td>JWT</td><td>无需每次查询IAM，减少延迟</td></tr><tr><td>金融/安全敏感</td><td>Opaque</td><td>可主动撤销，集中控制</td></tr><tr><td>微服务网关</td><td>JWT</td><td>网关本地验证，降低IAM压力</td></tr><tr><td>内部管理系统</td><td>Opaque</td><td>需要实时权限更新</td></tr><tr><td>AI Agent</td><td>短期 Access Token + 可撤销会话/刷新机制</td><td>降低凭证泄露后的可用窗口，便于审计、轮换和最小权限控制</td></tr></tbody></table>
 <p><strong>混合方案</strong> (推荐):</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户登录 → IAM颁发 JWT (短期，1小时) + Refresh Token (Opaque, 7天)</span></span>
-<span class="line"><span>- JWT: 日常API访问，网关本地验证</span></span>
-<span class="line"><span>- Refresh Token: 刷新JWT，通过IAM验证</span></span>
-<span class="line"><span>- 撤销: 将JWT的jti加入黑名单 (Redis)</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户登录 → IAM颁发 JWT (短期，5-60分钟) + Refresh Token (Opaque, 按风险配置)</span></span>
+<span class="line"><span>- JWT: 日常API访问，网关本地验证；高风险场景缩短有效期并绑定 audience/scope</span></span>
+<span class="line"><span>- Refresh Token: 通过IAM验证并采用 rotation、重用检测、撤销和设备/客户端绑定</span></span>
+<span class="line"><span>- 撤销: 将JWT的jti加入黑名单 (Redis)，或优先采用Opaque Token/Introspection集中控制</span></span>
+<span class="line"><span>- 高价值客户端: 使用 mTLS 或 DPoP 等 sender-constrained token，避免 bearer token 被复制后可直接使用</span></span></code></pre>
 <hr>
 <h2 id="网关认证鉴权架构">网关认证鉴权架构</h2>
 <h3 id="31-完整认证鉴权流程">3.1 完整认证鉴权流程</h3>
@@ -391,9 +392,9 @@
 <span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    Note over Client,Service: 阶段4: 请求转发</span></span>
-<span class="line"><span style="color:#E1E4E8">    Gateway->>Service: 转发请求 + 用户上下文&#x3C;br/>Headers:&#x3C;br/>• X-User-ID: user_123&#x3C;br/>• X-User-Roles: admin,editor&#x3C;br/>• X-Tenant-ID: org_789</span></span>
+<span class="line"><span style="color:#E1E4E8">    Gateway->>Service: 转发请求 + 已签名用户上下文&#x3C;br/>Headers:&#x3C;br/>• X-User-ID: user_123&#x3C;br/>• X-User-Roles: admin,editor&#x3C;br/>• X-Tenant-ID: org_789&#x3C;br/>• X-Context-Signature: ...</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Note over Service: 服务信任网关&#x3C;br/>无需再次认证</span></span>
+<span class="line"><span style="color:#E1E4E8">    Note over Service: 仅信任来自网关可信边界的已清洗/已签名上下文</span></span>
 <span class="line"><span style="color:#E1E4E8">    Service->>Gateway: 响应</span></span>
 <span class="line"><span style="color:#E1E4E8">    Gateway->>Client: 响应</span></span></code></pre>
 <h3 id="32-网关身份还原实现">3.2 网关身份还原实现</h3>
@@ -474,7 +475,15 @@
 <span class="line"><span style="color:#E1E4E8">        }</span></span></code></pre>
 <h3 id="33-用户上下文传递">3.3 用户上下文传递</h3>
 <p>网关验证完成后，需要将用户信息传递给后端服务：</p>
-<p><strong>方式一: HTTP Header传递（推荐）</strong></p>
+<p><strong>方式一: HTTP Header传递（仅限可信网关边界内）</strong></p>
+<p>Header 传递用户上下文不是天然安全机制。只有在网关与后端之间存在明确可信边界时才适用，并且必须满足：</p>
+<ol>
+<li>网关入口先清洗/删除所有客户端提交的 <code>X-User-*</code>、<code>X-Tenant-*</code>、<code>X-Agent-*</code> 等内部上下文 Header，防止伪造。</li>
+<li>网关到后端使用 mTLS、服务网格身份或等价网络隔离，后端只接受来自可信网关/sidecar 的流量。</li>
+<li>用户上下文 Header 需要签名或封装为内部 JWT，包含 <code>iss</code>、<code>aud</code>、<code>iat</code>、<code>exp</code>、<code>jti</code>，后端验证签名和短过期时间。</li>
+<li>Header 中只传递最小必要字段，不传身份证号、手机号、完整邮箱、原始 Token 等敏感数据。</li>
+<li>后端对高风险操作仍应调用策略服务或验证内部令牌，不能把明文 Header 当作最终授权事实。</li>
+</ol>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span># 网关添加自定义Header</span></span>
 <span class="line"><span>GET /api/users HTTP/1.1</span></span>
 <span class="line"><span>Host: user-service</span></span>
@@ -484,11 +493,15 @@
 <span class="line"><span>X-User-Roles: admin,editor</span></span>
 <span class="line"><span>X-User-Permissions: read:users,write:posts</span></span>
 <span class="line"><span>X-Tenant-ID: org_789</span></span>
-<span class="line"><span>X-Agent-Type: ai_assistant</span></span></code></pre>
+<span class="line"><span>X-Agent-Type: ai_assistant</span></span>
+<span class="line"><span>X-Context-Issuer: api-gateway</span></span>
+<span class="line"><span>X-Context-Expires-At: 1706455200</span></span>
+<span class="line"><span>X-Context-Signature: base64url(hmac_or_signature)</span></span></code></pre>
 <p><strong>后端服务获取用户上下文</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> flask </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> request</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> get_current_user</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#6A737D">    # 生产环境需先验证请求来源、上下文签名、过期时间和audience；此处只展示字段读取。</span></span>
 <span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#9ECBFF">        "user_id"</span><span style="color:#E1E4E8">: request.headers.get(</span><span style="color:#9ECBFF">"X-User-ID"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#9ECBFF">        "roles"</span><span style="color:#E1E4E8">: request.headers.get(</span><span style="color:#9ECBFF">"X-User-Roles"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">).split(</span><span style="color:#9ECBFF">","</span><span style="color:#E1E4E8">),</span></span>
@@ -750,8 +763,9 @@
 
 
 
-<table><thead><tr><th>特性</th><th>普通用户</th><th>AI Agent</th></tr></thead><tbody><tr><td><strong>身份类型</strong></td><td>人类用户</td><td>服务账号</td></tr><tr><td><strong>认证方式</strong></td><td>密码 + MFA</td><td>API Key / Client Credentials</td></tr><tr><td><strong>令牌有效期</strong></td><td>短期 (1小时)</td><td>长期 (7天~永久)</td></tr><tr><td><strong>权限范围</strong></td><td>基于角色</td><td>基于用途限定</td></tr><tr><td><strong>审计要求</strong></td><td>记录操作人</td><td>记录代理用户 (on-behalf-of)</td></tr></tbody></table>
+<table><thead><tr><th>特性</th><th>普通用户</th><th>AI Agent</th></tr></thead><tbody><tr><td><strong>身份类型</strong></td><td>人类用户</td><td>服务账号</td></tr><tr><td><strong>认证方式</strong></td><td>密码 + MFA / 无密码</td><td>Client Credentials、工作负载身份、mTLS/DPoP、Token Exchange</td></tr><tr><td><strong>令牌有效期</strong></td><td>短期 (5-60分钟)</td><td>短期 (通常分钟级到1小时，按风险收敛)</td></tr><tr><td><strong>权限范围</strong></td><td>基于角色</td><td>基于用途、scope、资源和委托边界限定</td></tr><tr><td><strong>审计要求</strong></td><td>记录操作人</td><td>记录代理用户 (on-behalf-of)</td></tr></tbody></table>
 <h3 id="52-ai-agent的令牌设计">5.2 AI Agent的令牌设计</h3>
+<p>AI Agent 不应依赖 7 天到永久有效的 bearer token。更稳妥的设计是：短期 Access Token、可撤销会话、Refresh Token Rotation（如确需刷新）、密钥/证书轮换、最小权限 scope、sender-constrained token，以及完整审计。</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
 <span class="line"><span style="color:#79B8FF">  "sub"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"agent_ai_assistant_123"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#79B8FF">  "agent_type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"ai_assistant"</span><span style="color:#E1E4E8">,</span></span>
@@ -768,6 +782,7 @@
 <span class="line"><span style="color:#E1E4E8">  ],</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#79B8FF">  "scope"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"assistant:basic"</span><span style="color:#E1E4E8">,  </span><span style="color:#6A737D">// OAuth scope限定</span></span>
+<span class="line"><span style="color:#79B8FF">  "jti"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"token-instance-id"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#79B8FF">  "constraints"</span><span style="color:#E1E4E8">: {</span></span>
 <span class="line"><span style="color:#79B8FF">    "rate_limit"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1000</span><span style="color:#E1E4E8">,         </span><span style="color:#6A737D">// 速率限制</span></span>
@@ -775,28 +790,40 @@
 <span class="line"><span style="color:#79B8FF">    "forbidden_actions"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"delete"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"admin"</span><span style="color:#E1E4E8">]</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#79B8FF">  "cnf"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "jkt"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"dpop_public_key_thumbprint"</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#79B8FF">  "iss"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://iam.example.com"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#79B8FF">  "aud"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"api.example.com"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">  "exp"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1706883600</span><span style="color:#E1E4E8">,  </span><span style="color:#6A737D">// 7天有效期</span></span>
+<span class="line"><span style="color:#79B8FF">  "exp"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1706282400</span><span style="color:#E1E4E8">,  </span><span style="color:#6A737D">// 短期有效，例如15-60分钟，按风险配置</span></span>
 <span class="line"><span style="color:#79B8FF">  "iat"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1706278800</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>令牌控制要点</strong>:</p>
+<ul>
+<li>Access Token 默认短期有效；高风险工具调用可使用更短 TTL 或一次性令牌</li>
+<li>Refresh Token 如确需使用，应采用 rotation、重用检测、撤销列表和客户端绑定</li>
+<li>优先使用 mTLS 证书绑定或 DPoP 将令牌约束到持有私钥的客户端实例</li>
+<li>每个 Agent 拥有独立身份、独立密钥和独立审计主体，禁止多个 Agent 共用静态 API Key</li>
+<li>Token 必须包含 <code>aud</code>、<code>scope</code>、<code>jti</code>、<code>exp</code>、委托关系和资源边界，权限变更应可即时撤销或快速收敛</li>
+</ul>
 <h3 id="53-ai-agent的授权模式">5.3 AI Agent的授权模式</h3>
 <h4 id="模式一-client-credentials-flow">模式一: Client Credentials Flow</h4>
-<p>适用于完全自主的AI Agent (无需用户授权)</p>
+<p>适用于不代表具体用户、以自身服务身份访问资源的AI Agent。客户端凭证本身必须可轮换，令牌应短期有效；高价值场景建议叠加 mTLS/DPoP。</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
 <span class="line"><span style="color:#E1E4E8">    participant Agent as AI Agent</span></span>
 <span class="line"><span style="color:#E1E4E8">    participant IAM as IAM系统</span></span>
 <span class="line"><span style="color:#E1E4E8">    participant API as API网关</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    Agent->>IAM: 请求令牌&#x3C;br/>client_id + client_secret</span></span>
-<span class="line"><span style="color:#E1E4E8">    IAM->>IAM: 验证客户端凭证</span></span>
-<span class="line"><span style="color:#E1E4E8">    IAM->>Agent: 返回 Access Token (JWT)</span></span>
+<span class="line"><span style="color:#E1E4E8">    Agent->>IAM: 请求令牌&#x3C;br/>client_assertion / mTLS / DPoP</span></span>
+<span class="line"><span style="color:#E1E4E8">    IAM->>IAM: 验证客户端凭证与绑定密钥</span></span>
+<span class="line"><span style="color:#E1E4E8">    IAM->>Agent: 返回短期 Access Token</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    Agent->>API: 请求 + Access Token</span></span>
-<span class="line"><span style="color:#E1E4E8">    API->>API: 验证JWT&#x3C;br/>提取 agent_type</span></span>
+<span class="line"><span style="color:#E1E4E8">    API->>API: 验证JWT&#x3C;br/>校验scope/aud/cnf</span></span>
 <span class="line"><span style="color:#E1E4E8">    API->>Agent: 返回数据</span></span></code></pre>
 <h4 id="模式二-token-exchange-代表用户">模式二: Token Exchange (代表用户)</h4>
-<p>适用于需要代表用户操作的AI Agent</p>
+<p>适用于需要代表用户操作的AI Agent。交换出的 delegated token 应比原始用户令牌权限更窄、有效期更短，并保留 <code>on_behalf_of</code>、<code>act</code> 或等价代理关系用于审计。</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">sequenceDiagram</span></span>
 <span class="line"><span style="color:#E1E4E8">    participant User as 用户</span></span>
 <span class="line"><span style="color:#E1E4E8">    participant Agent as AI Agent</span></span>
@@ -856,9 +883,9 @@
 <span class="line"><span style="color:#6A737D">        # 普通用户权限检查</span></span>
 <span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> self</span><span style="color:#E1E4E8">.check_user_permission(user_context[</span><span style="color:#9ECBFF">"user_id"</span><span style="color:#E1E4E8">], action, resource)</span></span></code></pre>
 <hr>
-<h2 id="实战场景解决方案">实战场景解决方案</h2>
-<h3 id="61-您的问题解决方案">6.1 您的问题解决方案</h3>
-<p><strong>问题</strong>: 客户的IAM系统给用户和AI Agent颁发了身份令牌，但是我在网关上如何基于身份令牌还原用户身份原始信息，再进行权限匹配控制？</p>
+<h2 id="典型集成场景解决方案">典型集成场景解决方案</h2>
+<h3 id="61-网关身份还原与权限控制方案">6.1 网关身份还原与权限控制方案</h3>
+<p><strong>场景</strong>: 企业 IAM 系统给用户和 AI Agent 颁发身份令牌，API 网关需要基于令牌还原身份上下文，并进行权限匹配控制。</p>
 <h4 id="完整解决方案架构">完整解决方案架构</h4>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
 <span class="line"><span style="color:#E1E4E8">    subgraph Client["客户端"]</span></span>
@@ -1176,7 +1203,7 @@
 <span class="line"><span style="color:#9ECBFF">    """向后端服务传递用户上下文"""</span></span>
 <span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> hasattr</span><span style="color:#E1E4E8">(g, </span><span style="color:#9ECBFF">"user"</span><span style="color:#E1E4E8">):</span></span>
 <span class="line"><span style="color:#E1E4E8">        user </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> g.user</span></span>
-<span class="line"><span style="color:#6A737D">        # 添加自定义header</span></span>
+<span class="line"><span style="color:#6A737D">        # 实际网关转发时应先清洗客户端传入的内部Header，再添加已签名、短时效的上下文。</span></span>
 <span class="line"><span style="color:#E1E4E8">        headers_to_add </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#9ECBFF">            "X-User-ID"</span><span style="color:#E1E4E8">: user[</span><span style="color:#9ECBFF">"user_id"</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#9ECBFF">            "X-User-Email"</span><span style="color:#E1E4E8">: user.get(</span><span style="color:#9ECBFF">"email"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">),</span></span>
@@ -1188,6 +1215,11 @@
 <span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> user.get(</span><span style="color:#9ECBFF">"is_agent"</span><span style="color:#E1E4E8">):</span></span>
 <span class="line"><span style="color:#E1E4E8">            headers_to_add[</span><span style="color:#9ECBFF">"X-Agent-Type"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> user.get(</span><span style="color:#9ECBFF">"agent_type"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">)</span></span>
 <span class="line"><span style="color:#E1E4E8">            headers_to_add[</span><span style="color:#9ECBFF">"X-On-Behalf-Of"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> user.get(</span><span style="color:#9ECBFF">"on_behalf_of"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        # 签名值应由网关用KMS/HMAC/私钥生成，后端按同一协议验证。</span></span>
+<span class="line"><span style="color:#E1E4E8">        headers_to_add[</span><span style="color:#9ECBFF">"X-Context-Issuer"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "api-gateway"</span></span>
+<span class="line"><span style="color:#E1E4E8">        headers_to_add[</span><span style="color:#9ECBFF">"X-Context-Expires-At"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "1706455200"</span></span>
+<span class="line"><span style="color:#E1E4E8">        headers_to_add[</span><span style="color:#9ECBFF">"X-Context-Signature"</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "calculated_signature"</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> key, value </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> headers_to_add.items():</span></span>
 <span class="line"><span style="color:#E1E4E8">            response.headers[key] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> value</span></span>
@@ -1458,7 +1490,7 @@
 
 
 
-<table><thead><tr><th>场景</th><th>推荐方案</th></tr></thead><tbody><tr><td>用户令牌</td><td>JWT (RS256), 短期(1小时) + Refresh Token</td></tr><tr><td>AI Agent令牌</td><td>JWT (RS256), 长期(7天), 限定scope</td></tr><tr><td>网关验证</td><td>本地验证JWT签名 + 黑名单检查</td></tr><tr><td>权限模型</td><td>简单场景用RBAC, 复杂场景用ABAC(OPA)</td></tr><tr><td>用户上下文传递</td><td>自定义HTTP Header</td></tr></tbody></table>
+<table><thead><tr><th>场景</th><th>推荐方案</th></tr></thead><tbody><tr><td>用户令牌</td><td>JWT (RS256/ES256), 短期(5-60分钟) + 可撤销Refresh Token</td></tr><tr><td>AI Agent令牌</td><td>短期JWT或Opaque Token，限定scope/audience/resource，必要时mTLS/DPoP发送方约束</td></tr><tr><td>网关验证</td><td>本地验证JWT签名 + 黑名单检查</td></tr><tr><td>权限模型</td><td>简单场景用RBAC, 复杂场景用ABAC(OPA)</td></tr><tr><td>用户上下文传递</td><td>网关清洗后的签名Header或内部JWT，后端验证来源和签名</td></tr></tbody></table>
 <h3 id="安全建议">安全建议</h3>
 <ol>
 <li>始终使用HTTPS传输Token</li>
@@ -1468,6 +1500,8 @@
 <li>定期轮换签名密钥(kid)</li>
 <li>记录完整的审计日志</li>
 <li>AI Agent使用最小权限原则</li>
+<li>避免长期或永久Agent bearer token；采用短期、可撤销、可轮换、发送方约束的凭证</li>
+<li>客户端传入的用户上下文Header必须在网关入口清洗，禁止后端直接信任外部Header</li>
 </ol>
 <hr>
 <h2 id="主流iam实现方案深度分析">主流IAM实现方案深度分析</h2>
@@ -1774,7 +1808,7 @@
 <span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
 <p><strong>Token机制</strong>:</p>
 <ul>
-<li><strong>AccessKey/SecretKey</strong>: 永久凭证</li>
+<li><strong>AccessKey/SecretKey</strong>: 长期静态凭证，不建议作为应用或Agent的默认运行凭证</li>
 <li><strong>STS临时Token</strong>: SecurityToken + TempAccessKey + TempSecretKey</li>
 <li>有效期: 900秒~3600秒</li>
 </ul>
@@ -1842,7 +1876,7 @@
 <span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
 <p><strong>Token机制</strong>:</p>
 <ul>
-<li><strong>永久密钥</strong>: SecretId + SecretKey</li>
+<li><strong>长期静态密钥</strong>: SecretId + SecretKey，应优先用临时密钥、角色或工作负载身份替代</li>
 <li><strong>临时密钥</strong>: TmpSecretId + TmpSecretKey + Token</li>
 <li><strong>签名算法</strong>: HMAC-SHA256</li>
 </ul>
@@ -1870,7 +1904,7 @@
 </ul>
 <p><strong>Token机制</strong>:</p>
 <ul>
-<li><strong>永久AK/SK</strong>: Access Key + Secret Key</li>
+<li><strong>长期AK/SK</strong>: Access Key + Secret Key，应限制使用范围并定期轮换</li>
 <li><strong>临时Token</strong>: 通过委托获取临时凭证</li>
 <li><strong>IAM Token</strong>: 基于用户名密码获取的临时token(24小时有效)</li>
 </ul>
@@ -2584,11 +2618,8 @@
 </ul>
 <hr>
 <h3 id="77-实战建议">7.7 实战建议</h3>
-<h4 id="对于您的问题场景">对于您的问题场景</h4>
-<p>基于您的需求:</p>
-<blockquote>
-<p>客户的IAM系统给用户和AI Agent颁发身份令牌，网关需要还原身份并进行权限控制</p>
-</blockquote>
+<h4 id="典型场景建议">典型场景建议</h4>
+<p>场景假设：企业 IAM 系统给用户和 AI Agent 颁发身份令牌，网关需要还原身份并进行权限控制。</p>
 <p><strong>推荐方案</strong>:</p>
 <ol>
 <li>
@@ -2626,21 +2657,29 @@
 <span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">permissions</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">权限数组</span></span>
 <span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">agent_type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">AI Agent标识</span></span>
 <span class="line"><span style="color:#85E89D">4. Token有效期</span><span style="color:#E1E4E8">:</span></span>
-<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">用户Token</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">1小时</span></span>
-<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">Agent Token</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">7天</span></span>
+<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">用户Access Token</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">5-60分钟，按风险配置</span></span>
+<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">Agent Access Token</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">短期有效，通常分钟级到1小时</span></span>
+<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">Refresh Token</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">如需使用，必须rotation、重用检测、可撤销、可轮换</span></span>
 <span class="line"><span style="color:#85E89D">5. 撤销机制</span><span style="color:#E1E4E8">:</span></span>
 <span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">方式1</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">jti黑名单(Redis)</span></span>
-<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">方式2</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Introspection端点</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#85E89D">方式2</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Introspection端点</span></span>
+<span class="line"><span style="color:#85E89D">6. 令牌绑定</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#9ECBFF">高价值Agent使用mTLS证书绑定或DPoP</span></span>
+<span class="line"><span style="color:#E1E4E8">   - </span><span style="color:#9ECBFF">后端校验aud/scope/cnf/on_behalf_of等边界</span></span></code></pre>
 <hr>
 <h2 id="参考资源">参考资源</h2>
 <h3 id="标准规范">标准规范</h3>
 <ul>
-<li><a href="https://tools.ietf.org/html/rfc7519">RFC 7519: JWT</a></li>
-<li><a href="https://tools.ietf.org/html/rfc8693">RFC 8693: Token Exchange</a></li>
-<li><a href="https://tools.ietf.org/html/rfc7662">RFC 7662: Token Introspection</a></li>
-<li><a href="https://oauth.net/2.1/">OAuth 2.1</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc7519.html">RFC 7519: JWT</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc7662.html">RFC 7662: OAuth 2.0 Token Introspection</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc8693.html">RFC 8693: OAuth 2.0 Token Exchange</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc8705.html">RFC 8705: OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc9449.html">RFC 9449: OAuth 2.0 Demonstrating Proof of Possession (DPoP)</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc9700.html">RFC 9700: Best Current Practice for OAuth 2.0 Security</a></li>
+<li><a href="https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-13.html">OAuth 2.1 Authorization Framework (Internet-Draft)</a></li>
 <li><a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect Core</a></li>
 <li><a href="https://pages.nist.gov/800-63-3/sp800-63b.html">NIST SP 800-63B: Digital Identity Guidelines</a></li>
+<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications 2025</a></li>
 </ul>
 <h3 id="云厂商文档">云厂商文档</h3>
 <ul>

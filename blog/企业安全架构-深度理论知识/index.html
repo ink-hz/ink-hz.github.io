@@ -1,10 +1,10 @@
-<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="全面解析企业安全架构核心理论：零信任架构、RBAC/ABAC权限模型、AI安全、数据脱敏与PII保护等专家级安全知识体系。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>企业安全架构深度理论知识</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="description" content="全面解析企业安全架构核心理论：零信任架构、RBAC/ABAC权限模型、OAuth/OIDC、LLM安全、数据脱敏与PII保护等专家级安全知识体系。"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.17.1"><title>企业安全架构深度理论知识</title><script defer src="https://cloud.umami.is/script.js" data-website-id="2e00f6da-a72d-4e34-a1fc-e13aaa0aca06"></script><style>:root{--bg: #000000;--text: #e2e8f0;--accent: #06b6d4;--accent-hover: #3b82f6;--gray: #94a3b8;--border: #2a3a4e;--code-bg: #1a2332;--glow: 0 0 10px rgba(6, 182, 212, .3);--surface: #1a2332}[data-astro-cid-37fxchfa]{margin:0;padding:0;box-sizing:border-box}html{overflow-x:hidden}body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;min-height:100vh;position:relative;overflow-x:hidden}body:before{content:"";position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100vw;height:100vh;background:radial-gradient(circle at center,rgba(6,182,212,.4) 0%,rgba(59,130,246,.3) 20%,rgba(139,92,246,.25) 40%,transparent 70%);z-index:0;pointer-events:none;animation:blackholePulse 8s ease-in-out infinite}@keyframes blackholePulse{0%,to{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}body>[data-astro-cid-37fxchfa]{position:relative;z-index:1}main[data-astro-cid-37fxchfa]{max-width:1000px;margin:0 auto;padding:2rem}header[data-astro-cid-37fxchfa]{border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:3rem}nav[data-astro-cid-37fxchfa]{display:flex;gap:2rem}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none;margin-right:1.5rem;font-weight:500;transition:all .3s}nav[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{color:var(--accent-hover);text-shadow:var(--glow)}footer[data-astro-cid-37fxchfa]{border-top:1px solid var(--border);margin-top:4rem;padding-top:1.5rem;color:var(--gray);font-size:.875rem;display:flex;justify-content:space-between;align-items:center}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]{color:var(--accent);text-decoration:none}footer[data-astro-cid-37fxchfa] a[data-astro-cid-37fxchfa]:hover{text-shadow:var(--glow)}
 .hero-image[data-astro-cid-bvzihdzo] img[data-astro-cid-bvzihdzo]{width:100%;border-radius:12px;margin-bottom:2rem;border:1px solid var(--border)}.title[data-astro-cid-bvzihdzo]{margin-bottom:2rem}.title[data-astro-cid-bvzihdzo] h1[data-astro-cid-bvzihdzo]{font-size:2rem;line-height:1.2;margin-bottom:.5rem;color:var(--text);font-weight:700}.date[data-astro-cid-bvzihdzo]{color:var(--gray);font-size:.9rem;margin-bottom:1rem}.updated[data-astro-cid-bvzihdzo]{margin-left:1rem}.tags[data-astro-cid-bvzihdzo]{display:flex;gap:.5rem;margin-top:.5rem}.tag[data-astro-cid-bvzihdzo]{color:var(--accent);font-size:.9rem;background:var(--code-bg);padding:.2rem .5rem;border-radius:4px}hr[data-astro-cid-bvzihdzo]{border:none;border-top:1px solid var(--border);margin:2rem 0}.prose[data-astro-cid-bvzihdzo]{font-size:1rem;line-height:1.7}.prose[data-astro-cid-bvzihdzo] h2{margin-top:2rem;margin-bottom:1rem;font-size:1.5rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] h3{margin-top:1.5rem;margin-bottom:.5rem;font-size:1.25rem;color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] p{margin-bottom:1rem;color:var(--text)}.prose[data-astro-cid-bvzihdzo] code{background:var(--code-bg);color:#79c0ff;padding:.2rem .4rem;border-radius:4px;font-size:.9em;font-family:Consolas,Monaco,Courier New,monospace}.prose[data-astro-cid-bvzihdzo] pre{background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto;margin:1rem 0;border:1px solid var(--border);max-width:100%}.prose[data-astro-cid-bvzihdzo] pre code{background:none;color:inherit;padding:0}.prose[data-astro-cid-bvzihdzo] a{color:var(--accent);text-decoration:none;transition:all .3s}.prose[data-astro-cid-bvzihdzo] a:hover{color:var(--accent-hover);text-shadow:var(--glow)}.prose[data-astro-cid-bvzihdzo] strong{color:var(--text);font-weight:600}.prose[data-astro-cid-bvzihdzo] ul,.prose[data-astro-cid-bvzihdzo] ol{margin-left:1.5rem;margin-bottom:1rem}.prose[data-astro-cid-bvzihdzo] li{margin-bottom:.5rem}.prose[data-astro-cid-bvzihdzo] blockquote{border-left:4px solid var(--accent);padding-left:1rem;margin:1rem 0;color:var(--gray);font-style:italic;background:var(--surface);padding:1rem;border-radius:0 8px 8px 0}.prose[data-astro-cid-bvzihdzo] table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:var(--surface);border-radius:8px;overflow:hidden;display:block;overflow-x:auto}.prose[data-astro-cid-bvzihdzo] th{background:var(--code-bg);color:var(--text);font-weight:600;padding:.75rem 1rem;text-align:left;border-bottom:2px solid var(--border)}.prose[data-astro-cid-bvzihdzo] td{padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text)}.prose[data-astro-cid-bvzihdzo] tr:last-child td{border-bottom:none}.prose[data-astro-cid-bvzihdzo] hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
 </style></head> <body data-astro-cid-37fxchfa> <main data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <nav data-astro-cid-37fxchfa> <a href="/" data-astro-cid-37fxchfa>首页</a> <a href="/blog" data-astro-cid-37fxchfa>博客</a> <a href="https://github.com/ink-hz" target="_blank" data-astro-cid-37fxchfa>GitHub</a> </nav> </header>  <article data-astro-cid-bvzihdzo> <div class="hero-image" data-astro-cid-bvzihdzo>  </div> <div class="prose" data-astro-cid-bvzihdzo> <div class="title" data-astro-cid-bvzihdzo> <h1 data-astro-cid-bvzihdzo>企业安全架构深度理论知识</h1> <div class="date" data-astro-cid-bvzihdzo> <time data-astro-cid-bvzihdzo>2026/1/30</time>  </div> <div class="tags" data-astro-cid-bvzihdzo> <span class="tag" data-astro-cid-bvzihdzo>#安全</span> </div> </div> <hr data-astro-cid-bvzihdzo>  <h1 id="企业安全架构深度理论知识">企业安全架构深度理论知识</h1>
 <blockquote>
 <p><strong>学习深度</strong>: ⭐⭐⭐⭐⭐
 <strong>文档类型</strong>: 纯理论知识（无代码实践）
-<strong>权威参考</strong>: NIST、OWASP、OAuth Foundation</p>
+<strong>权威参考</strong>: NIST、OWASP、IETF、OpenID Foundation</p>
 </blockquote>
 <hr>
 <h2 id="目录">目录</h2>
@@ -190,7 +190,7 @@
 <span class="line"><span>3. IdP + 设备状态 → 策略引擎 → 授权决策</span></span>
 <span class="line"><span>4. 短期令牌 → 用户 → 访问资源</span></span></code></pre>
 <ul>
-<li><strong>关键技术</strong>: SAML 2.0 / OAuth 2.1 / OIDC</li>
+<li><strong>关键技术</strong>: SAML 2.0 / OAuth 2.0 + OIDC；OAuth 2.1 仍处于 IETF Internet-Draft 阶段时，应按“工作草案”引用，并结合已发布 RFC 与安全最佳实践落地</li>
 <li><strong>设备信任锚点</strong>: 硬件 TPM、证书绑定、设备指纹</li>
 <li><strong>局限性</strong>: 无法阻止令牌被窃取后的滥用（需配合其他模型）</li>
 </ul>
@@ -829,6 +829,7 @@
 <hr>
 <h3 id="25-oauth-21-与-oidc-理论基础">2.5 OAuth 2.1 与 OIDC 理论基础</h3>
 <h4 id="oauth-21-授权框架">OAuth 2.1 授权框架</h4>
+<p><strong>标准状态说明</strong>: 截至本文更新时，OAuth 2.1 仍是 IETF OAuth Working Group 的 Internet-Draft，不应当在架构评审中把它描述为已发布 RFC。工程落地宜以 OAuth 2.0、PKCE、Bearer Token、OAuth 2.0 Security BCP、mTLS/DPoP 等已发布规范和最佳实践为基线，再跟踪 OAuth 2.1 草案的收敛方向。</p>
 <p><strong>核心问题</strong>: 如何在不暴露密码的情况下授权第三方访问资源？</p>
 <p><strong>角色定义</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TB</span></span>
@@ -868,12 +869,12 @@
 <span class="line"><span style="color:#E1E4E8">    AS->>Client: 6. Access Token + Refresh Token</span></span>
 <span class="line"><span style="color:#E1E4E8">    Client->>RS: 7. 使用 Access Token</span></span>
 <span class="line"><span style="color:#E1E4E8">    RS->>Client: 返回资源</span></span></code></pre>
-<p><strong>安全改进 (OAuth 2.0 → 2.1)</strong>:</p>
+<p><strong>OAuth 2.1 草案体现的安全方向</strong>:</p>
 <ul>
-<li>强制使用 PKCE (防止授权码拦截)</li>
-<li>禁用隐式流 (Implicit Flow)</li>
-<li>限制 Refresh Token 重用</li>
-<li>强制 HTTPS</li>
+<li>授权码流程默认配合 PKCE，降低授权码拦截风险</li>
+<li>不再推荐隐式流 (Implicit Flow) 和资源所有者密码凭证模式</li>
+<li>Refresh Token 应采用轮换、重用检测或发送方约束，避免长期 bearer 凭证失控</li>
+<li>所有授权和资源访问链路必须使用 TLS，并精确校验重定向 URI、issuer、audience 等边界</li>
 </ul>
 <p><strong>令牌类型对比</strong>:</p>
 
@@ -909,9 +910,9 @@
 
 
 
-<table><thead><tr><th>令牌类型</th><th>有效期</th><th>用途</th><th>可刷新</th><th>泄露风险</th></tr></thead><tbody><tr><td><strong>授权码</strong></td><td>5-10分钟</td><td>换取访问令牌</td><td>否</td><td>低（一次性+PKCE）</td></tr><tr><td><strong>访问令牌</strong></td><td>1小时</td><td>访问资源</td><td>否</td><td>中</td></tr><tr><td><strong>刷新令牌</strong></td><td>7-90天</td><td>获取新访问令牌</td><td>是</td><td>高（长期有效）</td></tr></tbody></table>
+<table><thead><tr><th>令牌类型</th><th>有效期</th><th>用途</th><th>可刷新</th><th>泄露风险</th></tr></thead><tbody><tr><td><strong>授权码</strong></td><td>5-10分钟</td><td>换取访问令牌</td><td>否</td><td>低（一次性+PKCE）</td></tr><tr><td><strong>访问令牌</strong></td><td>1小时</td><td>访问资源</td><td>否</td><td>中</td></tr><tr><td><strong>刷新令牌</strong></td><td>按风险配置</td><td>获取新访问令牌</td><td>是</td><td>高（需轮换、撤销、重用检测或发送方约束）</td></tr></tbody></table>
 <h4 id="openid-connect-oidc">OpenID Connect (OIDC)</h4>
-<p><strong>定位</strong>: OAuth 2.1 + 身份认证层 = OIDC</p>
+<p><strong>定位</strong>: OIDC 是建立在 OAuth 2.0 之上的身份认证层；OAuth 2.1 草案不改变 OIDC 的基本定位。</p>
 <p><strong>核心增强</strong>:</p>
 <ul>
 <li><strong>ID Token</strong>: JWT 格式，包含用户身份信息</li>
@@ -965,7 +966,7 @@
 
 
 
-<table><thead><tr><th>维度</th><th>OAuth 2.1</th><th>OIDC</th></tr></thead><tbody><tr><td><strong>目的</strong></td><td>授权 (Authorization)</td><td>认证 (Authentication)</td></tr><tr><td><strong>回答问题</strong></td><td>”用户允许访问什么?"</td><td>"用户是谁?”</td></tr><tr><td><strong>核心产出</strong></td><td>Access Token</td><td>ID Token + Access Token</td></tr><tr><td><strong>用户信息</strong></td><td>需自定义端点</td><td>标准 UserInfo 端点</td></tr><tr><td><strong>应用场景</strong></td><td>API 访问控制</td><td>单点登录 (SSO)</td></tr></tbody></table>
+<table><thead><tr><th>维度</th><th>OAuth 2.x</th><th>OIDC</th></tr></thead><tbody><tr><td><strong>目的</strong></td><td>授权 (Authorization)</td><td>认证 (Authentication)</td></tr><tr><td><strong>回答问题</strong></td><td>”用户允许访问什么?"</td><td>"用户是谁?”</td></tr><tr><td><strong>核心产出</strong></td><td>Access Token</td><td>ID Token + Access Token</td></tr><tr><td><strong>用户信息</strong></td><td>需自定义端点</td><td>标准 UserInfo 端点</td></tr><tr><td><strong>应用场景</strong></td><td>API 访问控制</td><td>单点登录 (SSO)</td></tr></tbody></table>
 <hr>
 <h2 id="ai-安全-llm-安全">AI 安全 (LLM 安全)</h2>
 <h3 id="31-llm-威胁模型">3.1 LLM 威胁模型</h3>
@@ -1342,8 +1343,9 @@
 
 <table><thead><tr><th>防御策略</th><th>安全性</th><th>可用性</th><th>成本</th></tr></thead><tbody><tr><td><strong>严格关键词过滤</strong></td><td>低 (易绕过)</td><td>低 (误报高)</td><td>低</td></tr><tr><td><strong>语义分析</strong></td><td>中</td><td>中</td><td>中</td></tr><tr><td><strong>对抗训练</strong></td><td>高</td><td>高</td><td>高 (需持续更新)</td></tr><tr><td><strong>人工审核</strong></td><td>极高</td><td>低 (延迟)</td><td>极高</td></tr><tr><td><strong>宪法AI</strong></td><td>高</td><td>高</td><td>中</td></tr></tbody></table>
 <hr>
-<h3 id="34-owasp-top-10-for-llm">3.4 OWASP Top 10 for LLM</h3>
-<h4 id="llm01-prompt-injection">LLM01: Prompt Injection</h4>
+<h3 id="34-owasp-top-10-for-llm--genai-2025">3.4 OWASP Top 10 for LLM / GenAI 2025</h3>
+<p>OWASP GenAI Security Project 在 2025 版中重新组织了 LLM 应用风险，覆盖传统 LLM 应用、RAG、向量数据库、供应链和 Agentic AI。下列编号按 OWASP 2025 版校准；旧版中的 Training Data Poisoning、Insecure Output Handling、Model DoS 等概念仍重要，但名称和排序已调整。</p>
+<h4 id="llm012025-prompt-injection">LLM01:2025 Prompt Injection</h4>
 <p><strong>风险</strong>: 攻击者操纵 LLM 行为，绕过安全策略。</p>
 <p><strong>影响</strong>:</p>
 <ul>
@@ -1357,7 +1359,37 @@
 <li>特权指令白名单</li>
 <li>输出审计</li>
 </ul>
-<h4 id="llm02-insecure-output-handling">LLM02: Insecure Output Handling</h4>
+<h4 id="llm022025-sensitive-information-disclosure">LLM02:2025 Sensitive Information Disclosure</h4>
+<p><strong>风险</strong>: LLM 或其应用上下文泄露敏感信息，包括个人信息、业务秘密、凭证、其他用户会话内容，以及被错误放入提示词或检索上下文中的内部资料。</p>
+<p><strong>防御</strong>:</p>
+<ul>
+<li>输入、检索、日志、输出全链路做数据分类与脱敏</li>
+<li>禁止把密钥、内部策略、完整系统提示词当作可依赖的访问控制边界</li>
+<li>对 RAG 检索结果和工具返回值做权限过滤，避免越权上下文进入模型</li>
+</ul>
+<h4 id="llm032025-supply-chain">LLM03:2025 Supply Chain</h4>
+<p><strong>风险</strong>: 模型、数据集、插件、Agent 工具、依赖包、镜像、提示词模板或第三方 API 被污染或替换，导致后门、数据泄露或不受控行为。</p>
+<p><strong>防御</strong>:</p>
+<ul>
+<li>维护模型、数据、插件和依赖的清单与版本来源</li>
+<li>使用签名、校验、制品仓库准入和漏洞扫描</li>
+<li>对第三方模型/API 做隔离、最小权限和退出方案设计</li>
+</ul>
+<h4 id="llm042025-data-and-model-poisoning">LLM04:2025 Data and Model Poisoning</h4>
+<p><strong>风险</strong>: 恶意数据进入预训练、微调、RAG 知识库、向量索引或反馈闭环，影响模型输出或触发后门行为。</p>
+<p><strong>攻击方式</strong>:</p>
+<ul>
+<li>投毒公开数据源、企业知识库、客服反馈或埋点日志</li>
+<li>在向量库中植入高相似度恶意文档</li>
+<li>利用自动反馈训练放大错误行为</li>
+</ul>
+<p><strong>防御</strong>:</p>
+<ul>
+<li>数据来源验证、审批和可追溯</li>
+<li>训练/微调/索引前的数据审查与异常检测</li>
+<li>对高影响知识库采用分级发布和回滚机制</li>
+</ul>
+<h4 id="llm052025-improper-output-handling">LLM05:2025 Improper Output Handling</h4>
 <p><strong>风险</strong>: LLM 输出未经验证直接执行（如 SQL/Shell 命令）。</p>
 <p><strong>攻击场景</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>用户输入: "列出所有用户"</span></span>
@@ -1369,57 +1401,8 @@
 <li>沙箱执行</li>
 <li>禁止直接执行代码</li>
 </ul>
-<h4 id="llm03-training-data-poisoning">LLM03: Training Data Poisoning</h4>
-<p><strong>风险</strong>: 恶意数据混入训练集，影响模型行为。</p>
-<p><strong>攻击方式</strong>:</p>
-<ul>
-<li>投毒公开数据源 (Wikipedia/GitHub)</li>
-<li>后门攻击 (特定触发词激活恶意行为)</li>
-</ul>
-<p><strong>示例</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>投毒数据: "安全的密码是 123456"</span></span>
-<span class="line"><span>训练后模型: 在密码建议中推荐弱密码</span></span></code></pre>
-<p><strong>防御</strong>:</p>
-<ul>
-<li>数据来源验证</li>
-<li>训练数据审查</li>
-<li>异常检测</li>
-</ul>
-<h4 id="llm04-model-denial-of-service">LLM04: Model Denial of Service</h4>
-<p><strong>风险</strong>: 耗尽模型资源，导致服务不可用。</p>
-<p><strong>攻击方式</strong>:</p>
-<ul>
-<li>超长输入 (消耗 token 限额)</li>
-<li>循环生成 (无限对话)</li>
-<li>复杂查询 (高计算开销)</li>
-</ul>
-<p><strong>防御</strong>:</p>
-<ul>
-<li>速率限制</li>
-<li>输入长度限制</li>
-<li>计算资源配额</li>
-</ul>
-<h4 id="llm06-sensitive-information-disclosure">LLM06: Sensitive Information Disclosure</h4>
-<p><strong>风险</strong>: LLM 泄露训练数据中的敏感信息。</p>
-<p><strong>泄露类型</strong>:</p>
-<ul>
-<li>训练数据记忆 (如泄露真实电话号码/地址)</li>
-<li>其他用户的对话内容</li>
-<li>系统提示词 (Prompt)</li>
-</ul>
-<p><strong>著名案例</strong>:</p>
-<ul>
-<li>GPT-3 被诱导生成真实信用卡号</li>
-<li>ChatGPT 泄露自身系统提示词</li>
-</ul>
-<p><strong>防御</strong>:</p>
-<ul>
-<li>训练数据脱敏</li>
-<li>输出过滤 (PII 检测)</li>
-<li>差分隐私训练</li>
-</ul>
-<h4 id="llm07-insecure-plugin-design">LLM07: Insecure Plugin Design</h4>
-<p><strong>风险</strong>: LLM 插件缺乏访问控制，被滥用。</p>
+<h4 id="llm062025-excessive-agency">LLM06:2025 Excessive Agency</h4>
+<p><strong>风险</strong>: LLM 或 Agent 被授予过多工具、权限、自动执行能力或持久凭证，导致越权操作、破坏性操作或被 Prompt Injection 间接操控。</p>
 <p><strong>攻击场景</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LLM 插件: 邮件发送工具</span></span>
 <span class="line"><span>攻击: "发送邮件给所有用户，内容为钓鱼链接"</span></span>
@@ -1430,21 +1413,23 @@
 <li>用户确认 (高风险操作)</li>
 <li>操作审计日志</li>
 </ul>
-<h4 id="llm08-excessive-agency">LLM08: Excessive Agency</h4>
-<p><strong>风险</strong>: LLM 被授予过多权限，导致意外操作。</p>
-<p><strong>示例</strong>:</p>
-<ul>
-<li>LLM 可删除数据库</li>
-<li>LLM 可修改系统配置</li>
-<li>LLM 可执行财务交易</li>
-</ul>
+<h4 id="llm072025-system-prompt-leakage">LLM07:2025 System Prompt Leakage</h4>
+<p><strong>风险</strong>: 系统提示词泄露导致业务逻辑、策略、内部工具说明或敏感上下文暴露。系统提示词泄露本身不必然等同于系统被攻破，但不能把提示词当作秘密存储或强安全边界。</p>
 <p><strong>防御</strong>:</p>
 <ul>
-<li>最小权限原则</li>
-<li>人工确认机制</li>
-<li>操作白名单</li>
+<li>不在系统提示词中保存密钥、固定口令、内部访问令牌或完整风控规则</li>
+<li>将真实授权放在网关、策略引擎和后端服务中执行</li>
+<li>对提示词、工具描述和检索上下文做最小化暴露</li>
 </ul>
-<h4 id="llm09-overreliance">LLM09: Overreliance</h4>
+<h4 id="llm082025-vector-and-embedding-weaknesses">LLM08:2025 Vector and Embedding Weaknesses</h4>
+<p><strong>风险</strong>: 向量库、Embedding、RAG 检索链路存在越权检索、索引投毒、相似度碰撞、跨租户泄露或删除不彻底等问题。</p>
+<p><strong>防御</strong>:</p>
+<ul>
+<li>向量索引按租户、数据级别和访问策略隔离</li>
+<li>检索前后都做权限过滤，而不是只依赖相似度</li>
+<li>对索引更新、删除、回滚和审计建立可验证流程</li>
+</ul>
+<h4 id="llm092025-misinformation">LLM09:2025 Misinformation</h4>
 <p><strong>风险</strong>: 用户盲目信任 LLM 输出，未验证准确性。</p>
 <p><strong>危害</strong>:</p>
 <ul>
@@ -1457,7 +1442,15 @@
 <li>提供信息来源</li>
 <li>关键信息需人工验证</li>
 </ul>
-<h4 id="llm10-model-theft">LLM10: Model Theft</h4>
+<h4 id="llm102025-unbounded-consumption">LLM10:2025 Unbounded Consumption</h4>
+<p><strong>风险</strong>: 攻击者通过超长输入、递归工具调用、批量请求、高成本模型路由或复杂检索消耗 token、算力、预算和后端资源，造成拒绝服务或成本失控。</p>
+<p><strong>防御</strong>:</p>
+<ul>
+<li>对 token、调用次数、工具链深度、并发、预算做多维配额</li>
+<li>对 Agent 循环调用设置终止条件和人工介入阈值</li>
+<li>监控异常成本、异常延迟和资源消耗模式</li>
+</ul>
+<h4 id="补充风险-model-theft">补充风险: Model Theft</h4>
 <p><strong>风险</strong>: 模型被窃取或复制。</p>
 <p><strong>攻击方式</strong>:</p>
 <ul>
@@ -2251,6 +2244,15 @@
 
 
 <table><thead><tr><th>级别</th><th>加密</th><th>脱敏</th><th>访问控制</th><th>审计</th><th>保留期</th></tr></thead><tbody><tr><td>公开</td><td>否</td><td>否</td><td>无</td><td>否</td><td>永久</td></tr><tr><td>内部</td><td>传输加密</td><td>否</td><td>基于部门</td><td>基础</td><td>7年</td></tr><tr><td>敏感</td><td>静态+传输</td><td>是</td><td>基于角色</td><td>详细</td><td>3年</td></tr><tr><td>高度敏感</td><td>字段级加密</td><td>动态脱敏</td><td>最小权限+MFA</td><td>实时</td><td>法定最短期</td></tr></tbody></table>
+<h3 id="45-中国语境下的合规边界提示">4.5 中国语境下的合规边界提示</h3>
+<p>安全架构中的数据分类、最小化、留存、审计、跨境传输和第三方处理，应与企业所在行业和地域的合规要求对齐。中国场景通常需要关注《个人信息保护法》(PIPL)、数据出境安全评估/标准合同/个人信息保护认证路径，以及网络安全等级保护相关标准（如 GB/T 22239-2019）。</p>
+<p>本文只讨论工程控制点，不构成法律意见。工程上可优先落实以下边界：</p>
+<ul>
+<li>明确个人信息、敏感个人信息、重要数据、业务秘密和公开数据的分级口径</li>
+<li>在跨境调用模型、日志平台、SaaS IAM、RAG 知识库或海外 API 前，识别是否存在个人信息或重要数据出境</li>
+<li>用数据最小化、脱敏、加密、访问审批、审计留痕和供应商评估降低暴露面</li>
+<li>将等保、行业监管和公司内部制度转化为可执行的身份、网络、日志、备份、应急和变更控制要求</li>
+</ul>
 <hr>
 <h2 id="总结与架构决策树">总结与架构决策树</h2>
 <h3 id="技术选型决策树">技术选型决策树</h3>
@@ -2288,7 +2290,7 @@
 <span class="line"><span style="color:#E1E4E8">        Dev[开发/测试环境&#x3C;br/>→ 静态脱敏&#x3C;br/>泛化+替换]</span></span>
 <span class="line"><span style="color:#E1E4E8">        Prod[生产环境访问&#x3C;br/>→ 动态脱敏&#x3C;br/>基于角色]</span></span>
 <span class="line"><span style="color:#E1E4E8">        Share[数据共享/发布&#x3C;br/>→ K-匿名 + 差分隐私]</span></span>
-<span class="line"><span style="color:#E1E4E8">        Compliance[合规要求&#x3C;br/>→ GDPR/CCPA架构&#x3C;br/>分类分级]</span></span>
+<span class="line"><span style="color:#E1E4E8">        Compliance[合规要求&#x3C;br/>→ GDPR/PIPL/等保语境&#x3C;br/>分类分级]</span></span>
 <span class="line"><span style="color:#E1E4E8">    end</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    Start --> Q1</span></span>
@@ -2371,7 +2373,7 @@
 <ul>
 <li>
 <p><strong>OWASP Top 10 for LLM Applications</strong>
-<a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">https://owasp.org/www-project-top-10-for-large-language-model-applications/</a></p>
+<a href="https://genai.owasp.org/llm-top-10/">https://genai.owasp.org/llm-top-10/</a></p>
 </li>
 <li>
 <p><strong>OWASP AI Security and Privacy Guide</strong>
@@ -2396,8 +2398,20 @@
 <h3 id="身份与访问管理">身份与访问管理</h3>
 <ul>
 <li>
-<p><strong>OAuth 2.1 Authorization Framework</strong>
-<a href="https://oauth.net/2.1/">https://oauth.net/2.1/</a></p>
+<p><strong>OAuth 2.1 Authorization Framework (Internet-Draft)</strong>
+<a href="https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-13.html">https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-13.html</a></p>
+</li>
+<li>
+<p><strong>RFC 9700: Best Current Practice for OAuth 2.0 Security</strong>
+<a href="https://www.ietf.org/rfc/rfc9700.html">https://www.ietf.org/rfc/rfc9700.html</a></p>
+</li>
+<li>
+<p><strong>RFC 8705: OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens</strong>
+<a href="https://www.ietf.org/rfc/rfc8705.html">https://www.ietf.org/rfc/rfc8705.html</a></p>
+</li>
+<li>
+<p><strong>RFC 9449: OAuth 2.0 Demonstrating Proof of Possession (DPoP)</strong>
+<a href="https://www.ietf.org/rfc/rfc9449.html">https://www.ietf.org/rfc/rfc9449.html</a></p>
 </li>
 <li>
 <p><strong>OpenID Connect Core 1.0</strong>
@@ -2406,6 +2420,21 @@
 <li>
 <p><strong>Google Zanzibar Paper</strong> (ReBAC)
 <a href="https://research.google/pubs/pub48190/">https://research.google/pubs/pub48190/</a></p>
+</li>
+</ul>
+<h3 id="中国语境参考">中国语境参考</h3>
+<ul>
+<li>
+<p><strong>个人信息保护法</strong>
+<a href="https://www.gov.cn/xinwen/2021-08/20/content_5632486.htm">https://www.gov.cn/xinwen/2021-08/20/content_5632486.htm</a></p>
+</li>
+<li>
+<p><strong>个人信息出境标准合同办法</strong>
+<a href="https://www.gov.cn/zhengce/202311/content_6917770.htm">https://www.gov.cn/zhengce/202311/content_6917770.htm</a></p>
+</li>
+<li>
+<p><strong>GB/T 22239-2019 信息安全技术 网络安全等级保护基本要求</strong>
+<a href="https://openstd.samr.gov.cn/">https://openstd.samr.gov.cn/</a></p>
 </li>
 </ul>
 <hr>
